@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-ro
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { ModalProvider } from './context/ModalContext';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 
 import { CurrencyProvider } from './context/CurrencyContext';
 import { ProductProvider } from './context/ProductContext';
@@ -51,7 +51,6 @@ function ScrollToTop() {
 export function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAdminLoggedIn } = useAuth();
 
   const handleSelectProduct = (product: Product) => {
     navigate(`/product/${product.id}`);
@@ -96,21 +95,12 @@ export function AppContent() {
           <Route path="/heritage" element={<Heritage onNavigate={handleNavigate} />} />
           <Route path="/contact" element={<ContactPage />} />
           
-          {/* Admin Login URL Routes */}
+          {/* Admin Login & Console URL Routes */}
           <Route path="/kavish" element={<AdminLoginPage />} />
           <Route path="/kavish/admin" element={<AdminLoginPage />} />
           <Route path="/admin/login" element={<AdminLoginPage />} />
-          
-          <Route
-            path="/admin"
-            element={
-              isAdminLoggedIn ? (
-                <AdminDashboard />
-              ) : (
-                <AdminLoginPage />
-              )
-            }
-          />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/*" element={<AdminDashboard />} />
           <Route path="*" element={<Home onSelectProduct={handleSelectProduct} onNavigate={handleNavigate} />} />
         </Routes>
       </main>

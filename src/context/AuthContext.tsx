@@ -152,7 +152,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loginAdmin = (passcode: string): boolean => {
     const cleanPass = passcode.trim();
-    if (cleanPass === adminPasscode || cleanPass === 'admin123' || cleanPass === 'kuthampully2026' || cleanPass === 'admin') {
+    const lowerPass = cleanPass.toLowerCase();
+    if (
+      lowerPass === adminPasscode.toLowerCase() ||
+      lowerPass === 'admin123' ||
+      lowerPass === 'kuthampully2026' ||
+      lowerPass === 'admin'
+    ) {
       setIsAdminLoggedIn(true);
       localStorage.setItem('kavish_admin_auth', 'true');
       setIsAdminLoginModalOpen(false);

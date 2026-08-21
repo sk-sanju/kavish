@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { AdminLayout, type AdminTab } from '../components/admin/AdminLayout';
+import { AdminLoginPage } from './AdminLoginPage';
 import { DashboardOverview } from '../components/admin/DashboardOverview';
 import { ProductManagement } from '../components/admin/ProductManagement';
 import { CategoryManagement } from '../components/admin/CategoryManagement';
@@ -24,13 +25,9 @@ export const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<AdminTab>('overview');
 
-  useEffect(() => {
-    if (!isAdminLoggedIn) {
-      navigate('/admin/login');
-    }
-  }, [isAdminLoggedIn, navigate]);
-
-  if (!isAdminLoggedIn) return null;
+  if (!isAdminLoggedIn) {
+    return <AdminLoginPage />;
+  }
 
   return (
     <AdminLayout
