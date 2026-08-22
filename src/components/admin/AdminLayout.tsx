@@ -43,7 +43,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   onNavigateHome,
   onOpenAddProductModal
 }) => {
-  const { logoutAdmin, adminUsername } = useAuth();
+  const { logoutAdmin, adminProfile } = useAuth();
   const { notifications } = useAdmin();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifDrawerOpen, setNotifDrawerOpen] = useState(false);
@@ -119,7 +119,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           {onOpenAddProductModal && (
             <button
               onClick={onOpenAddProductModal}
-              className="hidden sm:flex bg-[#D4AF37] text-[#12372A] px-3 py-1.5 text-xs font-bold uppercase rounded-xl hover:bg-[#FAF8F1] transition-all items-center gap-1 shadow-sm"
+              className="hidden sm:flex bg-[#D4AF37] text-[#12372A] px-3 py-1.5 text-xs font-bold uppercase rounded-xl hover:bg-[#FAF8F1] transition-all items-center gap-1 shadow-sm cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Product</span>
@@ -129,7 +129,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           {/* Notifications Trigger */}
           <button
             onClick={() => setNotifDrawerOpen(true)}
-            className="p-2 bg-[#0B241B] border border-[#D4AF37]/40 text-[#D4AF37] rounded-xl relative hover:bg-[#D4AF37] hover:text-[#12372A] transition-all"
+            className="p-2 bg-[#0B241B] border border-[#D4AF37]/40 text-[#D4AF37] rounded-xl relative hover:bg-[#D4AF37] hover:text-[#12372A] transition-all cursor-pointer"
             title="Notifications"
           >
             <Bell className="w-4 h-4" />
@@ -144,15 +144,15 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           <div className="flex items-center gap-2 bg-[#0B241B] border border-[#D4AF37]/40 px-3 py-1.5 rounded-xl text-xs">
             <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
             <div className="hidden lg:block text-left">
-              <span className="font-bold text-[#FAF8F1] block leading-tight">{adminUsername}</span>
-              <span className="text-[9px] text-[#D4AF37] uppercase font-mono">Super Admin</span>
+              <span className="font-bold text-[#FAF8F1] block leading-tight">{adminProfile.name}</span>
+              <span className="text-[9px] text-[#D4AF37] uppercase font-mono">{adminProfile.email}</span>
             </div>
             <button
               onClick={() => {
                 logoutAdmin();
                 onNavigateHome();
               }}
-              className="text-[#E8DDC7]/70 hover:text-red-400 p-1 ml-1"
+              className="text-[#E8DDC7]/70 hover:text-red-400 p-1 ml-1 cursor-pointer"
               title="Sign Out Admin"
             >
               <LogOut className="w-3.5 h-3.5" />

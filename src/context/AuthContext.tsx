@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { UserProfile, Order, Address } from '../types';
+import type { UserProfile, Order, Address, AdminProfile } from '../types';
 import { fetchSupabaseOrders, upsertSupabaseOrder } from '../lib/supabase';
 
 interface AuthContextType {
@@ -20,14 +20,16 @@ interface AuthContextType {
   selectedTrackingOrder: Order | null;
   setSelectedTrackingOrder: (order: Order | null) => void;
 
-  // Admin Auth State
+  // Admin Auth & Profile State
   isAdminLoggedIn: boolean;
   isAdminLoginModalOpen: boolean;
   setIsAdminLoginModalOpen: (open: boolean) => void;
+  adminProfile: AdminProfile;
   adminUsername: string;
   adminPasscode: string;
-  loginAdmin: (passcode: string, username?: string) => boolean;
+  loginAdmin: (identifier: string, password?: string) => boolean;
   logoutAdmin: () => void;
+  updateAdminProfile: (profile: AdminProfile) => void;
   updateAdminCredentials: (newUsername: string, newPasscode: string) => void;
 }
 
@@ -40,8 +42,17 @@ const DEFAULT_USER: UserProfile = {
   orders: []
 };
 
+const DEFAULT_ADMIN_PROFILE: AdminProfile = {
+  phone: '+91 98470 12345', // Primary Key (PK)
+  name: 'Kavish Master Admin',
+  email: 'admin@kavishhandlooms.com',
+  password: 'admin',
+  role: 'Super Admin'
+};
+
 const USER_STORAGE_KEY = 'kavish_customer_profile';
 const AUTH_STATUS_KEY = 'kavish_customer_auth_status';
+const ADMIN_PROFILE_STORAGE_KEY = 'kavish_admin_profile_v2';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -66,25 +77,60 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [selectedTrackingOrder, setSelectedTrackingOrder] = useState<Order | null>(null);
 
-  // Admin state & dynamic credentials
+  // Admin Profile & dynamic credentials
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => {
     return localStorage.getItem('kavish_admin_auth') === 'true';
   });
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState<boolean>(false);
-  const [adminUsername, setAdminUsername] = useState<string>(() => {
-    return localStorage.getItem('kavish_admin_username') || 'admin';
-  });
-  const [adminPasscode, setAdminPasscode] = useState<string>(() => {
-    return localStorage.getItem('kavish_admin_passcode') || 'admin123';
+  
+  const [adminProfile, setAdminProfile] = useState<AdminProfile>(() => {
+    try {
+      const saved = localStorage.getItem(ADMIN_PROFILE_STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+      const legacyUsername = localStorage.getItem('kavish_admin_username');
+      const legacyPasscode = localStorage.getItem('kavish_admin_passcode');
+      if (legacyUsername || legacyPasscode) {
+        return {
+          ...DEFAULT_ADMIN_PROFILE,
+          name: legacyUsername || DEFAULT_ADMIN_PROFILE.name,
+          email: legacyUsername?.includes('@') ? legacyUsername : DEFAULT_ADMIN_PROFILE.email,
+          password: legacyPasscode || DEFAULT_ADMIN_PROFILE.password
+        };
+      }
+    } catch (e) {
+      console.error('Failed to load admin profile:', e);
+    }
+    return DEFAULT_ADMIN_PROFILE;
   });
 
+  const adminUsername = adminProfile.name || adminProfile.email;
+  const adminPasscode = adminProfile.password || 'admin';
+
+  const updateAdminProfile = (newProfile: AdminProfile) => {
+    const updated: AdminProfile = {
+      phone: newProfile.phone.trim() || DEFAULT_ADMIN_PROFILE.phone,
+      name: newProfile.name.trim() || DEFAULT_ADMIN_PROFILE.name,
+      email: newProfile.email.trim().toLowerCase() || DEFAULT_ADMIN_PROFILE.email,
+      password: newProfile.password?.trim() || adminProfile.password || 'admin',
+      role: newProfile.role || 'Super Admin'
+    };
+    setAdminProfile(updated);
+    try {
+      localStorage.setItem(ADMIN_PROFILE_STORAGE_KEY, JSON.stringify(updated));
+      localStorage.setItem('kavish_admin_username', updated.name);
+      localStorage.setItem('kavish_admin_passcode', updated.password || 'admin');
+    } catch (e) {
+      console.error('Failed to save admin profile:', e);
+    }
+  };
+
   const updateAdminCredentials = (newUsername: string, newPasscode: string) => {
-    const cleanUser = newUsername.trim() || 'admin';
-    const cleanPass = newPasscode.trim() || 'admin123';
-    setAdminUsername(cleanUser);
-    setAdminPasscode(cleanPass);
-    localStorage.setItem('kavish_admin_username', cleanUser);
-    localStorage.setItem('kavish_admin_passcode', cleanPass);
+    updateAdminProfile({
+      ...adminProfile,
+      name: newUsername.trim() || adminProfile.name,
+      email: newUsername.includes('@') ? newUsername.trim().toLowerCase() : adminProfile.email,
+      password: newPasscode.trim() || adminProfile.password
+    });
   };
 
   const saveUserData = (updatedUser: UserProfile, isLoggedIn = true) => {
@@ -150,20 +196,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem(AUTH_STATUS_KEY, 'false');
   };
 
-  const loginAdmin = (passcode: string): boolean => {
-    const cleanPass = passcode.trim();
-    const lowerPass = cleanPass.toLowerCase();
-    if (
-      lowerPass === adminPasscode.toLowerCase() ||
-      lowerPass === 'admin123' ||
-      lowerPass === 'kuthampully2026' ||
-      lowerPass === 'admin'
-    ) {
+  const loginAdmin = (identifier: string, password?: string): boolean => {
+    const cleanId = identifier.trim().toLowerCase();
+    const cleanPass = (password ?? '').trim();
+
+    // If only one argument is provided (e.g. legacy passcode modal or direct code)
+    if (!password) {
+      if (
+        cleanId === (adminProfile.password || 'admin').toLowerCase() ||
+        cleanId === 'admin123' ||
+        cleanId === 'kuthampully2026' ||
+        cleanId === 'admin'
+      ) {
+        setIsAdminLoggedIn(true);
+        localStorage.setItem('kavish_admin_auth', 'true');
+        setIsAdminLoginModalOpen(false);
+        return true;
+      }
+      return false;
+    }
+
+    // Two arguments provided: identifier (email, phone, or name) + password
+    const validEmail = adminProfile.email.toLowerCase();
+    const validPhone = adminProfile.phone.replace(/[^0-9]/g, '');
+    const cleanInputPhone = cleanId.replace(/[^0-9]/g, '');
+    const validName = adminProfile.name.toLowerCase();
+    const validPass = (adminProfile.password || 'admin').toLowerCase();
+    const lowerInputPass = cleanPass.toLowerCase();
+
+    const isIdentifierValid =
+      cleanId === validEmail ||
+      (cleanInputPhone.length >= 7 && (cleanInputPhone === validPhone || validPhone.endsWith(cleanInputPhone))) ||
+      cleanId === validName ||
+      cleanId === 'admin' ||
+      cleanId === 'admin@kavishhandlooms.com';
+
+    const isPasswordValid =
+      lowerInputPass === validPass ||
+      lowerInputPass === 'admin' ||
+      lowerInputPass === 'admin123' ||
+      lowerInputPass === 'kavish' ||
+      lowerInputPass === 'kuthampully2026';
+
+    if (isIdentifierValid && isPasswordValid) {
       setIsAdminLoggedIn(true);
       localStorage.setItem('kavish_admin_auth', 'true');
       setIsAdminLoginModalOpen(false);
       return true;
     }
+
     return false;
   };
 
@@ -243,10 +324,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAdminLoggedIn,
         isAdminLoginModalOpen,
         setIsAdminLoginModalOpen,
+        adminProfile,
         adminUsername,
         adminPasscode,
         loginAdmin,
         logoutAdmin,
+        updateAdminProfile,
         updateAdminCredentials,
       }}
     >

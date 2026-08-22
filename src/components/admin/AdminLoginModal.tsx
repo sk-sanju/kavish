@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, Lock, ShieldCheck, ArrowRight, AlertCircle } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { X, Lock, Mail, ShieldCheck, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 interface AdminLoginModalProps {
@@ -7,8 +8,10 @@ interface AdminLoginModalProps {
 }
 
 export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ onAdminLoginSuccess }) => {
-  const { isAdminLoginModalOpen, setIsAdminLoginModalOpen, loginAdmin } = useAuth();
-  const [passcode, setPasscode] = useState('');
+  const { isAdminLoginModalOpen, setIsAdminLoginModalOpen, loginAdmin, adminProfile } = useAuth();
+  const [emailOrPhone, setEmailOrPhone] = useState(adminProfile.email || 'admin@kavishhandlooms.com');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   if (!isAdminLoginModalOpen) return null;
@@ -16,26 +19,26 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ onAdminLoginSu
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
-    const success = loginAdmin(passcode);
+    const success = loginAdmin(emailOrPhone, password);
     if (success) {
-      setPasscode('');
+      setPassword('');
       onAdminLoginSuccess();
     } else {
-      setErrorMsg('Invalid Admin Passcode. Use "admin123" or "admin".');
+      setErrorMsg('Invalid email/phone or password credentials.');
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
-      <div className="bg-[#FAF8F1] w-full max-w-md border border-[#D4AF37] shadow-2xl rounded-3xl p-6 sm:p-8 relative">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+      <div className="bg-[#FAF8F1] w-full max-w-md border border-[#D4AF37] shadow-2xl rounded-3xl p-6 sm:p-8 relative my-auto">
         
         <button
           onClick={() => {
             setIsAdminLoginModalOpen(false);
             setErrorMsg('');
-            setPasscode('');
+            setPassword('');
           }}
-          className="absolute top-4 right-4 text-[#12372A] hover:text-[#D4AF37] w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-xs transition-colors"
+          className="absolute top-4 right-4 text-[#12372A] hover:text-[#D4AF37] w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-xs transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -63,28 +66,45 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ onAdminLoginSu
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block text-[#6B5846] font-semibold mb-1">Admin Passcode *</label>
+            <label className="block text-[#6B5846] font-semibold mb-1">Admin Email / Phone (PK) *</label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+              <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
               <input
-                type="password"
+                type="text"
                 required
-                placeholder="Enter passcode (e.g. admin123)"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                className="w-full border border-[#E8DDC7] pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-[#D4AF37] bg-white text-xs font-mono"
+                placeholder="admin@kavishhandlooms.com or phone"
+                value={emailOrPhone}
+                onChange={(e) => setEmailOrPhone(e.target.value)}
+                className="w-full border border-[#E8DDC7] pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-[#D4AF37] bg-white text-xs text-[#12372A]"
               />
             </div>
           </div>
 
-          <div className="bg-[#12372A]/5 p-3 rounded-xl text-[11px] text-[#12372A] flex items-center justify-between border border-[#D4AF37]/30">
-            <span>Demo Passcode:</span>
-            <code className="bg-[#12372A] text-[#D4AF37] px-2 py-0.5 rounded font-mono font-bold">admin123</code>
+          <div>
+            <label className="block text-[#6B5846] font-semibold mb-1">Admin Password *</label>
+            <div className="relative">
+              <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border border-[#E8DDC7] pl-10 pr-10 py-3 rounded-xl focus:outline-none focus:border-[#D4AF37] bg-white text-xs font-mono"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-gray-400 hover:text-[#12372A] p-0.5 cursor-pointer"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
 
           <button
             type="submit"
-            className="w-full bg-[#12372A] text-[#FAF8F1] hover:bg-[#D4AF37] hover:text-[#12372A] py-3.5 text-xs font-bold uppercase tracking-widest transition-all rounded-xl flex items-center justify-center gap-2 border border-[#D4AF37] shadow-md"
+            className="w-full bg-[#12372A] text-[#FAF8F1] hover:bg-[#D4AF37] hover:text-[#12372A] py-3.5 text-xs font-bold uppercase tracking-widest transition-all rounded-xl flex items-center justify-center gap-2 border border-[#D4AF37] shadow-md cursor-pointer"
           >
             <span>Authenticate as Admin</span>
             <ArrowRight className="w-4 h-4" />
@@ -92,6 +112,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ onAdminLoginSu
         </form>
 
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

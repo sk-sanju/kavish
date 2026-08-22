@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Key, CreditCard, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { CreditCard, ShieldCheck, CheckCircle2, User, Mail, Phone, Lock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { 
   getRazorpayKey, 
@@ -9,10 +9,14 @@ import {
 } from '../../utils/razorpay';
 
 export const SettingsManagement: React.FC = () => {
-  const { adminUsername, adminPasscode, updateAdminCredentials } = useAuth();
+  const { adminProfile, updateAdminProfile } = useAuth();
 
-  const [newUsernameInput, setNewUsernameInput] = useState(adminUsername);
-  const [newPasscodeInput, setNewPasscodeInput] = useState(adminPasscode);
+  const [adminName, setAdminName] = useState(adminProfile.name || 'Kavish Master Admin');
+  const [adminEmail, setAdminEmail] = useState(adminProfile.email || 'admin@kavishhandlooms.com');
+  const [adminPhone, setAdminPhone] = useState(adminProfile.phone || '+91 98470 12345');
+  const [adminPassword, setAdminPassword] = useState(adminProfile.password || 'admin');
+  const [adminSaveSuccess, setAdminSaveSuccess] = useState(false);
+
   const [razorpayKeyId, setRazorpayKeyId] = useState(getRazorpayKey());
   const [razorpaySecret, setRazorpaySecret] = useState(getRazorpaySecret());
   const [razorpayLinkInput, setRazorpayLinkInput] = useState(getRazorpayPayLink());
@@ -22,14 +26,21 @@ export const SettingsManagement: React.FC = () => {
   const [gstinInput, setGstinInput] = useState('32AAACK1234F1Z8');
   const [contactPhoneInput, setContactPhoneInput] = useState('+91 98470 12345');
 
-  const handleSaveCredentials = (e: React.FormEvent) => {
+  const handleSaveAdminProfile = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newUsernameInput.trim() || !newPasscodeInput.trim()) {
-      alert('Username and Passcode cannot be empty.');
+    if (!adminEmail.trim() || !adminPhone.trim()) {
+      alert('Admin Email and Primary Phone (PK) cannot be empty.');
       return;
     }
-    updateAdminCredentials(newUsernameInput.trim(), newPasscodeInput.trim());
-    alert('Admin Credentials & Security Passcode updated successfully!');
+    updateAdminProfile({
+      name: adminName.trim(),
+      email: adminEmail.trim(),
+      phone: adminPhone.trim(),
+      password: adminPassword.trim(),
+      role: 'Super Admin'
+    });
+    setAdminSaveSuccess(true);
+    setTimeout(() => setAdminSaveSuccess(false), 3000);
   };
 
   const handleSaveRazorpay = (e: React.FormEvent) => {
@@ -131,48 +142,101 @@ export const SettingsManagement: React.FC = () => {
         </form>
       </div>
 
-      {/* Admin Passcode & Login Details Card */}
-      <div className="bg-white p-6 rounded-2xl shadow-md space-y-4">
-        <div className="flex items-center gap-2">
-          <Key className="w-5 h-5 text-[#D4AF37]" />
-          <h3 className="font-serif font-bold text-lg text-[#12372A]">🔐 Admin Login Details &amp; Security Passcode</h3>
+      {/* Admin Profile & Security Credentials Card */}
+      <div className="bg-white p-6 rounded-2xl shadow-md space-y-4 border-2 border-[#D4AF37]/30">
+        <div className="flex items-center justify-between border-b border-[#E8DDC7] pb-3">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-[#12372A]" />
+            <h3 className="font-serif font-bold text-lg text-[#12372A]">👑 Admin Profile &amp; Login Credentials</h3>
+          </div>
+          <span className="text-[10px] font-bold text-[#D4AF37] uppercase bg-[#12372A] px-2.5 py-1 rounded-full font-mono">
+            Super Admin Account
+          </span>
         </div>
 
         <p className="text-xs text-[#6B5846]">
-          Update the Staff Account ID and Passcode used to sign into the internal Admin Console (`/admin/login`).
+          Configure the Master Admin profile details (Full Name, Official Email, Primary Phone as Unique Identifier, and Security Password) used to authenticate at <code className="bg-[#FAF8F1] px-1 py-0.5 rounded text-[#12372A] font-mono">/admin/login</code>.
         </p>
 
-        <form onSubmit={handleSaveCredentials} className="space-y-4 text-xs">
+        <form onSubmit={handleSaveAdminProfile} className="space-y-4 text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold text-[#6B5846] mb-1">Admin Staff Username ID</label>
+              <label className="block font-semibold text-[#6B5846] mb-1 flex items-center gap-1">
+                <User className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>Admin Full Name *</span>
+              </label>
               <input
                 type="text"
                 required
-                value={newUsernameInput}
-                onChange={(e) => setNewUsernameInput(e.target.value)}
+                value={adminName}
+                onChange={(e) => setAdminName(e.target.value)}
+                placeholder="e.g. Kavish Master Admin"
                 className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-[#6B5846] mb-1">Security Login Passcode</label>
+              <label className="block font-semibold text-[#6B5846] mb-1 flex items-center gap-1">
+                <Mail className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>Official Email Address *</span>
+              </label>
+              <input
+                type="email"
+                required
+                value={adminEmail}
+                onChange={(e) => setAdminEmail(e.target.value)}
+                placeholder="admin@kavishhandlooms.com"
+                className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-[#6B5846] mb-1 flex items-center gap-1">
+                <Phone className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>Primary Mobile Phone (PK - Primary Key) *</span>
+              </label>
               <input
                 type="text"
                 required
-                value={newPasscodeInput}
-                onChange={(e) => setNewPasscodeInput(e.target.value)}
+                value={adminPhone}
+                onChange={(e) => setAdminPhone(e.target.value)}
+                placeholder="+91 98470 12345"
+                className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-mono font-bold text-[#12372A]"
+              />
+              <span className="text-[10px] text-gray-500 mt-1 block">Primary key identifier for administrative database records &amp; OTP recovery.</span>
+            </div>
+
+            <div>
+              <label className="block font-semibold text-[#6B5846] mb-1 flex items-center gap-1">
+                <Lock className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>Security Login Password *</span>
+              </label>
+              <input
+                type="password"
+                required
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+                placeholder="••••••••"
                 className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-mono text-sm font-bold text-[#12372A]"
               />
+              <span className="text-[10px] text-gray-500 mt-1 block">Staff passcode used to unlock the internal console.</span>
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="bg-[#12372A] text-[#FAF8F1] px-5 py-2.5 rounded-xl font-bold uppercase text-xs border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-xs cursor-pointer"
-          >
-            Save New Admin Credentials
-          </button>
+          <div className="flex items-center gap-3 pt-2">
+            <button
+              type="submit"
+              className="bg-[#12372A] text-[#FAF8F1] px-5 py-3 rounded-xl font-bold uppercase text-xs border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-xs cursor-pointer"
+            >
+              Save Admin Profile &amp; Credentials
+            </button>
+
+            {adminSaveSuccess && (
+              <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 flex items-center gap-1 animate-fadeIn">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Admin profile &amp; login credentials updated!
+              </span>
+            )}
+          </div>
         </form>
       </div>
 

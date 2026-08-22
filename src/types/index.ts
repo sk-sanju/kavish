@@ -269,6 +269,14 @@ export interface AdminUser {
   lastLogin?: string;
 }
 
+export interface AdminProfile {
+  phone: string; // Primary Key (PK)
+  name: string;
+  email: string;
+  password?: string;
+  role?: string;
+}
+
 export interface StoreNotification {
   id: string;
   title: string;

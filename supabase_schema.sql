@@ -156,14 +156,15 @@ CREATE TABLE IF NOT EXISTS public.store_content (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 9. ADMIN USERS TABLE
+-- 9. ADMIN USERS TABLE (Primary Key: phone_number)
 CREATE TABLE IF NOT EXISTS public.admin_users (
-  id TEXT PRIMARY KEY,
+  phone_number TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL,
-  role TEXT NOT NULL,
+  password TEXT NOT NULL,
+  role TEXT DEFAULT 'Super Admin',
   status TEXT DEFAULT 'Active',
-  permissions JSONB DEFAULT '[]'::jsonb,
+  permissions JSONB DEFAULT '["all"]'::jsonb,
   last_login TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
