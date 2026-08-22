@@ -28,6 +28,7 @@ interface AuthContextType {
   adminUsername: string;
   adminPasscode: string;
   loginAdmin: (identifier: string, password?: string) => boolean;
+  registerAdmin: (name: string, email: string, phone: string, password: string, role?: string) => boolean;
   logoutAdmin: () => void;
   updateAdminProfile: (profile: AdminProfile) => void;
   updateAdminCredentials: (newUsername: string, newPasscode: string) => void;
@@ -53,6 +54,7 @@ const DEFAULT_ADMIN_PROFILE: AdminProfile = {
 const USER_STORAGE_KEY = 'kavish_customer_profile';
 const AUTH_STATUS_KEY = 'kavish_customer_auth_status';
 const ADMIN_PROFILE_STORAGE_KEY = 'kavish_admin_profile_v2';
+const ADMIN_ACCOUNTS_STORAGE_KEY = 'kavish_all_admin_accounts_v1';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -106,6 +108,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const adminUsername = adminProfile.name || adminProfile.email;
   const adminPasscode = adminProfile.password || 'admin';
 
+  const getStoredAdminAccounts = (): AdminProfile[] => {
+    try {
+      const list = localStorage.getItem(ADMIN_ACCOUNTS_STORAGE_KEY);
+      if (list) return JSON.parse(list);
+    } catch (e) {
+      console.error(e);
+    }
+    return [DEFAULT_ADMIN_PROFILE];
+  };
+
   const updateAdminProfile = (newProfile: AdminProfile) => {
     const updated: AdminProfile = {
       phone: newProfile.phone.trim() || DEFAULT_ADMIN_PROFILE.phone,
@@ -119,9 +131,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem(ADMIN_PROFILE_STORAGE_KEY, JSON.stringify(updated));
       localStorage.setItem('kavish_admin_username', updated.name);
       localStorage.setItem('kavish_admin_passcode', updated.password || 'admin');
+
+      // Update accounts directory
+      const accounts = getStoredAdminAccounts();
+      const existingIdx = accounts.findIndex(a => a.phone === updated.phone || a.email === updated.email);
+      if (existingIdx >= 0) {
+        accounts[existingIdx] = updated;
+      } else {
+        accounts.push(updated);
+      }
+      localStorage.setItem(ADMIN_ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts));
     } catch (e) {
       console.error('Failed to save admin profile:', e);
     }
+  };
+
+  const registerAdmin = (
+    name: string,
+    email: string,
+    phone: string,
+    password: string,
+    role: string = 'Super Admin'
+  ): boolean => {
+    const newAdmin: AdminProfile = {
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      phone: phone.trim(),
+      password: password.trim(),
+      role: role || 'Super Admin'
+    };
+    updateAdminProfile(newAdmin);
+    setIsAdminLoggedIn(true);
+    localStorage.setItem('kavish_admin_auth', 'true');
+    setIsAdminLoginModalOpen(false);
+    return true;
   };
 
   const updateAdminCredentials = (newUsername: string, newPasscode: string) => {
@@ -216,29 +259,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     }
 
-    // Two arguments provided: identifier (email, phone, or name) + password
-    const validEmail = adminProfile.email.toLowerCase();
-    const validPhone = adminProfile.phone.replace(/[^0-9]/g, '');
+    // Check against all registered admin accounts
+    const accounts = getStoredAdminAccounts();
     const cleanInputPhone = cleanId.replace(/[^0-9]/g, '');
-    const validName = adminProfile.name.toLowerCase();
-    const validPass = (adminProfile.password || 'admin').toLowerCase();
     const lowerInputPass = cleanPass.toLowerCase();
 
-    const isIdentifierValid =
-      cleanId === validEmail ||
-      (cleanInputPhone.length >= 7 && (cleanInputPhone === validPhone || validPhone.endsWith(cleanInputPhone))) ||
-      cleanId === validName ||
-      cleanId === 'admin' ||
-      cleanId === 'admin@kavishhandlooms.com';
+    for (const acc of accounts) {
+      const validEmail = acc.email.toLowerCase();
+      const validPhone = acc.phone.replace(/[^0-9]/g, '');
+      const validName = acc.name.toLowerCase();
+      const validPass = (acc.password || 'admin').toLowerCase();
 
-    const isPasswordValid =
-      lowerInputPass === validPass ||
-      lowerInputPass === 'admin' ||
-      lowerInputPass === 'admin123' ||
-      lowerInputPass === 'kavish' ||
-      lowerInputPass === 'kuthampully2026';
+      const isMatch =
+        cleanId === validEmail ||
+        (cleanInputPhone.length >= 7 && (cleanInputPhone === validPhone || validPhone.endsWith(cleanInputPhone))) ||
+        cleanId === validName;
 
-    if (isIdentifierValid && isPasswordValid) {
+      const isPassCorrect =
+        lowerInputPass === validPass ||
+        lowerInputPass === 'admin' ||
+        lowerInputPass === 'admin123' ||
+        lowerInputPass === 'kavish' ||
+        lowerInputPass === 'kuthampully2026';
+
+      if (isMatch && isPassCorrect) {
+        setAdminProfile(acc);
+        localStorage.setItem(ADMIN_PROFILE_STORAGE_KEY, JSON.stringify(acc));
+        localStorage.setItem('kavish_admin_username', acc.name);
+        localStorage.setItem('kavish_admin_passcode', acc.password || 'admin');
+        setIsAdminLoggedIn(true);
+        localStorage.setItem('kavish_admin_auth', 'true');
+        setIsAdminLoginModalOpen(false);
+        return true;
+      }
+    }
+
+    // Fallback for default master credentials
+    if (
+      (cleanId === 'admin' || cleanId === 'admin@kavishhandlooms.com') &&
+      (lowerInputPass === 'admin' || lowerInputPass === 'admin123' || lowerInputPass === 'kavish')
+    ) {
       setIsAdminLoggedIn(true);
       localStorage.setItem('kavish_admin_auth', 'true');
       setIsAdminLoginModalOpen(false);
@@ -328,6 +388,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         adminUsername,
         adminPasscode,
         loginAdmin,
+        registerAdmin,
         logoutAdmin,
         updateAdminProfile,
         updateAdminCredentials,
