@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, X } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';
 import { useAdmin } from '../../context/AdminContext';
@@ -217,9 +218,9 @@ export const InventoryManagement: React.FC = () => {
       </div>
 
       {/* Stock Adjustment Modal */}
-      {showAdjustModal && selectedProduct && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[85vh]">
+      {showAdjustModal && selectedProduct && createPortal(
+        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh] my-auto">
             
             {/* Modal Header */}
             <div className="p-5 bg-[#12372A] text-[#FAF8F1] flex items-center justify-between shrink-0">
@@ -307,7 +308,8 @@ export const InventoryManagement: React.FC = () => {
             </div>
 
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Plus, Edit, Trash2, CheckCircle2, XCircle, X } from 'lucide-react';
 import type { CategoryItem, ProductCategory } from '../../types';
 import { useProducts } from '../../context/ProductContext';
@@ -134,8 +135,8 @@ export const CategoryManagement: React.FC = () => {
       </div>
 
       {/* Category Editor Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+      {showModal && createPortal(
+        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[85vh]">
             
             {/* Modal Fixed Header */}
@@ -239,7 +240,8 @@ export const CategoryManagement: React.FC = () => {
             </div>
 
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>
