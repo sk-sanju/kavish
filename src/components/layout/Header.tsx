@@ -17,7 +17,6 @@ export const Header: React.FC = () => {
   const { setIsSearchOpen, isMobileMenuOpen, setIsMobileMenuOpen } = useModal();
   const {
     isAdminLoggedIn,
-    setIsAdminLoginModalOpen,
     logoutAdmin,
     isCustomerLoggedIn,
     openCustomerAuthModal,
@@ -285,7 +284,7 @@ export const Header: React.FC = () => {
         <div className="lg:hidden fixed inset-0 top-[100px] sm:top-[110px] z-50 bg-[#FAF8F1] px-6 py-6 overflow-y-auto animate-fadeIn pb-24 shadow-2xl">
           <div className="flex flex-col space-y-4 font-sans text-sm tracking-wider uppercase font-semibold">
             
-            {isAdminLoggedIn ? (
+            {isAdminLoggedIn && (
               <div className="p-3 bg-[#12372A] text-[#D4AF37] rounded-xl flex items-center justify-between border border-[#D4AF37]">
                 <button
                   onClick={() => handleNavClick('admin')}
@@ -303,20 +302,7 @@ export const Header: React.FC = () => {
                   Logout
                 </button>
               </div>
-            ) : !isCustomerLoggedIn ? (
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  setIsAdminLoginModalOpen(true);
-                }}
-                className="text-left py-2.5 border-b border-[#E8DDC7] text-[#6B5846] flex justify-between items-center text-xs"
-              >
-                <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-[#D4AF37]" /> Admin Atelier Login
-                </span>
-                <span className="text-[10px] bg-[#E8DDC7]/50 text-[#12372A] px-2 py-0.5 rounded-full font-bold">Staff Only</span>
-              </button>
-            ) : null}
+            )}
 
             <button
               onClick={() => handleNavClick('shop', 'women')}

@@ -1,18 +1,21 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { Product, PromoOffer, Review } from '../types';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import type { Product, PromoOffer, Review, CategoryItem } from '../types';
 import { PRODUCTS as INITIAL_PRODUCTS } from '../data/products';
 import { INITIAL_OFFERS } from '../data/offers';
 import { COLLECTIONS as INITIAL_COLLECTIONS } from '../data/collections';
 import type { CollectionItem } from '../data/collections';
+import { INITIAL_CATEGORIES } from '../data/categories';
 import { REVIEWS as INITIAL_REVIEWS } from '../data/reviews';
 import {
   fetchSupabaseProducts, upsertSupabaseProduct, removeSupabaseProduct,
   fetchSupabaseOffers, upsertSupabaseOffer,
-  fetchSupabaseReviews, upsertSupabaseReview
+  fetchSupabaseReviews, upsertSupabaseReview,
+  fetchSupabaseCategories, upsertSupabaseCategory
 } from '../lib/supabase';
 
 interface ProductContextType {
   products: Product[];
+  categories: CategoryItem[];
   offers: PromoOffer[];
   collections: CollectionItem[];
   reviews: Review[];
@@ -23,6 +26,11 @@ interface ProductContextType {
   updateProduct: (product: Product) => void;
   deleteProduct: (id: string) => void;
   toggleStockStatus: (id: string) => void;
+
+  addCategory: (catForm: Partial<CategoryItem>) => CategoryItem;
+  updateCategory: (cat: CategoryItem) => void;
+  deleteCategory: (id: string) => void;
+  toggleCategoryStatus: (id: string) => void;
 
   addOffer: (offerForm: Partial<PromoOffer>) => PromoOffer;
   toggleOfferStatus: (id: string) => void;
@@ -42,6 +50,7 @@ interface ProductContextType {
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 const PRODUCTS_STORAGE_KEY = 'kavish_live_products_v1';
+const CATEGORIES_STORAGE_KEY = 'kavish_live_categories_v1';
 const OFFERS_STORAGE_KEY = 'kavish_live_offers_v1';
 const COLLECTIONS_STORAGE_KEY = 'kavish_live_collections_v1';
 const REVIEWS_STORAGE_KEY = 'kavish_live_reviews_v1';
@@ -59,6 +68,19 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       console.error('Failed to parse saved products:', e);
     }
     return INITIAL_PRODUCTS;
+  });
+
+  const [categories, setCategories] = useState<CategoryItem[]>(() => {
+    try {
+      const saved = localStorage.getItem(CATEGORIES_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.error('Failed to parse saved categories:', e);
+    }
+    return INITIAL_CATEGORIES;
   });
 
   const [offers, setOffers] = useState<PromoOffer[]>(() => {
@@ -104,59 +126,154 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return localStorage.getItem(ANNOUNCEMENT_STORAGE_KEY) || 'Complimentary Express Air Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified';
   });
 
+  // Cross-tab and window sync listener
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      try {
+        if (e.key === PRODUCTS_STORAGE_KEY && e.newValue) {
+          setProducts(JSON.parse(e.newValue));
+        } else if (e.key === CATEGORIES_STORAGE_KEY && e.newValue) {
+          setCategories(JSON.parse(e.newValue));
+        } else if (e.key === OFFERS_STORAGE_KEY && e.newValue) {
+          setOffers(JSON.parse(e.newValue));
+        } else if (e.key === COLLECTIONS_STORAGE_KEY && e.newValue) {
+          setCollections(JSON.parse(e.newValue));
+        } else if (e.key === ANNOUNCEMENT_STORAGE_KEY && e.newValue) {
+          setAnnouncementTextState(e.newValue);
+        }
+      } catch (err) {
+        console.error('Storage sync parse error:', err);
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   useEffect(() => {
     async function loadSupabaseData() {
-      const dbProducts = await fetchSupabaseProducts();
-      if (dbProducts && dbProducts.length > 0) setProducts(dbProducts);
+      // Only fallback to Supabase if localStorage had no customized items
+      const hasLocalProducts = Boolean(localStorage.getItem(PRODUCTS_STORAGE_KEY));
+      if (!hasLocalProducts) {
+        const dbProducts = await fetchSupabaseProducts();
+        if (dbProducts && dbProducts.length > 0) {
+          setProducts(dbProducts);
+          localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(dbProducts));
+        }
+      }
 
-      const dbOffers = await fetchSupabaseOffers();
-      if (dbOffers && dbOffers.length > 0) setOffers(dbOffers);
+      const hasLocalCategories = Boolean(localStorage.getItem(CATEGORIES_STORAGE_KEY));
+      if (!hasLocalCategories) {
+        const dbCategories = await fetchSupabaseCategories();
+        if (dbCategories && dbCategories.length > 0) {
+          setCategories(dbCategories);
+          localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbCategories));
+        }
+      }
 
-      const dbReviews = await fetchSupabaseReviews();
-      if (dbReviews && dbReviews.length > 0) setReviews(dbReviews);
+      const hasLocalOffers = Boolean(localStorage.getItem(OFFERS_STORAGE_KEY));
+      if (!hasLocalOffers) {
+        const dbOffers = await fetchSupabaseOffers();
+        if (dbOffers && dbOffers.length > 0) {
+          setOffers(dbOffers);
+          localStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(dbOffers));
+        }
+      }
+
+      const hasLocalReviews = Boolean(localStorage.getItem(REVIEWS_STORAGE_KEY));
+      if (!hasLocalReviews) {
+        const dbReviews = await fetchSupabaseReviews();
+        if (dbReviews && dbReviews.length > 0) {
+          setReviews(dbReviews);
+          localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(dbReviews));
+        }
+      }
     }
     loadSupabaseData();
   }, []);
 
-  const saveProducts = (newProducts: Product[]) => {
+  const saveProducts = useCallback((newProducts: Product[]) => {
     setProducts(newProducts);
     try {
       localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(newProducts));
     } catch (e) {
       console.error('Failed to save products:', e);
     }
-  };
+  }, []);
 
-  const saveOffers = (newOffers: PromoOffer[]) => {
+  const saveCategories = useCallback((newCategories: CategoryItem[]) => {
+    setCategories(newCategories);
+    try {
+      localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(newCategories));
+    } catch (e) {
+      console.error('Failed to save categories:', e);
+    }
+  }, []);
+
+  const saveOffers = useCallback((newOffers: PromoOffer[]) => {
     setOffers(newOffers);
     try {
       localStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(newOffers));
     } catch (e) {
       console.error('Failed to save offers:', e);
     }
-  };
+  }, []);
 
-  const saveCollections = (newCollections: CollectionItem[]) => {
+  const saveCollections = useCallback((newCollections: CollectionItem[]) => {
     setCollections(newCollections);
     try {
       localStorage.setItem(COLLECTIONS_STORAGE_KEY, JSON.stringify(newCollections));
     } catch (e) {
       console.error('Failed to save collections:', e);
     }
-  };
+  }, []);
 
-  const saveReviews = (newReviews: Review[]) => {
+  const saveReviews = useCallback((newReviews: Review[]) => {
     setReviews(newReviews);
     try {
       localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(newReviews));
     } catch (e) {
       console.error('Failed to save reviews:', e);
     }
-  };
+  }, []);
 
   const setAnnouncementText = (text: string) => {
     setAnnouncementTextState(text);
     localStorage.setItem(ANNOUNCEMENT_STORAGE_KEY, text);
+  };
+
+  const addCategory = (catForm: Partial<CategoryItem>): CategoryItem => {
+    const newCat: CategoryItem = {
+      id: `cat-${Date.now()}`,
+      name: catForm.name || 'New Category',
+      parentCategory: catForm.parentCategory || 'women',
+      slug: catForm.slug || catForm.name?.toLowerCase().replace(/\s+/g, '-') || `cat-${Date.now()}`,
+      image: catForm.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80',
+      description: catForm.description || '',
+      seoTitle: catForm.seoTitle || catForm.name || '',
+      seoDescription: catForm.seoDescription || '',
+      status: catForm.status || 'Active',
+      productCount: catForm.productCount || 0
+    };
+    const updated = [...categories, newCat];
+    saveCategories(updated);
+    upsertSupabaseCategory(newCat);
+    return newCat;
+  };
+
+  const updateCategory = (updatedCat: CategoryItem): void => {
+    const updated = categories.map((c) => (c.id === updatedCat.id ? { ...updatedCat } : c));
+    saveCategories(updated);
+    upsertSupabaseCategory(updatedCat);
+  };
+
+  const deleteCategory = (id: string): void => {
+    const updated = categories.filter((c) => c.id !== id);
+    saveCategories(updated);
+  };
+
+  const toggleCategoryStatus = (id: string): void => {
+    const updated = categories.map((c) => (c.id === id ? { ...c, status: c.status === 'Active' ? 'Disabled' : 'Active' } as CategoryItem : c));
+    saveCategories(updated);
   };
 
   const addProduct = (productForm: Partial<Product>): Product => {
@@ -304,6 +421,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     saveOffers(INITIAL_OFFERS);
     saveCollections(INITIAL_COLLECTIONS);
     saveReviews(INITIAL_REVIEWS);
+    saveCategories(INITIAL_CATEGORIES);
     setAnnouncementText('Complimentary Express Air Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified');
   };
 
@@ -311,6 +429,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     <ProductContext.Provider
       value={{
         products,
+        categories,
         offers,
         collections,
         reviews,
@@ -320,6 +439,10 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         updateProduct,
         deleteProduct,
         toggleStockStatus,
+        addCategory,
+        updateCategory,
+        deleteCategory,
+        toggleCategoryStatus,
         addOffer,
         toggleOfferStatus,
         deleteOffer,

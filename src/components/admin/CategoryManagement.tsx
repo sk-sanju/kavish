@@ -1,84 +1,13 @@
 import React, { useState } from 'react';
 import { Plus, Edit, Trash2, CheckCircle2, XCircle, X } from 'lucide-react';
 import type { CategoryItem, ProductCategory } from '../../types';
+import { useProducts } from '../../context/ProductContext';
+import { INITIAL_CATEGORIES } from '../../data/categories';
 
-export const DEFAULT_CATEGORIES: CategoryItem[] = [
-  {
-    id: 'cat-kasavu-sarees',
-    name: 'Kasavu Sarees',
-    parentCategory: 'women',
-    slug: 'kasavu-sarees',
-    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80',
-    description: 'Authentic GI Tagged Kuthampully Kasavu sarees with pure electroplated 24k gold zari borders.',
-    seoTitle: 'Buy Authentic Kuthampully Kasavu Sarees Online | Kavish',
-    seoDescription: 'Handcrafted GI certified Kerala Kasavu sarees directly from master weavers in Kuthampully.',
-    status: 'Active',
-    productCount: 18
-  },
-  {
-    id: 'cat-set-mundu',
-    name: 'Set Mundu & Kerala Drapes',
-    parentCategory: 'women',
-    slug: 'set-mundu',
-    image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=80',
-    description: 'Traditional two-piece Kerala Mundum Neriyathum drapes woven with pure organic cotton.',
-    seoTitle: 'Pure Cotton Set Mundu & Mundum Neriyathum | Kavish Kerala',
-    seoDescription: 'Shop handcrafted traditional Kerala Set Mundu for Onam, Vishu, and temple rituals.',
-    status: 'Active',
-    productCount: 12
-  },
-  {
-    id: 'cat-double-mundu',
-    name: 'Double Kasavu Mundu',
-    parentCategory: 'men',
-    slug: 'double-mundu',
-    image: 'https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=600&q=80',
-    description: 'Classic 4-meter ceremonial double dhotis crafted on heritage pit looms in Thrissur.',
-    seoTitle: 'Men’s Double Kasavu Mundu & Traditional Dhoti | Kavish',
-    seoDescription: 'Premium double kasavu mundu for grooms, festivals, and ceremonial occasions.',
-    status: 'Active',
-    productCount: 14
-  },
-  {
-    id: 'cat-linen-shirts',
-    name: 'Pure Flax Linen Shirts',
-    parentCategory: 'men',
-    slug: 'linen-shirts',
-    image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80',
-    description: '100% pure organic European flax linen shirts tailored for understated modern luxury.',
-    seoTitle: 'Luxury Organic Linen Shirts for Men | Kavish Kerala Atelier',
-    seoDescription: 'Breathable, tailored European flax linen shirts pairing perfectly with Kasavu dhotis.',
-    status: 'Active',
-    productCount: 16
-  },
-  {
-    id: 'cat-kids-kasavu',
-    name: 'Pattu Pavada & Kasavu Frocks',
-    parentCategory: 'kids',
-    slug: 'kids-kasavu',
-    image: 'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?auto=format&fit=crop&w=600&q=80',
-    description: 'Delicate heritage festive wear and pure cotton kasavu dresses for infants and children.',
-    seoTitle: 'Kids Kasavu Dresses & Traditional Kerala Wear | Kavish',
-    seoDescription: 'Handcrafted, soft cotton traditional pattu pavada and kasavu shirts for kids.',
-    status: 'Active',
-    productCount: 9
-  },
-  {
-    id: 'cat-bridal-tissue',
-    name: 'Bridal Tissue Kasavu Editions',
-    parentCategory: 'women',
-    slug: 'bridal-tissue',
-    image: 'https://images.unsplash.com/photo-1583391733975-00c50d31062f?auto=format&fit=crop&w=600&q=80',
-    description: 'Regal full-tissue wedding sarees featuring antique motifs inspired by Travancore royalty.',
-    seoTitle: 'Royal Kerala Bridal Tissue Kasavu Sarees | Kavish Luxury',
-    seoDescription: 'Exclusive heirloom bridal Kasavu collection crafted by fifth-generation master weavers.',
-    status: 'Active',
-    productCount: 8
-  }
-];
+export const DEFAULT_CATEGORIES = INITIAL_CATEGORIES;
 
 export const CategoryManagement: React.FC = () => {
-  const [categories, setCategories] = useState<CategoryItem[]>(DEFAULT_CATEGORIES);
+  const { categories, addCategory, updateCategory, deleteCategory, toggleCategoryStatus } = useProducts();
 
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState<CategoryItem | null>(null);
@@ -96,33 +25,21 @@ export const CategoryManagement: React.FC = () => {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (editingCategory) {
-      setCategories(categories.map(c => c.id === editingCategory.id ? { ...editingCategory, ...form } as CategoryItem : c));
+      updateCategory({ ...editingCategory, ...form } as CategoryItem);
     } else {
-      const newCat: CategoryItem = {
-        id: `cat-${Date.now()}`,
-        name: form.name || 'New Category',
-        parentCategory: form.parentCategory || 'women',
-        slug: form.slug || form.name?.toLowerCase().replace(/\s+/g, '-') || `cat-${Date.now()}`,
-        image: form.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80',
-        description: form.description || '',
-        seoTitle: form.seoTitle || form.name || '',
-        seoDescription: form.seoDescription || '',
-        status: form.status || 'Active',
-        productCount: 0
-      };
-      setCategories([...categories, newCat]);
+      addCategory(form);
     }
     setShowModal(false);
     setEditingCategory(null);
   };
 
   const handleToggleStatus = (id: string) => {
-    setCategories(categories.map(c => c.id === id ? { ...c, status: c.status === 'Active' ? 'Disabled' : 'Active' } : c));
+    toggleCategoryStatus(id);
   };
 
   const handleDelete = (id: string) => {
     if (window.confirm('Are you sure you want to delete this category?')) {
-      setCategories(categories.filter(c => c.id !== id));
+      deleteCategory(id);
     }
   };
 

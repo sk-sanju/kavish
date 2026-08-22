@@ -23,7 +23,7 @@ const FacebookIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" 
 );
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
-  const { isAdminLoggedIn, isCustomerLoggedIn, setIsAdminLoginModalOpen } = useAuth();
+  const { isAdminLoggedIn } = useAuth();
   const { formatPrice } = useCurrency();
 
   return (
@@ -124,25 +124,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li><button onClick={() => onNavigate('account')} className="hover:text-[#D4AF37]">My Account &amp; Orders</button></li>
               <li><button onClick={() => onNavigate('contact')} className="hover:text-[#D4AF37]">Bespoke Bridal Consultations</button></li>
               
-              {/* Separate Admin Authentication Trigger - Hidden for logged in customers */}
-              {!isCustomerLoggedIn && (
+              {/* Admin Control Center - Only displayed when logged in as admin */}
+              {isAdminLoggedIn && (
                 <li className="pt-2">
-                  {isAdminLoggedIn ? (
-                    <button
-                      onClick={() => onNavigate('admin')}
-                      className="text-[#D4AF37] font-bold hover:underline flex items-center gap-1"
-                    >
-                      <ShieldCheck className="w-3.5 h-3.5" /> Admin Control Center
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setIsAdminLoginModalOpen(true)}
-                      className="text-[#E8DDC7]/60 hover:text-[#D4AF37] flex items-center gap-1.5 text-[11px]"
-                    >
-                      <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
-                      <span>Atelier Staff Admin Portal</span>
-                    </button>
-                  )}
+                  <button
+                    onClick={() => onNavigate('admin')}
+                    className="text-[#D4AF37] font-bold hover:underline flex items-center gap-1"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5" /> Admin Control Center
+                  </button>
                 </li>
               )}
             </ul>
