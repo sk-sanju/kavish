@@ -31,8 +31,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
   };
 
   const [shippingAddress, setShippingAddress] = useState<Address>(defaultAddr);
-  const [shippingOption, setShippingOption] = useState<'standard' | 'gift'>('standard');
-  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'netbanking' | 'cod'>('upi');
+  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'netbanking'>('upi');
   const [placedOrder, setPlacedOrder] = useState<Order | null>(null);
 
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
@@ -70,12 +69,6 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
 
   const handleProcessPayment = () => {
     setPaymentError(null);
-
-    if (paymentMethod === 'cod') {
-      finalizeOrder('Cash on Delivery (COD)');
-      return;
-    }
-
     setIsProcessingPayment(true);
 
     initializeRazorpayPayment({
@@ -262,24 +255,30 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
                   <h3 className="font-serif text-lg sm:text-xl font-bold text-[#12372A]">2. Delivery Method</h3>
                   
                   <div className="space-y-3 text-xs">
-                    <label className={`p-4 border rounded-xl block cursor-pointer transition-all ${shippingOption === 'standard' ? 'border-[#12372A] bg-[#FAF8F1]' : 'border-[#E8DDC7]'}`}>
-                      <input type="radio" checked={shippingOption === 'standard'} onChange={() => setShippingOption('standard')} className="mr-3 accent-[#12372A]" />
-                      <strong>Standard Express Courier (Complimentary)</strong>
-                      <p className="text-[#6B5846] mt-1 pl-6 font-light">Delivered in 2-4 business days via BlueDart Air.</p>
-                    </label>
-
-                    <label className={`p-4 border rounded-xl block cursor-pointer transition-all ${shippingOption === 'gift' ? 'border-[#12372A] bg-[#FAF8F1]' : 'border-[#E8DDC7]'}`}>
-                      <input type="radio" checked={shippingOption === 'gift'} onChange={() => setShippingOption('gift')} className="mr-3 accent-[#12372A]" />
-                      <strong>Royal Gift Box Packaging (+{formatPrice(250)})</strong>
-                      <p className="text-[#6B5846] mt-1 pl-6 font-light">Includes velvet gold casing, personalized handwritten note &amp; gift wrap.</p>
+                    <label className="p-4 border border-[#12372A] bg-[#FAF8F1] rounded-xl block transition-all shadow-2xs">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <input
+                            type="radio"
+                            checked={true}
+                            readOnly
+                            className="mr-3 accent-[#12372A]"
+                          />
+                          <strong className="text-[#12372A]">Standard Express Courier (Complimentary)</strong>
+                        </div>
+                        <span className="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full font-bold uppercase">
+                          Free Express
+                        </span>
+                      </div>
+                      <p className="text-[#6B5846] mt-1 pl-6 font-light">Delivered in 2–4 business days via BlueDart Air / Express Courier.</p>
                     </label>
                   </div>
 
                   <div className="flex gap-3 sm:gap-4">
-                    <button onClick={() => setStep(1)} className="px-5 sm:px-6 py-3.5 border border-[#12372A] text-xs font-bold uppercase rounded-xl">Back</button>
+                    <button onClick={() => setStep(1)} className="px-5 sm:px-6 py-3.5 border border-[#12372A] text-xs font-bold uppercase rounded-xl cursor-pointer">Back</button>
                     <button
                       onClick={() => setStep(3)}
-                      className="flex-1 bg-[#12372A] text-[#FAF8F1] hover:bg-[#D4AF37] hover:text-[#12372A] py-3.5 text-xs font-bold uppercase tracking-widest transition-all rounded-xl flex items-center justify-center gap-2 border border-[#D4AF37] shadow-md"
+                      className="flex-1 bg-[#12372A] text-[#FAF8F1] hover:bg-[#D4AF37] hover:text-[#12372A] py-3.5 text-xs font-bold uppercase tracking-widest transition-all rounded-xl flex items-center justify-center gap-2 border border-[#D4AF37] shadow-md cursor-pointer"
                     >
                       <span>Continue to Payment</span>
                       <ArrowRight className="w-4 h-4" />
@@ -300,12 +299,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
                   {paymentError && (
                     <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs flex justify-between items-center">
                       <span>{paymentError}</span>
-                      <button onClick={() => setPaymentError(null)} className="font-bold underline text-[10px]">Dismiss</button>
+                      <button onClick={() => setPaymentError(null)} className="font-bold underline text-[10px] cursor-pointer">Dismiss</button>
                     </div>
                   )}
                   
                   <div className="space-y-3 text-xs">
-                    <label className={`p-4 border rounded-xl block cursor-pointer transition-all ${paymentMethod === 'upi' ? 'border-[#12372A] bg-[#FAF8F1]' : 'border-[#E8DDC7]'}`}>
+                    <label className={`p-4 border rounded-xl block cursor-pointer transition-all ${paymentMethod === 'upi' ? 'border-[#12372A] bg-[#FAF8F1] shadow-2xs' : 'border-[#E8DDC7]'}`}>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <input type="radio" checked={paymentMethod === 'upi'} onChange={() => setPaymentMethod('upi')} className="mr-3 accent-[#12372A]" />
@@ -316,17 +315,29 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
                       <p className="text-[#6B5846] mt-1.5 pl-6 font-light">Zero transaction fee. Instant 1-click checkout modal via Razorpay.</p>
                     </label>
 
-                    <label className={`p-4 border rounded-xl block cursor-pointer transition-all ${paymentMethod === 'card' ? 'border-[#12372A] bg-[#FAF8F1]' : 'border-[#E8DDC7]'}`}>
-                      <input type="radio" checked={paymentMethod === 'card'} onChange={() => setPaymentMethod('card')} className="mr-3 accent-[#12372A]" />
-                      <strong>Razorpay Credit / Debit Card &amp; Netbanking</strong>
+                    <label className={`p-4 border rounded-xl block cursor-pointer transition-all ${paymentMethod === 'card' ? 'border-[#12372A] bg-[#FAF8F1] shadow-2xs' : 'border-[#E8DDC7]'}`}>
+                      <div className="flex items-center">
+                        <input type="radio" checked={paymentMethod === 'card'} onChange={() => setPaymentMethod('card')} className="mr-3 accent-[#12372A]" />
+                        <strong>Razorpay Credit / Debit Card &amp; Netbanking</strong>
+                      </div>
                       <p className="text-[#6B5846] mt-1.5 pl-6 font-light">Visa, Mastercard, RuPay, Amex, and 50+ Indian banks supported.</p>
                     </label>
 
-                    <label className={`p-4 border rounded-xl block cursor-pointer transition-all ${paymentMethod === 'cod' ? 'border-[#12372A] bg-[#FAF8F1]' : 'border-[#E8DDC7]'}`}>
-                      <input type="radio" checked={paymentMethod === 'cod'} onChange={() => setPaymentMethod('cod')} className="mr-3 accent-[#12372A]" />
-                      <strong>Cash on Delivery (COD)</strong>
-                      <p className="text-[#6B5846] mt-1.5 pl-6 font-light">Pay cash or scan QR upon courier delivery to your doorstep.</p>
-                    </label>
+                    {/* Cash on Delivery (COD) - Future Feature / Currently Unavailable */}
+                    <div className="p-4 border border-gray-200 bg-gray-50/70 rounded-xl opacity-75 cursor-not-allowed">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <input type="radio" disabled checked={false} className="mr-3 cursor-not-allowed opacity-40" />
+                          <strong className="text-gray-600">Cash on Delivery (COD)</strong>
+                        </div>
+                        <span className="text-[9px] bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full font-bold uppercase font-mono">
+                          Future Feature • Currently Unavailable
+                        </span>
+                      </div>
+                      <p className="text-gray-500 mt-1.5 pl-6 text-[11px] font-light">
+                        Cash on Delivery will be enabled in upcoming releases. Please use Instant UPI or Cards for verified order dispatch.
+                      </p>
+                    </div>
                   </div>
 
                   <div className="flex gap-3 sm:gap-4">
