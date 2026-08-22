@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { CheckCircle2, Lock, Truck, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Lock, Truck, ArrowRight, FileText } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { initializeRazorpayPayment } from '../utils/razorpay';
+import { sendOrderNotificationEmail, ADMIN_NOTIFICATION_EMAIL } from '../utils/emailService';
 import type { Address, Order } from '../types';
 
 interface CheckoutPageProps {
@@ -37,9 +38,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
-  const finalizeOrder = (paymentDetailsMethod: string) => {
+  const finalizeOrder = (paymentDetailsMethod: string, customOrderId?: string, customInvoiceId?: string) => {
+    const orderNum = Math.floor(10000 + Math.random() * 90000);
+    const finalOrderId = customOrderId || `KV-ORD-${orderNum}`;
+    const finalInvoiceId = customInvoiceId || `KV-INV-2026-${orderNum}`;
+
     const newOrder: Order = {
-      id: `KV-ORD-${Math.floor(10000 + Math.random() * 90000)}`,
+      id: finalOrderId,
+      invoiceId: finalInvoiceId,
       date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
       status: 'Processing',
       items: cart.map(c => ({
@@ -65,20 +71,29 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
     setIsProcessingPayment(false);
     setStep(4);
     onOrderSuccess(newOrder);
+
+    // Send real-time order purchase notification to sanjayskpy7@gmail.com
+    sendOrderNotificationEmail(newOrder, ADMIN_NOTIFICATION_EMAIL);
   };
 
   const handleProcessPayment = () => {
     setPaymentError(null);
     setIsProcessingPayment(true);
 
+    const orderNum = Math.floor(10000 + Math.random() * 90000);
+    const generatedOrderId = `KV-ORD-${orderNum}`;
+    const generatedInvoiceId = `KV-INV-2026-${orderNum}`;
+
     initializeRazorpayPayment({
       amountInINR: total,
+      orderId: generatedOrderId,
+      invoiceId: generatedInvoiceId,
       customerName: shippingAddress.name,
       customerEmail: user.email,
       customerPhone: shippingAddress.phone,
       onSuccess: (paymentId) => {
         const methodTitle = paymentMethod === 'upi' ? `Razorpay Instant UPI (${paymentId})` : `Razorpay Card (${paymentId})`;
-        finalizeOrder(methodTitle);
+        finalizeOrder(methodTitle, generatedOrderId, generatedInvoiceId);
       },
       onFailure: (err) => {
         setIsProcessingPayment(false);
@@ -139,22 +154,35 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
               Thank you for choosing Kavish. Your order <strong className="text-[#12372A]">{placedOrder.id}</strong> has been received by our Chendamangalam handloom team.
             </p>
 
-            <div className="bg-[#FAF8F1] p-4 border border-[#E8DDC7] text-left text-xs space-y-2 rounded-2xl">
+            <div className="bg-[#FAF8F1] p-5 border border-[#E8DDC7] text-left text-xs space-y-2.5 rounded-2xl">
               <div className="flex justify-between border-b border-[#E8DDC7] pb-2">
-                <span>AWB Tracking Number:</span>
+                <span className="font-semibold text-[#6B5846]">Order Reference ID:</span>
+                <strong className="font-mono text-[#12372A] font-bold">{placedOrder.id}</strong>
+              </div>
+              <div className="flex justify-between border-b border-[#E8DDC7] pb-2">
+                <span className="font-semibold text-[#6B5846]">Tax Invoice Number:</span>
+                <strong className="font-mono text-[#D4AF37] font-bold">{placedOrder.invoiceId || `KV-INV-2026-${placedOrder.id.replace('KV-ORD-', '')}`}</strong>
+              </div>
+              <div className="flex justify-between border-b border-[#E8DDC7] pb-2">
+                <span className="font-semibold text-[#6B5846]">AWB Tracking Number:</span>
                 <strong className="font-mono text-[#12372A]">{placedOrder.trackingNumber}</strong>
               </div>
               <div className="flex justify-between border-b border-[#E8DDC7] pb-2">
-                <span>Estimated Delivery:</span>
+                <span className="font-semibold text-[#6B5846]">Estimated Delivery:</span>
                 <strong className="text-[#12372A]">{placedOrder.estimatedDelivery}</strong>
               </div>
               <div className="flex justify-between border-b border-[#E8DDC7] pb-2">
-                <span>Payment Reference / Status:</span>
+                <span className="font-semibold text-[#6B5846]">Payment Reference / Status:</span>
                 <strong className="text-green-700 font-mono text-[11px]">{placedOrder.paymentMethod}</strong>
               </div>
               <div className="flex justify-between font-medium pt-1">
-                <span>Total Paid:</span>
-                <strong className="text-[#12372A]">{formatPrice(placedOrder.total)}</strong>
+                <span className="font-bold text-[#12372A]">Total Paid:</span>
+                <strong className="text-base font-serif font-bold text-[#12372A]">{formatPrice(placedOrder.total)}</strong>
+              </div>
+
+              <div className="mt-3 pt-3 border-t border-[#E8DDC7]/80 flex items-center gap-2 text-[11px] text-[#12372A] bg-white p-2.5 rounded-xl">
+                <FileText className="w-4 h-4 text-[#D4AF37] shrink-0" />
+                <span>An instant order receipt and dispatch notification has been dispatched to <strong>sanjayskpy7@gmail.com</strong></span>
               </div>
             </div>
 

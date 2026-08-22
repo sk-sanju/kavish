@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Search, X } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { Search, X, FileText, Printer, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useAdmin } from '../../context/AdminContext';
 import { useCurrency } from '../../context/CurrencyContext';
@@ -20,7 +21,10 @@ export const OrderManagement: React.FC = () => {
   const allOrdersList: Order[] = user.orders;
 
   const filteredOrders = allOrdersList.filter(o => {
-    const matchesSearch = o.id.toLowerCase().includes(searchTerm.toLowerCase()) || o.shippingAddress.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch =
+      o.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (o.invoiceId && o.invoiceId.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      o.shippingAddress.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || o.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -75,7 +79,7 @@ export const OrderManagement: React.FC = () => {
           <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
           <input
             type="text"
-            placeholder="Search by Order ID (KV-ORD-...) or customer name..."
+            placeholder="Search by Order ID (KV-ORD-...), Invoice ID, or customer name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full border border-[#E8DDC7] pl-10 pr-4 py-2 rounded-xl bg-[#FAF8F1]"
@@ -101,79 +105,90 @@ export const OrderManagement: React.FC = () => {
         </select>
       </div>
 
-      {/* Order Table */}
+      {/* Orders Table */}
       <div className="bg-white border border-[#E8DDC7] rounded-2xl shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="bg-[#12372A] text-[#FAF8F1] font-serif uppercase tracking-wider text-[10px]">
-                <th className="p-3.5">Order Ref</th>
+          <table className="w-full text-left text-xs">
+            <thead className="bg-[#12372A] text-[#FAF8F1] uppercase text-[10px] tracking-wider">
+              <tr>
+                <th className="p-3.5">Order &amp; Invoice ID</th>
                 <th className="p-3.5">Customer</th>
                 <th className="p-3.5">Date</th>
-                <th className="p-3.5">Items Count</th>
+                <th className="p-3.5">Items</th>
                 <th className="p-3.5">Total Paid</th>
                 <th className="p-3.5">Payment Method</th>
-                <th className="p-3.5">Fulfillment Status</th>
-                <th className="p-3.5 text-right">View / Update</th>
+                <th className="p-3.5">Status</th>
+                <th className="p-3.5 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E8DDC7]">
-              {filteredOrders.map(order => (
-                <tr key={order.id} className="hover:bg-[#FAF8F1] transition-colors">
-                  <td className="p-3.5 font-bold font-serif text-[#12372A] text-sm">{order.id}</td>
+              {filteredOrders.map(order => {
+                const invId = order.invoiceId || `KV-INV-2026-${order.id.replace('KV-ORD-', '')}`;
+                return (
+                  <tr key={order.id} className="hover:bg-[#FAF8F1] transition-colors">
+                    <td className="p-3.5">
+                      <strong className="font-bold font-serif text-[#12372A] text-sm block">{order.id}</strong>
+                      <span className="font-mono text-[10px] text-[#D4AF37] font-semibold">{invId}</span>
+                    </td>
 
-                  <td className="p-3.5">
-                    <strong className="text-[#12372A] block">{order.shippingAddress.name}</strong>
-                    <span className="text-[10px] text-[#6B5846]">{order.shippingAddress.city}, {order.shippingAddress.state}</span>
-                  </td>
+                    <td className="p-3.5">
+                      <strong className="text-[#12372A] block">{order.shippingAddress.name}</strong>
+                      <span className="text-[10px] text-[#6B5846]">{order.shippingAddress.city}, {order.shippingAddress.state}</span>
+                    </td>
 
-                  <td className="p-3.5 text-[#6B5846]">{order.date}</td>
+                    <td className="p-3.5 text-[#6B5846]">{order.date}</td>
 
-                  <td className="p-3.5 font-bold">{order.items.length} Item(s)</td>
+                    <td className="p-3.5 font-bold">{order.items.length} Item(s)</td>
 
-                  <td className="p-3.5 font-serif font-bold text-[#12372A] text-sm">{formatPrice(order.total)}</td>
+                    <td className="p-3.5 font-serif font-bold text-[#12372A] text-sm">{formatPrice(order.total)}</td>
 
-                  <td className="p-3.5 font-mono text-[10px] text-[#12372A]">{order.paymentMethod}</td>
+                    <td className="p-3.5 font-mono text-[10px] text-[#12372A]">{order.paymentMethod}</td>
 
-                  <td className="p-3.5">
-                    <span className="bg-[#12372A] text-[#D4AF37] text-[10px] font-bold uppercase px-3 py-1 rounded-full border border-[#D4AF37]">
-                      {order.status}
-                    </span>
-                  </td>
+                    <td className="p-3.5">
+                      <span className="bg-[#12372A] text-[#D4AF37] text-[10px] font-bold uppercase px-3 py-1 rounded-full border border-[#D4AF37]">
+                        {order.status}
+                      </span>
+                    </td>
 
-                  <td className="p-3.5 text-right">
-                    <button
-                      onClick={() => {
-                        setSelectedOrder(order);
-                        setEditingStatus(order.status);
-                        setAwbInput(order.trackingNumber || '');
-                        setCourierInput(order.courierProvider || 'BlueDart Air Express');
-                      }}
-                      className="bg-[#12372A] text-[#FAF8F1] px-3.5 py-1.5 rounded-xl font-bold uppercase text-[10px] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all border border-[#D4AF37]"
-                    >
-                      Manage Order
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    <td className="p-3.5 text-right">
+                      <button
+                        onClick={() => {
+                          setSelectedOrder(order);
+                          setEditingStatus(order.status);
+                          setAwbInput(order.trackingNumber || '');
+                          setCourierInput(order.courierProvider || 'BlueDart Air Express');
+                        }}
+                        className="bg-[#12372A] text-[#FAF8F1] px-3.5 py-1.5 rounded-xl font-bold uppercase text-[10px] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all border border-[#D4AF37] cursor-pointer"
+                      >
+                        Manage Order
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       </div>
 
       {/* Order Detail & Fulfillment Drawer / Modal */}
-      {selectedOrder && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs overflow-y-auto animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[85vh]">
+      {selectedOrder && createPortal(
+        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[88vh]">
             
             {/* Modal Header */}
             <div className="p-5 bg-[#12372A] text-[#FAF8F1] flex justify-between items-start shrink-0">
               <div>
                 <span className="text-[10px] uppercase font-bold text-[#D4AF37] tracking-widest block">Order Specification &amp; Dispatch</span>
-                <h3 className="font-serif font-bold text-xl text-[#FAF8F1]">{selectedOrder.id}</h3>
-                <span className="text-xs text-[#E8DDC7]/80">Placed on {selectedOrder.date}</span>
+                <div className="flex items-center gap-3 mt-1">
+                  <h3 className="font-serif font-bold text-xl text-[#FAF8F1]">{selectedOrder.id}</h3>
+                  <span className="bg-[#D4AF37] text-[#12372A] text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full">
+                    {selectedOrder.invoiceId || `KV-INV-2026-${selectedOrder.id.replace('KV-ORD-', '')}`}
+                  </span>
+                </div>
+                <span className="text-xs text-[#E8DDC7]/80 block mt-0.5">Placed on {selectedOrder.date}</span>
               </div>
-              <button onClick={() => setSelectedOrder(null)} className="p-1 text-[#E8DDC7] hover:text-white">
+              <button onClick={() => setSelectedOrder(null)} className="p-1 text-[#E8DDC7] hover:text-white cursor-pointer">
                 <X className="w-6 h-6" />
               </button>
             </div>
@@ -193,8 +208,9 @@ export const OrderManagement: React.FC = () => {
                 </div>
 
                 <div>
-                  <h4 className="font-bold text-[#12372A] mb-1">Payment &amp; Carrier Reference</h4>
+                  <h4 className="font-bold text-[#12372A] mb-1">Payment &amp; Invoice Reference</h4>
                   <p className="text-[#6B5846] leading-relaxed">
+                    Invoice: <strong className="font-mono text-[#D4AF37] font-bold">{selectedOrder.invoiceId || `KV-INV-2026-${selectedOrder.id.replace('KV-ORD-', '')}`}</strong><br />
                     Method: <strong className="text-[#12372A]">{selectedOrder.paymentMethod}</strong><br />
                     Carrier: <strong>{selectedOrder.courierProvider || 'BlueDart Air Express'}</strong><br />
                     AWB Tracking: <strong className="font-mono text-[#12372A]">{selectedOrder.trackingNumber}</strong>
@@ -224,6 +240,16 @@ export const OrderManagement: React.FC = () => {
                 <div className="flex justify-between text-[#6B5846]">
                   <span>Items Subtotal:</span>
                   <span>{formatPrice(selectedOrder.subtotal)}</span>
+                </div>
+                {selectedOrder.discount > 0 && (
+                  <div className="flex justify-between text-green-700">
+                    <span>Discount Deducted:</span>
+                    <span>-{formatPrice(selectedOrder.discount)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-[#6B5846]">
+                  <span>Shipping Fee:</span>
+                  <span>{selectedOrder.shippingFee === 0 ? 'Complimentary Free' : formatPrice(selectedOrder.shippingFee)}</span>
                 </div>
                 <div className="flex justify-between text-[#6B5846]">
                   <span>GST Tax (5% Apparel CGST+SGST):</span>
@@ -289,21 +315,22 @@ export const OrderManagement: React.FC = () => {
               <button
                 type="submit"
                 form="order-fulfillment-form"
-                className="flex-1 bg-[#12372A] text-[#FAF8F1] py-3 font-bold uppercase text-xs rounded-xl hover:bg-[#D4AF37] hover:text-[#12372A] transition-all border border-[#D4AF37]"
+                className="flex-1 bg-[#12372A] text-[#FAF8F1] py-3 font-bold uppercase text-xs rounded-xl hover:bg-[#D4AF37] hover:text-[#12372A] transition-all border border-[#D4AF37] cursor-pointer"
               >
                 Update Status &amp; Save Tracking Info
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedOrder(null)}
-                className="px-5 py-3 border border-[#E8DDC7] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all"
+                className="px-5 py-3 border border-[#E8DDC7] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all cursor-pointer"
               >
                 Close
               </button>
             </div>
 
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

@@ -120,6 +120,7 @@ function mapProductToDb(p: Product): Record<string, any> {
 function mapOrderFromDb(row: any): Order {
   return {
     id: row.id,
+    invoiceId: row.invoice_id || `KV-INV-2026-${row.id ? row.id.replace('KV-ORD-', '') : '001'}`,
     date: row.date,
     status: row.status,
     items: Array.isArray(row.items) ? row.items : [],
@@ -142,6 +143,7 @@ function mapOrderFromDb(row: any): Order {
 function mapOrderToDb(o: Order): Record<string, any> {
   return {
     id: o.id,
+    invoice_id: o.invoiceId || `KV-INV-2026-${o.id.replace('KV-ORD-', '')}`,
     date: o.date,
     status: o.status,
     items: o.items,

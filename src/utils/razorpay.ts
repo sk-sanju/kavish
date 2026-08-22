@@ -58,6 +58,7 @@ export interface RazorpayPaymentOptions {
   amountInINR: number;
   currencyCode?: string;
   orderId?: string;
+  invoiceId?: string;
   customerName: string;
   customerEmail: string;
   customerPhone: string;
@@ -93,7 +94,7 @@ export const initializeRazorpayPayment = async (options: RazorpayPaymentOptions)
       openCustomRazorpayPayLink(options.amountInINR);
       setTimeout(() => {
         const generatedPayId = `pay_rzp_kavish_${Math.floor(100000 + Math.random() * 900000)}`;
-        options.onSuccess(generatedPayId, `order_rzp_${Date.now()}`);
+        options.onSuccess(generatedPayId, options.orderId || `order_rzp_${Date.now()}`);
       }, 1000);
       return;
     }
@@ -109,7 +110,7 @@ export const initializeRazorpayPayment = async (options: RazorpayPaymentOptions)
     amount: amountInPaise,
     currency: 'INR',
     name: 'KAVISH Luxury Handlooms',
-    description: 'Authentic Kuthampully Weaves Payment',
+    description: options.orderId ? `Order #${options.orderId} • Invoice #${options.invoiceId || ''}` : 'Authentic Kuthampully Weaves Payment',
     image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=150&auto=format&fit=crop&q=80',
     prefill: {
       name: options.customerName,
@@ -117,7 +118,11 @@ export const initializeRazorpayPayment = async (options: RazorpayPaymentOptions)
       contact: options.customerPhone,
     },
     notes: {
+      order_id: options.orderId || '',
+      invoice_id: options.invoiceId || '',
       brand: 'KAVISH Kuthampully Atelier',
+      admin_notification_email: 'sanjayskpy7@gmail.com',
+      customer_contact: options.customerPhone || ''
     },
     theme: {
       color: '#12372A',
@@ -126,7 +131,7 @@ export const initializeRazorpayPayment = async (options: RazorpayPaymentOptions)
       if (response && response.razorpay_payment_id) {
         options.onSuccess(
           response.razorpay_payment_id,
-          response.razorpay_order_id,
+          response.razorpay_order_id || options.orderId,
           response.razorpay_signature
         );
       } else {

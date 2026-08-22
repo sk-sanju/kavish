@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
   courier_provider TEXT,
   estimated_delivery TEXT,
   notes TEXT,
+  invoice_id TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

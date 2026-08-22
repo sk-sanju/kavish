@@ -135,7 +135,8 @@ export interface OrderItem {
 }
 
 export interface Order {
-  id: string;
+  id: string; // Order ID e.g. KV-ORD-83921
+  invoiceId?: string; // Invoice ID e.g. KV-INV-2026-83921
   date: string;
   status: OrderStatus;
   items: OrderItem[];
