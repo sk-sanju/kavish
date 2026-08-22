@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, Heart, ShoppingBag, User, Menu, X, ChevronDown, ShieldCheck, LogOut, Globe } from 'lucide-react';
+import logoImg from '../../assets/logo.png';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useModal } from '../../context/ModalContext';
@@ -80,14 +81,13 @@ export const Header: React.FC = () => {
           {/* Kavish Luxury Logo */}
           <div
             onClick={() => handleNavClick('home')}
-            className="cursor-pointer group text-center lg:text-left flex flex-col items-center lg:items-start"
+            className="cursor-pointer group flex items-center"
           >
-            <span className="font-serif text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-[0.2em] text-[#12372A] group-hover:text-[#D4AF37] transition-colors">
-              KAVISH
-            </span>
-            <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.25em] text-[#6B5846] font-sans font-medium -mt-0.5 sm:-mt-1">
-              Kuthampully Heritage • Luxury
-            </span>
+            <img
+              src={logoImg}
+              alt="KAVISH - Kerala Ethnic Wear"
+              className="h-10 sm:h-12 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            />
           </div>
 
           {/* Navigation Links - Desktop */}

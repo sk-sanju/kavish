@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Truck, RefreshCw, Lock } from 'lucide-react';
+import logoImg from '../../assets/logo.png';
 import { useAuth } from '../../context/AuthContext';
 import { useCurrency } from '../../context/CurrencyContext';
 
@@ -81,9 +82,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           
           {/* Brand Info */}
           <div className="lg:col-span-4 space-y-4">
-            <span className="font-serif text-3xl font-bold tracking-[0.2em] text-[#FAF8F1] block">
-              KAVISH
-            </span>
+            <div className="inline-block bg-[#FAF8F1] p-2.5 rounded-2xl shadow-md">
+              <img
+                src={logoImg}
+                alt="KAVISH - Kerala Ethnic Wear"
+                className="h-12 w-auto object-contain"
+              />
+            </div>
             <p className="text-xs text-[#E8DDC7]/90 leading-relaxed font-light">
               Crafted in Kuthampully, Thrissur. We preserve 500 years of royal Devanga weaving traditions, crafting premium Kasavu sarees, set mundus, and European linen for modern generations.
             </p>

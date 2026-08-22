@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CheckCircle2, Lock, Truck, ArrowRight } from 'lucide-react';
+import logoImg from '../assets/logo.png';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useCurrency } from '../context/CurrencyContext';
@@ -97,8 +98,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
     <div className="py-8 sm:py-12 bg-[#FAF8F1] min-h-screen animate-fadeIn pb-24 lg:pb-12">
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
         
-        <div className="text-center max-w-xl mx-auto mb-6 sm:mb-8">
-          <span className="font-serif text-2xl sm:text-3xl font-bold text-[#12372A]">KAVISH</span>
+        <div className="text-center max-w-xl mx-auto mb-6 sm:mb-8 flex flex-col items-center">
+          <img
+            src={logoImg}
+            alt="KAVISH - Kerala Ethnic Wear"
+            className="h-12 sm:h-14 w-auto object-contain cursor-pointer hover:opacity-90 transition-opacity"
+            onClick={onNavigateHome}
+          />
           <p className="text-[10px] sm:text-xs text-[#D4AF37] font-semibold uppercase tracking-widest mt-1">Secure Atelier Checkout</p>
         </div>
 

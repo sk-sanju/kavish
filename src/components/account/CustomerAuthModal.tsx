@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, UserPlus, LogIn, Sparkles, Truck, Award } from 'lucide-react';
+import logoImg from '../../assets/logo.png';
 import { useAuth } from '../../context/AuthContext';
 
 export const CustomerAuthModal: React.FC = () => {
@@ -53,9 +54,13 @@ export const CustomerAuthModal: React.FC = () => {
 
         {/* Header */}
         <div className="bg-[#12372A] text-[#FAF8F1] p-6 sm:p-8 text-center relative">
-          <span className="font-serif text-2xl sm:text-3xl font-bold tracking-[0.2em] text-[#D4AF37] block">
-            KAVISH
-          </span>
+          <div className="inline-block bg-[#FAF8F1] px-4 py-2 rounded-2xl shadow-md mx-auto mb-2">
+            <img
+              src={logoImg}
+              alt="KAVISH"
+              className="h-10 sm:h-12 w-auto object-contain"
+            />
+          </div>
           <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[#E8DDC7] mt-1 font-medium">
             Royal Kuthampully Patron Circle
           </p>

@@ -5,20 +5,49 @@ declare global {
 }
 
 export const RAZORPAY_KEY_STORAGE_KEY = 'kavish_razorpay_key_id';
+export const RAZORPAY_SECRET_STORAGE_KEY = 'kavish_razorpay_key_secret';
+export const RAZORPAY_LINK_STORAGE_KEY = 'kavish_razorpay_custom_link';
 
 // Personalised Razorpay Payment Portal Link
-export const RAZORPAY_CUSTOM_PAY_LINK = 'https://razorpay.me/@kavishbysanjaysuresh';
+export const DEFAULT_RAZORPAY_CUSTOM_PAY_LINK = 'https://razorpay.me/@kavishbysanjaysuresh';
+
+export const getRazorpayPayLink = (): string => {
+  return localStorage.getItem(RAZORPAY_LINK_STORAGE_KEY) || 
+    (import.meta.env.VITE_RAZORPAY_PAY_LINK as string) || 
+    DEFAULT_RAZORPAY_CUSTOM_PAY_LINK;
+};
 
 export const openCustomRazorpayPayLink = (amount?: number): void => {
-  const targetUrl = amount ? `${RAZORPAY_CUSTOM_PAY_LINK}?amount=${amount}` : RAZORPAY_CUSTOM_PAY_LINK;
+  const baseLink = getRazorpayPayLink();
+  const targetUrl = amount ? `${baseLink}?amount=${amount}` : baseLink;
   window.open(targetUrl, '_blank', 'noopener,noreferrer');
 };
 
-// Default test Key ID placeholder. User can overwrite with their API Key ID from Admin or Checkout modal
+// Default test Key ID placeholder. User can overwrite with their API Key ID from Admin or .env
 export const DEFAULT_RAZORPAY_KEY = 'rzp_test_YOUR_KEY_ID';
 
 export const getRazorpayKey = (): string => {
-  return localStorage.getItem(RAZORPAY_KEY_STORAGE_KEY) || DEFAULT_RAZORPAY_KEY;
+  const envKey = import.meta.env.VITE_RAZORPAY_KEY_ID as string | undefined;
+  const storedKey = localStorage.getItem(RAZORPAY_KEY_STORAGE_KEY);
+  
+  if (storedKey && storedKey.trim() !== '' && storedKey !== DEFAULT_RAZORPAY_KEY) {
+    return storedKey.trim();
+  }
+  if (envKey && envKey.trim() !== '' && envKey.trim() !== DEFAULT_RAZORPAY_KEY) {
+    return envKey.trim();
+  }
+  return storedKey?.trim() || envKey?.trim() || DEFAULT_RAZORPAY_KEY;
+};
+
+export const getRazorpaySecret = (): string => {
+  const envSecret = import.meta.env.VITE_RAZORPAY_KEY_SECRET as string | undefined;
+  return localStorage.getItem(RAZORPAY_SECRET_STORAGE_KEY) || (envSecret && envSecret.trim().length > 0 ? envSecret.trim() : '');
+};
+
+export const setRazorpayConfig = (keyId: string, keySecret?: string, customLink?: string): void => {
+  if (keyId !== undefined) localStorage.setItem(RAZORPAY_KEY_STORAGE_KEY, keyId.trim());
+  if (keySecret !== undefined) localStorage.setItem(RAZORPAY_SECRET_STORAGE_KEY, keySecret.trim());
+  if (customLink !== undefined) localStorage.setItem(RAZORPAY_LINK_STORAGE_KEY, customLink.trim());
 };
 
 export const setRazorpayKey = (keyId: string): void => {
@@ -56,14 +85,18 @@ export const initializeRazorpayPayment = async (options: RazorpayPaymentOptions)
 
   const amountInPaise = Math.round(options.amountInINR * 100);
 
-  // If using custom personalized link or placeholder key, open user's Razorpay payment portal directly
-  if (!keyId || keyId === 'rzp_test_YOUR_KEY_ID') {
-    openCustomRazorpayPayLink(options.amountInINR);
-    setTimeout(() => {
-      const generatedPayId = `pay_rzp_kavish_${Math.floor(100000 + Math.random() * 900000)}`;
-      options.onSuccess(generatedPayId, `order_rzp_${Date.now()}`);
-    }, 1000);
-    return;
+  // If placeholder key is used and no real key is set, attempt standard custom pay link
+  if (!keyId || keyId === DEFAULT_RAZORPAY_KEY) {
+    if (sdkLoaded) {
+      // Proceed with SDK using key if possible
+    } else {
+      openCustomRazorpayPayLink(options.amountInINR);
+      setTimeout(() => {
+        const generatedPayId = `pay_rzp_kavish_${Math.floor(100000 + Math.random() * 900000)}`;
+        options.onSuccess(generatedPayId, `order_rzp_${Date.now()}`);
+      }, 1000);
+      return;
+    }
   }
 
   if (!sdkLoaded) {

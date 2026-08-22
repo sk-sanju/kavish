@@ -4,6 +4,7 @@ import {
   DollarSign, BarChart3, Layout, Star, Bell, ShieldCheck, History, Settings,
   Search, Plus, LogOut, Menu, X, ArrowLeft, Globe
 } from 'lucide-react';
+import logoImg from '../../assets/logo.png';
 import { useAuth } from '../../context/AuthContext';
 import { useAdmin } from '../../context/AdminContext';
 import { NotificationCenter } from './NotificationCenter';
@@ -86,12 +87,16 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
 
-          <div onClick={onNavigateHome} className="cursor-pointer flex items-center gap-2 group">
-            <span className="font-serif text-lg sm:text-2xl font-bold tracking-[0.2em] text-[#FAF8F1] group-hover:text-[#D4AF37] transition-colors">
-              KAVISH
-            </span>
-            <span className="bg-[#D4AF37] text-[#12372A] text-[9px] uppercase font-bold px-2 py-0.5 rounded-full font-mono">
-              Atelier Internal OS
+          <div onClick={onNavigateHome} className="cursor-pointer flex items-center gap-3 group">
+            <div className="bg-[#FAF8F1] px-2.5 py-1 rounded-xl shadow-xs flex items-center">
+              <img
+                src={logoImg}
+                alt="KAVISH"
+                className="h-7 sm:h-8 w-auto object-contain"
+              />
+            </div>
+            <span className="bg-[#D4AF37] text-[#12372A] text-[9px] uppercase font-bold px-2 py-0.5 rounded-full font-mono hidden sm:inline-block">
+              Atelier OS
             </span>
           </div>
         </div>
