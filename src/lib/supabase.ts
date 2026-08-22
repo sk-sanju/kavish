@@ -11,15 +11,32 @@ import type {
   StoreContentConfig
 } from '../types';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://cswdcbruzgdqburynlop.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzd2RjYnJ1emdkqWJ1cnlubG9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyOTk5NzYsImV4cCI6MjEwMjg3NTk3Nn0.57dm65p13c5CbQu9EIqT-S1WikQsTU5xob8-bLQJNhw';
+function isValidHttpUrl(stringToTest?: string): boolean {
+  if (!stringToTest) return false;
+  try {
+    const url = new URL(stringToTest);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
 
-export const isSupabaseConfigured = Boolean(
-  (import.meta.env.VITE_SUPABASE_URL || supabaseUrl) &&
-  (import.meta.env.VITE_SUPABASE_ANON_KEY || supabaseAnonKey)
+const envUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim();
+const envKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
+
+const defaultUrl = 'https://cswdcbruzgdqburynlop.supabase.co';
+const defaultKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzd2RjYnJ1emdkcWJ1cnlubG9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyOTk5NzYsImV4cCI6MjEwMjg3NTk3Nn0.57dm65p13c5CbQu9EIqT-S1WikQsTU5xob8-bLQJNhw';
+
+const activeUrl = isValidHttpUrl(envUrl) ? envUrl : defaultUrl;
+const activeKey = envKey && envKey.length > 20 ? envKey : defaultKey;
+
+export const isSupabaseConfigured = isValidHttpUrl(activeUrl) && Boolean(activeKey && activeKey.length > 20);
+
+// Initialize client safely - guaranteed valid URL prevents top-level bundle crashes
+export const supabase = createClient(
+  isValidHttpUrl(activeUrl) ? activeUrl : 'https://placeholder.supabase.co',
+  activeKey || 'placeholder-anon-key'
 );
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // ====================================================================
 // FIELD TRANSFORMERS (CAMELCASE <-> SNAKE_CASE)
