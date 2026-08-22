@@ -34,10 +34,25 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
   const { formatPrice } = useCurrency();
 
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[0] || 'Free Size');
-  const [selectedColor, setSelectedColor] = useState<ProductColor>(product.colors[0]);
+  const [selectedSize, setSelectedSize] = useState(product?.sizes?.[0] || 'Free Size');
+  const [selectedColor, setSelectedColor] = useState<ProductColor>(product?.colors?.[0] || { name: 'Kasavu Gold', hex: '#D4AF37' });
   const [quantity, setQuantity] = useState(1);
   const [openAccordion, setOpenAccordion] = useState<string | null>('details');
+
+  if (!product) {
+    return (
+      <div className="py-28 bg-[#FAF8F1] text-center px-4 animate-fadeIn">
+        <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#12372A]">Garment Not Found</h2>
+        <p className="text-xs text-[#6B5846] mt-2 mb-6">The requested handloom garment is currently not available or catalog is syncing.</p>
+        <button
+          onClick={() => navigate('/shop')}
+          className="bg-[#12372A] text-[#FAF8F1] px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-[#D4AF37] hover:text-[#12372A] transition-all"
+        >
+          Explore Atelier Collection
+        </button>
+      </div>
+    );
+  }
 
   const isFavorite = isInWishlist(product.id);
 

@@ -151,41 +151,35 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   useEffect(() => {
     async function loadSupabaseData() {
-      // Only fallback to Supabase if localStorage had no customized items
-      const hasLocalProducts = Boolean(localStorage.getItem(PRODUCTS_STORAGE_KEY));
-      if (!hasLocalProducts) {
-        const dbProducts = await fetchSupabaseProducts();
-        if (dbProducts && dbProducts.length > 0) {
+      try {
+        const [dbProducts, dbCategories, dbOffers, dbReviews] = await Promise.all([
+          fetchSupabaseProducts(),
+          fetchSupabaseCategories(),
+          fetchSupabaseOffers(),
+          fetchSupabaseReviews()
+        ]);
+
+        if (dbProducts !== null) {
           setProducts(dbProducts);
           localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(dbProducts));
         }
-      }
 
-      const hasLocalCategories = Boolean(localStorage.getItem(CATEGORIES_STORAGE_KEY));
-      if (!hasLocalCategories) {
-        const dbCategories = await fetchSupabaseCategories();
-        if (dbCategories && dbCategories.length > 0) {
+        if (dbCategories !== null) {
           setCategories(dbCategories);
           localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbCategories));
         }
-      }
 
-      const hasLocalOffers = Boolean(localStorage.getItem(OFFERS_STORAGE_KEY));
-      if (!hasLocalOffers) {
-        const dbOffers = await fetchSupabaseOffers();
-        if (dbOffers && dbOffers.length > 0) {
+        if (dbOffers !== null) {
           setOffers(dbOffers);
           localStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(dbOffers));
         }
-      }
 
-      const hasLocalReviews = Boolean(localStorage.getItem(REVIEWS_STORAGE_KEY));
-      if (!hasLocalReviews) {
-        const dbReviews = await fetchSupabaseReviews();
-        if (dbReviews && dbReviews.length > 0) {
+        if (dbReviews !== null) {
           setReviews(dbReviews);
           localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(dbReviews));
         }
+      } catch (err) {
+        console.warn('Error loading live data from Supabase database:', err);
       }
     }
     loadSupabaseData();
