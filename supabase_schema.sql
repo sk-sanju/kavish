@@ -169,6 +169,14 @@ CREATE TABLE IF NOT EXISTS public.admin_users (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- 10. SHIPPING RULES & LOGISTICS CONFIG
+CREATE TABLE IF NOT EXISTS public.shipping_rules (
+  id TEXT PRIMARY KEY DEFAULT 'main_shipping',
+  free_shipping_threshold NUMERIC DEFAULT 0,
+  standard_flat_rate NUMERIC DEFAULT 0,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Enable Row Level Security (RLS) Policies
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
@@ -179,6 +187,7 @@ ALTER TABLE public.return_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.store_content ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.shipping_rules ENABLE ROW LEVEL SECURITY;
 
 -- Allow Public Read Access for Storefront
 CREATE POLICY "Allow Public Read Products" ON public.products FOR SELECT USING (true);
@@ -186,6 +195,7 @@ CREATE POLICY "Allow Public Read Categories" ON public.categories FOR SELECT USI
 CREATE POLICY "Allow Public Read Offers" ON public.promo_offers FOR SELECT USING (true);
 CREATE POLICY "Allow Public Read Reviews" ON public.reviews FOR SELECT USING (true);
 CREATE POLICY "Allow Public Read Store Content" ON public.store_content FOR SELECT USING (true);
+CREATE POLICY "Allow Public Read Shipping" ON public.shipping_rules FOR SELECT USING (true);
 
 -- Allow Public Write / Admin Full Access
 CREATE POLICY "Allow All Products Access" ON public.products FOR ALL USING (true);
@@ -196,3 +206,4 @@ CREATE POLICY "Allow All Returns Access" ON public.return_requests FOR ALL USING
 CREATE POLICY "Allow All Audit Logs Access" ON public.audit_logs FOR ALL USING (true);
 CREATE POLICY "Allow All Content Access" ON public.store_content FOR ALL USING (true);
 CREATE POLICY "Allow All Admin Users Access" ON public.admin_users FOR ALL USING (true);
+CREATE POLICY "Allow All Shipping Access" ON public.shipping_rules FOR ALL USING (true);

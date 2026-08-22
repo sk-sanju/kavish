@@ -8,7 +8,8 @@ import type {
   ReturnRequest,
   CategoryItem,
   AdminUser,
-  StoreContentConfig
+  StoreContentConfig,
+  ShippingConfig
 } from '../types';
 
 function isValidHttpUrl(stringToTest?: string): boolean {
@@ -596,6 +597,38 @@ export async function upsertSupabaseStoreContent(sc: StoreContentConfig): Promis
   try {
     const dbPayload = mapStoreContentToDb(sc);
     const { error } = await supabase.from('store_content').upsert([dbPayload]);
+    if (error) return false;
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+export async function fetchSupabaseShippingConfig(): Promise<ShippingConfig | null> {
+  if (!isSupabaseConfigured) return null;
+  try {
+    const { data, error } = await supabase.from('shipping_rules').select('*').limit(1).single();
+    if (error || !data) return null;
+    return {
+      freeShippingThreshold: Number(data.free_shipping_threshold) || 0,
+      standardFlatRate: Number(data.standard_flat_rate) || 0
+    };
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function upsertSupabaseShippingConfig(config: ShippingConfig): Promise<boolean> {
+  if (!isSupabaseConfigured) return false;
+  try {
+    const { error } = await supabase.from('shipping_rules').upsert([
+      {
+        id: 'main_shipping',
+        free_shipping_threshold: Number(config.freeShippingThreshold) || 0,
+        standard_flat_rate: Number(config.standardFlatRate) || 0,
+        updated_at: new Date().toISOString()
+      }
+    ]);
     if (error) return false;
     return true;
   } catch (err) {

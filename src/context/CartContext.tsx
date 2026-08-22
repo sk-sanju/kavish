@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Product, CartItem, ProductColor, ShippingConfig } from '../types';
+import { fetchSupabaseShippingConfig, upsertSupabaseShippingConfig } from '../lib/supabase';
 
 interface CartContextType {
   cart: CartItem[];
@@ -53,6 +54,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return DEFAULT_SHIPPING_CONFIG;
   });
 
+  // Load from Supabase across all devices & store views
+  useEffect(() => {
+    async function loadDbShippingConfig() {
+      const dbConfig = await fetchSupabaseShippingConfig();
+      if (dbConfig) {
+        setShippingConfig(dbConfig);
+        try {
+          localStorage.setItem(SHIPPING_STORAGE_KEY, JSON.stringify(dbConfig));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+    loadDbShippingConfig();
+  }, []);
+
   const updateShippingConfig = (config: ShippingConfig) => {
     const cleanConfig: ShippingConfig = {
       freeShippingThreshold: Number(config.freeShippingThreshold) || 0,
@@ -64,6 +81,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (e) {
       console.error(e);
     }
+    upsertSupabaseShippingConfig(cleanConfig);
   };
 
   useEffect(() => {
