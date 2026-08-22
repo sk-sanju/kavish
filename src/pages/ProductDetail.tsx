@@ -20,7 +20,8 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
   const navigate = useNavigate();
   const { products, reviews, addReview } = useProducts();
 
-  const product = propProduct || products.find(p => p.id === params.id) || products[0];
+  const targetId = params.id || propProduct?.id;
+  const product = (targetId ? products.find(p => p.id === targetId) : null) || propProduct || products[0];
 
   const [newReviewTitle, setNewReviewTitle] = useState('');
   const [newReviewComment, setNewReviewComment] = useState('');

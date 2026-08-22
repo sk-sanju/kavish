@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Trash2, Ruler } from 'lucide-react';
 import type { Product, ProductCategory, ProductSubcategory } from '../../types';
 
@@ -12,17 +12,18 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
   const [activeTab, setActiveTab] = useState<'basic' | 'pricing' | 'inventory' | 'variants' | 'media' | 'sizechart'>('basic');
 
   const [form, setForm] = useState<Partial<Product>>({
+    id: product?.id,
     name: product?.name || '',
     subtitle: product?.subtitle || '',
     category: product?.category || 'women',
     subcategory: product?.subcategory || 'Kasavu Sarees',
     collection: product?.collection || 'kasavu-masterpieces',
-    price: product?.price || 4999,
-    originalPrice: product?.originalPrice || 6499,
-    costPrice: product?.costPrice || 2500,
+    price: product?.price ?? 4999,
+    originalPrice: product?.originalPrice ?? 6499,
+    costPrice: product?.costPrice ?? 2500,
     inStock: product?.inStock ?? true,
-    stockCount: product?.stockCount || 15,
-    lowStockThreshold: product?.lowStockThreshold || 5,
+    stockCount: product?.stockCount ?? 15,
+    lowStockThreshold: product?.lowStockThreshold ?? 5,
     allowBackorders: product?.allowBackorders ?? false,
     brand: product?.brand || 'Kavish Kuthampully Atelier',
     isNew: product?.isNew ?? true,
@@ -37,15 +38,42 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
     fitInformation: product?.fitInformation || 'Standard Traditional Fit',
     sku: product?.sku || `KV-KUT-${Math.floor(1000 + Math.random() * 9000)}`,
     tags: product?.tags?.length ? product?.tags : ['Kuthampully', 'GI Tag', 'Handloom'],
-    sizeChart: product?.sizeChart || {
-      title: "Garment Measurement Guide",
-      description: "Tailoring specs and dimensions.",
-      rows: [
-        { size: '38 (S)', chest: '38-40"', shoulder: '17.5"', length: '29.5"' },
-        { size: '40 (M)', chest: '40-42"', shoulder: '18.0"', length: '30.0"' }
-      ]
-    }
+    sizeChart: product?.sizeChart
   });
+
+  useEffect(() => {
+    if (product) {
+      setForm({
+        id: product.id,
+        name: product.name || '',
+        subtitle: product.subtitle || '',
+        category: product.category || 'women',
+        subcategory: product.subcategory || 'Kasavu Sarees',
+        collection: product.collection || 'kasavu-masterpieces',
+        price: product.price ?? 4999,
+        originalPrice: product.originalPrice ?? 6499,
+        costPrice: product.costPrice ?? 2500,
+        inStock: product.inStock ?? true,
+        stockCount: product.stockCount ?? 15,
+        lowStockThreshold: product.lowStockThreshold ?? 5,
+        allowBackorders: product.allowBackorders ?? false,
+        brand: product.brand || 'Kavish Kuthampully Atelier',
+        isNew: product.isNew ?? true,
+        isBestSeller: product.isBestSeller ?? false,
+        isFeatured: product.isFeatured ?? true,
+        images: product.images?.length ? product.images : ['https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80'],
+        sizes: product.sizes?.length ? product.sizes : ['38 (S)', '40 (M)', '42 (L)', '44 (XL)'],
+        colors: product.colors?.length ? product.colors : [{ name: 'Kasavu Gold', hex: '#D4AF37' }, { name: 'Royal Cream', hex: '#FAF8F1' }],
+        fabric: product.fabric || '100% Organic Cotton & 24k Zari',
+        details: product.details?.length ? product.details : ['100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)'],
+        careInstructions: product.careInstructions?.length ? product.careInstructions : ['Dry Clean Only', 'Iron on Reverse Zari'],
+        fitInformation: product.fitInformation || 'Standard Traditional Fit',
+        sku: product.sku || `KV-KUT-${Math.floor(1000 + Math.random() * 9000)}`,
+        tags: product.tags?.length ? product.tags : ['Kuthampully', 'GI Tag', 'Handloom'],
+        sizeChart: product.sizeChart
+      });
+    }
+  }, [product]);
 
   const [newImageUrl, setNewImageUrl] = useState('');
   const [newColorName, setNewColorName] = useState('');
@@ -121,7 +149,14 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(form);
+    onSave({
+      ...form,
+      id: product?.id || form.id,
+      price: Number(form.price),
+      originalPrice: form.originalPrice ? Number(form.originalPrice) : undefined,
+      costPrice: form.costPrice ? Number(form.costPrice) : undefined,
+      stockCount: form.stockCount !== undefined ? Number(form.stockCount) : 10,
+    });
   };
 
   return (
