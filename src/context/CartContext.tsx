@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { Product, CartItem, ProductColor } from '../types';
+import type { Product, CartItem, ProductColor, ShippingConfig } from '../types';
 
 interface CartContextType {
   cart: CartItem[];
@@ -14,6 +14,8 @@ interface CartContextType {
   shippingFee: number;
   total: number;
   itemCount: number;
+  shippingConfig: ShippingConfig;
+  updateShippingConfig: (config: ShippingConfig) => void;
   freeShippingThreshold: number;
   freeShippingProgress: number;
   amountNeededForFreeShipping: number;
@@ -25,8 +27,11 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const FREE_SHIPPING_THRESHOLD = 2000;
-const STANDARD_SHIPPING_FEE = 150;
+export const SHIPPING_STORAGE_KEY = 'kavish_shipping_config_v1';
+export const DEFAULT_SHIPPING_CONFIG: ShippingConfig = {
+  freeShippingThreshold: 0,
+  standardFlatRate: 0
+};
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -37,6 +42,43 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [appliedPromoCode, setAppliedPromoCode] = useState<string | null>(null);
   const [discountPercent, setDiscountPercent] = useState<number>(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const [shippingConfig, setShippingConfig] = useState<ShippingConfig>(() => {
+    try {
+      const saved = localStorage.getItem(SHIPPING_STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error(e);
+    }
+    return DEFAULT_SHIPPING_CONFIG;
+  });
+
+  const updateShippingConfig = (config: ShippingConfig) => {
+    const cleanConfig: ShippingConfig = {
+      freeShippingThreshold: Number(config.freeShippingThreshold) || 0,
+      standardFlatRate: Number(config.standardFlatRate) || 0
+    };
+    setShippingConfig(cleanConfig);
+    try {
+      localStorage.setItem(SHIPPING_STORAGE_KEY, JSON.stringify(cleanConfig));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === SHIPPING_STORAGE_KEY && e.newValue) {
+        try {
+          setShippingConfig(JSON.parse(e.newValue));
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('kavish_cart', JSON.stringify(cart));
@@ -151,12 +193,21 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const percentDiscount = Math.round((subtotal * discountPercent) / 100);
   const discount = percentDiscount > 0 ? percentDiscount : discountAmountFixed;
-  const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || cart.length === 0 ? 0 : STANDARD_SHIPPING_FEE;
+
+  // Free shipping conditions: cart empty, flat rate is 0, threshold is 0, or subtotal >= threshold
+  const isFreeShipping =
+    cart.length === 0 ||
+    shippingConfig.standardFlatRate === 0 ||
+    shippingConfig.freeShippingThreshold === 0 ||
+    (shippingConfig.freeShippingThreshold > 0 && subtotal >= shippingConfig.freeShippingThreshold);
+
+  const shippingFee = isFreeShipping ? 0 : shippingConfig.standardFlatRate;
   const total = Math.max(0, subtotal - discount + shippingFee);
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  const freeShippingProgress = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
-  const amountNeededForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+  const effectiveThreshold = shippingConfig.freeShippingThreshold > 0 ? shippingConfig.freeShippingThreshold : 0;
+  const freeShippingProgress = effectiveThreshold === 0 ? 100 : Math.min(100, (subtotal / effectiveThreshold) * 100);
+  const amountNeededForFreeShipping = effectiveThreshold === 0 ? 0 : Math.max(0, effectiveThreshold - subtotal);
 
   return (
     <CartContext.Provider
@@ -173,7 +224,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         shippingFee,
         total,
         itemCount,
-        freeShippingThreshold: FREE_SHIPPING_THRESHOLD,
+        shippingConfig,
+        updateShippingConfig,
+        freeShippingThreshold: effectiveThreshold,
         freeShippingProgress,
         amountNeededForFreeShipping,
         appliedPromoCode,

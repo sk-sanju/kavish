@@ -307,3 +307,8 @@ export interface GSTConfig {
   hsnCode: string;
   includeTaxInPrice: boolean;
 }
+
+export interface ShippingConfig {
+  freeShippingThreshold: number;
+  standardFlatRate: number;
+}

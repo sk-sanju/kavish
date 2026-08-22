@@ -1,8 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Truck, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { useCart } from '../../context/CartContext';
 
 export const ShippingManagement: React.FC = () => {
-  const [freeShippingThreshold, setFreeShippingThreshold] = useState(2000);
-  const [standardFlatRate, setStandardFlatRate] = useState(150);
+  const { shippingConfig, updateShippingConfig } = useCart();
+
+  const [freeShippingThreshold, setFreeShippingThreshold] = useState(shippingConfig.freeShippingThreshold ?? 0);
+  const [standardFlatRate, setStandardFlatRate] = useState(shippingConfig.standardFlatRate ?? 0);
+  const [savedSuccess, setSavedSuccess] = useState(false);
+
+  useEffect(() => {
+    setFreeShippingThreshold(shippingConfig.freeShippingThreshold ?? 0);
+    setStandardFlatRate(shippingConfig.standardFlatRate ?? 0);
+  }, [shippingConfig]);
+
+  const handleSave = () => {
+    updateShippingConfig({
+      freeShippingThreshold: Number(freeShippingThreshold) || 0,
+      standardFlatRate: Number(standardFlatRate) || 0
+    });
+    setSavedSuccess(true);
+    setTimeout(() => {
+      setSavedSuccess(false);
+    }, 3000);
+  };
 
   const zones = [
     { id: 'z1', name: 'Domestic South India (Kerala, TN, KA)', deliveryTime: '2 - 3 Days', carrier: 'BlueDart Express Air', status: 'Active' },
@@ -25,41 +46,58 @@ export const ShippingManagement: React.FC = () => {
         </div>
       </div>
 
+      {savedSuccess && (
+        <div className="p-4 bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs rounded-2xl flex items-center gap-2 font-medium animate-fadeIn">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+          <span>Logistics &amp; shipping configuration saved! Changes are active immediately across the store and checkout.</span>
+        </div>
+      )}
+
       {/* Free Shipping Rules Config */}
       <div className="bg-white p-6 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-4">
-        <h3 className="font-serif font-bold text-lg text-[#12372A] border-b border-[#E8DDC7] pb-3">
-          Complimentary Free Shipping Rules
-        </h3>
+        <div className="flex items-center gap-2 border-b border-[#E8DDC7] pb-3">
+          <Truck className="w-5 h-5 text-[#D4AF37]" />
+          <h3 className="font-serif font-bold text-lg text-[#12372A]">
+            Complimentary Free Shipping Rules
+          </h3>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div>
             <label className="block font-semibold text-[#6B5846] mb-1">Free Shipping Threshold (₹)</label>
             <input
               type="number"
+              min="0"
               value={freeShippingThreshold}
               onChange={(e) => setFreeShippingThreshold(Number(e.target.value))}
               className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-serif text-sm font-bold text-[#12372A]"
             />
-            <span className="text-[10px] text-[#6B5846] mt-1 block">Orders equal to or above this amount get free BlueDart Air shipping.</span>
+            <span className="text-[10px] text-[#6B5846] mt-1 block">
+              Set to <strong>0</strong> for 100% Free Shipping on all orders. Otherwise, orders at or above this amount get free shipping.
+            </span>
           </div>
 
           <div>
             <label className="block font-semibold text-[#6B5846] mb-1">Standard Flat Shipping Rate (₹)</label>
             <input
               type="number"
+              min="0"
               value={standardFlatRate}
               onChange={(e) => setStandardFlatRate(Number(e.target.value))}
               className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-serif text-sm font-bold text-[#12372A]"
             />
-            <span className="text-[10px] text-[#6B5846] mt-1 block">Applied to orders below the free shipping threshold.</span>
+            <span className="text-[10px] text-[#6B5846] mt-1 block">
+              Set to <strong>0</strong> for no delivery charge. Applied to orders below the free shipping threshold.
+            </span>
           </div>
         </div>
 
         <button
-          onClick={() => alert('Shipping rules saved successfully!')}
-          className="bg-[#12372A] text-[#FAF8F1] px-5 py-2.5 rounded-xl font-bold uppercase text-xs border border-[#D4AF37]"
+          onClick={handleSave}
+          className="bg-[#12372A] text-[#FAF8F1] hover:bg-[#D4AF37] hover:text-[#12372A] px-5 py-2.5 rounded-xl font-bold uppercase text-xs border border-[#D4AF37] transition-all cursor-pointer shadow-sm flex items-center gap-2"
         >
-          Save Logistics Configuration
+          <ShieldCheck className="w-4 h-4" />
+          <span>Save Logistics Configuration</span>
         </button>
       </div>
 
