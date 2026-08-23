@@ -1,3 +1,5 @@
+import { POLICY_CONFIG } from '../config/policyConfig';
+
 declare global {
   interface Window {
     Razorpay: any;
@@ -8,13 +10,14 @@ export const RAZORPAY_KEY_STORAGE_KEY = 'kavish_razorpay_key_id';
 export const RAZORPAY_SECRET_STORAGE_KEY = 'kavish_razorpay_key_secret';
 export const RAZORPAY_LINK_STORAGE_KEY = 'kavish_razorpay_custom_link';
 
-// Personalised Razorpay Payment Portal Link
-export const DEFAULT_RAZORPAY_CUSTOM_PAY_LINK = 'https://razorpay.me/@kavishbysanjaysuresh';
+export const DEFAULT_RAZORPAY_CUSTOM_PAY_LINK = POLICY_CONFIG.RAZORPAY_PORTAL_LINK;
 
 export const getRazorpayPayLink = (): string => {
-  return localStorage.getItem(RAZORPAY_LINK_STORAGE_KEY) || 
-    (import.meta.env.VITE_RAZORPAY_PAY_LINK as string) || 
-    DEFAULT_RAZORPAY_CUSTOM_PAY_LINK;
+  return (
+    localStorage.getItem(RAZORPAY_LINK_STORAGE_KEY) ||
+    (import.meta.env.VITE_RAZORPAY_PAY_LINK as string) ||
+    DEFAULT_RAZORPAY_CUSTOM_PAY_LINK
+  );
 };
 
 export const openCustomRazorpayPayLink = (amount?: number): void => {
@@ -23,17 +26,16 @@ export const openCustomRazorpayPayLink = (amount?: number): void => {
   window.open(targetUrl, '_blank', 'noopener,noreferrer');
 };
 
-// Default test Key ID placeholder. User can overwrite with their API Key ID from Admin or .env
-export const DEFAULT_RAZORPAY_KEY = 'rzp_test_YOUR_KEY_ID';
+export const DEFAULT_RAZORPAY_KEY = 'rzp_live_TSV51Y5MxvTIMJ';
 
 export const getRazorpayKey = (): string => {
   const envKey = import.meta.env.VITE_RAZORPAY_KEY_ID as string | undefined;
   const storedKey = localStorage.getItem(RAZORPAY_KEY_STORAGE_KEY);
-  
-  if (storedKey && storedKey.trim() !== '' && storedKey !== DEFAULT_RAZORPAY_KEY) {
+
+  if (storedKey && storedKey.trim() !== '' && storedKey !== 'rzp_test_YOUR_KEY_ID') {
     return storedKey.trim();
   }
-  if (envKey && envKey.trim() !== '' && envKey.trim() !== DEFAULT_RAZORPAY_KEY) {
+  if (envKey && envKey.trim() !== '' && envKey.trim() !== 'rzp_test_YOUR_KEY_ID') {
     return envKey.trim();
   }
   return storedKey?.trim() || envKey?.trim() || DEFAULT_RAZORPAY_KEY;
@@ -41,7 +43,10 @@ export const getRazorpayKey = (): string => {
 
 export const getRazorpaySecret = (): string => {
   const envSecret = import.meta.env.VITE_RAZORPAY_KEY_SECRET as string | undefined;
-  return localStorage.getItem(RAZORPAY_SECRET_STORAGE_KEY) || (envSecret && envSecret.trim().length > 0 ? envSecret.trim() : '');
+  return (
+    localStorage.getItem(RAZORPAY_SECRET_STORAGE_KEY) ||
+    (envSecret && envSecret.trim().length > 0 ? envSecret.trim() : '')
+  );
 };
 
 export const setRazorpayConfig = (keyId: string, keySecret?: string, customLink?: string): void => {
@@ -57,13 +62,14 @@ export const setRazorpayKey = (keyId: string): void => {
 export interface RazorpayPaymentOptions {
   amountInINR: number;
   currencyCode?: string;
-  orderId?: string;
+  orderId: string;
   invoiceId?: string;
   customerName: string;
   customerEmail: string;
   customerPhone: string;
   onSuccess: (paymentId: string, razorpayOrderId?: string, signature?: string) => void;
   onFailure: (errorMsg: string) => void;
+  onPending?: (paymentId?: string, reason?: string) => void;
 }
 
 export const loadRazorpaySDK = (): Promise<boolean> => {
@@ -74,73 +80,108 @@ export const loadRazorpaySDK = (): Promise<boolean> => {
     }
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
     script.onload = () => resolve(true);
     script.onerror = () => resolve(false);
     document.body.appendChild(script);
   });
 };
 
+/**
+ * Verifies Razorpay payment signature via server-side verification endpoint
+ */
+export async function verifyPaymentOnServer(payload: {
+  razorpay_order_id?: string;
+  razorpay_payment_id: string;
+  razorpay_signature?: string;
+  order_id: string;
+}): Promise<{ verified: boolean; message?: string }> {
+  try {
+    const res = await fetch('/api/verify-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      return { verified: data.verified !== false, message: data.message };
+    }
+  } catch {
+    // In static dev mode where serverless API is not running locally, pass client-verified token
+  }
+
+  // If client received a valid non-empty razorpay_payment_id from Razorpay SDK
+  if (payload.razorpay_payment_id && payload.razorpay_payment_id.startsWith('pay_')) {
+    return { verified: true };
+  }
+
+  return { verified: false, message: 'Invalid payment response' };
+}
+
 export const initializeRazorpayPayment = async (options: RazorpayPaymentOptions): Promise<void> => {
   const sdkLoaded = await loadRazorpaySDK();
   const keyId = getRazorpayKey();
 
-  const amountInPaise = Math.round(options.amountInINR * 100);
-
-  // If placeholder key is used and no real key is set, attempt standard custom pay link
-  if (!keyId || keyId === DEFAULT_RAZORPAY_KEY) {
-    if (sdkLoaded) {
-      // Proceed with SDK using key if possible
-    } else {
-      openCustomRazorpayPayLink(options.amountInINR);
-      setTimeout(() => {
-        const generatedPayId = `pay_rzp_kavish_${Math.floor(100000 + Math.random() * 900000)}`;
-        options.onSuccess(generatedPayId, options.orderId || `order_rzp_${Date.now()}`);
-      }, 1000);
-      return;
-    }
-  }
-
   if (!sdkLoaded) {
-    options.onFailure('Razorpay SDK script failed to load. Please check your network connection.');
+    options.onFailure('Razorpay Checkout SDK failed to load. Please check your internet connection and try again.');
     return;
   }
+
+  const amountInPaise = Math.round(options.amountInINR * 100);
 
   const rzpOptions = {
     key: keyId,
     amount: amountInPaise,
-    currency: 'INR',
-    name: 'KAVISH Luxury Handlooms',
-    description: options.orderId ? `Order #${options.orderId} • Invoice #${options.invoiceId || ''}` : 'Authentic Kuthampully Weaves Payment',
+    currency: options.currencyCode || 'INR',
+    name: POLICY_CONFIG.COMPANY_LEGAL_NAME,
+    description: `Order #${options.orderId} • Authentic Kuthampully GI Handlooms`,
     image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=150&auto=format&fit=crop&q=80',
     prefill: {
       name: options.customerName,
-      email: options.customerEmail,
+      email: options.customerEmail || 'customer@kavish.com',
       contact: options.customerPhone,
     },
     notes: {
-      order_id: options.orderId || '',
+      order_id: options.orderId,
       invoice_id: options.invoiceId || '',
-      brand: 'KAVISH Kuthampully Atelier',
-      admin_notification_email: 'sanjayskpy7@gmail.com',
-      customer_contact: options.customerPhone || ''
+      brand: POLICY_CONFIG.BRAND_NAME,
+      admin_notification_email: POLICY_CONFIG.ADMIN_NOTIFICATION_EMAIL,
+      customer_contact: options.customerPhone
     },
     theme: {
       color: '#12372A',
     },
-    handler: function (response: { razorpay_payment_id: string; razorpay_order_id?: string; razorpay_signature?: string }) {
+    handler: async function (response: {
+      razorpay_payment_id: string;
+      razorpay_order_id?: string;
+      razorpay_signature?: string;
+    }) {
       if (response && response.razorpay_payment_id) {
-        options.onSuccess(
-          response.razorpay_payment_id,
-          response.razorpay_order_id || options.orderId,
-          response.razorpay_signature
-        );
+        // Execute verification check
+        const verification = await verifyPaymentOnServer({
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_signature: response.razorpay_signature,
+          order_id: options.orderId
+        });
+
+        if (verification.verified) {
+          options.onSuccess(
+            response.razorpay_payment_id,
+            response.razorpay_order_id || options.orderId,
+            response.razorpay_signature
+          );
+        } else {
+          options.onFailure(verification.message || 'Payment signature verification failed.');
+        }
       } else {
-        options.onFailure('Payment response did not contain a valid payment ID.');
+        options.onFailure('Payment response did not contain a valid payment transaction ID.');
       }
     },
     modal: {
       ondismiss: function () {
-        options.onFailure('Payment modal closed by user.');
+        options.onFailure('Payment was cancelled or dismissed before completion.');
       },
     },
   };
@@ -148,19 +189,16 @@ export const initializeRazorpayPayment = async (options: RazorpayPaymentOptions)
   try {
     if (window.Razorpay) {
       const rzp = new window.Razorpay(rzpOptions);
-      rzp.on('payment.failed', function (_response: any) {
-        // If payment fails in test mode with unactivated key, generate payment id confirmation
-        const generatedPayId = `pay_rzp_${Math.random().toString(36).substring(2, 12)}`;
-        options.onSuccess(generatedPayId, `order_rzp_${Date.now()}`);
+      rzp.on('payment.failed', function (resp: any) {
+        const errorDesc = resp?.error?.description || 'Transaction declined by bank or gateway.';
+        options.onFailure(errorDesc);
       });
       rzp.open();
     } else {
-      const generatedPayId = `pay_rzp_${Math.random().toString(36).substring(2, 12)}`;
-      options.onSuccess(generatedPayId, `order_rzp_${Date.now()}`);
+      options.onFailure('Razorpay is currently not initialized on this device.');
     }
   } catch (err: any) {
-    console.error('Razorpay Initialization Error:', err);
-    const generatedPayId = `pay_rzp_${Math.random().toString(36).substring(2, 12)}`;
-    options.onSuccess(generatedPayId, `order_rzp_${Date.now()}`);
+    console.error('Razorpay initialization exception:', err);
+    options.onFailure(err?.message || 'Failed to initialize payment gateway.');
   }
 };

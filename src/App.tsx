@@ -5,7 +5,6 @@ import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { ModalProvider } from './context/ModalContext';
 import { AuthProvider } from './context/AuthContext';
-
 import { CurrencyProvider } from './context/CurrencyContext';
 import { ProductProvider } from './context/ProductContext';
 import { AdminProvider } from './context/AdminContext';
@@ -36,6 +35,19 @@ import { ContactPage } from './pages/ContactPage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { AdminLoginPage } from './pages/AdminLoginPage';
 
+// Policy & Dedicated Flow Pages
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { TermsAndConditions } from './pages/TermsAndConditions';
+import { ReturnRefundPolicy } from './pages/ReturnRefundPolicy';
+import { ShippingPolicy } from './pages/ShippingPolicy';
+import { PaymentInformation } from './pages/PaymentInformation';
+import { FAQPage } from './pages/FAQPage';
+import { OrderSuccess } from './pages/OrderSuccess';
+import { PaymentFailed } from './pages/PaymentFailed';
+import { PaymentPending } from './pages/PaymentPending';
+import { TrackOrder } from './pages/TrackOrder';
+import { NotFoundPage } from './pages/NotFoundPage';
+
 import type { Product } from './types';
 
 function ScrollToTop() {
@@ -65,8 +77,15 @@ export function AppContent() {
     else if (view === 'checkout') navigate('/checkout');
     else if (view === 'wishlist') navigate('/wishlist');
     else if (view === 'account') navigate('/account');
-    else if (view === 'heritage') navigate('/heritage');
+    else if (view === 'heritage' || view === 'about') navigate('/heritage');
     else if (view === 'contact') navigate('/contact');
+    else if (view === 'faq') navigate('/faq');
+    else if (view === 'track-order') navigate('/track-order');
+    else if (view === 'privacy-policy') navigate('/privacy-policy');
+    else if (view === 'terms-and-conditions') navigate('/terms-and-conditions');
+    else if (view === 'return-refund-policy') navigate('/return-refund-policy');
+    else if (view === 'shipping-policy') navigate('/shipping-policy');
+    else if (view === 'payment-information') navigate('/payment-information');
     else if (view === 'admin') navigate('/admin');
     else navigate(`/${view}`);
   };
@@ -78,11 +97,11 @@ export function AppContent() {
       <ScrollToTop />
       
       {!isAdminRoute && <AnnouncementBar />}
-
       {!isAdminRoute && <Header />}
 
       <main className="flex-1">
         <Routes>
+          {/* Main Pages */}
           <Route path="/" element={<Home onSelectProduct={handleSelectProduct} onNavigate={handleNavigate} />} />
           <Route path="/shop" element={<Shop onSelectProduct={handleSelectProduct} />} />
           <Route path="/shop/category/:category" element={<Shop onSelectProduct={handleSelectProduct} />} />
@@ -93,7 +112,22 @@ export function AppContent() {
           <Route path="/wishlist" element={<WishlistPage onSelectProduct={handleSelectProduct} onNavigateHome={() => navigate('/')} />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/heritage" element={<Heritage onNavigate={handleNavigate} />} />
+          <Route path="/about" element={<Heritage onNavigate={handleNavigate} />} />
           <Route path="/contact" element={<ContactPage />} />
+
+          {/* Legal & Policy Pages */}
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/return-refund-policy" element={<ReturnRefundPolicy />} />
+          <Route path="/shipping-policy" element={<ShippingPolicy />} />
+          <Route path="/payment-information" element={<PaymentInformation />} />
+          <Route path="/faq" element={<FAQPage />} />
+
+          {/* Order Lifecycle & Tracking */}
+          <Route path="/order-success" element={<OrderSuccess />} />
+          <Route path="/payment-failed" element={<PaymentFailed />} />
+          <Route path="/payment-pending" element={<PaymentPending />} />
+          <Route path="/track-order" element={<TrackOrder />} />
           
           {/* Admin Login & Console URL Routes */}
           <Route path="/kavish" element={<AdminLoginPage />} />
@@ -101,12 +135,13 @@ export function AppContent() {
           <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/*" element={<AdminDashboard />} />
-          <Route path="*" element={<Home onSelectProduct={handleSelectProduct} onNavigate={handleNavigate} />} />
+
+          {/* 404 Not Found Handling */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
 
       {!isAdminRoute && <Footer onNavigate={handleNavigate} />}
-
       {!isAdminRoute && <MobileNavigation />}
 
       <QuickViewModal />
@@ -121,7 +156,6 @@ export function AppContent() {
       <AdminLoginModal onAdminLoginSuccess={() => navigate('/admin')} />
 
       <Toast />
-
     </div>
   );
 }
