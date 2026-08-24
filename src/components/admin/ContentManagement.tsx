@@ -25,12 +25,12 @@ export const ContentManagement: React.FC = () => {
       atelierTitle: 'Kavish Kuthampully Atelier',
       atelierSubtitle: 'Headquarters & Loom House',
       addressLine1: 'Kuthampully Handloom Village, Near Thiruvilwamala',
-      addressLine2: 'Thrissur District, Kerala - 679121, India',
+      addressLine2: 'Thrissur District, Kerala - 680594, India.',
       visitingHoursLine1: 'Monday – Saturday: 9:30 AM – 7:00 PM IST',
       visitingHoursLine2: 'Sunday: 10:00 AM – 5:00 PM (By Appointment)',
-      phone: '+91 4884 282 100 / +91 98470 55111',
-      email: 'concierge@kavishhandlooms.com',
-      whatsappNumber: '919847055111',
+      phone: '+91 9539251789',
+      email: 'kavishlooms@gmail.com',
+      whatsappNumber: '919539251789',
       badgeText: 'Authentic Kuthampully GI Tag Unit'
     }
   );
@@ -240,7 +240,7 @@ export const ContentManagement: React.FC = () => {
                     value={contactForm.email}
                     onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                     className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-mono font-bold"
-                    placeholder="e.g. concierge@kavishhandlooms.com"
+                    placeholder="e.g. kavishlooms@gmail.com"
                   />
                 </div>
               </div>
@@ -256,7 +256,7 @@ export const ContentManagement: React.FC = () => {
                     value={contactForm.whatsappNumber}
                     onChange={(e) => setContactForm({ ...contactForm, whatsappNumber: e.target.value })}
                     className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-mono font-bold"
-                    placeholder="e.g. 919847055111 (Country code + number)"
+                    placeholder="e.g. 919539251789 (Country code + number)"
                   />
                   <span className="text-[10px] text-gray-500 mt-1 block">Used to generate one-click WhatsApp chat link.</span>
                 </div>
@@ -318,7 +318,7 @@ export const ContentManagement: React.FC = () => {
                     <Phone className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-[#12372A] font-bold block text-[11px]">Direct Concierge Phone:</strong>
-                      <p className="text-[#6B5846] text-[11px]">{contactForm.phone || '+91 4884 282 100 / +91 98470 55111'}</p>
+                      <p className="text-[#6B5846] text-[11px]">{contactForm.phone || '+91 9539251789'}</p>
                     </div>
                   </div>
 
@@ -326,7 +326,7 @@ export const ContentManagement: React.FC = () => {
                     <Mail className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-[#12372A] font-bold block text-[11px]">Email Concierge:</strong>
-                      <p className="text-[#6B5846] text-[11px]">{contactForm.email || 'concierge@kavishhandlooms.com'}</p>
+                      <p className="text-[#6B5846] text-[11px]">{contactForm.email || 'kavishlooms@gmail.com'}</p>
                     </div>
                   </div>
 

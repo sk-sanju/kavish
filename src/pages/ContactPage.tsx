@@ -8,16 +8,16 @@ export const ContactPage: React.FC = () => {
     atelierTitle: 'Kavish Kuthampully Atelier',
     atelierSubtitle: 'Headquarters & Loom House',
     addressLine1: 'Kuthampully Handloom Village, Near Thiruvilwamala',
-    addressLine2: 'Thrissur District, Kerala - 679121, India',
+    addressLine2: 'Thrissur District, Kerala - 680594, India.',
     visitingHoursLine1: 'Monday – Saturday: 9:30 AM – 7:00 PM IST',
     visitingHoursLine2: 'Sunday: 10:00 AM – 5:00 PM (By Appointment)',
-    phone: '+91 4884 282 100 / +91 98470 55111',
-    email: 'concierge@kavishhandlooms.com',
-    whatsappNumber: '919847055111',
+    phone: '+91 9539251789',
+    email: 'kavishlooms@gmail.com',
+    whatsappNumber: '919539251789',
     badgeText: 'Authentic Kuthampully GI Tag Unit'
   };
 
-  const cleanWhatsappNumber = (contact.whatsappNumber || '919847055111').replace(/[^0-9]/g, '');
+  const cleanWhatsappNumber = (contact.whatsappNumber || '919539251789').replace(/[^0-9]/g, '');
 
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', subject: 'Custom Saree / Bespoke Order', message: '' });

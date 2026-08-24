@@ -17,17 +17,17 @@ export const POLICY_CONFIG = {
     LINE_1: 'Kuthampully Handloom Village, Near Thiruvilwamala',
     LINE_2: 'Thrissur District',
     STATE: 'Kerala',
-    PINCODE: '679121',
+    PINCODE: '680594',
     COUNTRY: 'India',
-    FULL: 'Kuthampully Handloom Village, Near Thiruvilwamala, Thrissur District, Kerala - 679121, India'
+    FULL: 'Kuthampully Handloom Village, Near Thiruvilwamala, Thrissur District, Kerala - 680594, India.'
   },
 
   // Customer Concierge & Support Coordinates
-  SUPPORT_EMAIL: 'concierge@kavishhandlooms.com',
+  SUPPORT_EMAIL: 'kavishlooms@gmail.com',
   ADMIN_NOTIFICATION_EMAIL: 'sanjayskpy7@gmail.com',
-  SUPPORT_PHONE: '+91 98470 55111',
-  SUPPORT_PHONE_ALT: '+91 4884 282 100',
-  WHATSAPP_NUMBER: '919847055111',
+  SUPPORT_PHONE: '+91 9539251789',
+  SUPPORT_PHONE_ALT: '+91 9539251789',
+  WHATSAPP_NUMBER: '919539251789',
   WORKING_HOURS: 'Monday – Saturday: 9:30 AM – 7:00 PM IST (Sunday by Appointment)',
 
   // Shipping & Logistics Parameters
