@@ -291,6 +291,19 @@ export interface StoreNotification {
   targetId?: string;
 }
 
+export interface StoreContactConfig {
+  atelierTitle: string;
+  atelierSubtitle: string;
+  addressLine1: string;
+  addressLine2: string;
+  visitingHoursLine1: string;
+  visitingHoursLine2: string;
+  phone: string;
+  email: string;
+  whatsappNumber: string;
+  badgeText: string;
+}
+
 export interface StoreContentConfig {
   announcementText: string;
   heroTitle: string;
@@ -299,6 +312,7 @@ export interface StoreContentConfig {
   featuredCollectionIds: string[];
   faqItems: { question: string; answer: string }[];
   policyText: string;
+  contactInfo?: StoreContactConfig;
 }
 
 export interface GSTConfig {

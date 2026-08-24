@@ -74,7 +74,19 @@ const DEFAULT_STORE_CONTENT: StoreContentConfig = {
     { question: 'Are all Kavish garments certified authentic handloom?', answer: 'Yes, every Kavish product carries the official Government GI Tag (Reg 2011) woven in Kuthampully, Thrissur.' },
     { question: 'What is your size exchange policy?', answer: 'We offer a complimentary 7-day doorstep size exchange concierge across India.' }
   ],
-  policyText: 'Kavish Handlooms Pvt. Ltd. guarantees 100% authentic Devanga artisan craftsmanship.'
+  policyText: 'Kavish Handlooms Pvt. Ltd. guarantees 100% authentic Devanga artisan craftsmanship.',
+  contactInfo: {
+    atelierTitle: 'Kavish Kuthampully Atelier',
+    atelierSubtitle: 'Headquarters & Loom House',
+    addressLine1: 'Kuthampully Handloom Village, Near Thiruvilwamala',
+    addressLine2: 'Thrissur District, Kerala - 679121, India',
+    visitingHoursLine1: 'Monday – Saturday: 9:30 AM – 7:00 PM IST',
+    visitingHoursLine2: 'Sunday: 10:00 AM – 5:00 PM (By Appointment)',
+    phone: '+91 4884 282 100 / +91 98470 55111',
+    email: 'concierge@kavishhandlooms.com',
+    whatsappNumber: '919847055111',
+    badgeText: 'Authentic Kuthampully GI Tag Unit'
+  }
 };
 
 const AUDIT_STORAGE_KEY = 'kavish_audit_logs_v1';

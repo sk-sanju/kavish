@@ -1,22 +1,64 @@
 import React, { useState } from 'react';
-import { Sparkles } from 'lucide-react';
+import { 
+  Sparkles, 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock, 
+  MessageSquare, 
+  Building2, 
+  Award, 
+  CheckCircle2 
+} from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 import { useProducts } from '../../context/ProductContext';
+import type { StoreContactConfig } from '../../types';
 
 export const ContentManagement: React.FC = () => {
-  const { storeContent, updateStoreContent } = useAdmin();
+  const { storeContent, updateStoreContent, addAuditLog } = useAdmin();
   const { announcementText, setAnnouncementText } = useProducts();
 
   const [form, setForm] = useState(storeContent);
   const [announcementInput, setAnnouncementInput] = useState(announcementText);
+  const [contactForm, setContactForm] = useState<StoreContactConfig>(
+    storeContent.contactInfo || {
+      atelierTitle: 'Kavish Kuthampully Atelier',
+      atelierSubtitle: 'Headquarters & Loom House',
+      addressLine1: 'Kuthampully Handloom Village, Near Thiruvilwamala',
+      addressLine2: 'Thrissur District, Kerala - 679121, India',
+      visitingHoursLine1: 'Monday – Saturday: 9:30 AM – 7:00 PM IST',
+      visitingHoursLine2: 'Sunday: 10:00 AM – 5:00 PM (By Appointment)',
+      phone: '+91 4884 282 100 / +91 98470 55111',
+      email: 'concierge@kavishhandlooms.com',
+      whatsappNumber: '919847055111',
+      badgeText: 'Authentic Kuthampully GI Tag Unit'
+    }
+  );
+
   const [newFaqQ, setNewFaqQ] = useState('');
   const [newFaqA, setNewFaqA] = useState('');
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    updateStoreContent(form);
+    const updatedContent = {
+      ...form,
+      contactInfo: contactForm
+    };
+    updateStoreContent(updatedContent);
     setAnnouncementText(announcementInput);
-    alert('Storefront content updated successfully live!');
+
+    addAuditLog({
+      adminName: 'Sanjay Suresh (Super Admin)',
+      adminRole: 'Super Admin',
+      action: 'Updated Storefront Content & Atelier Contact Details',
+      entity: 'StoreContent',
+      entityId: 'main_content',
+      newValue: `${contactForm.atelierTitle}, ${contactForm.email}`
+    });
+
+    setSaveSuccess(true);
+    setTimeout(() => setSaveSuccess(false), 3500);
   };
 
   const handleAddFaq = () => {
@@ -47,12 +89,260 @@ export const ContentManagement: React.FC = () => {
             Storefront CMS
           </span>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#12372A] mt-0.5">
-            Store Content Management
+            Store Content &amp; Atelier Management
           </h1>
         </div>
+
+        {saveSuccess && (
+          <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-50 border border-green-300 text-green-800 text-xs font-bold rounded-xl animate-fadeIn">
+            <CheckCircle2 className="w-4 h-4 text-green-600" />
+            Changes Published Live!
+          </span>
+        )}
       </div>
 
       <form onSubmit={handleSave} className="space-y-6 text-xs">
+
+        {/* Headquarters & Loom House Atelier Info Editor */}
+        <div className="bg-white p-6 sm:p-8 border-2 border-[#D4AF37]/30 rounded-3xl shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E8DDC7] pb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-[#12372A] text-[#D4AF37] flex items-center justify-center">
+                <Building2 className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-serif font-bold text-lg text-[#12372A]">
+                  Headquarters &amp; Loom House Atelier Details
+                </h3>
+                <p className="text-xs text-[#6B5846]">
+                  Manage address, visiting hours, concierge phone, email &amp; WhatsApp displayed on Contact Page
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            {/* Form Inputs (7 cols on large) */}
+            <div className="lg:col-span-7 space-y-4">
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-semibold text-[#6B5846] mb-1">
+                    Atelier Main Title *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={contactForm.atelierTitle}
+                    onChange={(e) => setContactForm({ ...contactForm, atelierTitle: e.target.value })}
+                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
+                    placeholder="e.g. Kavish Kuthampully Atelier"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-[#6B5846] mb-1">
+                    Subtitle / Badge Label
+                  </label>
+                  <input
+                    type="text"
+                    value={contactForm.atelierSubtitle}
+                    onChange={(e) => setContactForm({ ...contactForm, atelierSubtitle: e.target.value })}
+                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#D4AF37]"
+                    placeholder="e.g. HEADQUARTERS & LOOM HOUSE"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-[#6B5846] mb-1 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#D4AF37]" />
+                  <span>Physical Address (Line 1) *</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={contactForm.addressLine1}
+                  onChange={(e) => setContactForm({ ...contactForm, addressLine1: e.target.value })}
+                  className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
+                  placeholder="e.g. Kuthampully Handloom Village, Near Thiruvilwamala"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-[#6B5846] mb-1">
+                  District, State &amp; Pincode (Line 2)
+                </label>
+                <input
+                  type="text"
+                  value={contactForm.addressLine2}
+                  onChange={(e) => setContactForm({ ...contactForm, addressLine2: e.target.value })}
+                  className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
+                  placeholder="e.g. Thrissur District, Kerala - 679121, India"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-semibold text-[#6B5846] mb-1 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>Visiting Hours (Mon – Sat)</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={contactForm.visitingHoursLine1}
+                    onChange={(e) => setContactForm({ ...contactForm, visitingHoursLine1: e.target.value })}
+                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
+                    placeholder="e.g. Monday – Saturday: 9:30 AM – 7:00 PM IST"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-[#6B5846] mb-1 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>Visiting Hours (Sunday)</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={contactForm.visitingHoursLine2}
+                    onChange={(e) => setContactForm({ ...contactForm, visitingHoursLine2: e.target.value })}
+                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
+                    placeholder="e.g. Sunday: 10:00 AM – 5:00 PM (By Appointment)"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-semibold text-[#6B5846] mb-1 flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>Direct Concierge Phone *</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={contactForm.phone}
+                    onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-mono font-bold"
+                    placeholder="e.g. +91 4884 282 100 / +91 98470 55111"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-[#6B5846] mb-1 flex items-center gap-1.5">
+                    <Mail className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>Email Concierge *</span>
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={contactForm.email}
+                    onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-mono font-bold"
+                    placeholder="e.g. concierge@kavishhandlooms.com"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-semibold text-[#6B5846] mb-1 flex items-center gap-1.5">
+                    <MessageSquare className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>WhatsApp Concierge Number</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={contactForm.whatsappNumber}
+                    onChange={(e) => setContactForm({ ...contactForm, whatsappNumber: e.target.value })}
+                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-mono font-bold"
+                    placeholder="e.g. 919847055111 (Country code + number)"
+                  />
+                  <span className="text-[10px] text-gray-500 mt-1 block">Used to generate one-click WhatsApp chat link.</span>
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-[#6B5846] mb-1 flex items-center gap-1.5">
+                    <Award className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>GI Tag / Accreditation Badge</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={contactForm.badgeText}
+                    onChange={(e) => setContactForm({ ...contactForm, badgeText: e.target.value })}
+                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold"
+                    placeholder="e.g. Authentic Kuthampully GI Tag Unit"
+                  />
+                </div>
+              </div>
+
+            </div>
+
+            {/* Live Preview Card (5 cols on large) */}
+            <div className="lg:col-span-5 space-y-2">
+              <span className="block font-serif font-bold text-xs uppercase tracking-wider text-[#6B5846]">
+                Live Storefront Card Preview
+              </span>
+
+              <div className="bg-white p-6 border-2 border-[#E8DDC7] rounded-2xl shadow-xs space-y-5">
+                <div>
+                  <span className="text-[10px] uppercase tracking-widest text-[#D4AF37] font-bold block mb-1">
+                    {contactForm.atelierSubtitle || 'HEADQUARTERS & LOOM HOUSE'}
+                  </span>
+                  <h4 className="font-serif text-xl font-bold text-[#12372A]">
+                    {contactForm.atelierTitle || 'Kavish Kuthampully Atelier'}
+                  </h4>
+                </div>
+
+                <div className="space-y-3 text-xs">
+                  
+                  <div className="flex items-start gap-3 p-3 bg-[#FAF8F1] rounded-xl border border-[#E8DDC7]">
+                    <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-[#12372A] font-bold block text-[11px]">Address:</strong>
+                      <p className="text-[#6B5846] text-[11px]">{contactForm.addressLine1 || 'Kuthampully Handloom Village, Near Thiruvilwamala'}</p>
+                      {contactForm.addressLine2 && <p className="text-[#6B5846] text-[11px]">{contactForm.addressLine2}</p>}
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 bg-[#FAF8F1] rounded-xl border border-[#E8DDC7]">
+                    <Clock className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-[#12372A] font-bold block text-[11px]">Atelier Visiting Hours:</strong>
+                      <p className="text-[#6B5846] text-[11px]">{contactForm.visitingHoursLine1 || 'Monday – Saturday: 9:30 AM – 7:00 PM IST'}</p>
+                      {contactForm.visitingHoursLine2 && <p className="text-[#6B5846] text-[11px]">{contactForm.visitingHoursLine2}</p>}
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 bg-[#FAF8F1] rounded-xl border border-[#E8DDC7]">
+                    <Phone className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-[#12372A] font-bold block text-[11px]">Direct Concierge Phone:</strong>
+                      <p className="text-[#6B5846] text-[11px]">{contactForm.phone || '+91 4884 282 100 / +91 98470 55111'}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 bg-[#FAF8F1] rounded-xl border border-[#E8DDC7]">
+                    <Mail className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-[#12372A] font-bold block text-[11px]">Email Concierge:</strong>
+                      <p className="text-[#6B5846] text-[11px]">{contactForm.email || 'concierge@kavishhandlooms.com'}</p>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div className="pt-2 border-t border-[#E8DDC7]">
+                  <div className="w-full bg-[#12372A] text-[#FAF8F1] py-2.5 px-3 text-[11px] font-bold uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 border border-[#D4AF37]">
+                    <MessageSquare className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>Chat via WhatsApp Concierge</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
         
         {/* Header Announcement Bar Editor */}
         <div className="bg-white p-6 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-3">
@@ -138,9 +428,10 @@ export const ContentManagement: React.FC = () => {
 
         <button
           type="submit"
-          className="bg-[#12372A] text-[#FAF8F1] px-6 py-3 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A]"
+          className="bg-[#12372A] text-[#FAF8F1] px-8 py-3.5 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-md flex items-center gap-2"
         >
-          Publish Live Content Updates
+          <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+          <span>Publish Live Content &amp; Atelier Updates</span>
         </button>
 
       </form>

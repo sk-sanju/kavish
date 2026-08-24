@@ -361,7 +361,8 @@ function mapStoreContentFromDb(row: any): StoreContentConfig {
     bannerImage: row.banner_image || '',
     featuredCollectionIds: Array.isArray(row.featured_collection_ids) ? row.featured_collection_ids : [],
     faqItems: Array.isArray(row.faq_items) ? row.faq_items : [],
-    policyText: row.policy_text || ''
+    policyText: row.policy_text || '',
+    contactInfo: row.contact_info || undefined
   };
 }
 
@@ -374,7 +375,8 @@ function mapStoreContentToDb(sc: StoreContentConfig): Record<string, any> {
     banner_image: sc.bannerImage,
     featured_collection_ids: sc.featuredCollectionIds,
     faq_items: sc.faqItems,
-    policy_text: sc.policyText
+    policy_text: sc.policyText,
+    contact_info: sc.contactInfo || null
   };
 }
 
