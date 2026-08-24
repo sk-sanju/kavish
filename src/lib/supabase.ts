@@ -175,6 +175,7 @@ function mapOfferFromDb(row: any): PromoOffer {
     startDate: row.start_date || undefined,
     isActive: Boolean(row.is_active ?? true),
     usageCount: Number(row.usage_count ?? 0),
+    usageLimit: row.usage_limit != null ? Number(row.usage_limit) : undefined,
     perCustomerLimit: row.per_customer_limit != null ? Number(row.per_customer_limit) : undefined,
     isFirstOrderOnly: Boolean(row.is_first_order_only ?? false),
     description: row.description || ''
@@ -193,6 +194,7 @@ function mapOfferToDb(off: PromoOffer): Record<string, any> {
     start_date: off.startDate ?? null,
     is_active: off.isActive,
     usage_count: off.usageCount,
+    usage_limit: off.usageLimit ?? null,
     per_customer_limit: off.perCustomerLimit ?? 1,
     is_first_order_only: off.isFirstOrderOnly ?? false,
     description: off.description

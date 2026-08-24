@@ -33,6 +33,7 @@ interface ProductContextType {
   toggleCategoryStatus: (id: string) => void;
 
   addOffer: (offerForm: Partial<PromoOffer>) => PromoOffer;
+  updateOffer: (offer: PromoOffer) => void;
   toggleOfferStatus: (id: string) => void;
   deleteOffer: (id: string) => void;
 
@@ -332,9 +333,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       discountType: offerForm.discountType || 'percentage',
       discountValue: offerForm.discountValue || 10,
       minOrderAmount: offerForm.minOrderAmount || 1000,
+      maxDiscountAmount: offerForm.maxDiscountAmount,
       expiryDate: offerForm.expiryDate || '2026-12-31',
       isActive: offerForm.isActive ?? true,
-      usageCount: 0,
+      usageCount: offerForm.usageCount || 0,
+      usageLimit: offerForm.usageLimit,
       description: offerForm.description || 'Special Atelier Discount Code',
     };
 
@@ -342,6 +345,12 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     saveOffers(updated);
     upsertSupabaseOffer(newOffer);
     return newOffer;
+  };
+
+  const updateOffer = (updatedOffer: PromoOffer): void => {
+    const updated = offers.map((o) => (o.id === updatedOffer.id ? { ...updatedOffer } : o));
+    saveOffers(updated);
+    upsertSupabaseOffer(updatedOffer);
   };
 
   const toggleOfferStatus = (id: string): void => {
@@ -438,6 +447,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         deleteCategory,
         toggleCategoryStatus,
         addOffer,
+        updateOffer,
         toggleOfferStatus,
         deleteOffer,
         addCollection,

@@ -196,6 +196,7 @@ export interface PromoOffer {
   startDate?: string;
   isActive: boolean;
   usageCount: number;
+  usageLimit?: number;
   perCustomerLimit?: number;
   isFirstOrderOnly?: boolean;
   description: string;

@@ -163,6 +163,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             (o: any) => o.code && o.code.toUpperCase() === cleanCode && (o.isActive === undefined || o.isActive === true)
           );
           if (matched) {
+            // Check expiry date if specified
+            if (matched.expiryDate) {
+              const today = new Date().toISOString().split('T')[0];
+              if (matched.expiryDate < today) {
+                return {
+                  success: false,
+                  message: `Coupon code ${cleanCode} expired on ${matched.expiryDate}.`
+                };
+              }
+            }
+
+            // Check maximum user count limit
+            if (matched.usageLimit != null && matched.usageLimit > 0 && (matched.usageCount || 0) >= matched.usageLimit) {
+              return {
+                success: false,
+                message: `Coupon code ${cleanCode} has reached its maximum limit of ${matched.usageLimit} users.`
+              };
+            }
+
             if (matched.minOrderAmount && currentSubtotal < matched.minOrderAmount) {
               return {
                 success: false,
