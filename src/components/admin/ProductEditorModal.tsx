@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Trash2, Ruler } from 'lucide-react';
+import { X, Trash2, Ruler, UploadCloud, ImagePlus, Link as LinkIcon, Loader2, Star } from 'lucide-react';
 import type { Product, ProductCategory, ProductSubcategory } from '../../types';
+import { readImageFileAsDataUrl } from '../../utils/fileUpload';
 
 interface ProductEditorModalProps {
   product: Partial<Product> | null;
@@ -11,6 +12,10 @@ interface ProductEditorModalProps {
 
 export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product, onSave, onClose }) => {
   const [activeTab, setActiveTab] = useState<'basic' | 'pricing' | 'inventory' | 'variants' | 'media' | 'sizechart'>('basic');
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState<Partial<Product>>({
     id: product?.id,
@@ -81,15 +86,52 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
   const [newColorHex, setNewColorHex] = useState('#D4AF37');
   const [newSizeTag, setNewSizeTag] = useState('');
 
+  const handleDeviceFiles = async (files: FileList | File[] | null) => {
+    if (!files || files.length === 0) return;
+    setUploadError(null);
+    setIsUploadingImage(true);
+
+    try {
+      const fileArray = Array.from(files);
+      const readPromises = fileArray.map(async (file) => {
+        if (!file.type.startsWith('image/')) {
+          throw new Error(`"${file.name}" is not a supported image file.`);
+        }
+        return readImageFileAsDataUrl(file);
+      });
+
+      const newUrls = await Promise.all(readPromises);
+      setForm((prev) => ({
+        ...prev,
+        images: [...(prev.images || []), ...newUrls]
+      }));
+    } catch (err: any) {
+      setUploadError(err.message || 'Failed to process selected image(s).');
+    } finally {
+      setIsUploadingImage(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   const handleAddImage = () => {
     if (newImageUrl.trim()) {
       setForm({ ...form, images: [...(form.images || []), newImageUrl.trim()] });
       setNewImageUrl('');
+      setUploadError(null);
     }
   };
 
   const handleRemoveImage = (idx: number) => {
     setForm({ ...form, images: (form.images || []).filter((_, i) => i !== idx) });
+  };
+
+  const handleSetCoverImage = (idx: number) => {
+    if (idx === 0) return;
+    const currentImages = [...(form.images || [])];
+    const [selected] = currentImages.splice(idx, 1);
+    setForm({ ...form, images: [selected, ...currentImages] });
   };
 
   const handleAddColor = () => {
@@ -491,32 +533,169 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
 
           {/* TAB 5: MEDIA GALLERY */}
           {activeTab === 'media' && (
-            <div className="space-y-4">
-              <label className="block font-semibold text-[#6B5846]">Product High-Res Image URLs</label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {(form.images || []).map((img, idx) => (
-                  <div key={idx} className="relative aspect-[3/4] border border-[#E8DDC7] rounded-xl overflow-hidden group">
-                    <img src={img} alt={`Product ${idx}`} className="w-full h-full object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImage(idx)}
-                      className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full opacity-90 hover:opacity-100"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ))}
+            <div className="space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <label className="block font-semibold text-[#12372A] text-sm">Product High-Res Media Gallery</label>
+                  <p className="text-xs text-[#6B5846]">
+                    Upload photos directly from your device (phone/PC) or paste web URLs. The first image will be used as the primary catalog cover.
+                  </p>
+                </div>
+                <span className="text-[11px] font-mono font-bold bg-[#FAF8F1] px-2.5 py-1 rounded-lg border border-[#E8DDC7] text-[#12372A] self-start sm:self-auto">
+                  {(form.images || []).length} Photo{(form.images || []).length === 1 ? '' : 's'} Added
+                </span>
               </div>
 
-              <div className="flex gap-2 pt-2">
+              {/* Device Upload Zone */}
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsDragging(true);
+                }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setIsDragging(false);
+                  handleDeviceFiles(e.dataTransfer.files);
+                }}
+                onClick={() => fileInputRef.current?.click()}
+                className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
+                  isDragging
+                    ? 'border-[#D4AF37] bg-[#D4AF37]/10 scale-[0.99]'
+                    : 'border-[#D4AF37]/40 bg-[#FAF8F1]/60 hover:bg-[#FAF8F1] hover:border-[#D4AF37]'
+                }`}
+              >
                 <input
-                  type="text"
-                  placeholder="Paste image URL (https://...)"
-                  value={newImageUrl}
-                  onChange={(e) => setNewImageUrl(e.target.value)}
-                  className="flex-1 border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => handleDeviceFiles(e.target.files)}
+                  className="hidden"
                 />
-                <button type="button" onClick={handleAddImage} className="bg-[#12372A] text-[#FAF8F1] px-5 py-2.5 font-bold uppercase rounded-xl">+ Add Image</button>
+
+                <div className="flex flex-col items-center justify-center space-y-2">
+                  <div className="w-12 h-12 rounded-full bg-[#12372A]/5 border border-[#D4AF37]/30 flex items-center justify-center text-[#12372A]">
+                    {isUploadingImage ? (
+                      <Loader2 className="w-6 h-6 animate-spin text-[#D4AF37]" />
+                    ) : (
+                      <UploadCloud className="w-6 h-6 text-[#12372A]" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-xs sm:text-sm font-bold text-[#12372A]">
+                      {isUploadingImage ? 'Processing Images...' : 'Click to Upload from Device or Drag & Drop'}
+                    </p>
+                    <p className="text-[11px] text-[#6B5846] mt-0.5">
+                      Supports JPG, PNG, WEBP, HEIC • Select multiple photos at once
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={isUploadingImage}
+                    className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#12372A] text-[#FAF8F1] text-[11px] font-bold uppercase rounded-xl tracking-wider hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-xs"
+                  >
+                    <ImagePlus className="w-3.5 h-3.5" />
+                    <span>Browse Device Files</span>
+                  </button>
+                </div>
+              </div>
+
+              {uploadError && (
+                <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center justify-between">
+                  <span>{uploadError}</span>
+                  <button type="button" onClick={() => setUploadError(null)} className="font-bold hover:text-red-900">✕</button>
+                </div>
+              )}
+
+              {/* Or Paste URL */}
+              <div className="pt-2 border-t border-[#E8DDC7]">
+                <label className="block text-[11px] font-semibold text-[#6B5846] mb-1.5 flex items-center gap-1.5">
+                  <LinkIcon className="w-3 h-3 text-[#D4AF37]" />
+                  <span>Or Add via Direct Web Image URL:</span>
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    placeholder="https://images.unsplash.com/... or cloud image link"
+                    value={newImageUrl}
+                    onChange={(e) => setNewImageUrl(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddImage();
+                      }
+                    }}
+                    className="flex-1 border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] text-xs"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddImage}
+                    className="bg-[#12372A] text-[#FAF8F1] px-5 py-2.5 font-bold uppercase text-xs rounded-xl hover:bg-[#D4AF37] hover:text-[#12372A] transition-all whitespace-nowrap"
+                  >
+                    + Add URL
+                  </button>
+                </div>
+              </div>
+
+              {/* Attached Photos Grid */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B5846] mb-2">
+                  Attached Product Media ({(form.images || []).length})
+                </label>
+
+                {(form.images || []).length === 0 ? (
+                  <div className="p-8 border border-dashed border-[#E8DDC7] rounded-2xl text-center text-xs text-[#6B5846] bg-[#FAF8F1]">
+                    No images added yet. Upload from device above or paste an image URL.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+                    {(form.images || []).map((img, idx) => (
+                      <div
+                        key={idx}
+                        className={`relative aspect-[3/4] border-2 rounded-2xl overflow-hidden group shadow-xs transition-all ${
+                          idx === 0 ? 'border-[#D4AF37] ring-2 ring-[#D4AF37]/30' : 'border-[#E8DDC7]'
+                        }`}
+                      >
+                        <img src={img} alt={`Product view ${idx + 1}`} className="w-full h-full object-cover" />
+                        
+                        {/* Cover Badge */}
+                        {idx === 0 ? (
+                          <span className="absolute top-2 left-2 bg-[#12372A] text-[#D4AF37] text-[10px] font-bold px-2 py-0.5 rounded-md border border-[#D4AF37] shadow-sm flex items-center gap-1">
+                            <Star className="w-2.5 h-2.5 fill-[#D4AF37]" />
+                            Cover
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleSetCoverImage(idx)}
+                            className="absolute top-2 left-2 bg-black/60 hover:bg-[#12372A] text-white text-[10px] font-bold px-2 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition-all"
+                            title="Set as main product cover"
+                          >
+                            Set Cover
+                          </button>
+                        )}
+
+                        {/* Actions */}
+                        <div className="absolute top-2 right-2 flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(idx)}
+                            className="bg-red-600/90 hover:bg-red-600 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                            title="Remove photo"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        {/* Position indicator */}
+                        <span className="absolute bottom-1.5 right-2 text-[10px] font-mono font-bold bg-black/60 text-white px-1.5 py-0.5 rounded">
+                          #{idx + 1}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}

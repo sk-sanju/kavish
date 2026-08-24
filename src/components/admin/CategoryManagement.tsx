@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { Plus, Edit, Trash2, CheckCircle2, XCircle, X } from 'lucide-react';
+import { Plus, Edit, Trash2, CheckCircle2, XCircle, X, UploadCloud, ImagePlus, Link as LinkIcon, Loader2 } from 'lucide-react';
 import type { CategoryItem, ProductCategory } from '../../types';
 import { useProducts } from '../../context/ProductContext';
 import { INITIAL_CATEGORIES } from '../../data/categories';
+import { readImageFileAsDataUrl } from '../../utils/fileUpload';
 
 export const DEFAULT_CATEGORIES = INITIAL_CATEGORIES;
 
@@ -12,6 +13,11 @@ export const CategoryManagement: React.FC = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState<CategoryItem | null>(null);
+  const [isUploadingCategoryImg, setIsUploadingCategoryImg] = useState(false);
+  const [isCategoryDragging, setIsCategoryDragging] = useState(false);
+  const [uploadCategoryError, setUploadCategoryError] = useState<string | null>(null);
+  const categoryFileInputRef = useRef<HTMLInputElement>(null);
+
   const [form, setForm] = useState<Partial<CategoryItem>>({
     name: '',
     parentCategory: 'women',
@@ -22,6 +28,28 @@ export const CategoryManagement: React.FC = () => {
     seoDescription: '',
     status: 'Active'
   });
+
+  const handleCategoryDeviceUpload = async (files: FileList | File[] | null) => {
+    if (!files || files.length === 0) return;
+    setUploadCategoryError(null);
+    setIsUploadingCategoryImg(true);
+
+    try {
+      const file = files[0];
+      if (!file.type.startsWith('image/')) {
+        throw new Error(`"${file.name}" is not a supported image file.`);
+      }
+      const dataUrl = await readImageFileAsDataUrl(file);
+      setForm((prev) => ({ ...prev, image: dataUrl }));
+    } catch (err: any) {
+      setUploadCategoryError(err.message || 'Failed to process category image.');
+    } finally {
+      setIsUploadingCategoryImg(false);
+      if (categoryFileInputRef.current) {
+        categoryFileInputRef.current.value = '';
+      }
+    }
+  };
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -179,14 +207,109 @@ export const CategoryManagement: React.FC = () => {
                 </select>
               </div>
 
-              <div>
-                <label className="block font-semibold text-[#6B5846] mb-1">Category Banner Image URL</label>
-                <input
-                  type="text"
-                  value={form.image}
-                  onChange={(e) => setForm({ ...form, image: e.target.value })}
-                  className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
-                />
+              {/* Category Image Section with Device Upload */}
+              <div className="space-y-3 pt-1">
+                <div className="flex items-center justify-between">
+                  <label className="block font-semibold text-[#6B5846]">Category Banner Image</label>
+                  {form.image && (
+                    <span className="text-[10px] text-green-700 font-bold bg-green-50 px-2 py-0.5 rounded border border-green-200">
+                      Image Selected
+                    </span>
+                  )}
+                </div>
+
+                {/* Live Preview If Image Exists */}
+                {form.image ? (
+                  <div className="relative h-36 rounded-2xl overflow-hidden border border-[#E8DDC7] group shadow-xs">
+                    <img src={form.image} alt="Category Banner Preview" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3">
+                      <p className="text-white text-xs font-bold font-serif">{form.name || 'Category Name Preview'}</p>
+                    </div>
+                    <div className="absolute top-2 right-2 flex gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
+                      <button
+                        type="button"
+                        onClick={() => categoryFileInputRef.current?.click()}
+                        className="bg-[#12372A] text-[#FAF8F1] px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase hover:bg-[#D4AF37] hover:text-[#12372A] transition-all flex items-center gap-1 shadow-sm"
+                      >
+                        <ImagePlus className="w-3 h-3" />
+                        Change
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setForm({ ...form, image: '' })}
+                        className="bg-red-600 text-white p-1 rounded-lg hover:bg-red-700 transition-all shadow-sm"
+                        title="Remove image"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+
+                {/* Device Upload Zone */}
+                <div
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsCategoryDragging(true);
+                  }}
+                  onDragLeave={() => setIsCategoryDragging(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setIsCategoryDragging(false);
+                    handleCategoryDeviceUpload(e.dataTransfer.files);
+                  }}
+                  onClick={() => categoryFileInputRef.current?.click()}
+                  className={`border-2 border-dashed rounded-2xl p-4 text-center cursor-pointer transition-all ${
+                    isCategoryDragging
+                      ? 'border-[#D4AF37] bg-[#D4AF37]/10'
+                      : 'border-[#D4AF37]/40 bg-[#FAF8F1]/60 hover:bg-[#FAF8F1] hover:border-[#D4AF37]'
+                  }`}
+                >
+                  <input
+                    ref={categoryFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleCategoryDeviceUpload(e.target.files)}
+                    className="hidden"
+                  />
+                  <div className="flex flex-col items-center justify-center space-y-1.5">
+                    <div className="w-9 h-9 rounded-full bg-[#12372A]/5 border border-[#D4AF37]/30 flex items-center justify-center text-[#12372A]">
+                      {isUploadingCategoryImg ? (
+                        <Loader2 className="w-5 h-5 animate-spin text-[#D4AF37]" />
+                      ) : (
+                        <UploadCloud className="w-5 h-5 text-[#12372A]" />
+                      )}
+                    </div>
+                    <p className="text-xs font-bold text-[#12372A]">
+                      {isUploadingCategoryImg ? 'Uploading from device...' : 'Upload Banner from Device'}
+                    </p>
+                    <p className="text-[10px] text-[#6B5846]">
+                      Drag & drop image here or click to browse (JPG, PNG, WebP)
+                    </p>
+                  </div>
+                </div>
+
+                {uploadCategoryError && (
+                  <div className="p-2.5 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center justify-between">
+                    <span>{uploadCategoryError}</span>
+                    <button type="button" onClick={() => setUploadCategoryError(null)} className="font-bold hover:text-red-900">✕</button>
+                  </div>
+                )}
+
+                {/* Or Web Image URL Input */}
+                <div>
+                  <label className="block text-[10px] font-semibold text-[#6B5846] mb-1 flex items-center gap-1">
+                    <LinkIcon className="w-2.5 h-2.5 text-[#D4AF37]" />
+                    <span>Or Paste Image Web URL:</span>
+                  </label>
+                  <input
+                    type="url"
+                    value={form.image || ''}
+                    onChange={(e) => setForm({ ...form, image: e.target.value })}
+                    placeholder="https://images.unsplash.com/..."
+                    className="w-full border border-[#E8DDC7] p-2 rounded-xl bg-[#FAF8F1] text-xs font-mono"
+                  />
+                </div>
               </div>
 
               <div>
