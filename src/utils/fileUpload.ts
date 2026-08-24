@@ -1,14 +1,22 @@
 /**
  * Utility to read and optimize image files from local device storage
  */
+const VALID_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.svg', '.gif', '.bmp', '.avif', '.jfif', '.heic'];
+
+function isImageFile(file: File): boolean {
+  if (file.type && file.type.startsWith('image/')) return true;
+  const fileName = (file.name || '').toLowerCase();
+  return VALID_IMAGE_EXTENSIONS.some((ext) => fileName.endsWith(ext));
+}
+
 export async function readImageFileAsDataUrl(
   file: File,
   maxWidth = 1600,
   maxHeight = 1600,
   quality = 0.85
 ): Promise<string> {
-  if (!file.type.startsWith('image/')) {
-    throw new Error('Please select a valid image file (JPEG, PNG, WebP, etc.).');
+  if (!isImageFile(file)) {
+    throw new Error(`"${file.name || 'File'}" is not a supported image (JPG, PNG, WebP, SVG, etc.).`);
   }
 
   return new Promise((resolve, reject) => {
@@ -17,46 +25,56 @@ export async function readImageFileAsDataUrl(
     reader.onload = (e) => {
       const result = e.target?.result as string;
       if (!result) {
-        reject(new Error('Failed to read file.'));
+        reject(new Error('Could not read file content.'));
         return;
       }
 
-      // If SVG or small/non-raster, return directly
-      if (file.type === 'image/svg+xml' || file.size < 80 * 1024) {
+      // If SVG or small file (< 100KB), return directly as Data URL
+      if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg') || file.size < 100 * 1024) {
         resolve(result);
         return;
       }
 
+      // Use HTML Image element to compress / scale large device photos
       const img = new Image();
       img.onload = () => {
-        let { width, height } = img;
+        try {
+          let { width, height } = img;
 
-        if (width > maxWidth || height > maxHeight) {
-          const ratio = Math.min(maxWidth / width, maxHeight / height);
-          width = Math.round(width * ratio);
-          height = Math.round(height * ratio);
+          if (width <= maxWidth && height <= maxHeight && file.size < 300 * 1024) {
+            resolve(result);
+            return;
+          }
+
+          if (width > maxWidth || height > maxHeight) {
+            const ratio = Math.min(maxWidth / width, maxHeight / height);
+            width = Math.max(1, Math.round(width * ratio));
+            height = Math.max(1, Math.round(height * ratio));
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve(result);
+            return;
+          }
+
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const isPng = file.type === 'image/png' || file.name.toLowerCase().endsWith('.png');
+          const mimeType = isPng ? 'image/png' : 'image/jpeg';
+          const compressedDataUrl = canvas.toDataURL(mimeType, quality);
+          resolve(compressedDataUrl || result);
+        } catch {
+          resolve(result);
         }
-
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          resolve(result); // Fallback to uncompressed
-          return;
-        }
-
-        ctx.drawImage(img, 0, 0, width, height);
-
-        // Keep PNG transparency if PNG, otherwise use JPEG for optimal size
-        const mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
-        const compressedDataUrl = canvas.toDataURL(mimeType, quality);
-        resolve(compressedDataUrl);
       };
 
       img.onerror = () => {
-        // Fallback to raw data url if canvas draw fails
+        // If image decode fails in browser, still resolve raw base64 data URL
         resolve(result);
       };
 
@@ -64,9 +82,10 @@ export async function readImageFileAsDataUrl(
     };
 
     reader.onerror = () => {
-      reject(new Error('Error reading local file.'));
+      reject(new Error('Failed to read device file.'));
     };
 
     reader.readAsDataURL(file);
   });
 }
+

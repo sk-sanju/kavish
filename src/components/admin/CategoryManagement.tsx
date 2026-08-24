@@ -247,32 +247,53 @@ export const CategoryManagement: React.FC = () => {
                 ) : null}
 
                 {/* Device Upload Zone */}
-                <div
+                <label
+                  htmlFor="category-device-file-input"
                   onDragOver={(e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     setIsCategoryDragging(true);
                   }}
-                  onDragLeave={() => setIsCategoryDragging(false)}
+                  onDragEnter={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsCategoryDragging(true);
+                  }}
+                  onDragLeave={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsCategoryDragging(false);
+                  }}
                   onDrop={(e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     setIsCategoryDragging(false);
-                    handleCategoryDeviceUpload(e.dataTransfer.files);
+                    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                      handleCategoryDeviceUpload(e.dataTransfer.files);
+                    }
                   }}
-                  onClick={() => categoryFileInputRef.current?.click()}
-                  className={`border-2 border-dashed rounded-2xl p-4 text-center cursor-pointer transition-all ${
+                  className={`block border-2 border-dashed rounded-2xl p-4 text-center cursor-pointer select-none transition-all ${
                     isCategoryDragging
-                      ? 'border-[#D4AF37] bg-[#D4AF37]/10'
-                      : 'border-[#D4AF37]/40 bg-[#FAF8F1]/60 hover:bg-[#FAF8F1] hover:border-[#D4AF37]'
+                      ? 'border-[#D4AF37] bg-[#D4AF37]/15 ring-2 ring-[#D4AF37]/50'
+                      : 'border-[#D4AF37]/50 bg-[#FAF8F1]/70 hover:bg-[#FAF8F1] hover:border-[#D4AF37]'
                   }`}
                 >
                   <input
+                    id="category-device-file-input"
                     ref={categoryFileInputRef}
                     type="file"
-                    accept="image/*"
-                    onChange={(e) => handleCategoryDeviceUpload(e.target.files)}
-                    className="hidden"
+                    accept="image/*,.jpg,.jpeg,.png,.webp,.svg,.gif,.bmp,.avif,.jfif,.heic"
+                    onClick={(e) => {
+                      (e.currentTarget as HTMLInputElement).value = '';
+                    }}
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files.length > 0) {
+                        handleCategoryDeviceUpload(e.target.files);
+                      }
+                    }}
+                    className="sr-only"
                   />
-                  <div className="flex flex-col items-center justify-center space-y-1.5">
+                  <div className="flex flex-col items-center justify-center space-y-1.5 pointer-events-none">
                     <div className="w-9 h-9 rounded-full bg-[#12372A]/5 border border-[#D4AF37]/30 flex items-center justify-center text-[#12372A]">
                       {isUploadingCategoryImg ? (
                         <Loader2 className="w-5 h-5 animate-spin text-[#D4AF37]" />
@@ -281,13 +302,17 @@ export const CategoryManagement: React.FC = () => {
                       )}
                     </div>
                     <p className="text-xs font-bold text-[#12372A]">
-                      {isUploadingCategoryImg ? 'Uploading from device...' : 'Upload Banner from Device'}
+                      {isUploadingCategoryImg ? 'Uploading & Processing...' : 'Click to Upload Banner from Device'}
                     </p>
                     <p className="text-[10px] text-[#6B5846]">
-                      Drag & drop image here or click to browse (JPG, PNG, WebP)
+                      Drag & drop image here or click to browse (JPG, PNG, WebP, SVG)
                     </p>
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#12372A] text-[#FAF8F1] text-[10px] font-bold uppercase rounded-lg tracking-wider mt-0.5 shadow-xs">
+                      <ImagePlus className="w-3 h-3 text-[#D4AF37]" />
+                      <span>Browse File</span>
+                    </span>
                   </div>
-                </div>
+                </label>
 
                 {uploadCategoryError && (
                   <div className="p-2.5 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center justify-between">

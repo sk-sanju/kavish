@@ -547,34 +547,55 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
               </div>
 
               {/* Device Upload Zone */}
-              <div
+              <label
+                htmlFor="product-device-file-input"
                 onDragOver={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   setIsDragging(true);
                 }}
-                onDragLeave={() => setIsDragging(false)}
+                onDragEnter={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsDragging(true);
+                }}
+                onDragLeave={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsDragging(false);
+                }}
                 onDrop={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   setIsDragging(false);
-                  handleDeviceFiles(e.dataTransfer.files);
+                  if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    handleDeviceFiles(e.dataTransfer.files);
+                  }
                 }}
-                onClick={() => fileInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
+                className={`block border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer select-none transition-all ${
                   isDragging
-                    ? 'border-[#D4AF37] bg-[#D4AF37]/10 scale-[0.99]'
-                    : 'border-[#D4AF37]/40 bg-[#FAF8F1]/60 hover:bg-[#FAF8F1] hover:border-[#D4AF37]'
+                    ? 'border-[#D4AF37] bg-[#D4AF37]/15 scale-[0.99] ring-2 ring-[#D4AF37]/50'
+                    : 'border-[#D4AF37]/50 bg-[#FAF8F1]/70 hover:bg-[#FAF8F1] hover:border-[#D4AF37]'
                 }`}
               >
                 <input
+                  id="product-device-file-input"
                   ref={fileInputRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/*,.jpg,.jpeg,.png,.webp,.svg,.gif,.bmp,.avif,.jfif,.heic"
                   multiple
-                  onChange={(e) => handleDeviceFiles(e.target.files)}
-                  className="hidden"
+                  onClick={(e) => {
+                    (e.currentTarget as HTMLInputElement).value = '';
+                  }}
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      handleDeviceFiles(e.target.files);
+                    }
+                  }}
+                  className="sr-only"
                 />
 
-                <div className="flex flex-col items-center justify-center space-y-2">
+                <div className="flex flex-col items-center justify-center space-y-2 pointer-events-none">
                   <div className="w-12 h-12 rounded-full bg-[#12372A]/5 border border-[#D4AF37]/30 flex items-center justify-center text-[#12372A]">
                     {isUploadingImage ? (
                       <Loader2 className="w-6 h-6 animate-spin text-[#D4AF37]" />
@@ -584,22 +605,18 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                   </div>
                   <div>
                     <p className="text-xs sm:text-sm font-bold text-[#12372A]">
-                      {isUploadingImage ? 'Processing Images...' : 'Click to Upload from Device or Drag & Drop'}
+                      {isUploadingImage ? 'Processing & Optimizing Images...' : 'Click to Upload from Device or Drag & Drop'}
                     </p>
                     <p className="text-[11px] text-[#6B5846] mt-0.5">
-                      Supports JPG, PNG, WEBP, HEIC • Select multiple photos at once
+                      JPG, PNG, WebP, SVG • Select multiple photos at once
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    disabled={isUploadingImage}
-                    className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#12372A] text-[#FAF8F1] text-[11px] font-bold uppercase rounded-xl tracking-wider hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-xs"
-                  >
-                    <ImagePlus className="w-3.5 h-3.5" />
+                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#12372A] text-[#FAF8F1] text-[11px] font-bold uppercase rounded-xl tracking-wider shadow-xs">
+                    <ImagePlus className="w-3.5 h-3.5 text-[#D4AF37]" />
                     <span>Browse Device Files</span>
-                  </button>
+                  </span>
                 </div>
-              </div>
+              </label>
 
               {uploadError && (
                 <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center justify-between">
