@@ -33,17 +33,21 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
 
   const activeCat = params.category || initialCategory;
   const activeCol = params.collection || initialCollection;
+  const isDirectDept = ['women', 'men', 'kids'].includes((activeCat || '').toLowerCase());
 
   const [filters, setFilters] = useState<FilterState>(() => ({
     ...INITIAL_FILTERS,
-    gender: activeCat ? [activeCat] : [],
+    gender: isDirectDept && activeCat ? [activeCat.toLowerCase()] : [],
+    category: !isDirectDept && activeCat ? [activeCat.toLowerCase()] : [],
     collection: activeCol ? [activeCol] : [],
   }));
 
   useEffect(() => {
+    const isDept = ['women', 'men', 'kids'].includes((activeCat || '').toLowerCase());
     setFilters(prev => ({
       ...prev,
-      gender: activeCat ? [activeCat] : [],
+      gender: isDept && activeCat ? [activeCat.toLowerCase()] : [],
+      category: !isDept && activeCat ? [activeCat.toLowerCase()] : [],
       collection: activeCol ? [activeCol] : [],
     }));
   }, [activeCat, activeCol]);
@@ -64,6 +68,18 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
     return products.filter(product => {
       if (filters.gender.length > 0 && !filters.gender.includes(product.category)) {
         return false;
+      }
+      if (filters.category.length > 0) {
+        const catFilter = filters.category[0].toLowerCase().replace(/-/g, ' ');
+        const pSub = (product.subcategory || '').toLowerCase();
+        const pName = (product.name || '').toLowerCase();
+        const pCat = (product.category || '').toLowerCase();
+        const matchesCategory = pSub.includes(catFilter) ||
+          catFilter.includes(pSub) ||
+          pName.includes(catFilter) ||
+          pCat.includes(catFilter) ||
+          (product.tags && product.tags.some(t => t.toLowerCase().includes(catFilter)));
+        if (!matchesCategory) return false;
       }
       if (filters.collection.length > 0 && !filters.collection.includes(product.collection)) {
         return false;

@@ -48,5 +48,29 @@ export const INITIAL_CATEGORIES: CategoryItem[] = [
     seoDescription: 'Heirloom bridal wedding sarees crafted with 500-year-old weaving traditions.',
     status: 'Active',
     productCount: 5
+  },
+  {
+    id: 'cat-pure-linen',
+    name: 'Pure European Linen',
+    parentCategory: 'men',
+    slug: 'pure-linen',
+    image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80',
+    description: 'Tailored organic linen shirts and kurtas spun with ultra-breathable unbleached European yarn.',
+    seoTitle: 'Pure European Linen Shirts & Kurtas | Kavish',
+    seoDescription: 'Breathable, sustainable luxury linen tailored for gentlemen.',
+    status: 'Active',
+    productCount: 4
+  },
+  {
+    id: 'cat-stoles-dupattas',
+    name: 'Handloom Stoles & Sets',
+    parentCategory: 'women',
+    slug: 'stoles-dupattas',
+    image: 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=800&q=80',
+    description: 'Featherlight Kasavu stoles, temple border dupattas, and ceremonial matching sets.',
+    seoTitle: 'Handloom Kasavu Dupattas & Stoles | Kavish',
+    seoDescription: 'Exquisite lightweight handloom accessories with gold zari accents.',
+    status: 'Active',
+    productCount: 3
   }
 ];
