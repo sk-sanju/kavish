@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { AdminLayout, type AdminTab } from '../components/admin/AdminLayout';
 import { AdminLoginPage } from './AdminLoginPage';
 import { DashboardOverview } from '../components/admin/DashboardOverview';
+import { BannerManagement } from '../components/admin/BannerManagement';
 import { ProductManagement } from '../components/admin/ProductManagement';
 import { CategoryManagement } from '../components/admin/CategoryManagement';
 import { InventoryManagement } from '../components/admin/InventoryManagement';
@@ -36,6 +37,7 @@ export const AdminDashboard: React.FC = () => {
       onNavigateHome={() => navigate('/')}
     >
       {activeTab === 'overview' && <DashboardOverview onNavigateTab={setActiveTab} />}
+      {activeTab === 'banners' && <BannerManagement />}
       {activeTab === 'products' && <ProductManagement />}
       {activeTab === 'categories' && <CategoryManagement />}
       {activeTab === 'inventory' && <InventoryManagement />}

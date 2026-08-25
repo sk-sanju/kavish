@@ -6,12 +6,59 @@ import type {
   StoreNotification,
   StoreContentConfig,
   GSTConfig,
-  ReturnStatus
+  ReturnStatus,
+  HeroBanner
 } from '../types';
 import {
   fetchSupabaseAuditLogs, insertSupabaseAuditLog,
-  fetchSupabaseReturnRequests, upsertSupabaseReturnRequest
+  fetchSupabaseReturnRequests, upsertSupabaseReturnRequest,
+  fetchSupabaseStoreContent, upsertSupabaseStoreContent
 } from '../lib/supabase';
+
+export const DEFAULT_HERO_BANNERS: HeroBanner[] = [
+  {
+    id: 'banner-01',
+    tag: 'Atelier Signature Edit',
+    title: '500 Years of\nKuthampully Handloom\nMastery',
+    subtitle: 'Royal Kasavu Sarees & Unbleached European Linen Woven for Modern Royalty',
+    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1800&q=90',
+    primaryCtaText: 'Shop Collection',
+    primaryCtaLink: 'shop',
+    secondaryCtaText: 'Explore Our Story',
+    secondaryCtaLink: 'heritage',
+    collectionSlug: 'kasavu-masterpieces',
+    isActive: true,
+    order: 1
+  },
+  {
+    id: 'banner-02',
+    tag: 'Festive Campaign',
+    title: 'The Royal Kasavu\nGold Zari Legacy.',
+    subtitle: 'Woven with 24k electroplated gold threads in Kuthampully for grand celebrations and heirloom memories.',
+    image: 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1800&q=90',
+    primaryCtaText: 'Shop Festive Edit',
+    primaryCtaLink: 'shop',
+    secondaryCtaText: 'GI Tag Heritage',
+    secondaryCtaLink: 'heritage',
+    collectionSlug: 'festive-edit',
+    isActive: true,
+    order: 2
+  },
+  {
+    id: 'banner-03',
+    tag: 'Pure European Linen',
+    title: 'Bespoke Kerala\nLinen Shirts & Mundus',
+    subtitle: 'Breathable, unbleached handloom weaves tailored with subtle gold borders for discerning gentlemen.',
+    image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1800&q=90',
+    primaryCtaText: 'Shop Men\'s Edit',
+    primaryCtaLink: 'shop',
+    secondaryCtaText: 'Craftsmanship',
+    secondaryCtaLink: 'heritage',
+    collectionSlug: 'col-everyday',
+    isActive: true,
+    order: 3
+  }
+];
 
 interface AdminContextType {
   auditLogs: AuditLog[];
@@ -20,6 +67,7 @@ interface AdminContextType {
   notifications: StoreNotification[];
   gstConfig: GSTConfig;
   storeContent: StoreContentConfig;
+  heroBanners: HeroBanner[];
 
   addAuditLog: (log: Omit<AuditLog, 'id' | 'timestamp'>) => void;
   updateReturnStatus: (id: string, status: ReturnStatus, notes?: string) => void;
@@ -35,6 +83,13 @@ interface AdminContextType {
 
   updateGSTConfig: (config: Partial<GSTConfig>) => void;
   updateStoreContent: (content: Partial<StoreContentConfig>) => void;
+
+  addHeroBanner: (bannerForm: Partial<HeroBanner>) => HeroBanner;
+  updateHeroBanner: (banner: HeroBanner) => void;
+  deleteHeroBanner: (id: string) => void;
+  toggleHeroBannerStatus: (id: string) => void;
+  reorderHeroBanners: (banners: HeroBanner[]) => void;
+  resetHeroBannersToDefault: () => void;
 }
 
 const INITIAL_AUDIT_LOGS: AuditLog[] = [];
@@ -149,6 +204,19 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return DEFAULT_GST_CONFIG;
   });
 
+  const [heroBanners, setHeroBanners] = useState<HeroBanner[]>(() => {
+    try {
+      const saved = localStorage.getItem('kavish_hero_banners_v1');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return DEFAULT_HERO_BANNERS;
+  });
+
   const [storeContent, setStoreContent] = useState<StoreContentConfig>(() => {
     try {
       const saved = localStorage.getItem(CONTENT_STORAGE_KEY);
@@ -156,7 +224,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } catch (e) {
       console.error(e);
     }
-    return DEFAULT_STORE_CONTENT;
+    return { ...DEFAULT_STORE_CONTENT, heroBanners: DEFAULT_HERO_BANNERS };
   });
 
   useEffect(() => {
@@ -166,6 +234,15 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       const dbReturns = await fetchSupabaseReturnRequests();
       if (dbReturns && dbReturns.length > 0) setReturnRequests(dbReturns);
+
+      const dbContent = await fetchSupabaseStoreContent();
+      if (dbContent) {
+        setStoreContent(prev => ({ ...prev, ...dbContent }));
+        if (dbContent.heroBanners && dbContent.heroBanners.length > 0) {
+          setHeroBanners(dbContent.heroBanners);
+          localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(dbContent.heroBanners));
+        }
+      }
     }
     loadSupabaseAdminData();
   }, []);
@@ -188,6 +265,81 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const saveNotifications = (notifs: StoreNotification[]) => {
     setNotifications(notifs);
     localStorage.setItem(NOTIF_STORAGE_KEY, JSON.stringify(notifs));
+  };
+
+  const saveHeroBanners = (newBanners: HeroBanner[]) => {
+    setHeroBanners(newBanners);
+    localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(newBanners));
+    const updatedContent = { ...storeContent, heroBanners: newBanners };
+    setStoreContent(updatedContent);
+    localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(updatedContent));
+  };
+
+  const addHeroBanner = (bannerForm: Partial<HeroBanner>): HeroBanner => {
+    const newBanner: HeroBanner = {
+      id: bannerForm.id || `banner-${Date.now()}`,
+      tag: bannerForm.tag?.trim() || 'Atelier Edit',
+      title: bannerForm.title?.trim() || '500 Years of Handloom Mastery',
+      subtitle: bannerForm.subtitle?.trim() || 'Royal Kasavu Sarees & Handloom Weaves',
+      image: bannerForm.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1800&q=90',
+      primaryCtaText: bannerForm.primaryCtaText || 'Shop Collection',
+      primaryCtaLink: bannerForm.primaryCtaLink || 'shop',
+      secondaryCtaText: bannerForm.secondaryCtaText || 'Explore Our Story',
+      secondaryCtaLink: bannerForm.secondaryCtaLink || 'heritage',
+      collectionSlug: bannerForm.collectionSlug || 'kasavu-masterpieces',
+      isActive: bannerForm.isActive ?? true,
+      order: bannerForm.order || heroBanners.length + 1
+    };
+    const updated = [...heroBanners, newBanner];
+    saveHeroBanners(updated);
+    addAuditLog({
+      adminName: 'Sanjay Suresh (Super Admin)',
+      adminRole: 'Super Admin',
+      action: `Created new Hero Banner: "${newBanner.tag}"`,
+      entity: 'StoreContent',
+      entityId: newBanner.id,
+      newValue: newBanner.title
+    });
+    return newBanner;
+  };
+
+  const updateHeroBanner = (banner: HeroBanner) => {
+    const updated = heroBanners.map(b => b.id === banner.id ? banner : b);
+    saveHeroBanners(updated);
+    addAuditLog({
+      adminName: 'Sanjay Suresh (Super Admin)',
+      adminRole: 'Super Admin',
+      action: `Updated Hero Banner: "${banner.tag}"`,
+      entity: 'StoreContent',
+      entityId: banner.id,
+      newValue: banner.title
+    });
+  };
+
+  const deleteHeroBanner = (id: string) => {
+    const bannerToDelete = heroBanners.find(b => b.id === id);
+    const updated = heroBanners.filter(b => b.id !== id);
+    saveHeroBanners(updated);
+    addAuditLog({
+      adminName: 'Sanjay Suresh (Super Admin)',
+      adminRole: 'Super Admin',
+      action: `Deleted Hero Banner: "${bannerToDelete?.tag || id}"`,
+      entity: 'StoreContent',
+      entityId: id
+    });
+  };
+
+  const toggleHeroBannerStatus = (id: string) => {
+    const updated = heroBanners.map(b => b.id === id ? { ...b, isActive: !b.isActive } : b);
+    saveHeroBanners(updated);
+  };
+
+  const reorderHeroBanners = (banners: HeroBanner[]) => {
+    saveHeroBanners(banners);
+  };
+
+  const resetHeroBannersToDefault = () => {
+    saveHeroBanners(DEFAULT_HERO_BANNERS);
   };
 
   const addAuditLog = (logData: Omit<AuditLog, 'id' | 'timestamp'>) => {
@@ -286,6 +438,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const updated = { ...storeContent, ...content };
     setStoreContent(updated);
     localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(updated));
+    upsertSupabaseStoreContent(updated);
   };
 
   return (
@@ -297,6 +450,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         notifications,
         gstConfig,
         storeContent,
+        heroBanners,
         addAuditLog,
         updateReturnStatus,
         addReturnRequest,
@@ -307,7 +461,13 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         clearAllNotifications,
         addNotification,
         updateGSTConfig,
-        updateStoreContent
+        updateStoreContent,
+        addHeroBanner,
+        updateHeroBanner,
+        deleteHeroBanner,
+        toggleHeroBannerStatus,
+        reorderHeroBanners,
+        resetHeroBannersToDefault
       }}
     >
       {children}

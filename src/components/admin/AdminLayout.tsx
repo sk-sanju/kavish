@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   TrendingUp, Package, Tag, Truck, Users, Percent, RefreshCw, Navigation,
   DollarSign, BarChart3, Layout, Star, Bell, ShieldCheck, History, Settings,
-  Search, Plus, LogOut, Menu, X, ArrowLeft, Globe
+  Search, Plus, LogOut, Menu, X, ArrowLeft, Globe, Image as ImageIcon
 } from 'lucide-react';
 import logoImg from '../../assets/logo.png';
 import { useAuth } from '../../context/AuthContext';
@@ -11,6 +11,7 @@ import { NotificationCenter } from './NotificationCenter';
 
 export type AdminTab =
   | 'overview'
+  | 'banners'
   | 'products'
   | 'categories'
   | 'inventory'
@@ -53,6 +54,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
   const navItems: { id: AdminTab; label: string; icon: any; badge?: string }[] = [
     { id: 'overview', label: 'Dashboard Overview', icon: TrendingUp },
+    { id: 'banners', label: 'Banner & Hero CMS', icon: ImageIcon, badge: 'Hero' },
     { id: 'orders', label: 'Order Management', icon: Truck, badge: 'Live' },
     { id: 'products', label: 'Product Catalog', icon: Package },
     { id: 'categories', label: 'Category Manager', icon: Layout },

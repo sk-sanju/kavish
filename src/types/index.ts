@@ -304,11 +304,27 @@ export interface StoreContactConfig {
   badgeText: string;
 }
 
+export interface HeroBanner {
+  id: string;
+  tag: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  primaryCtaText?: string;
+  primaryCtaLink?: string;
+  secondaryCtaText?: string;
+  secondaryCtaLink?: string;
+  collectionSlug?: string;
+  isActive?: boolean;
+  order?: number;
+}
+
 export interface StoreContentConfig {
   announcementText: string;
   heroTitle: string;
   heroSubtitle: string;
   bannerImage: string;
+  heroBanners?: HeroBanner[];
   featuredCollectionIds: string[];
   faqItems: { question: string; answer: string }[];
   policyText: string;
