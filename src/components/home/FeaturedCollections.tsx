@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';
+import { getOptimizedImageUrl, handleImageError } from '../../utils/imageOptimizer';
 
 interface FeaturedCollectionsProps {
   onNavigate: (view: string, categoryFilter?: string, collectionFilter?: string) => void;
@@ -45,11 +46,14 @@ export const FeaturedCollections: React.FC<FeaturedCollectionsProps> = ({ onNavi
                 }`}
               >
                 {/* Card Image */}
-                <div className="aspect-[16/10] md:aspect-auto h-80 lg:h-96 overflow-hidden relative rounded-3xl">
+                <div className="aspect-[16/10] md:aspect-auto h-80 lg:h-96 overflow-hidden relative rounded-3xl bg-[#0B241B]">
                   <img
-                    src={col.image}
+                    src={getOptimizedImageUrl(col.image, { width: idx === 0 ? 1000 : 700, quality: 75 })}
                     alt={col.title}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-106"
+                    loading="lazy"
+                    decoding="async"
+                    onError={handleImageError}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#12372A]/90 via-[#12372A]/35 to-transparent" />
                 </div>

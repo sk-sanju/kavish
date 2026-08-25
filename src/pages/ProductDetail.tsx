@@ -8,6 +8,7 @@ import { useModal } from '../context/ModalContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { useProducts } from '../context/ProductContext';
 import { ProductCard } from '../components/product/ProductCard';
+import { getOptimizedImageUrl, handleImageError } from '../utils/imageOptimizer';
 
 interface ProductDetailProps {
   product?: Product | null;
@@ -103,16 +104,26 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
                     selectedImage === idx ? 'border-[#12372A] ring-2 ring-[#12372A]' : 'border-transparent opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt="Product view" className="w-full h-full object-cover rounded-xl" />
+                  <img
+                    src={getOptimizedImageUrl(img, { width: 160, quality: 75 })}
+                    alt="Product view thumbnail"
+                    className="w-full h-full object-cover rounded-xl"
+                    loading="lazy"
+                    decoding="async"
+                    onError={handleImageError}
+                  />
                 </button>
               ))}
             </div>
 
-            <div className="flex-1 aspect-[3/4] bg-white border border-[#E8DDC7] rounded-3xl overflow-hidden relative group shadow-sm">
+            <div className="flex-1 aspect-[3/4] bg-[#FAF8F1] border border-[#E8DDC7] rounded-3xl overflow-hidden relative group shadow-sm">
               <img
-                src={product.images[selectedImage] || product.images[0]}
+                src={getOptimizedImageUrl(product.images[selectedImage] || product.images[0], { width: 900, quality: 80 })}
                 alt={product.name}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 rounded-3xl"
+                loading="eager"
+                decoding="async"
+                onError={handleImageError}
               />
               <span className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-[#12372A] text-[#FAF8F1] text-[8px] sm:text-[9px] uppercase tracking-widest font-bold px-3 py-1 rounded-full border border-[#D4AF37] shadow-xs">
                 Kuthampully GI Handloom Tag

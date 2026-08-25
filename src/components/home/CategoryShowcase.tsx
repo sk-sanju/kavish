@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles, Compass } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';
 import { INITIAL_CATEGORIES } from '../../data/categories';
 import type { CategoryItem, ProductCategory } from '../../types';
+import { getOptimizedImageUrl, handleImageError } from '../../utils/imageOptimizer';
 
 interface CategoryShowcaseProps {
   onNavigate: (view: string, categoryFilter?: string, collectionFilter?: string) => void;
@@ -119,43 +120,11 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
           </div>
         </div>
 
-        {/* Circular Quick Avatar Row (Story Explorer) */}
-        <div className="mb-12 pb-2 overflow-x-auto scrollbar-none flex gap-4 sm:gap-6 justify-start sm:justify-center">
-          {activeCategories.map((cat) => {
-            const isSelected = selectedDept === cat.parentCategory || selectedDept === 'all';
-            return (
-              <button
-                key={cat.id}
-                onClick={() => handleCategoryClick(cat)}
-                className="group flex flex-col items-center shrink-0 w-20 sm:w-24 text-center focus:outline-none transition-transform hover:-translate-y-1"
-              >
-                <div className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-full p-0.5 shadow-md group-hover:shadow-lg transition-all ${
-                  isSelected ? 'bg-gradient-to-tr from-[#D4AF37] via-[#12372A] to-[#D4AF37]' : 'bg-[#E8DDC7]'
-                }`}>
-                  <div className="w-full h-full rounded-full overflow-hidden border-2 border-white bg-white">
-                    <img
-                      src={cat.image}
-                      alt={cat.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <span className="mt-2 text-[11px] sm:text-xs font-serif font-bold text-[#12372A] group-hover:text-[#D4AF37] transition-colors line-clamp-1 leading-tight">
-                  {cat.name.replace("Women's ", "").replace("Men's ", "")}
-                </span>
-                <span className="text-[9px] sm:text-[10px] text-[#6B5846] uppercase tracking-wider font-semibold">
-                  {cat.parentCategory}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
         {/* Category Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {displayedCategories.map((cat, idx) => {
             const count = getProductCountForCat(cat);
+            const optimizedImg = getOptimizedImageUrl(cat.image, { width: 600, quality: 75 });
             return (
               <div
                 key={cat.id}
@@ -165,10 +134,12 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
                 {/* Visual Category Imagery */}
                 <div className="relative h-64 sm:h-72 overflow-hidden bg-[#FAF8F1]">
                   <img
-                    src={cat.image}
+                    src={optimizedImg}
                     alt={cat.name}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
                     loading="lazy"
+                    decoding="async"
+                    onError={handleImageError}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#12372A]/90 via-[#12372A]/30 to-transparent" />
 

@@ -1,13 +1,14 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { getOptimizedImageUrl, handleImageError } from '../../utils/imageOptimizer';
 
 const INSTA_IMAGES = [
-  'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1583391733956-6c78276477e2?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=400&q=75',
+  'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=400&q=75',
+  'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=400&q=75',
+  'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=400&q=75',
+  'https://images.unsplash.com/photo-1583391733956-6c78276477e2?auto=format&fit=crop&w=400&q=75',
+  'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?auto=format&fit=crop&w=400&q=75',
 ];
 
 const InstagramIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
@@ -52,12 +53,15 @@ export const SocialGallery: React.FC = () => {
               href="https://instagram.com"
               target="_blank"
               rel="noreferrer"
-              className="group aspect-square overflow-hidden bg-black relative border border-[#E8DDC7] rounded-2xl shadow-xs"
+              className="group aspect-square overflow-hidden bg-[#FAF8F1] relative border border-[#E8DDC7] rounded-2xl shadow-xs"
             >
               <img
-                src={img}
+                src={getOptimizedImageUrl(img, { width: 350, quality: 75 })}
                 alt="Kavish Instagram Styling"
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90 group-hover:opacity-100 rounded-2xl"
+                loading="lazy"
+                decoding="async"
+                onError={handleImageError}
               />
               <div className="absolute inset-0 bg-[#12372A]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[#D4AF37] rounded-2xl">
                 <InstagramIcon className="w-6 h-6" />

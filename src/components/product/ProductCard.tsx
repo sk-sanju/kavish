@@ -5,6 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useModal } from '../../context/ModalContext';
 import { useCurrency } from '../../context/CurrencyContext';
+import { getOptimizedImageUrl, handleImageError } from '../../utils/imageOptimizer';
 
 interface ProductCardProps {
   product: Product;
@@ -35,6 +36,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
     openQuickView(product);
   };
 
+  const rawImg = product.images[currentImageIndex] || product.images[0];
+  const displayImg = getOptimizedImageUrl(rawImg, { width: 500, quality: 75 });
+
   return (
     <div
       onClick={() => onSelectProduct && onSelectProduct(product)}
@@ -47,10 +51,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
         onMouseLeave={() => setCurrentImageIndex(0)}
       >
         <img
-          src={product.images[currentImageIndex] || product.images[0]}
+          src={displayImg}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-106"
           loading="lazy"
+          decoding="async"
+          onError={handleImageError}
         />
 
         {/* Floating Badges with Smooth Rounded Pill shape */}
