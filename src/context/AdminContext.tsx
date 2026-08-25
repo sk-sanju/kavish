@@ -457,7 +457,41 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const updateStoreContent = (content: Partial<StoreContentConfig>) => {
-    const updated = { ...storeContent, ...content };
+    let updatedHeroBanners = heroBanners;
+
+    if (content.heroBanners && Array.isArray(content.heroBanners) && content.heroBanners.length > 0) {
+      updatedHeroBanners = content.heroBanners;
+      setHeroBanners(updatedHeroBanners);
+      localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(updatedHeroBanners));
+    } else if (content.heroTitle !== undefined || content.heroSubtitle !== undefined || content.bannerImage !== undefined) {
+      const activeIdx = heroBanners.findIndex(b => b.isActive !== false);
+      const targetIdx = activeIdx >= 0 ? activeIdx : 0;
+
+      if (heroBanners.length > 0) {
+        updatedHeroBanners = heroBanners.map((b, idx) => {
+          if (idx === targetIdx) {
+            return {
+              ...b,
+              ...(content.heroTitle !== undefined ? { title: content.heroTitle } : {}),
+              ...(content.heroSubtitle !== undefined ? { subtitle: content.heroSubtitle } : {}),
+              ...(content.bannerImage !== undefined ? { image: content.bannerImage } : {})
+            };
+          }
+          return b;
+        });
+      } else {
+        updatedHeroBanners = [{
+          ...DEFAULT_HERO_BANNERS[0],
+          title: content.heroTitle || DEFAULT_HERO_BANNERS[0].title,
+          subtitle: content.heroSubtitle || DEFAULT_HERO_BANNERS[0].subtitle,
+          image: content.bannerImage || DEFAULT_HERO_BANNERS[0].image
+        }];
+      }
+      setHeroBanners(updatedHeroBanners);
+      localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(updatedHeroBanners));
+    }
+
+    const updated = { ...storeContent, ...content, heroBanners: updatedHeroBanners };
     setStoreContent(updated);
     localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(updated));
     upsertSupabaseStoreContent(updated);

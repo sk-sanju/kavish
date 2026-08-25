@@ -151,11 +151,17 @@ CREATE TABLE IF NOT EXISTS public.store_content (
   hero_title TEXT,
   hero_subtitle TEXT,
   banner_image TEXT,
+  hero_banners JSONB DEFAULT '[]'::jsonb,
   featured_collection_ids JSONB DEFAULT '[]'::jsonb,
   faq_items JSONB DEFAULT '[]'::jsonb,
   policy_text TEXT,
+  contact_info JSONB,
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Migration for existing store_content tables
+ALTER TABLE public.store_content ADD COLUMN IF NOT EXISTS hero_banners JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public.store_content ADD COLUMN IF NOT EXISTS contact_info JSONB;
 
 -- 9. ADMIN USERS TABLE (Primary Key: phone_number)
 CREATE TABLE IF NOT EXISTS public.admin_users (

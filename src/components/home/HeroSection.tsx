@@ -12,16 +12,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
   const [activeIdx, setActiveIdx] = useState(0);
 
   const bannersList: HeroBanner[] = useMemo(() => {
-    const list = (heroBanners && heroBanners.length > 0)
+    let list = (heroBanners && heroBanners.length > 0)
       ? heroBanners
       : (storeContent?.heroBanners && storeContent.heroBanners.length > 0)
         ? storeContent.heroBanners
         : DEFAULT_HERO_BANNERS;
+
     const active = list.filter(b => b.isActive !== false);
     return active.length > 0 ? active : DEFAULT_HERO_BANNERS;
   }, [heroBanners, storeContent]);
 
-  const current = bannersList[activeIdx] || bannersList[0] || DEFAULT_HERO_BANNERS[0];
+  const safeIdx = (activeIdx >= 0 && activeIdx < bannersList.length) ? activeIdx : 0;
+  const current = bannersList[safeIdx] || DEFAULT_HERO_BANNERS[0];
 
   return (
     <section className="relative bg-[#12372A] text-[#FAF8F1] min-h-[75vh] sm:min-h-[85vh] flex items-center overflow-hidden">

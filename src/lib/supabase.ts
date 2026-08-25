@@ -616,9 +616,29 @@ export async function upsertSupabaseStoreContent(sc: StoreContentConfig): Promis
   try {
     const dbPayload = mapStoreContentToDb(sc);
     const { error } = await supabase.from('store_content').upsert([dbPayload]);
-    if (error) return false;
+    if (error) {
+      console.warn('Upsert store_content full payload error, trying base columns fallback:', error.message);
+      // Fallback: In case hero_banners or contact_info column has not been migrated yet in Supabase
+      const basePayload: Record<string, any> = {
+        id: 'main_content',
+        announcement_text: sc.announcementText,
+        hero_title: sc.heroTitle,
+        hero_subtitle: sc.heroSubtitle,
+        banner_image: sc.bannerImage,
+        featured_collection_ids: sc.featuredCollectionIds,
+        faq_items: sc.faqItems,
+        policy_text: sc.policyText
+      };
+      const { error: baseError } = await supabase.from('store_content').upsert([basePayload]);
+      if (baseError) {
+        console.error('Supabase store_content fallback failed:', baseError.message);
+        return false;
+      }
+      return true;
+    }
     return true;
   } catch (err) {
+    console.error('Supabase store_content exception:', err);
     return false;
   }
 }

@@ -8,11 +8,13 @@ import {
   MessageSquare, 
   Building2, 
   Award, 
-  CheckCircle2 
+  CheckCircle2,
+  UploadCloud
 } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 import { useProducts } from '../../context/ProductContext';
 import type { StoreContactConfig } from '../../types';
+import { readImageFileAsDataUrl } from '../../utils/fileUpload';
 
 export const ContentManagement: React.FC = () => {
   const { storeContent, updateStoreContent, addAuditLog } = useAdmin();
@@ -371,19 +373,30 @@ export const ContentManagement: React.FC = () => {
         </div>
 
         {/* Hero Section Banner Content */}
-        <div className="bg-white p-6 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-4">
-          <h3 className="font-serif font-bold text-base text-[#12372A] border-b border-[#E8DDC7] pb-2">
-            Homepage Hero Banner Headline &amp; Subtitle
-          </h3>
+        <div className="bg-white p-6 border-2 border-[#D4AF37]/30 rounded-2xl shadow-xs space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E8DDC7] pb-3">
+            <div>
+              <h3 className="font-serif font-bold text-base text-[#12372A]">
+                Homepage Hero Banner Content &amp; Imagery
+              </h3>
+              <p className="text-[11px] text-[#6B5846]">
+                Configure main headline, story subtitle, and luxury background image for the live storefront
+              </p>
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37] bg-[#12372A] px-2.5 py-1 rounded-lg">
+              Live Homepage Hero
+            </span>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold text-[#6B5846] mb-1">Hero Main Title</label>
+              <label className="block font-semibold text-[#6B5846] mb-1">Hero Main Title *</label>
               <input
                 type="text"
                 value={form.heroTitle}
                 onChange={(e) => setForm({ ...form, heroTitle: e.target.value })}
-                className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold"
+                placeholder="500 Years of Kuthampully Handloom Mastery"
+                className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
               />
             </div>
 
@@ -393,8 +406,57 @@ export const ContentManagement: React.FC = () => {
                 type="text"
                 value={form.heroSubtitle}
                 onChange={(e) => setForm({ ...form, heroSubtitle: e.target.value })}
-                className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
+                placeholder="Royal Kasavu Sarees & Unbleached European Linen Woven for Modern Royalty"
+                className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] text-[#12372A]"
               />
+            </div>
+          </div>
+
+          {/* Banner Image URL and Live Preview */}
+          <div className="pt-2 border-t border-[#E8DDC7] space-y-2">
+            <label className="block font-semibold text-[#6B5846]">Banner Background Image</label>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+              <div className="md:col-span-8 space-y-2">
+                <input
+                  type="text"
+                  value={form.bannerImage || ''}
+                  onChange={(e) => setForm({ ...form, bannerImage: e.target.value })}
+                  placeholder="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1800&q=90"
+                  className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] text-xs font-mono"
+                />
+                <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FAF8F1] border border-[#E8DDC7] hover:border-[#D4AF37] rounded-xl text-xs font-semibold text-[#12372A] cursor-pointer transition-all">
+                  <UploadCloud className="w-3.5 h-3.5 text-[#D4AF37]" />
+                  <span>Upload Image from Device</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    onChange={async (e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        try {
+                          const dataUrl = await readImageFileAsDataUrl(e.target.files[0]);
+                          setForm({ ...form, bannerImage: dataUrl });
+                        } catch (err: any) {
+                          alert(err.message || 'Failed to upload image.');
+                        }
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+
+              {form.bannerImage && (
+                <div className="md:col-span-4 relative h-20 rounded-xl overflow-hidden border border-[#D4AF37]/50 shadow-xs">
+                  <img
+                    src={form.bannerImage}
+                    alt="Banner preview"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-1.5">
+                    <span className="text-[10px] text-[#FAF8F1] font-semibold truncate">Current Live Image</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
