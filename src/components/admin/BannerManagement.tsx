@@ -107,7 +107,7 @@ export const BannerManagement: React.FC = () => {
 
   const handleOpenEditModal = (banner: HeroBanner) => {
     setEditingBanner(banner);
-    setForm(banner);
+    setForm({ ...banner });
     setShowModal(true);
   };
 
@@ -118,11 +118,26 @@ export const BannerManagement: React.FC = () => {
       return;
     }
 
+    const payload: HeroBanner = {
+      id: editingBanner ? editingBanner.id : `banner-${Date.now()}`,
+      tag: form.tag?.trim() || 'Atelier Signature Edit',
+      title: form.title?.trim() || '500 Years of Handloom Mastery',
+      subtitle: form.subtitle?.trim() || 'Royal Kasavu Sarees & Unbleached European Linen Woven for Modern Royalty',
+      image: form.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1800&q=90',
+      primaryCtaText: form.primaryCtaText?.trim() || 'Shop Collection',
+      primaryCtaLink: form.primaryCtaLink?.trim() || 'shop',
+      secondaryCtaText: form.secondaryCtaText?.trim() || 'Explore Our Story',
+      secondaryCtaLink: form.secondaryCtaLink?.trim() || 'heritage',
+      collectionSlug: form.collectionSlug || 'kasavu-masterpieces',
+      isActive: form.isActive !== false,
+      order: editingBanner?.order || heroBanners.length + 1
+    };
+
     if (editingBanner) {
-      updateHeroBanner({ ...editingBanner, ...form } as HeroBanner);
-      showToast(`Banner "${form.tag}" updated successfully.`);
+      updateHeroBanner(payload);
+      showToast(`Banner "${payload.tag}" updated successfully.`);
     } else {
-      addHeroBanner(form);
+      addHeroBanner(payload);
       showToast(`New hero banner created.`);
     }
     setShowModal(false);

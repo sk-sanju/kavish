@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Sparkles, 
   MapPin, 
@@ -35,6 +35,17 @@ export const ContentManagement: React.FC = () => {
     }
   );
 
+  useEffect(() => {
+    setForm(storeContent);
+    if (storeContent.contactInfo) {
+      setContactForm(storeContent.contactInfo);
+    }
+  }, [storeContent]);
+
+  useEffect(() => {
+    setAnnouncementInput(announcementText);
+  }, [announcementText]);
+
   const [newFaqQ, setNewFaqQ] = useState('');
   const [newFaqA, setNewFaqA] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -42,6 +53,7 @@ export const ContentManagement: React.FC = () => {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     const updatedContent = {
+      ...storeContent,
       ...form,
       contactInfo: contactForm
     };

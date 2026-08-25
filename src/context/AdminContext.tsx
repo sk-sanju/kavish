@@ -238,9 +238,23 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const dbContent = await fetchSupabaseStoreContent();
       if (dbContent) {
         setStoreContent(prev => ({ ...prev, ...dbContent }));
-        if (dbContent.heroBanners && dbContent.heroBanners.length > 0) {
+        if (dbContent.heroBanners && Array.isArray(dbContent.heroBanners) && dbContent.heroBanners.length > 0) {
           setHeroBanners(dbContent.heroBanners);
           localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(dbContent.heroBanners));
+        } else {
+          const currentLocal = (() => {
+            try {
+              const saved = localStorage.getItem('kavish_hero_banners_v1');
+              if (saved) {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+              }
+            } catch (e) {
+              console.error(e);
+            }
+            return DEFAULT_HERO_BANNERS;
+          })();
+          upsertSupabaseStoreContent({ ...dbContent, heroBanners: currentLocal });
         }
       }
     }
@@ -270,9 +284,17 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const saveHeroBanners = (newBanners: HeroBanner[]) => {
     setHeroBanners(newBanners);
     localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(newBanners));
-    const updatedContent = { ...storeContent, heroBanners: newBanners };
+    const firstActive = newBanners.find(b => b.isActive !== false) || newBanners[0];
+    const updatedContent: StoreContentConfig = {
+      ...storeContent,
+      heroBanners: newBanners,
+      heroTitle: firstActive?.title || storeContent.heroTitle,
+      heroSubtitle: firstActive?.subtitle || storeContent.heroSubtitle,
+      bannerImage: firstActive?.image || storeContent.bannerImage
+    };
     setStoreContent(updatedContent);
     localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(updatedContent));
+    upsertSupabaseStoreContent(updatedContent);
   };
 
   const addHeroBanner = (bannerForm: Partial<HeroBanner>): HeroBanner => {
