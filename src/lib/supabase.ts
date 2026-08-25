@@ -564,6 +564,17 @@ export async function upsertSupabaseCategory(cat: CategoryItem): Promise<boolean
   }
 }
 
+export async function removeSupabaseCategory(id: string): Promise<boolean> {
+  if (!isSupabaseConfigured) return false;
+  try {
+    const { error } = await supabase.from('categories').delete().eq('id', id);
+    if (error) return false;
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
 export async function fetchSupabaseAdminUsers(): Promise<AdminUser[] | null> {
   if (!isSupabaseConfigured) return null;
   try {

@@ -1,6 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { Plus, Edit, Trash2, CheckCircle2, XCircle, X, UploadCloud, ImagePlus, Link as LinkIcon, Loader2 } from 'lucide-react';
+import {
+  Plus, Edit, Trash2, CheckCircle2, XCircle, X, UploadCloud, ImagePlus,
+  Link as LinkIcon, Loader2, Search, Filter, Layers, Sparkles
+} from 'lucide-react';
 import type { CategoryItem, ProductCategory } from '../../types';
 import { useProducts } from '../../context/ProductContext';
 import { INITIAL_CATEGORIES } from '../../data/categories';
@@ -9,13 +12,16 @@ import { readImageFileAsDataUrl } from '../../utils/fileUpload';
 export const DEFAULT_CATEGORIES = INITIAL_CATEGORIES;
 
 export const CategoryManagement: React.FC = () => {
-  const { categories, addCategory, updateCategory, deleteCategory, toggleCategoryStatus } = useProducts();
+  const { products, categories, addCategory, updateCategory, deleteCategory, toggleCategoryStatus } = useProducts();
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState<'all' | ProductCategory>('all');
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState<CategoryItem | null>(null);
   const [isUploadingCategoryImg, setIsUploadingCategoryImg] = useState(false);
   const [isCategoryDragging, setIsCategoryDragging] = useState(false);
   const [uploadCategoryError, setUploadCategoryError] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const categoryFileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState<Partial<CategoryItem>>({
@@ -28,6 +34,47 @@ export const CategoryManagement: React.FC = () => {
     seoDescription: '',
     status: 'Active'
   });
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  // Filtered categories
+  const filteredCategories = useMemo(() => {
+    return categories.filter(cat => {
+      const matchesSearch = cat.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        cat.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        cat.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesDept = selectedDepartment === 'all' || cat.parentCategory === selectedDepartment;
+      return matchesSearch && matchesDept;
+    });
+  }, [categories, searchTerm, selectedDepartment]);
+
+  // Compute live products count for each category
+  const getCategoryProductCount = (cat: CategoryItem) => {
+    const catName = cat.name.toLowerCase();
+    const catSlug = cat.slug.toLowerCase();
+    return products.filter(p => {
+      const pCat = (p.category || '').toLowerCase();
+      const pSub = (p.subcategory || '').toLowerCase();
+      const pName = (p.name || '').toLowerCase();
+      return pCat === cat.parentCategory.toLowerCase() && (
+        pSub.includes(catName) || catName.includes(pSub) ||
+        pName.includes(catName) || pName.includes(catSlug)
+      );
+    }).length;
+  };
+
+  const handleNameChange = (name: string) => {
+    const autoSlug = name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+    setForm(prev => ({
+      ...prev,
+      name,
+      slug: prev.slug && prev.slug !== autoSlug.slice(0, -1) && !editingCategory ? prev.slug : autoSlug,
+      seoTitle: prev.seoTitle && prev.seoTitle !== name.slice(0, -1) && !editingCategory ? prev.seoTitle : `${name} | Kavish Luxury Handlooms`
+    }));
+  };
 
   const handleCategoryDeviceUpload = async (files: FileList | File[] | null) => {
     if (!files || files.length === 0) return;
@@ -53,10 +100,17 @@ export const CategoryManagement: React.FC = () => {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.name || !form.name.trim()) {
+      alert('Please enter a valid category name.');
+      return;
+    }
+
     if (editingCategory) {
       updateCategory({ ...editingCategory, ...form } as CategoryItem);
+      showToast(`Category "${form.name}" updated successfully.`);
     } else {
       addCategory(form);
+      showToast(`Category "${form.name}" created successfully.`);
     }
     setShowModal(false);
     setEditingCategory(null);
@@ -66,15 +120,30 @@ export const CategoryManagement: React.FC = () => {
     toggleCategoryStatus(id);
   };
 
-  const handleDelete = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this category?')) {
+  const handleDelete = (id: string, name: string) => {
+    if (window.confirm(`Are you sure you want to delete category "${name}"?`)) {
       deleteCategory(id);
+      showToast(`Category "${name}" deleted.`);
     }
   };
 
+  const handleSeedDefaults = () => {
+    INITIAL_CATEGORIES.forEach(c => addCategory(c));
+    showToast('Loaded standard authentic Kuthampully handloom categories.');
+  };
+
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6 animate-fadeIn relative">
       
+      {/* Feedback Toast */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 bg-[#12372A] text-[#FAF8F1] px-4 py-3 rounded-2xl border border-[#D4AF37] shadow-xl flex items-center gap-2 text-xs font-semibold animate-fadeIn">
+          <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DDC7] pb-5">
         <div>
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#D4AF37] block">
@@ -85,82 +154,215 @@ export const CategoryManagement: React.FC = () => {
           </h1>
         </div>
 
-        <button
-          onClick={() => {
-            setEditingCategory(null);
-            setForm({
-              name: '', parentCategory: 'women', slug: '', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80',
-              description: '', seoTitle: '', seoDescription: '', status: 'Active'
-            });
-            setShowModal(true);
-          }}
-          className="bg-[#12372A] text-[#FAF8F1] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#D4AF37] hover:text-[#12372A] transition-all flex items-center gap-2 border border-[#D4AF37] shadow-sm self-start sm:self-auto"
-        >
-          <Plus className="w-4 h-4 text-[#D4AF37]" />
-          <span>Create Category</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          {categories.length === 0 && (
+            <button
+              onClick={handleSeedDefaults}
+              className="bg-[#FAF8F1] text-[#12372A] px-4 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#E8DDC7] transition-all flex items-center gap-1.5 border border-[#D4AF37]"
+            >
+              <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+              <span>Load Default Categories</span>
+            </button>
+          )}
+
+          <button
+            onClick={() => {
+              setEditingCategory(null);
+              setForm({
+                name: '',
+                parentCategory: 'women',
+                slug: '',
+                image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80',
+                description: '',
+                seoTitle: '',
+                seoDescription: '',
+                status: 'Active'
+              });
+              setShowModal(true);
+            }}
+            className="bg-[#12372A] text-[#FAF8F1] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#D4AF37] hover:text-[#12372A] transition-all flex items-center gap-2 border border-[#D4AF37] shadow-sm"
+          >
+            <Plus className="w-4 h-4 text-[#D4AF37]" />
+            <span>Create Category</span>
+          </button>
+        </div>
       </div>
 
-      {/* Categories Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map(cat => (
-          <div key={cat.id} className="bg-white border border-[#E8DDC7] hover:border-[#D4AF37] rounded-3xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
-            <div>
-              <div className="h-44 relative overflow-hidden">
-                <img src={cat.image} alt={cat.name} className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                <span className="absolute top-3 right-3 bg-[#12372A] text-[#D4AF37] text-[10px] uppercase font-bold px-2.5 py-1 rounded-full border border-[#D4AF37]">
-                  {cat.parentCategory}
-                </span>
-                <h3 className="absolute bottom-3 left-4 font-serif text-xl font-bold text-[#FAF8F1]">
-                  {cat.name}
-                </h3>
-              </div>
+      {/* Department Filter Tabs & Search Bar */}
+      <div className="bg-white p-4 border border-[#E8DDC7] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between text-xs">
+        {/* Search */}
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+          <input
+            type="text"
+            placeholder="Search categories by name, slug, or description..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full border border-[#E8DDC7] pl-10 pr-4 py-2 rounded-xl bg-[#FAF8F1] text-xs text-[#12372A]"
+          />
+        </div>
 
-              <div className="p-4 space-y-2 text-xs">
-                <p className="text-[#6B5846] font-light line-clamp-2 leading-relaxed">{cat.description}</p>
-                <div className="pt-2 border-t border-[#FAF8F1] flex justify-between items-center text-[11px] font-mono text-[#12372A]">
-                  <span className="bg-[#FAF8F1] px-2 py-0.5 rounded border border-[#E8DDC7]">/{cat.slug}</span>
-                  <span className="font-bold text-[#12372A]">{cat.productCount} Garments</span>
+        {/* Department Filter */}
+        <div className="flex items-center gap-1.5 bg-[#FAF8F1] p-1 rounded-xl border border-[#E8DDC7] overflow-x-auto">
+          <Filter className="w-3.5 h-3.5 text-[#D4AF37] ml-2 shrink-0" />
+          <button
+            onClick={() => setSelectedDepartment('all')}
+            className={`px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap ${selectedDepartment === 'all' ? 'bg-[#12372A] text-[#FAF8F1] font-bold shadow-xs' : 'text-[#6B5846] hover:bg-white'}`}
+          >
+            All ({categories.length})
+          </button>
+          <button
+            onClick={() => setSelectedDepartment('women')}
+            className={`px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap ${selectedDepartment === 'women' ? 'bg-[#12372A] text-[#FAF8F1] font-bold shadow-xs' : 'text-[#6B5846] hover:bg-white'}`}
+          >
+            Women ({categories.filter(c => c.parentCategory === 'women').length})
+          </button>
+          <button
+            onClick={() => setSelectedDepartment('men')}
+            className={`px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap ${selectedDepartment === 'men' ? 'bg-[#12372A] text-[#FAF8F1] font-bold shadow-xs' : 'text-[#6B5846] hover:bg-white'}`}
+          >
+            Men ({categories.filter(c => c.parentCategory === 'men').length})
+          </button>
+          <button
+            onClick={() => setSelectedDepartment('kids')}
+            className={`px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap ${selectedDepartment === 'kids' ? 'bg-[#12372A] text-[#FAF8F1] font-bold shadow-xs' : 'text-[#6B5846] hover:bg-white'}`}
+          >
+            Kids ({categories.filter(c => c.parentCategory === 'kids').length})
+          </button>
+        </div>
+      </div>
+
+      {/* Empty State When No Categories Found */}
+      {filteredCategories.length === 0 ? (
+        <div className="bg-white border-2 border-dashed border-[#E8DDC7] rounded-3xl p-12 text-center space-y-4 shadow-xs">
+          <div className="w-16 h-16 rounded-full bg-[#FAF8F1] border border-[#D4AF37] flex items-center justify-center mx-auto text-[#12372A]">
+            <Layers className="w-8 h-8 text-[#D4AF37]" />
+          </div>
+          <div className="max-w-md mx-auto space-y-1">
+            <h3 className="font-serif text-lg font-bold text-[#12372A]">
+              {categories.length === 0 ? 'No Categories Configured Yet' : 'No Matching Categories Found'}
+            </h3>
+            <p className="text-xs text-[#6B5846]">
+              {categories.length === 0
+                ? 'Organize your store taxonomy by adding your first handloom department or loading default heritage categories.'
+                : 'Try adjusting your search query or department filter.'}
+            </p>
+          </div>
+
+          <div className="flex justify-center gap-3 pt-2">
+            {categories.length === 0 && (
+              <button
+                onClick={handleSeedDefaults}
+                className="bg-[#FAF8F1] text-[#12372A] px-4 py-2.5 rounded-xl text-xs font-bold uppercase border border-[#D4AF37] hover:bg-[#E8DDC7] transition-all flex items-center gap-1.5"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>Load Default Categories</span>
+              </button>
+            )}
+            <button
+              onClick={() => {
+                setEditingCategory(null);
+                setForm({
+                  name: '',
+                  parentCategory: 'women',
+                  slug: '',
+                  image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80',
+                  description: '',
+                  seoTitle: '',
+                  seoDescription: '',
+                  status: 'Active'
+                });
+                setShowModal(true);
+              }}
+              className="bg-[#12372A] text-[#FAF8F1] px-5 py-2.5 rounded-xl text-xs font-bold uppercase border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all flex items-center gap-1.5 shadow-sm"
+            >
+              <Plus className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <span>Create Category</span>
+            </button>
+          </div>
+        </div>
+      ) : (
+        /* Categories Grid */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredCategories.map(cat => {
+            const liveGarmentCount = getCategoryProductCount(cat);
+            return (
+              <div
+                key={cat.id}
+                className="bg-white border border-[#E8DDC7] hover:border-[#D4AF37] rounded-3xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="h-44 relative overflow-hidden bg-[#FAF8F1]">
+                    <img
+                      src={cat.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80'}
+                      alt={cat.name}
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+                    
+                    <span className="absolute top-3 right-3 bg-[#12372A] text-[#D4AF37] text-[10px] uppercase font-bold px-2.5 py-1 rounded-full border border-[#D4AF37] shadow-sm">
+                      {cat.parentCategory}
+                    </span>
+                    
+                    <h3 className="absolute bottom-3 left-4 right-4 font-serif text-xl font-bold text-[#FAF8F1] line-clamp-1">
+                      {cat.name}
+                    </h3>
+                  </div>
+
+                  <div className="p-4 space-y-2.5 text-xs">
+                    <p className="text-[#6B5846] font-light line-clamp-2 leading-relaxed min-h-[32px]">
+                      {cat.description || 'Traditional Kuthampully handloom certified collection.'}
+                    </p>
+                    <div className="pt-2 border-t border-[#FAF8F1] flex justify-between items-center text-[11px] font-mono text-[#12372A]">
+                      <span className="bg-[#FAF8F1] px-2 py-0.5 rounded border border-[#E8DDC7] text-[10px]">
+                        /{cat.slug}
+                      </span>
+                      <span className="font-bold text-[#12372A] bg-[#FAF8F1] px-2 py-0.5 rounded-full border border-[#E8DDC7]">
+                        {liveGarmentCount} Garments
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-[#FAF8F1] border-t border-[#E8DDC7] flex items-center justify-between">
+                  <button
+                    onClick={() => handleToggleStatus(cat.id)}
+                    className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase flex items-center gap-1 border transition-all ${
+                      cat.status === 'Active'
+                        ? 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200'
+                        : 'bg-gray-200 text-gray-700 border-gray-300 hover:bg-gray-300'
+                    }`}
+                  >
+                    {cat.status === 'Active' ? <CheckCircle2 className="w-3 h-3 text-green-600" /> : <XCircle className="w-3 h-3 text-gray-500" />}
+                    <span>{cat.status}</span>
+                  </button>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setEditingCategory(cat);
+                        setForm(cat);
+                        setShowModal(true);
+                      }}
+                      className="p-1.5 text-[#12372A] hover:bg-white rounded-lg transition-colors border border-transparent hover:border-[#E8DDC7]"
+                      title="Edit Category"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(cat.id, cat.name)}
+                      className="p-1.5 text-red-600 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-red-200"
+                      title="Delete Category"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div className="p-4 bg-[#FAF8F1] border-t border-[#E8DDC7] flex items-center justify-between">
-              <button
-                onClick={() => handleToggleStatus(cat.id)}
-                className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase flex items-center gap-1 border ${
-                  cat.status === 'Active' ? 'bg-green-100 text-green-800 border-green-300' : 'bg-gray-200 text-gray-700'
-                }`}
-              >
-                {cat.status === 'Active' ? <CheckCircle2 className="w-3 h-3 text-green-600" /> : <XCircle className="w-3 h-3" />}
-                <span>{cat.status}</span>
-              </button>
-
-              <div className="flex gap-2">
-                <button
-                  onClick={() => {
-                    setEditingCategory(cat);
-                    setForm(cat);
-                    setShowModal(true);
-                  }}
-                  className="p-1.5 text-[#12372A] hover:bg-white rounded-lg transition-colors"
-                  title="Edit Category"
-                >
-                  <Edit className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => handleDelete(cat.id)}
-                  className="p-1.5 text-red-600 hover:bg-white rounded-lg transition-colors"
-                  title="Delete Category"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Category Editor Modal */}
       {showModal && createPortal(
@@ -188,23 +390,36 @@ export const CategoryManagement: React.FC = () => {
                   type="text"
                   required
                   value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  onChange={(e) => handleNameChange(e.target.value)}
                   placeholder="e.g. Kasavu Sarees"
                   className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
                 />
               </div>
 
-              <div>
-                <label className="block font-semibold text-[#6B5846] mb-1">Parent Department</label>
-                <select
-                  value={form.parentCategory}
-                  onChange={(e) => setForm({ ...form, parentCategory: e.target.value as ProductCategory })}
-                  className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
-                >
-                  <option value="women">Women</option>
-                  <option value="men">Men</option>
-                  <option value="kids">Kids</option>
-                </select>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-[#6B5846] mb-1">Parent Department</label>
+                  <select
+                    value={form.parentCategory}
+                    onChange={(e) => setForm({ ...form, parentCategory: e.target.value as ProductCategory })}
+                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
+                  >
+                    <option value="women">Women</option>
+                    <option value="men">Men</option>
+                    <option value="kids">Kids</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-[#6B5846] mb-1">URL Slug</label>
+                  <input
+                    type="text"
+                    value={form.slug}
+                    onChange={(e) => setForm({ ...form, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, '-') })}
+                    placeholder="e.g. kasavu-sarees"
+                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-mono text-xs text-[#12372A]"
+                  />
+                </div>
               </div>
 
               {/* Category Image Section with Device Upload */}
@@ -321,7 +536,7 @@ export const CategoryManagement: React.FC = () => {
                   </div>
                 )}
 
-                {/* Or Web Image URL Input */}
+                {/* Web Image URL Input */}
                 <div>
                   <label className="block text-[10px] font-semibold text-[#6B5846] mb-1 flex items-center gap-1">
                     <LinkIcon className="w-2.5 h-2.5 text-[#D4AF37]" />
@@ -343,6 +558,7 @@ export const CategoryManagement: React.FC = () => {
                   rows={2}
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  placeholder="Short description of this handloom category..."
                   className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
                 />
               </div>
@@ -354,6 +570,7 @@ export const CategoryManagement: React.FC = () => {
                     type="text"
                     value={form.seoTitle}
                     onChange={(e) => setForm({ ...form, seoTitle: e.target.value })}
+                    placeholder="e.g. Authentic Kasavu Sarees | Kavish"
                     className="w-full border border-[#E8DDC7] p-2 rounded-xl bg-[#FAF8F1]"
                   />
                 </div>
@@ -363,6 +580,7 @@ export const CategoryManagement: React.FC = () => {
                     type="text"
                     value={form.seoDescription}
                     onChange={(e) => setForm({ ...form, seoDescription: e.target.value })}
+                    placeholder="Meta description for search engines..."
                     className="w-full border border-[#E8DDC7] p-2 rounded-xl bg-[#FAF8F1]"
                   />
                 </div>
@@ -374,9 +592,9 @@ export const CategoryManagement: React.FC = () => {
               <button
                 type="submit"
                 form="category-modal-form"
-                className="flex-1 bg-[#12372A] text-[#FAF8F1] py-3 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all"
+                className="flex-1 bg-[#12372A] text-[#FAF8F1] py-3 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-sm"
               >
-                Save Category
+                {editingCategory ? 'Update Category' : 'Save Category'}
               </button>
               <button
                 type="button"

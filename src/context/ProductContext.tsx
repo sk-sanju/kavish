@@ -10,7 +10,7 @@ import {
   fetchSupabaseProducts, upsertSupabaseProduct, removeSupabaseProduct,
   fetchSupabaseOffers, upsertSupabaseOffer,
   fetchSupabaseReviews, upsertSupabaseReview,
-  fetchSupabaseCategories, upsertSupabaseCategory
+  fetchSupabaseCategories, upsertSupabaseCategory, removeSupabaseCategory
 } from '../lib/supabase';
 
 interface ProductContextType {
@@ -165,9 +165,28 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
           localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(dbProducts));
         }
 
-        if (dbCategories !== null) {
+        if (dbCategories !== null && dbCategories.length > 0) {
           setCategories(dbCategories);
           localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbCategories));
+        } else if (dbCategories !== null && dbCategories.length === 0) {
+          // If Supabase has 0 categories, preserve existing local or initial categories & seed Supabase
+          const existingLocal = (() => {
+            try {
+              const saved = localStorage.getItem(CATEGORIES_STORAGE_KEY);
+              if (saved) {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+              }
+            } catch (e) {
+              console.error(e);
+            }
+            return INITIAL_CATEGORIES;
+          })();
+          if (existingLocal.length > 0) {
+            setCategories(existingLocal);
+            localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(existingLocal));
+            existingLocal.forEach(c => upsertSupabaseCategory(c));
+          }
         }
 
         if (dbOffers !== null) {
@@ -238,10 +257,10 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const addCategory = (catForm: Partial<CategoryItem>): CategoryItem => {
     const newCat: CategoryItem = {
-      id: `cat-${Date.now()}`,
-      name: catForm.name || 'New Category',
+      id: catForm.id || `cat-${Date.now()}`,
+      name: catForm.name?.trim() || 'New Category',
       parentCategory: catForm.parentCategory || 'women',
-      slug: catForm.slug || catForm.name?.toLowerCase().replace(/\s+/g, '-') || `cat-${Date.now()}`,
+      slug: catForm.slug?.trim() || (catForm.name || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-') || `cat-${Date.now()}`,
       image: catForm.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80',
       description: catForm.description || '',
       seoTitle: catForm.seoTitle || catForm.name || '',
@@ -249,7 +268,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       status: catForm.status || 'Active',
       productCount: catForm.productCount || 0
     };
-    const updated = [...categories, newCat];
+    const updated = [newCat, ...categories.filter(c => c.id !== newCat.id)];
     saveCategories(updated);
     upsertSupabaseCategory(newCat);
     return newCat;
@@ -264,11 +283,14 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const deleteCategory = (id: string): void => {
     const updated = categories.filter((c) => c.id !== id);
     saveCategories(updated);
+    removeSupabaseCategory(id);
   };
 
   const toggleCategoryStatus = (id: string): void => {
     const updated = categories.map((c) => (c.id === id ? { ...c, status: c.status === 'Active' ? 'Disabled' : 'Active' } as CategoryItem : c));
     saveCategories(updated);
+    const toggled = updated.find(c => c.id === id);
+    if (toggled) upsertSupabaseCategory(toggled);
   };
 
   const addProduct = (productForm: Partial<Product>): Product => {
