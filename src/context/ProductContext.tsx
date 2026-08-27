@@ -10,7 +10,7 @@ import {
   fetchSupabaseProducts, upsertSupabaseProduct, removeSupabaseProduct,
   fetchSupabaseOffers, upsertSupabaseOffer,
   fetchSupabaseReviews, upsertSupabaseReview,
-  fetchSupabaseCategories, upsertSupabaseCategory, removeSupabaseCategory,
+  fetchSupabaseCategories, upsertSupabaseCategory, removeSupabaseCategory, syncAllSupabaseCategories,
   fetchSupabaseStoreContent, upsertSupabaseStoreContent
 } from '../lib/supabase';
 
@@ -167,10 +167,19 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
           localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(dbProducts));
         }
 
-        if (dbCategories !== null && dbCategories.length > 0) {
-          setCategories(dbCategories);
-          localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbCategories));
-        } else if (dbCategories !== null && dbCategories.length === 0) {
+        // Category Resolution:
+        // 1. dbStoreContent.categories (saved by Admin with live metadata bridge)
+        // 2. dbCategories (from categories table in Supabase)
+        const remoteCategories = (dbStoreContent?.categories && Array.isArray(dbStoreContent.categories) && dbStoreContent.categories.length > 0)
+          ? dbStoreContent.categories
+          : (dbCategories && Array.isArray(dbCategories) && dbCategories.length > 0)
+            ? dbCategories
+            : null;
+
+        if (remoteCategories && remoteCategories.length > 0) {
+          setCategories(remoteCategories);
+          localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(remoteCategories));
+        } else {
           const existingLocal = (() => {
             try {
               const saved = localStorage.getItem(CATEGORIES_STORAGE_KEY);
@@ -186,7 +195,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
           if (existingLocal.length > 0) {
             setCategories(existingLocal);
             localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(existingLocal));
-            existingLocal.forEach(c => upsertSupabaseCategory(c));
+            syncAllSupabaseCategories(existingLocal);
           }
         }
 
@@ -288,6 +297,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const updated = [newCat, ...categories.filter(c => c.id !== newCat.id)];
     saveCategories(updated);
     upsertSupabaseCategory(newCat);
+    syncAllSupabaseCategories(updated);
     return newCat;
   };
 
@@ -295,12 +305,14 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const updated = categories.map((c) => (c.id === updatedCat.id ? { ...updatedCat } : c));
     saveCategories(updated);
     upsertSupabaseCategory(updatedCat);
+    syncAllSupabaseCategories(updated);
   };
 
   const deleteCategory = (id: string): void => {
     const updated = categories.filter((c) => c.id !== id);
     saveCategories(updated);
     removeSupabaseCategory(id);
+    syncAllSupabaseCategories(updated);
   };
 
   const toggleCategoryStatus = (id: string): void => {
@@ -308,6 +320,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     saveCategories(updated);
     const toggled = updated.find(c => c.id === id);
     if (toggled) upsertSupabaseCategory(toggled);
+    syncAllSupabaseCategories(updated);
   };
 
   const addProduct = (productForm: Partial<Product>): Product => {
