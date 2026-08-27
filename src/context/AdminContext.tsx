@@ -286,7 +286,11 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const saveHeroBanners = (newBanners: HeroBanner[]) => {
     setHeroBanners(newBanners);
-    localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(newBanners));
+    try {
+      localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(newBanners));
+    } catch (e) {
+      console.error('Error saving hero banners to localStorage:', e);
+    }
     const firstActive = newBanners.find(b => b.isActive !== false) || newBanners[0];
     const updatedContent: StoreContentConfig = {
       ...storeContent,
@@ -296,7 +300,11 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       bannerImage: firstActive?.image || storeContent.bannerImage
     };
     setStoreContent(updatedContent);
-    localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(updatedContent));
+    try {
+      localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(updatedContent));
+    } catch (e) {
+      console.error('Error saving store content to localStorage:', e);
+    }
     upsertSupabaseStoreContent(updatedContent);
   };
 
@@ -329,7 +337,10 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const updateHeroBanner = (banner: HeroBanner) => {
-    const updated = heroBanners.map(b => b.id === banner.id ? banner : b);
+    const exists = heroBanners.some(b => b.id === banner.id);
+    const updated = exists
+      ? heroBanners.map(b => (b.id === banner.id ? banner : b))
+      : [banner, ...heroBanners];
     saveHeroBanners(updated);
     addAuditLog({
       adminName: 'Sanjay Suresh (Super Admin)',

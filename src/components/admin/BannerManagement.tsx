@@ -45,6 +45,8 @@ export const BannerManagement: React.FC = () => {
   const [isUploadingBannerImg, setIsUploadingBannerImg] = useState(false);
   const [isBannerDragging, setIsBannerDragging] = useState(false);
   const [uploadBannerError, setUploadBannerError] = useState<string | null>(null);
+  const [modalError, setModalError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const bannerFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -69,6 +71,7 @@ export const BannerManagement: React.FC = () => {
   const handleDeviceUpload = async (files: FileList | File[] | null) => {
     if (!files || files.length === 0) return;
     setUploadBannerError(null);
+    setModalError(null);
     setIsUploadingBannerImg(true);
 
     try {
@@ -90,6 +93,8 @@ export const BannerManagement: React.FC = () => {
 
   const handleOpenCreateModal = () => {
     setEditingBanner(null);
+    setModalError(null);
+    setUploadBannerError(null);
     setForm({
       tag: 'New Collection Campaign',
       title: 'Heirloom Kasavu\nHandwoven with Pride',
@@ -107,7 +112,21 @@ export const BannerManagement: React.FC = () => {
 
   const handleOpenEditModal = (banner: HeroBanner) => {
     setEditingBanner(banner);
-    setForm({ ...banner });
+    setModalError(null);
+    setUploadBannerError(null);
+    setForm({
+      tag: banner.tag || 'Atelier Signature Edit',
+      title: banner.title || '',
+      subtitle: banner.subtitle || '',
+      image: banner.image || '',
+      primaryCtaText: banner.primaryCtaText || 'Shop Collection',
+      primaryCtaLink: banner.primaryCtaLink || 'shop',
+      secondaryCtaText: banner.secondaryCtaText || 'Explore Our Story',
+      secondaryCtaLink: banner.secondaryCtaLink || 'heritage',
+      collectionSlug: banner.collectionSlug || 'kasavu-masterpieces',
+      isActive: banner.isActive !== false,
+      order: banner.order
+    });
     setShowModal(true);
   };
 
@@ -116,43 +135,55 @@ export const BannerManagement: React.FC = () => {
       e.preventDefault();
       e.stopPropagation();
     }
+    setModalError(null);
 
     if (!form.title || !form.title.trim()) {
-      showToast('Please enter a hero headline title.');
+      setModalError('Please enter a hero headline title.');
       return;
     }
 
     if (!form.image || !form.image.trim()) {
-      showToast('Please upload or select a banner background image.');
+      setModalError('Please upload or select a banner background image.');
       return;
     }
 
-    const payload: HeroBanner = {
-      id: editingBanner ? editingBanner.id : `banner-${Date.now()}`,
-      tag: form.tag?.trim() || 'Atelier Signature Edit',
-      title: form.title?.trim() || '500 Years of Handloom Mastery',
-      subtitle: form.subtitle?.trim() || 'Royal Kasavu Sarees & Unbleached European Linen Woven for Modern Royalty',
-      image: form.image?.trim() || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1800&q=90',
-      primaryCtaText: form.primaryCtaText?.trim() || 'Shop Collection',
-      primaryCtaLink: form.primaryCtaLink?.trim() || 'shop',
-      secondaryCtaText: form.secondaryCtaText?.trim() || 'Explore Our Story',
-      secondaryCtaLink: form.secondaryCtaLink?.trim() || 'heritage',
-      collectionSlug: form.collectionSlug || 'kasavu-masterpieces',
-      isActive: form.isActive !== false,
-      order: editingBanner?.order || heroBanners.length + 1
-    };
+    setIsSaving(true);
+    try {
+      const bannerId = editingBanner ? editingBanner.id : `banner-${Date.now()}`;
+      const payload: HeroBanner = {
+        id: bannerId,
+        tag: form.tag?.trim() || 'Atelier Signature Edit',
+        title: form.title.trim(),
+        subtitle: form.subtitle?.trim() || 'Royal Kasavu Sarees & Unbleached European Linen Woven for Modern Royalty',
+        image: form.image.trim(),
+        primaryCtaText: form.primaryCtaText?.trim() || 'Shop Collection',
+        primaryCtaLink: form.primaryCtaLink?.trim() || 'shop',
+        secondaryCtaText: form.secondaryCtaText?.trim() || 'Explore Our Story',
+        secondaryCtaLink: form.secondaryCtaLink?.trim() || 'heritage',
+        collectionSlug: form.collectionSlug || 'kasavu-masterpieces',
+        isActive: form.isActive !== false,
+        order: editingBanner?.order || heroBanners.length + 1
+      };
 
-    if (editingBanner) {
-      updateHeroBanner(payload);
-      showToast(`Banner "${payload.tag}" updated successfully.`);
-      alert(`Hero Banner "${payload.tag}" updated and published live!`);
-    } else {
-      addHeroBanner(payload);
-      showToast(`New hero banner created.`);
-      alert(`New hero banner created and published live!`);
+      if (editingBanner) {
+        updateHeroBanner(payload);
+        showToast(`Banner "${payload.tag}" updated and published live!`);
+        // Find index to set preview
+        const editIdx = heroBanners.findIndex(b => b.id === payload.id);
+        if (editIdx >= 0) setPreviewBannerIndex(editIdx);
+      } else {
+        addHeroBanner(payload);
+        showToast(`New hero banner "${payload.tag}" created and published!`);
+        setPreviewBannerIndex(heroBanners.length);
+      }
+      setShowModal(false);
+      setEditingBanner(null);
+    } catch (err: any) {
+      console.error(err);
+      setModalError(err.message || 'Failed to save banner. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
-    setShowModal(false);
-    setEditingBanner(null);
   };
 
   const handleDelete = (id: string, tag: string) => {
@@ -197,7 +228,7 @@ export const BannerManagement: React.FC = () => {
       
       {/* Toast Feedback */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#12372A] text-[#FAF8F1] px-4 py-3 rounded-2xl border border-[#D4AF37] shadow-xl flex items-center gap-2 text-xs font-semibold animate-fadeIn">
+        <div className="fixed bottom-6 right-6 z-[10000] bg-[#12372A] text-[#FAF8F1] px-5 py-3.5 rounded-2xl border-2 border-[#D4AF37] shadow-2xl flex items-center gap-2.5 text-xs font-semibold animate-fadeIn">
           <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" />
           <span>{toastMessage}</span>
         </div>
@@ -503,13 +534,21 @@ export const BannerManagement: React.FC = () => {
             {/* Modal Scrollable Form Body */}
             <form id="banner-modal-form" noValidate onSubmit={handleSave} className="p-6 overflow-y-auto space-y-4 text-xs flex-1">
               
+              {/* Modal Error Alert */}
+              {modalError && (
+                <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center justify-between animate-fadeIn">
+                  <span>{modalError}</span>
+                  <button type="button" onClick={() => setModalError(null)} className="font-bold hover:text-red-900 ml-2">✕</button>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-semibold text-[#6B5846] mb-1">Campaign Badge Tag *</label>
                   <input
                     type="text"
                     required
-                    value={form.tag}
+                    value={form.tag || ''}
                     onChange={(e) => setForm({ ...form, tag: e.target.value })}
                     placeholder="e.g. Atelier Signature Edit"
                     className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
@@ -519,7 +558,7 @@ export const BannerManagement: React.FC = () => {
                 <div>
                   <label className="block font-semibold text-[#6B5846] mb-1">Associated Collection Filter</label>
                   <select
-                    value={form.collectionSlug}
+                    value={form.collectionSlug || 'kasavu-masterpieces'}
                     onChange={(e) => setForm({ ...form, collectionSlug: e.target.value })}
                     className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
                   >
@@ -538,7 +577,7 @@ export const BannerManagement: React.FC = () => {
                 <textarea
                   rows={2}
                   required
-                  value={form.title}
+                  value={form.title || ''}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                   placeholder="e.g. 500 Years of&#10;Kuthampully Handloom&#10;Mastery"
                   className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-serif text-sm font-bold text-[#12372A]"
@@ -549,7 +588,7 @@ export const BannerManagement: React.FC = () => {
                 <label className="block font-semibold text-[#6B5846] mb-1">Hero Subtitle Story Text</label>
                 <textarea
                   rows={2}
-                  value={form.subtitle}
+                  value={form.subtitle || ''}
                   onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
                   placeholder="e.g. Royal Kasavu Sarees & Unbleached European Linen Woven for Modern Royalty"
                   className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
@@ -704,7 +743,7 @@ export const BannerManagement: React.FC = () => {
                   <label className="block font-semibold text-[#6B5846] mb-1">Primary CTA Button Text</label>
                   <input
                     type="text"
-                    value={form.primaryCtaText}
+                    value={form.primaryCtaText || ''}
                     onChange={(e) => setForm({ ...form, primaryCtaText: e.target.value })}
                     placeholder="e.g. Shop Collection"
                     className="w-full border border-[#E8DDC7] p-2 rounded-xl bg-[#FAF8F1] font-bold"
@@ -715,7 +754,7 @@ export const BannerManagement: React.FC = () => {
                   <label className="block font-semibold text-[#6B5846] mb-1">Secondary CTA Button Text</label>
                   <input
                     type="text"
-                    value={form.secondaryCtaText}
+                    value={form.secondaryCtaText || ''}
                     onChange={(e) => setForm({ ...form, secondaryCtaText: e.target.value })}
                     placeholder="e.g. Explore Our Story"
                     className="w-full border border-[#E8DDC7] p-2 rounded-xl bg-[#FAF8F1] font-bold"
@@ -747,11 +786,20 @@ export const BannerManagement: React.FC = () => {
             {/* Modal Fixed Footer */}
             <div className="p-4 bg-[#FAF8F1] border-t border-[#E8DDC7] flex gap-3 shrink-0">
               <button
-                type="button"
+                type="submit"
+                form="banner-modal-form"
+                disabled={isSaving || isUploadingBannerImg}
                 onClick={handleSave}
-                className="flex-1 bg-[#12372A] text-[#FAF8F1] py-3 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-sm cursor-pointer"
+                className="flex-1 bg-[#12372A] text-[#FAF8F1] py-3 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] disabled:opacity-50 transition-all shadow-sm cursor-pointer flex items-center justify-center gap-2"
               >
-                {editingBanner ? 'Update Hero Banner' : 'Save & Publish Banner'}
+                {isSaving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-[#D4AF37]" />
+                    <span>Saving Banner...</span>
+                  </>
+                ) : (
+                  <span>{editingBanner ? 'Update Hero Banner' : 'Save & Publish Banner'}</span>
+                )}
               </button>
               <button
                 type="button"
