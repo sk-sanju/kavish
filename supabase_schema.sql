@@ -206,6 +206,7 @@ CREATE POLICY "Allow Public Read Shipping" ON public.shipping_rules FOR SELECT U
 
 -- Allow Public Write / Admin Full Access
 CREATE POLICY "Allow All Products Access" ON public.products FOR ALL USING (true);
+CREATE POLICY "Allow All Categories Access" ON public.categories FOR ALL USING (true);
 CREATE POLICY "Allow All Orders Access" ON public.orders FOR ALL USING (true);
 CREATE POLICY "Allow All Offers Access" ON public.promo_offers FOR ALL USING (true);
 CREATE POLICY "Allow All Reviews Access" ON public.reviews FOR ALL USING (true);

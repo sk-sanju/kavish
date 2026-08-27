@@ -655,7 +655,7 @@ export async function upsertSupabaseStoreContent(sc: StoreContentConfig): Promis
         banner_image: sc.bannerImage,
         featured_collection_ids: sc.featuredCollectionIds,
         faq_items: sc.faqItems,
-        policy_text: sc.policyText
+        policy_text: dbPayload.policy_text
       };
       const { error: baseError } = await supabase.from('store_content').upsert([basePayload]);
       if (baseError) {

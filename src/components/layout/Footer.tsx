@@ -1,7 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Truck, RefreshCw, Lock, Mail, Phone, MapPin } from 'lucide-react';
 import logoImg from '../../assets/logo.png';
-import { useCurrency } from '../../context/CurrencyContext';
 import { POLICY_CONFIG } from '../../config/policyConfig';
 
 interface FooterProps {
@@ -23,7 +22,6 @@ const FacebookIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' 
 );
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
-  const { formatPrice } = useCurrency();
 
   return (
     <footer className="bg-[#12372A] text-[#FAF8F1] pt-16 pb-24 lg:pb-12 border-t-2 border-[#D4AF37]/30">

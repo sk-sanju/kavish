@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   CheckCircle2, Lock, ArrowRight, ShieldCheck, AlertCircle, ShoppingCart,
-  QrCode, Copy, ExternalLink, CreditCard, Banknote, Sparkles, Check
+  Copy, ExternalLink, Check
 } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import { useCart } from '../context/CartContext';
