@@ -13,14 +13,37 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
   const [activeIdx, setActiveIdx] = useState(0);
 
   const bannersList: HeroBanner[] = useMemo(() => {
-    let list = (heroBanners && heroBanners.length > 0)
-      ? heroBanners
-      : (storeContent?.heroBanners && storeContent.heroBanners.length > 0)
-        ? storeContent.heroBanners
-        : DEFAULT_HERO_BANNERS;
+    // 1. If explicit heroBanners list from storeContent or state is configured
+    if (storeContent?.heroBanners && Array.isArray(storeContent.heroBanners) && storeContent.heroBanners.length > 0) {
+      const active = storeContent.heroBanners.filter(b => b.isActive !== false);
+      if (active.length > 0) return active;
+    }
+    if (heroBanners && Array.isArray(heroBanners) && heroBanners.length > 0 && heroBanners !== DEFAULT_HERO_BANNERS) {
+      const active = heroBanners.filter(b => b.isActive !== false);
+      if (active.length > 0) return active;
+    }
 
-    const active = list.filter(b => b.isActive !== false);
-    return active.length > 0 ? active : DEFAULT_HERO_BANNERS;
+    // 2. If storeContent has live bannerImage or heroTitle from database
+    if (storeContent?.bannerImage || storeContent?.heroTitle) {
+      return [
+        {
+          id: 'banner-live-primary',
+          tag: 'Atelier Signature Edit',
+          title: storeContent.heroTitle || DEFAULT_HERO_BANNERS[0].title,
+          subtitle: storeContent.heroSubtitle || DEFAULT_HERO_BANNERS[0].subtitle,
+          image: storeContent.bannerImage || DEFAULT_HERO_BANNERS[0].image,
+          primaryCtaText: 'Shop Collection',
+          primaryCtaLink: 'shop',
+          secondaryCtaText: 'Explore Our Story',
+          secondaryCtaLink: 'heritage',
+          collectionSlug: 'kasavu-masterpieces',
+          isActive: true,
+          order: 1
+        }
+      ];
+    }
+
+    return DEFAULT_HERO_BANNERS;
   }, [heroBanners, storeContent]);
 
   const safeIdx = (activeIdx >= 0 && activeIdx < bannersList.length) ? activeIdx : 0;

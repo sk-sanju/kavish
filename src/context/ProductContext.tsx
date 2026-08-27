@@ -10,7 +10,8 @@ import {
   fetchSupabaseProducts, upsertSupabaseProduct, removeSupabaseProduct,
   fetchSupabaseOffers, upsertSupabaseOffer,
   fetchSupabaseReviews, upsertSupabaseReview,
-  fetchSupabaseCategories, upsertSupabaseCategory, removeSupabaseCategory
+  fetchSupabaseCategories, upsertSupabaseCategory, removeSupabaseCategory,
+  fetchSupabaseStoreContent, upsertSupabaseStoreContent
 } from '../lib/supabase';
 
 interface ProductContextType {
@@ -124,7 +125,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   });
 
   const [announcementText, setAnnouncementTextState] = useState<string>(() => {
-    return localStorage.getItem(ANNOUNCEMENT_STORAGE_KEY) || 'Complimentary Express Air Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified';
+    return localStorage.getItem(ANNOUNCEMENT_STORAGE_KEY) || 'Complimentary Express Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified';
   });
 
   // Cross-tab and window sync listener
@@ -153,11 +154,12 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     async function loadSupabaseData() {
       try {
-        const [dbProducts, dbCategories, dbOffers, dbReviews] = await Promise.all([
+        const [dbProducts, dbCategories, dbOffers, dbReviews, dbStoreContent] = await Promise.all([
           fetchSupabaseProducts(),
           fetchSupabaseCategories(),
           fetchSupabaseOffers(),
-          fetchSupabaseReviews()
+          fetchSupabaseReviews(),
+          fetchSupabaseStoreContent()
         ]);
 
         if (dbProducts !== null) {
@@ -169,7 +171,6 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setCategories(dbCategories);
           localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbCategories));
         } else if (dbCategories !== null && dbCategories.length === 0) {
-          // If Supabase has 0 categories, preserve existing local or initial categories & seed Supabase
           const existingLocal = (() => {
             try {
               const saved = localStorage.getItem(CATEGORIES_STORAGE_KEY);
@@ -197,6 +198,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (dbReviews !== null) {
           setReviews(dbReviews);
           localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(dbReviews));
+        }
+
+        if (dbStoreContent && dbStoreContent.announcementText) {
+          setAnnouncementTextState(dbStoreContent.announcementText);
+          localStorage.setItem(ANNOUNCEMENT_STORAGE_KEY, dbStoreContent.announcementText);
         }
       } catch (err) {
         console.warn('Error loading live data from Supabase database:', err);
@@ -253,6 +259,17 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const setAnnouncementText = (text: string) => {
     setAnnouncementTextState(text);
     localStorage.setItem(ANNOUNCEMENT_STORAGE_KEY, text);
+    fetchSupabaseStoreContent().then(curr => {
+      upsertSupabaseStoreContent({
+        announcementText: text,
+        heroTitle: curr?.heroTitle || '500 Years of Kuthampully Handloom Mastery',
+        heroSubtitle: curr?.heroSubtitle || 'Royal Kasavu Sarees & Handloom Weaves',
+        bannerImage: curr?.bannerImage || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1600&q=90',
+        featuredCollectionIds: curr?.featuredCollectionIds || [],
+        faqItems: curr?.faqItems || [],
+        policyText: curr?.policyText || ''
+      });
+    });
   };
 
   const addCategory = (catForm: Partial<CategoryItem>): CategoryItem => {

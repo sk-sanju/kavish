@@ -241,20 +241,23 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         if (dbContent.heroBanners && Array.isArray(dbContent.heroBanners) && dbContent.heroBanners.length > 0) {
           setHeroBanners(dbContent.heroBanners);
           localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(dbContent.heroBanners));
-        } else {
-          const currentLocal = (() => {
-            try {
-              const saved = localStorage.getItem('kavish_hero_banners_v1');
-              if (saved) {
-                const parsed = JSON.parse(saved);
-                if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-              }
-            } catch (e) {
-              console.error(e);
-            }
-            return DEFAULT_HERO_BANNERS;
-          })();
-          upsertSupabaseStoreContent({ ...dbContent, heroBanners: currentLocal });
+        } else if (dbContent.bannerImage || dbContent.heroTitle) {
+          const liveBanner: HeroBanner = {
+            id: 'banner-live-01',
+            tag: 'Atelier Signature Edit',
+            title: dbContent.heroTitle || DEFAULT_HERO_BANNERS[0].title,
+            subtitle: dbContent.heroSubtitle || DEFAULT_HERO_BANNERS[0].subtitle,
+            image: dbContent.bannerImage || DEFAULT_HERO_BANNERS[0].image,
+            primaryCtaText: 'Shop Collection',
+            primaryCtaLink: 'shop',
+            secondaryCtaText: 'Explore Our Story',
+            secondaryCtaLink: 'heritage',
+            collectionSlug: 'kasavu-masterpieces',
+            isActive: true,
+            order: 1
+          };
+          setHeroBanners([liveBanner]);
+          localStorage.setItem('kavish_hero_banners_v1', JSON.stringify([liveBanner]));
         }
       }
     }

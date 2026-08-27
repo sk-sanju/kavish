@@ -354,20 +354,48 @@ function mapAdminUserToDb(u: AdminUser): Record<string, any> {
 }
 
 function mapStoreContentFromDb(row: any): StoreContentConfig {
+  let heroBanners = Array.isArray(row.hero_banners) && row.hero_banners.length > 0 ? row.hero_banners : undefined;
+  let contactInfo = row.contact_info || undefined;
+  let policyText = row.policy_text || '';
+
+  // Fallback: If hero_banners / contact_info were stored in policy_text metadata payload
+  if (policyText.includes('__KV_META__')) {
+    try {
+      const parts = policyText.split('__KV_META__');
+      policyText = parts[0];
+      const meta = JSON.parse(parts[1]);
+      if (meta.heroBanners && Array.isArray(meta.heroBanners) && meta.heroBanners.length > 0 && !heroBanners) {
+        heroBanners = meta.heroBanners;
+      }
+      if (meta.contactInfo && !contactInfo) {
+        contactInfo = meta.contactInfo;
+      }
+    } catch {
+      // Ignore parse failure
+    }
+  }
+
   return {
     announcementText: row.announcement_text || '',
     heroTitle: row.hero_title || '',
     heroSubtitle: row.hero_subtitle || '',
     bannerImage: row.banner_image || '',
-    heroBanners: Array.isArray(row.hero_banners) ? row.hero_banners : undefined,
+    heroBanners,
     featuredCollectionIds: Array.isArray(row.featured_collection_ids) ? row.featured_collection_ids : [],
     faqItems: Array.isArray(row.faq_items) ? row.faq_items : [],
-    policyText: row.policy_text || '',
-    contactInfo: row.contact_info || undefined
+    policyText,
+    contactInfo
   };
 }
 
 function mapStoreContentToDb(sc: StoreContentConfig): Record<string, any> {
+  const meta = {
+    heroBanners: sc.heroBanners || [],
+    contactInfo: sc.contactInfo || null
+  };
+  const cleanPolicy = (sc.policyText || '').split('__KV_META__')[0];
+  const combinedPolicyText = `${cleanPolicy}__KV_META__${JSON.stringify(meta)}`;
+
   return {
     id: 'main_content',
     announcement_text: sc.announcementText,
@@ -377,7 +405,7 @@ function mapStoreContentToDb(sc: StoreContentConfig): Record<string, any> {
     hero_banners: sc.heroBanners || null,
     featured_collection_ids: sc.featuredCollectionIds,
     faq_items: sc.faqItems,
-    policy_text: sc.policyText,
+    policy_text: combinedPolicyText,
     contact_info: sc.contactInfo || null
   };
 }
