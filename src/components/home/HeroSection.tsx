@@ -13,17 +13,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
   const [activeIdx, setActiveIdx] = useState(0);
 
   const bannersList: HeroBanner[] = useMemo(() => {
-    // 1. If explicit heroBanners list from storeContent or state is configured
-    if (storeContent?.heroBanners && Array.isArray(storeContent.heroBanners) && storeContent.heroBanners.length > 0) {
-      const active = storeContent.heroBanners.filter(b => b.isActive !== false);
-      if (active.length > 0) return active;
-    }
-    if (heroBanners && Array.isArray(heroBanners) && heroBanners.length > 0 && heroBanners !== DEFAULT_HERO_BANNERS) {
+    // 1. If live heroBanners is available in AdminContext
+    if (heroBanners && Array.isArray(heroBanners) && heroBanners.length > 0) {
       const active = heroBanners.filter(b => b.isActive !== false);
       if (active.length > 0) return active;
     }
 
-    // 2. If storeContent has live bannerImage or heroTitle from database
+    // 2. If storeContent has heroBanners
+    if (storeContent?.heroBanners && Array.isArray(storeContent.heroBanners) && storeContent.heroBanners.length > 0) {
+      const active = storeContent.heroBanners.filter(b => b.isActive !== false);
+      if (active.length > 0) return active;
+    }
+
+    // 3. If storeContent has live bannerImage or heroTitle from database
     if (storeContent?.bannerImage || storeContent?.heroTitle) {
       return [
         {

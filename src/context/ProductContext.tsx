@@ -171,35 +171,39 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
 
         // Category Resolution:
-        // 1. dbStoreContent.categories (saved by Admin with live metadata bridge)
-        // 2. dbCategories (from categories table in Supabase)
-        const remoteCategories = (dbStoreContent?.categories && Array.isArray(dbStoreContent.categories) && dbStoreContent.categories.length > 0)
-          ? dbStoreContent.categories
-          : (dbCategories && Array.isArray(dbCategories) && dbCategories.length > 0)
-            ? dbCategories
-            : null;
-
-        if (remoteCategories && remoteCategories.length > 0) {
-          setCategories(remoteCategories);
-          localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(remoteCategories));
-        } else {
-          const existingLocal = (() => {
-            try {
-              const saved = localStorage.getItem(CATEGORIES_STORAGE_KEY);
-              if (saved) {
-                const parsed = JSON.parse(saved);
-                if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-              }
-            } catch (e) {
-              console.error(e);
+        // 1. Check if dbStoreContent has categories from live cloud metadata bridge
+        // 2. Check existing local categories in localStorage (where user's recent cover edits are saved)
+        // 3. Check dbCategories from Supabase table
+        const localSavedCategories = (() => {
+          try {
+            const saved = localStorage.getItem(CATEGORIES_STORAGE_KEY);
+            if (saved) {
+              const parsed = JSON.parse(saved);
+              if (Array.isArray(parsed) && parsed.length > 0) return parsed;
             }
-            return INITIAL_CATEGORIES;
-          })();
-          if (existingLocal.length > 0) {
-            setCategories(existingLocal);
-            localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(existingLocal));
-            syncAllSupabaseCategories(existingLocal);
+          } catch (e) {
+            console.error(e);
           }
+          return null;
+        })();
+
+        let finalCategories: CategoryItem[] | null = null;
+        if (dbStoreContent?.categories && Array.isArray(dbStoreContent.categories) && dbStoreContent.categories.length > 0) {
+          finalCategories = dbStoreContent.categories;
+        } else if (localSavedCategories && localSavedCategories.length > 0) {
+          finalCategories = localSavedCategories;
+          syncAllSupabaseCategories(localSavedCategories);
+        } else if (dbCategories && Array.isArray(dbCategories) && dbCategories.length > 0) {
+          finalCategories = dbCategories;
+          syncAllSupabaseCategories(dbCategories);
+        } else {
+          finalCategories = INITIAL_CATEGORIES;
+          syncAllSupabaseCategories(INITIAL_CATEGORIES);
+        }
+
+        if (finalCategories && finalCategories.length > 0) {
+          setCategories(finalCategories);
+          localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(finalCategories));
         }
 
         if (dbOffers !== null) {
