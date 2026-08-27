@@ -9,9 +9,9 @@ export const OrderTrackerModal: React.FC = () => {
 
   const STEPS = [
     { title: 'Order Confirmed', description: 'Payment verified & order assigned to atelier', done: true },
-    { title: 'Handloom Quality Check', description: 'Inspected by Chendamangalam craft team', done: true },
-    { title: 'Dispatched via Express', description: 'Package handed over to BlueDart Courier', done: true },
-    { title: 'Out for Delivery', description: 'Courier agent en-route to delivery location', done: false },
+    { title: 'Handloom Quality Check', description: 'Inspected by Kuthampully craft team', done: true },
+    { title: 'Dispatched via Express', description: 'Package dispatched from Kuthampully loom house', done: true },
+    { title: 'Out for Delivery', description: 'Delivery agent en-route to delivery location', done: false },
     { title: 'Delivered', description: 'Package signed & delivered', done: false }
   ];
 
@@ -27,7 +27,7 @@ export const OrderTrackerModal: React.FC = () => {
         </button>
 
         <div className="flex items-center gap-2 text-[#D4AF37] text-xs font-bold uppercase tracking-wider mb-1">
-          <Truck className="w-4 h-4" /> Live Courier Tracker
+          <Truck className="w-4 h-4" /> Live Order Tracker
         </div>
 
         <h3 className="font-serif text-2xl font-bold text-[#12372A]">
