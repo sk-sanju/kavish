@@ -145,9 +145,11 @@ export const BannerManagement: React.FC = () => {
     if (editingBanner) {
       updateHeroBanner(payload);
       showToast(`Banner "${payload.tag}" updated successfully.`);
+      alert(`Hero Banner "${payload.tag}" updated and published live!`);
     } else {
       addHeroBanner(payload);
       showToast(`New hero banner created.`);
+      alert(`New hero banner created and published live!`);
     }
     setShowModal(false);
     setEditingBanner(null);
