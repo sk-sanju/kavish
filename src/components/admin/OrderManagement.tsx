@@ -7,7 +7,7 @@ import { useCurrency } from '../../context/CurrencyContext';
 import type { Order, OrderStatus } from '../../types';
 
 export const OrderManagement: React.FC = () => {
-  const { user } = useAuth();
+  const { user, updateOrder } = useAuth();
   const { addAuditLog, addNotification } = useAdmin();
   const { formatPrice } = useCurrency();
 
@@ -34,9 +34,14 @@ export const OrderManagement: React.FC = () => {
     if (!selectedOrder) return;
 
     const previousStatus = selectedOrder.status;
-    selectedOrder.status = editingStatus;
-    if (awbInput.trim()) selectedOrder.trackingNumber = awbInput.trim();
-    if (courierInput.trim()) selectedOrder.courierProvider = courierInput.trim();
+    const updatedOrder: Order = {
+      ...selectedOrder,
+      status: editingStatus,
+      trackingNumber: awbInput.trim() || selectedOrder.trackingNumber,
+      courierProvider: courierInput.trim() || selectedOrder.courierProvider
+    };
+
+    updateOrder(updatedOrder);
 
     addAuditLog({
       adminName: 'Sanjay Suresh (Super Admin)',

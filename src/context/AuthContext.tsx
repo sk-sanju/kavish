@@ -14,6 +14,7 @@ interface AuthContextType {
   logoutCustomer: () => void;
 
   addOrder: (order: Order) => void;
+  updateOrder: (order: Order) => void;
   addAddress: (address: Omit<Address, 'id'>) => void;
   deleteAddress: (id: string) => void;
   setDefaultAddress: (id: string) => void;
@@ -316,8 +317,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     async function loadSupabaseOrders() {
       const dbOrders = await fetchSupabaseOrders();
-      if (dbOrders && dbOrders.length > 0) {
-        setUser(prev => ({ ...prev, orders: dbOrders }));
+      if (dbOrders !== null) {
+        setUser(prev => {
+          const updated = { ...prev, orders: dbOrders };
+          try {
+            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updated));
+          } catch (e) {
+            console.error(e);
+          }
+          return updated;
+        });
       }
     }
     loadSupabaseOrders();
@@ -327,6 +336,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const updated = {
       ...user,
       orders: [order, ...user.orders]
+    };
+    saveUserData(updated, isCustomerLoggedIn);
+    upsertSupabaseOrder(order);
+  };
+
+  const updateOrder = (order: Order) => {
+    const updated = {
+      ...user,
+      orders: user.orders.map(o => o.id === order.id ? order : o)
     };
     saveUserData(updated, isCustomerLoggedIn);
     upsertSupabaseOrder(order);
@@ -376,6 +394,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loginCustomer,
         logoutCustomer,
         addOrder,
+        updateOrder,
         addAddress,
         deleteAddress,
         setDefaultAddress,
