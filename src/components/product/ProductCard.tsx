@@ -36,8 +36,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
     openQuickView(product);
   };
 
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   const rawImg = product.images[currentImageIndex] || product.images[0];
-  const displayImg = getOptimizedImageUrl(rawImg, { width: 500, quality: 75 });
+  const displayImg = getOptimizedImageUrl(rawImg, { width: 450, quality: 75 });
 
   return (
     <div
@@ -50,13 +52,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
         onMouseEnter={() => product.images[1] && setCurrentImageIndex(1)}
         onMouseLeave={() => setCurrentImageIndex(0)}
       >
+        {/* Shimmer Skeleton Placeholder */}
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-[#F2EDE2] animate-pulse" />
+        )}
+
         <img
           src={displayImg}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-106"
+          className={`w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-106 ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
           loading="lazy"
           decoding="async"
-          onError={handleImageError}
+          onLoad={() => setImageLoaded(true)}
+          onError={(e) => {
+            setImageLoaded(true);
+            handleImageError(e);
+          }}
         />
 
         {/* Floating Badges with Smooth Rounded Pill shape */}

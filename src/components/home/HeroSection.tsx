@@ -73,6 +73,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
           alt="Kavish Kerala Luxury Fashion Campaign"
           className="w-full h-full object-cover opacity-40 sm:opacity-45 transform scale-105 transition-all duration-1000 ease-out"
           loading="eager"
+          // @ts-ignore
+          fetchpriority="high"
           decoding="async"
           onError={handleImageError}
         />

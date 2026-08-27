@@ -420,17 +420,31 @@ function mapStoreContentToDb(sc: StoreContentConfig): Record<string, any> {
 // SUPABASE DATABASE HELPER METHODS
 // ==========================================
 
+function withTimeout<T>(promiseLike: PromiseLike<T>, ms = 4000): Promise<T> {
+  let timer: any;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`Supabase query timeout after ${ms}ms`)), ms);
+  });
+  return Promise.race([
+    Promise.resolve(promiseLike),
+    timeoutPromise
+  ]).finally(() => {
+    clearTimeout(timer);
+  });
+}
+
 export async function fetchSupabaseProducts(): Promise<Product[] | null> {
   if (!isSupabaseConfigured) return null;
   try {
-    const { data, error } = await supabase.from('products').select('*');
+    const res = await withTimeout(supabase.from('products').select('*'));
+    const { data, error } = res as any;
     if (error || !data) {
       if (error) console.warn('Supabase fetch products error:', error.message);
       return null;
     }
     return data.map(mapProductFromDb);
   } catch (err) {
-    console.warn('Supabase product fetch failed:', err);
+    console.warn('Supabase product fetch fallback:', err);
     return null;
   }
 }
@@ -465,7 +479,8 @@ export async function removeSupabaseProduct(id: string): Promise<boolean> {
 export async function fetchSupabaseOrders(): Promise<Order[] | null> {
   if (!isSupabaseConfigured) return null;
   try {
-    const { data, error } = await supabase.from('orders').select('*');
+    const res = await withTimeout(supabase.from('orders').select('*'));
+    const { data, error } = res as any;
     if (error || !data) return null;
     return data.map(mapOrderFromDb);
   } catch (err) {
@@ -488,7 +503,8 @@ export async function upsertSupabaseOrder(order: Order): Promise<boolean> {
 export async function fetchSupabaseOffers(): Promise<PromoOffer[] | null> {
   if (!isSupabaseConfigured) return null;
   try {
-    const { data, error } = await supabase.from('promo_offers').select('*');
+    const res = await withTimeout(supabase.from('promo_offers').select('*'));
+    const { data, error } = res as any;
     if (error || !data) return null;
     return data.map(mapOfferFromDb);
   } catch (err) {
@@ -511,7 +527,8 @@ export async function upsertSupabaseOffer(offer: PromoOffer): Promise<boolean> {
 export async function fetchSupabaseReviews(): Promise<Review[] | null> {
   if (!isSupabaseConfigured) return null;
   try {
-    const { data, error } = await supabase.from('reviews').select('*');
+    const res = await withTimeout(supabase.from('reviews').select('*'));
+    const { data, error } = res as any;
     if (error || !data) return null;
     return data.map(mapReviewFromDb);
   } catch (err) {
@@ -534,7 +551,8 @@ export async function upsertSupabaseReview(review: Review): Promise<boolean> {
 export async function fetchSupabaseAuditLogs(): Promise<AuditLog[] | null> {
   if (!isSupabaseConfigured) return null;
   try {
-    const { data, error } = await supabase.from('audit_logs').select('*');
+    const res = await withTimeout(supabase.from('audit_logs').select('*'));
+    const { data, error } = res as any;
     if (error || !data) return null;
     return data.map(mapAuditLogFromDb);
   } catch (err) {
@@ -557,7 +575,8 @@ export async function insertSupabaseAuditLog(log: AuditLog): Promise<boolean> {
 export async function fetchSupabaseReturnRequests(): Promise<ReturnRequest[] | null> {
   if (!isSupabaseConfigured) return null;
   try {
-    const { data, error } = await supabase.from('return_requests').select('*');
+    const res = await withTimeout(supabase.from('return_requests').select('*'));
+    const { data, error } = res as any;
     if (error || !data) return null;
     return data.map(mapReturnRequestFromDb);
   } catch (err) {
@@ -580,7 +599,8 @@ export async function upsertSupabaseReturnRequest(req: ReturnRequest): Promise<b
 export async function fetchSupabaseCategories(): Promise<CategoryItem[] | null> {
   if (!isSupabaseConfigured) return null;
   try {
-    const { data, error } = await supabase.from('categories').select('*');
+    const res = await withTimeout(supabase.from('categories').select('*'));
+    const { data, error } = res as any;
     if (error || !data) return null;
     return data.map(mapCategoryFromDb);
   } catch (err) {
@@ -632,7 +652,8 @@ export async function removeSupabaseCategory(id: string): Promise<boolean> {
 export async function fetchSupabaseAdminUsers(): Promise<AdminUser[] | null> {
   if (!isSupabaseConfigured) return null;
   try {
-    const { data, error } = await supabase.from('admin_users').select('*');
+    const res = await withTimeout(supabase.from('admin_users').select('*'));
+    const { data, error } = res as any;
     if (error || !data) return null;
     return data.map(mapAdminUserFromDb);
   } catch (err) {
@@ -655,7 +676,8 @@ export async function upsertSupabaseAdminUser(user: AdminUser): Promise<boolean>
 export async function fetchSupabaseStoreContent(): Promise<StoreContentConfig | null> {
   if (!isSupabaseConfigured) return null;
   try {
-    const { data, error } = await supabase.from('store_content').select('*').single();
+    const res = await withTimeout(supabase.from('store_content').select('*').single());
+    const { data, error } = res as any;
     if (error || !data) return null;
     return mapStoreContentFromDb(data);
   } catch (err) {
@@ -698,7 +720,8 @@ export async function upsertSupabaseStoreContent(sc: StoreContentConfig): Promis
 export async function fetchSupabaseShippingConfig(): Promise<ShippingConfig | null> {
   if (!isSupabaseConfigured) return null;
   try {
-    const { data, error } = await supabase.from('shipping_rules').select('*').limit(1).single();
+    const res = await withTimeout(supabase.from('shipping_rules').select('*').limit(1).single());
+    const { data, error } = res as any;
     if (error || !data) return null;
     return {
       freeShippingThreshold: Number(data.free_shipping_threshold) || 0,

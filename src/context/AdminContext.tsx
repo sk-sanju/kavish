@@ -228,19 +228,29 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   useEffect(() => {
-    async function loadSupabaseAdminData() {
-      const dbLogs = await fetchSupabaseAuditLogs();
-      if (dbLogs && dbLogs.length > 0) setAuditLogs(dbLogs);
+    const isAdmin = Boolean(localStorage.getItem('kavish_admin_auth'));
+    // Only load internal audit logs and return requests if an admin is logged in
+    if (isAdmin) {
+      fetchSupabaseAuditLogs().then(dbLogs => {
+        if (dbLogs && dbLogs.length > 0) setAuditLogs(dbLogs);
+      }).catch(err => console.warn('Audit logs load error:', err));
 
-      const dbReturns = await fetchSupabaseReturnRequests();
-      if (dbReturns && dbReturns.length > 0) setReturnRequests(dbReturns);
+      fetchSupabaseReturnRequests().then(dbReturns => {
+        if (dbReturns && dbReturns.length > 0) setReturnRequests(dbReturns);
+      }).catch(err => console.warn('Return requests load error:', err));
+    }
 
-      const dbContent = await fetchSupabaseStoreContent();
+    // Hero banners & store content are loaded for storefront display
+    fetchSupabaseStoreContent().then(dbContent => {
       if (dbContent) {
         setStoreContent(prev => ({ ...prev, ...dbContent }));
         if (dbContent.heroBanners && Array.isArray(dbContent.heroBanners) && dbContent.heroBanners.length > 0) {
           setHeroBanners(dbContent.heroBanners);
-          localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(dbContent.heroBanners));
+          try {
+            localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(dbContent.heroBanners));
+          } catch (e) {
+            console.error(e);
+          }
         } else if (dbContent.bannerImage || dbContent.heroTitle) {
           const liveBanner: HeroBanner = {
             id: 'banner-live-01',
@@ -257,11 +267,14 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             order: 1
           };
           setHeroBanners([liveBanner]);
-          localStorage.setItem('kavish_hero_banners_v1', JSON.stringify([liveBanner]));
+          try {
+            localStorage.setItem('kavish_hero_banners_v1', JSON.stringify([liveBanner]));
+          } catch (e) {
+            console.error(e);
+          }
         }
       }
-    }
-    loadSupabaseAdminData();
+    }).catch(err => console.warn('Store content fetch error:', err));
   }, []);
 
   const saveAuditLogs = (newLogs: AuditLog[]) => {

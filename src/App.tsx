@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 
 import { CartProvider } from './context/CartContext';
@@ -23,32 +23,46 @@ import { OrderTrackerModal } from './components/account/OrderTrackerModal';
 import { CustomerAuthModal } from './components/account/CustomerAuthModal';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
 
+// Critical Core Page: Loaded synchronously for instantaneous First Contentful Paint
 import { Home } from './pages/Home';
-import { Shop } from './pages/Shop';
-import { ProductDetail } from './pages/ProductDetail';
-import { CartPage } from './pages/CartPage';
-import { CheckoutPage } from './pages/CheckoutPage';
-import { WishlistPage } from './pages/WishlistPage';
-import { AccountPage } from './pages/AccountPage';
-import { Heritage } from './pages/Heritage';
-import { ContactPage } from './pages/ContactPage';
-import { AdminDashboard } from './pages/AdminDashboard';
-import { AdminLoginPage } from './pages/AdminLoginPage';
 
-// Policy & Dedicated Flow Pages
-import { PrivacyPolicy } from './pages/PrivacyPolicy';
-import { TermsAndConditions } from './pages/TermsAndConditions';
-import { ReturnRefundPolicy } from './pages/ReturnRefundPolicy';
-import { ShippingPolicy } from './pages/ShippingPolicy';
-import { PaymentInformation } from './pages/PaymentInformation';
-import { FAQPage } from './pages/FAQPage';
-import { OrderSuccess } from './pages/OrderSuccess';
-import { PaymentFailed } from './pages/PaymentFailed';
-import { PaymentPending } from './pages/PaymentPending';
-import { TrackOrder } from './pages/TrackOrder';
-import { NotFoundPage } from './pages/NotFoundPage';
+// Lazy-loaded routes to keep initial bundle ultra-lightweight
+const Shop = lazy(() => import('./pages/Shop').then(m => ({ default: m.Shop })));
+const ProductDetail = lazy(() => import('./pages/ProductDetail').then(m => ({ default: m.ProductDetail })));
+const CartPage = lazy(() => import('./pages/CartPage').then(m => ({ default: m.CartPage })));
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage').then(m => ({ default: m.CheckoutPage })));
+const WishlistPage = lazy(() => import('./pages/WishlistPage').then(m => ({ default: m.WishlistPage })));
+const AccountPage = lazy(() => import('./pages/AccountPage').then(m => ({ default: m.AccountPage })));
+const Heritage = lazy(() => import('./pages/Heritage').then(m => ({ default: m.Heritage })));
+const ContactPage = lazy(() => import('./pages/ContactPage').then(m => ({ default: m.ContactPage })));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
+const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage').then(m => ({ default: m.AdminLoginPage })));
+
+// Policy & Auxiliary Pages
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })));
+const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions').then(m => ({ default: m.TermsAndConditions })));
+const ReturnRefundPolicy = lazy(() => import('./pages/ReturnRefundPolicy').then(m => ({ default: m.ReturnRefundPolicy })));
+const ShippingPolicy = lazy(() => import('./pages/ShippingPolicy').then(m => ({ default: m.ShippingPolicy })));
+const PaymentInformation = lazy(() => import('./pages/PaymentInformation').then(m => ({ default: m.PaymentInformation })));
+const FAQPage = lazy(() => import('./pages/FAQPage').then(m => ({ default: m.FAQPage })));
+const OrderSuccess = lazy(() => import('./pages/OrderSuccess').then(m => ({ default: m.OrderSuccess })));
+const PaymentFailed = lazy(() => import('./pages/PaymentFailed').then(m => ({ default: m.PaymentFailed })));
+const PaymentPending = lazy(() => import('./pages/PaymentPending').then(m => ({ default: m.PaymentPending })));
+const TrackOrder = lazy(() => import('./pages/TrackOrder').then(m => ({ default: m.TrackOrder })));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
 import type { Product } from './types';
+
+function PageLoadingSkeleton() {
+  return (
+    <div className="min-h-[60vh] flex flex-col items-center justify-center py-20 px-4">
+      <div className="w-10 h-10 border-3 border-[#D4AF37]/30 border-t-[#D4AF37] rounded-full animate-spin" />
+      <p className="mt-4 font-serif text-sm tracking-widest text-[#12372A] uppercase font-medium animate-pulse">
+        Kavish Atelier
+      </p>
+    </div>
+  );
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -100,45 +114,47 @@ export function AppContent() {
       {!isAdminRoute && <Header />}
 
       <main className="flex-1">
-        <Routes>
-          {/* Main Pages */}
-          <Route path="/" element={<Home onSelectProduct={handleSelectProduct} onNavigate={handleNavigate} />} />
-          <Route path="/shop" element={<Shop onSelectProduct={handleSelectProduct} />} />
-          <Route path="/shop/category/:category" element={<Shop onSelectProduct={handleSelectProduct} />} />
-          <Route path="/shop/collection/:collection" element={<Shop onSelectProduct={handleSelectProduct} />} />
-          <Route path="/product/:id" element={<ProductDetail onSelectProduct={handleSelectProduct} onProceedToCheckout={() => navigate('/checkout')} />} />
-          <Route path="/cart" element={<CartPage onProceedToCheckout={() => navigate('/checkout')} />} />
-          <Route path="/checkout" element={<CheckoutPage onOrderSuccess={() => {}} onNavigateHome={() => navigate('/')} />} />
-          <Route path="/wishlist" element={<WishlistPage onSelectProduct={handleSelectProduct} onNavigateHome={() => navigate('/')} />} />
-          <Route path="/account" element={<AccountPage />} />
-          <Route path="/heritage" element={<Heritage onNavigate={handleNavigate} />} />
-          <Route path="/about" element={<Heritage onNavigate={handleNavigate} />} />
-          <Route path="/contact" element={<ContactPage />} />
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <Routes>
+            {/* Main Pages */}
+            <Route path="/" element={<Home onSelectProduct={handleSelectProduct} onNavigate={handleNavigate} />} />
+            <Route path="/shop" element={<Shop onSelectProduct={handleSelectProduct} />} />
+            <Route path="/shop/category/:category" element={<Shop onSelectProduct={handleSelectProduct} />} />
+            <Route path="/shop/collection/:collection" element={<Shop onSelectProduct={handleSelectProduct} />} />
+            <Route path="/product/:id" element={<ProductDetail onSelectProduct={handleSelectProduct} onProceedToCheckout={() => navigate('/checkout')} />} />
+            <Route path="/cart" element={<CartPage onProceedToCheckout={() => navigate('/checkout')} />} />
+            <Route path="/checkout" element={<CheckoutPage onOrderSuccess={() => {}} onNavigateHome={() => navigate('/')} />} />
+            <Route path="/wishlist" element={<WishlistPage onSelectProduct={handleSelectProduct} onNavigateHome={() => navigate('/')} />} />
+            <Route path="/account" element={<AccountPage />} />
+            <Route path="/heritage" element={<Heritage onNavigate={handleNavigate} />} />
+            <Route path="/about" element={<Heritage onNavigate={handleNavigate} />} />
+            <Route path="/contact" element={<ContactPage />} />
 
-          {/* Legal & Policy Pages */}
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-          <Route path="/return-refund-policy" element={<ReturnRefundPolicy />} />
-          <Route path="/shipping-policy" element={<ShippingPolicy />} />
-          <Route path="/payment-information" element={<PaymentInformation />} />
-          <Route path="/faq" element={<FAQPage />} />
+            {/* Legal & Policy Pages */}
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/return-refund-policy" element={<ReturnRefundPolicy />} />
+            <Route path="/shipping-policy" element={<ShippingPolicy />} />
+            <Route path="/payment-information" element={<PaymentInformation />} />
+            <Route path="/faq" element={<FAQPage />} />
 
-          {/* Order Lifecycle & Tracking */}
-          <Route path="/order-success" element={<OrderSuccess />} />
-          <Route path="/payment-failed" element={<PaymentFailed />} />
-          <Route path="/payment-pending" element={<PaymentPending />} />
-          <Route path="/track-order" element={<TrackOrder />} />
-          
-          {/* Admin Login & Console URL Routes */}
-          <Route path="/kavish" element={<AdminLoginPage />} />
-          <Route path="/kavish/admin" element={<AdminLoginPage />} />
-          <Route path="/admin/login" element={<AdminLoginPage />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/*" element={<AdminDashboard />} />
+            {/* Order Lifecycle & Tracking */}
+            <Route path="/order-success" element={<OrderSuccess />} />
+            <Route path="/payment-failed" element={<PaymentFailed />} />
+            <Route path="/payment-pending" element={<PaymentPending />} />
+            <Route path="/track-order" element={<TrackOrder />} />
+            
+            {/* Admin Login & Console URL Routes */}
+            <Route path="/kavish" element={<AdminLoginPage />} />
+            <Route path="/kavish/admin" element={<AdminLoginPage />} />
+            <Route path="/admin/login" element={<AdminLoginPage />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/*" element={<AdminDashboard />} />
 
-          {/* 404 Not Found Handling */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+            {/* 404 Not Found Handling */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
       </main>
 
       {!isAdminRoute && <Footer onNavigate={handleNavigate} />}

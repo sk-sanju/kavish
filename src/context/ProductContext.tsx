@@ -155,76 +155,93 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   useEffect(() => {
-    async function loadSupabaseData() {
+    let isMounted = true;
+
+    // 1. Fetch products independently
+    fetchSupabaseProducts().then((dbProducts) => {
+      if (!isMounted || dbProducts === null) return;
+      setProducts(dbProducts);
       try {
-        const [dbProducts, dbCategories, dbOffers, dbReviews, dbStoreContent] = await Promise.all([
-          fetchSupabaseProducts(),
-          fetchSupabaseCategories(),
-          fetchSupabaseOffers(),
-          fetchSupabaseReviews(),
-          fetchSupabaseStoreContent()
-        ]);
-
-        if (dbProducts !== null) {
-          setProducts(dbProducts);
-          localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(dbProducts));
-        }
-
-        // Category Resolution:
-        // 1. Check if dbStoreContent has categories from live cloud metadata bridge
-        // 2. Check existing local categories in localStorage (where user's recent cover edits are saved)
-        // 3. Check dbCategories from Supabase table
-        const localSavedCategories = (() => {
-          try {
-            const saved = localStorage.getItem(CATEGORIES_STORAGE_KEY);
-            if (saved) {
-              const parsed = JSON.parse(saved);
-              if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-            }
-          } catch (e) {
-            console.error(e);
-          }
-          return null;
-        })();
-
-        let finalCategories: CategoryItem[] | null = null;
-        if (dbStoreContent?.categories && Array.isArray(dbStoreContent.categories) && dbStoreContent.categories.length > 0) {
-          finalCategories = dbStoreContent.categories;
-        } else if (localSavedCategories && localSavedCategories.length > 0) {
-          finalCategories = localSavedCategories;
-          syncAllSupabaseCategories(localSavedCategories);
-        } else if (dbCategories && Array.isArray(dbCategories) && dbCategories.length > 0) {
-          finalCategories = dbCategories;
-          syncAllSupabaseCategories(dbCategories);
-        } else {
-          finalCategories = INITIAL_CATEGORIES;
-          syncAllSupabaseCategories(INITIAL_CATEGORIES);
-        }
-
-        if (finalCategories && finalCategories.length > 0) {
-          setCategories(finalCategories);
-          localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(finalCategories));
-        }
-
-        if (dbOffers !== null) {
-          setOffers(dbOffers);
-          localStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(dbOffers));
-        }
-
-        if (dbReviews !== null) {
-          setReviews(dbReviews);
-          localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(dbReviews));
-        }
-
-        if (dbStoreContent && dbStoreContent.announcementText) {
-          setAnnouncementTextState(dbStoreContent.announcementText);
-          localStorage.setItem(ANNOUNCEMENT_STORAGE_KEY, dbStoreContent.announcementText);
-        }
-      } catch (err) {
-        console.warn('Error loading live data from Supabase database:', err);
+        localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(dbProducts));
+      } catch (e) {
+        console.error(e);
       }
-    }
-    loadSupabaseData();
+    }).catch(err => console.warn('Products sync error:', err));
+
+    // 2. Fetch categories independently
+    fetchSupabaseCategories().then((dbCategories) => {
+      if (!isMounted) return;
+      const localSavedCategories = (() => {
+        try {
+          const saved = localStorage.getItem(CATEGORIES_STORAGE_KEY);
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+        return null;
+      })();
+
+      if (dbCategories && dbCategories.length > 0) {
+        setCategories(dbCategories);
+        try {
+          localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbCategories));
+        } catch (e) {
+          console.error(e);
+        }
+      } else if (localSavedCategories && localSavedCategories.length > 0) {
+        setCategories(localSavedCategories);
+      }
+    }).catch(err => console.warn('Categories sync error:', err));
+
+    // 3. Fetch offers independently
+    fetchSupabaseOffers().then((dbOffers) => {
+      if (!isMounted || dbOffers === null) return;
+      setOffers(dbOffers);
+      try {
+        localStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(dbOffers));
+      } catch (e) {
+        console.error(e);
+      }
+    }).catch(err => console.warn('Offers sync error:', err));
+
+    // 4. Fetch reviews independently
+    fetchSupabaseReviews().then((dbReviews) => {
+      if (!isMounted || dbReviews === null) return;
+      setReviews(dbReviews);
+      try {
+        localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(dbReviews));
+      } catch (e) {
+        console.error(e);
+      }
+    }).catch(err => console.warn('Reviews sync error:', err));
+
+    // 5. Fetch store content & announcement text independently
+    fetchSupabaseStoreContent().then((dbStoreContent) => {
+      if (!isMounted || !dbStoreContent) return;
+      if (dbStoreContent.announcementText) {
+        setAnnouncementTextState(dbStoreContent.announcementText);
+        try {
+          localStorage.setItem(ANNOUNCEMENT_STORAGE_KEY, dbStoreContent.announcementText);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      if (dbStoreContent.categories && Array.isArray(dbStoreContent.categories) && dbStoreContent.categories.length > 0) {
+        setCategories(dbStoreContent.categories);
+        try {
+          localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbStoreContent.categories));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }).catch(err => console.warn('Store content sync error:', err));
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const saveProducts = useCallback((newProducts: Product[]) => {

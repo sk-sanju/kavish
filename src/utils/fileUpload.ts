@@ -1,7 +1,7 @@
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 /**
- * Utility to read, upload to Supabase Storage, and optimize image files
+ * Utility to compress, optimize, and upload image files
  */
 const VALID_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.svg', '.gif', '.bmp', '.avif', '.jfif', '.heic'];
 
@@ -11,30 +11,122 @@ function isImageFile(file: File): boolean {
   return VALID_IMAGE_EXTENSIONS.some((ext) => fileName.endsWith(ext));
 }
 
+/**
+ * Compresses an image File to an optimized Blob (WebP/JPEG) with max resolution constraints.
+ */
+export async function compressImageToBlob(
+  file: File,
+  maxWidth = 1000,
+  maxHeight = 1000,
+  quality = 0.75
+): Promise<{ blob: Blob; mimeType: string }> {
+  // If SVG or very small, keep as is
+  if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg') || file.size < 50 * 1024) {
+    return { blob: file, mimeType: file.type || 'image/jpeg' };
+  }
+
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const src = e.target?.result as string;
+      if (!src) {
+        resolve({ blob: file, mimeType: file.type || 'image/jpeg' });
+        return;
+      }
+
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          width = Math.max(1, Math.round(width * ratio));
+          height = Math.max(1, Math.round(height * ratio));
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve({ blob: file, mimeType: file.type || 'image/jpeg' });
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Prefer modern WebP format
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              resolve({ blob, mimeType: 'image/webp' });
+            } else {
+              // Fallback to JPEG
+              canvas.toBlob(
+                (fallbackBlob) => {
+                  resolve({ blob: fallbackBlob || file, mimeType: 'image/jpeg' });
+                },
+                'image/jpeg',
+                quality
+              );
+            }
+          },
+          'image/webp',
+          quality
+        );
+      };
+
+      img.onerror = () => {
+        resolve({ blob: file, mimeType: file.type || 'image/jpeg' });
+      };
+
+      img.src = src;
+    };
+
+    reader.onerror = () => {
+      resolve({ blob: file, mimeType: file.type || 'image/jpeg' });
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
 export async function uploadImageFile(
   file: File,
   folder = 'uploads',
-  maxWidth = 1200,
-  maxHeight = 1200,
-  quality = 0.8
+  maxWidth = 1000,
+  maxHeight = 1000,
+  quality = 0.75
 ): Promise<string> {
   if (!isImageFile(file)) {
     throw new Error(`"${file.name || 'File'}" is not a supported image (JPG, PNG, WebP, SVG, etc.).`);
   }
 
+  // Pre-compress file into lightweight WebP/JPEG blob
+  let uploadBlob: Blob = file;
+  let fileExt = file.name.split('.').pop() || 'jpg';
+  let mimeType = file.type || 'image/jpeg';
+
+  try {
+    const compressed = await compressImageToBlob(file, maxWidth, maxHeight, quality);
+    uploadBlob = compressed.blob;
+    mimeType = compressed.mimeType;
+    fileExt = mimeType.includes('webp') ? 'webp' : 'jpg';
+  } catch (err) {
+    console.warn('Image pre-compression fallback:', err);
+  }
+
   // 1. Try uploading to Supabase Storage bucket 'store-media'
   if (isSupabaseConfigured) {
     try {
-      const fileExt = file.name.split('.').pop() || 'jpg';
-      const cleanExt = fileExt.toLowerCase().replace(/[^a-z0-9]/g, '');
-      const cleanFileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${cleanExt}`;
+      const cleanFileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
 
       const { data, error } = await supabase.storage
         .from('store-media')
-        .upload(cleanFileName, file, {
-          cacheControl: '3600',
+        .upload(cleanFileName, uploadBlob, {
+          cacheControl: '31536000', // 1 year immutable cache
           upsert: true,
-          contentType: file.type || 'image/jpeg'
+          contentType: mimeType
         });
 
       if (!error && data) {
@@ -56,9 +148,9 @@ export async function uploadImageFile(
 
 export async function readImageFileAsDataUrl(
   file: File,
-  maxWidth = 1600,
-  maxHeight = 1600,
-  quality = 0.85
+  maxWidth = 1000,
+  maxHeight = 1000,
+  quality = 0.75
 ): Promise<string> {
   if (!isImageFile(file)) {
     throw new Error(`"${file.name || 'File'}" is not a supported image (JPG, PNG, WebP, SVG, etc.).`);
@@ -74,22 +166,15 @@ export async function readImageFileAsDataUrl(
         return;
       }
 
-      // If SVG or small file (< 100KB), return directly as Data URL
-      if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg') || file.size < 100 * 1024) {
+      if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg') || file.size < 50 * 1024) {
         resolve(result);
         return;
       }
 
-      // Use HTML Image element to compress / scale large device photos
       const img = new Image();
       img.onload = () => {
         try {
           let { width, height } = img;
-
-          if (width <= maxWidth && height <= maxHeight && file.size < 300 * 1024) {
-            resolve(result);
-            return;
-          }
 
           if (width > maxWidth || height > maxHeight) {
             const ratio = Math.min(maxWidth / width, maxHeight / height);
@@ -109,17 +194,21 @@ export async function readImageFileAsDataUrl(
 
           ctx.drawImage(img, 0, 0, width, height);
 
-          const isPng = file.type === 'image/png' || file.name.toLowerCase().endsWith('.png');
-          const mimeType = isPng ? 'image/png' : 'image/jpeg';
-          const compressedDataUrl = canvas.toDataURL(mimeType, quality);
-          resolve(compressedDataUrl || result);
+          // Try WebP first for smallest data payload
+          const webpDataUrl = canvas.toDataURL('image/webp', quality);
+          if (webpDataUrl && webpDataUrl.startsWith('data:image/webp')) {
+            resolve(webpDataUrl);
+            return;
+          }
+
+          const jpegDataUrl = canvas.toDataURL('image/jpeg', quality);
+          resolve(jpegDataUrl || result);
         } catch {
           resolve(result);
         }
       };
 
       img.onerror = () => {
-        // If image decode fails in browser, still resolve raw base64 data URL
         resolve(result);
       };
 
@@ -133,4 +222,3 @@ export async function readImageFileAsDataUrl(
     reader.readAsDataURL(file);
   });
 }
-
