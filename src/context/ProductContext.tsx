@@ -61,6 +61,24 @@ const COLLECTIONS_STORAGE_KEY = 'kavish_live_collections_v1';
 const REVIEWS_STORAGE_KEY = 'kavish_live_reviews_v1';
 const ANNOUNCEMENT_STORAGE_KEY = 'kavish_live_announcement_v1';
 
+function safeStoreProducts(productsToStore: Product[]) {
+  try {
+    localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(productsToStore));
+  } catch (err) {
+    try {
+      // If full multi-megabyte base64 images exceed browser localStorage 5MB quota,
+      // store lightweight version with 1 image so local boot is preserved without crashing
+      const lightweight = productsToStore.map(p => ({
+        ...p,
+        images: p.images && p.images.length > 0 ? [p.images[0]] : []
+      }));
+      localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(lightweight));
+    } catch (innerErr) {
+      console.warn('LocalStorage full, in-memory state will be used.');
+    }
+  }
+}
+
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>(() => {
     try {
@@ -161,11 +179,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     fetchSupabaseProducts().then((dbProducts) => {
       if (!isMounted || dbProducts === null) return;
       setProducts(dbProducts);
-      try {
-        localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(dbProducts));
-      } catch (e) {
-        console.error(e);
-      }
+      safeStoreProducts(dbProducts);
     }).catch(err => console.warn('Products sync error:', err));
 
     // 2. Fetch categories independently
@@ -246,11 +260,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const saveProducts = useCallback((newProducts: Product[]) => {
     setProducts(newProducts);
-    try {
-      localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(newProducts));
-    } catch (e) {
-      console.error('Failed to save products:', e);
-    }
+    safeStoreProducts(newProducts);
   }, []);
 
   const saveCategories = useCallback((newCategories: CategoryItem[]) => {
@@ -514,11 +524,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
           return p;
         });
       });
-      try {
-        localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(updatedProducts));
-      } catch (e) {
-        console.error(e);
-      }
+      safeStoreProducts(updatedProducts);
       return updatedProducts;
     });
   };

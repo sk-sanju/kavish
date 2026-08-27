@@ -420,7 +420,7 @@ function mapStoreContentToDb(sc: StoreContentConfig): Record<string, any> {
 // SUPABASE DATABASE HELPER METHODS
 // ==========================================
 
-function withTimeout<T>(promiseLike: PromiseLike<T>, ms = 4000): Promise<T> {
+function withTimeout<T>(promiseLike: PromiseLike<T>, ms = 12000): Promise<T> {
   let timer: any;
   const timeoutPromise = new Promise<never>((_, reject) => {
     timer = setTimeout(() => reject(new Error(`Supabase query timeout after ${ms}ms`)), ms);
