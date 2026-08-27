@@ -47,8 +47,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <Truck className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-serif font-bold text-base text-[#FAF8F1]">Complimentary Express Delivery</h4>
-              <p className="text-xs text-[#E8DDC7]/80 mt-0.5">Free BlueDart Air shipping across India over {formatPrice(POLICY_CONFIG.FREE_SHIPPING_THRESHOLD)}.</p>
+              <h4 className="font-serif font-bold text-base text-[#FAF8F1]">Express Pan-India Delivery</h4>
+              <p className="text-xs text-[#E8DDC7]/80 mt-0.5">Secure doorstep dispatch across India within 4–10 business days.</p>
             </div>
           </div>
 
