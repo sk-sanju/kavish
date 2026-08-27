@@ -356,9 +356,10 @@ function mapAdminUserToDb(u: AdminUser): Record<string, any> {
 function mapStoreContentFromDb(row: any): StoreContentConfig {
   let heroBanners = Array.isArray(row.hero_banners) && row.hero_banners.length > 0 ? row.hero_banners : undefined;
   let contactInfo = row.contact_info || undefined;
+  let categories: CategoryItem[] | undefined = undefined;
   let policyText = row.policy_text || '';
 
-  // Fallback: If hero_banners / contact_info were stored in policy_text metadata payload
+  // Fallback: If hero_banners / categories / contact_info were stored in policy_text metadata payload
   if (policyText.includes('__KV_META__')) {
     try {
       const parts = policyText.split('__KV_META__');
@@ -366,6 +367,9 @@ function mapStoreContentFromDb(row: any): StoreContentConfig {
       const meta = JSON.parse(parts[1]);
       if (meta.heroBanners && Array.isArray(meta.heroBanners) && meta.heroBanners.length > 0 && !heroBanners) {
         heroBanners = meta.heroBanners;
+      }
+      if (meta.categories && Array.isArray(meta.categories) && meta.categories.length > 0) {
+        categories = meta.categories;
       }
       if (meta.contactInfo && !contactInfo) {
         contactInfo = meta.contactInfo;
@@ -381,6 +385,7 @@ function mapStoreContentFromDb(row: any): StoreContentConfig {
     heroSubtitle: row.hero_subtitle || '',
     bannerImage: row.banner_image || '',
     heroBanners,
+    categories,
     featuredCollectionIds: Array.isArray(row.featured_collection_ids) ? row.featured_collection_ids : [],
     faqItems: Array.isArray(row.faq_items) ? row.faq_items : [],
     policyText,
@@ -391,6 +396,7 @@ function mapStoreContentFromDb(row: any): StoreContentConfig {
 function mapStoreContentToDb(sc: StoreContentConfig): Record<string, any> {
   const meta = {
     heroBanners: sc.heroBanners || [],
+    categories: sc.categories || [],
     contactInfo: sc.contactInfo || null
   };
   const cleanPolicy = (sc.policyText || '').split('__KV_META__')[0];
@@ -590,6 +596,24 @@ export async function upsertSupabaseCategory(cat: CategoryItem): Promise<boolean
     if (error) return false;
     return true;
   } catch (err) {
+    return false;
+  }
+}
+
+export async function syncAllSupabaseCategories(categories: CategoryItem[]): Promise<boolean> {
+  if (!isSupabaseConfigured) return false;
+  try {
+    const currContent = await fetchSupabaseStoreContent();
+    if (currContent) {
+      await upsertSupabaseStoreContent({
+        ...currContent,
+        categories
+      });
+    }
+    await Promise.allSettled(categories.map(c => upsertSupabaseCategory(c)));
+    return true;
+  } catch (err) {
+    console.warn('syncAllSupabaseCategories warning:', err);
     return false;
   }
 }

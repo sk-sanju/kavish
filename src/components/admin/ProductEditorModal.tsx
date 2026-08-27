@@ -633,7 +633,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                 </label>
                 <div className="flex gap-2">
                   <input
-                    type="url"
+                    type="text"
                     placeholder="https://images.unsplash.com/... or cloud image link"
                     value={newImageUrl}
                     onChange={(e) => setNewImageUrl(e.target.value)}

@@ -325,6 +325,7 @@ export interface StoreContentConfig {
   heroSubtitle: string;
   bannerImage: string;
   heroBanners?: HeroBanner[];
+  categories?: CategoryItem[];
   featuredCollectionIds: string[];
   faqItems: { question: string; answer: string }[];
   policyText: string;

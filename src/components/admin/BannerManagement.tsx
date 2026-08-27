@@ -111,10 +111,19 @@ export const BannerManagement: React.FC = () => {
     setShowModal(true);
   };
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = (e?: React.FormEvent | React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     if (!form.title || !form.title.trim()) {
-      alert('Please enter a banner headline.');
+      showToast('Please enter a hero headline title.');
+      return;
+    }
+
+    if (!form.image || !form.image.trim()) {
+      showToast('Please upload or select a banner background image.');
       return;
     }
 
@@ -123,7 +132,7 @@ export const BannerManagement: React.FC = () => {
       tag: form.tag?.trim() || 'Atelier Signature Edit',
       title: form.title?.trim() || '500 Years of Handloom Mastery',
       subtitle: form.subtitle?.trim() || 'Royal Kasavu Sarees & Unbleached European Linen Woven for Modern Royalty',
-      image: form.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1800&q=90',
+      image: form.image?.trim() || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1800&q=90',
       primaryCtaText: form.primaryCtaText?.trim() || 'Shop Collection',
       primaryCtaLink: form.primaryCtaLink?.trim() || 'shop',
       secondaryCtaText: form.secondaryCtaText?.trim() || 'Explore Our Story',
@@ -490,7 +499,7 @@ export const BannerManagement: React.FC = () => {
             </div>
 
             {/* Modal Scrollable Form Body */}
-            <form id="banner-modal-form" onSubmit={handleSave} className="p-6 overflow-y-auto space-y-4 text-xs flex-1">
+            <form id="banner-modal-form" noValidate onSubmit={handleSave} className="p-6 overflow-y-auto space-y-4 text-xs flex-1">
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
@@ -678,10 +687,10 @@ export const BannerManagement: React.FC = () => {
                     <span>Or Custom Web Image URL:</span>
                   </label>
                   <input
-                    type="url"
+                    type="text"
                     value={form.image || ''}
                     onChange={(e) => setForm({ ...form, image: e.target.value })}
-                    placeholder="https://images.unsplash.com/photo-..."
+                    placeholder="https://images.unsplash.com/photo-... or image URL / base64"
                     className="w-full border border-[#E8DDC7] p-2 rounded-xl bg-[#FAF8F1] text-xs font-mono"
                   />
                 </div>
@@ -736,16 +745,16 @@ export const BannerManagement: React.FC = () => {
             {/* Modal Fixed Footer */}
             <div className="p-4 bg-[#FAF8F1] border-t border-[#E8DDC7] flex gap-3 shrink-0">
               <button
-                type="submit"
-                form="banner-modal-form"
-                className="flex-1 bg-[#12372A] text-[#FAF8F1] py-3 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-sm"
+                type="button"
+                onClick={handleSave}
+                className="flex-1 bg-[#12372A] text-[#FAF8F1] py-3 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-sm cursor-pointer"
               >
                 {editingBanner ? 'Update Hero Banner' : 'Save & Publish Banner'}
               </button>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-5 py-3 border border-[#E8DDC7] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all"
+                className="px-5 py-3 border border-[#E8DDC7] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all cursor-pointer"
               >
                 Cancel
               </button>

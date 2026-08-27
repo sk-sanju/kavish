@@ -383,7 +383,7 @@ export const CategoryManagement: React.FC = () => {
             </div>
 
             {/* Modal Scrollable Form Body */}
-            <form id="category-modal-form" onSubmit={handleSave} className="p-6 overflow-y-auto space-y-4 text-xs flex-1">
+            <form id="category-modal-form" noValidate onSubmit={handleSave} className="p-6 overflow-y-auto space-y-4 text-xs flex-1">
               <div>
                 <label className="block font-semibold text-[#6B5846] mb-1">Category Name *</label>
                 <input
@@ -543,10 +543,10 @@ export const CategoryManagement: React.FC = () => {
                     <span>Or Paste Image Web URL:</span>
                   </label>
                   <input
-                    type="url"
+                    type="text"
                     value={form.image || ''}
                     onChange={(e) => setForm({ ...form, image: e.target.value })}
-                    placeholder="https://images.unsplash.com/..."
+                    placeholder="https://images.unsplash.com/... or image data URL"
                     className="w-full border border-[#E8DDC7] p-2 rounded-xl bg-[#FAF8F1] text-xs font-mono"
                   />
                 </div>
@@ -590,16 +590,16 @@ export const CategoryManagement: React.FC = () => {
             {/* Modal Fixed Footer */}
             <div className="p-4 bg-[#FAF8F1] border-t border-[#E8DDC7] flex gap-3 shrink-0">
               <button
-                type="submit"
-                form="category-modal-form"
-                className="flex-1 bg-[#12372A] text-[#FAF8F1] py-3 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-sm"
+                type="button"
+                onClick={handleSave}
+                className="flex-1 bg-[#12372A] text-[#FAF8F1] py-3 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-sm cursor-pointer"
               >
                 {editingCategory ? 'Update Category' : 'Save Category'}
               </button>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-5 py-3 border border-[#E8DDC7] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all"
+                className="px-5 py-3 border border-[#E8DDC7] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all cursor-pointer"
               >
                 Cancel
               </button>
