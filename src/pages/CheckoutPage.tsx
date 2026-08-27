@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle2, Lock, ArrowRight, ShieldCheck, AlertCircle, ShoppingCart } from 'lucide-react';
+import {
+  CheckCircle2, Lock, ArrowRight, ShieldCheck, AlertCircle, ShoppingCart,
+  QrCode, Copy, ExternalLink, CreditCard, Banknote, Sparkles, Check
+} from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -14,6 +17,8 @@ interface CheckoutPageProps {
   onOrderSuccess?: (order: Order) => void;
   onNavigateHome: () => void;
 }
+
+type PaymentOption = 'razorpay' | 'direct_upi' | 'razorpay_link' | 'card' | 'cod';
 
 export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNavigateHome }) => {
   const navigate = useNavigate();
@@ -37,7 +42,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
 
   const [shippingAddress, setShippingAddress] = useState<Address>(defaultAddr);
   const [customerEmail, setCustomerEmail] = useState<string>(user.email || '');
-  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'netbanking'>('upi');
+  const [paymentOption, setPaymentOption] = useState<PaymentOption>('razorpay');
+  const [copiedUPI, setCopiedUPI] = useState(false);
+  const [upiTransactionRef, setUpiTransactionRef] = useState('');
 
   // Legal Consent Checkbox
   const [agreedToTerms, setAgreedToTerms] = useState(true);
@@ -87,7 +94,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
     }
   };
 
-  // Finalize order upon verified payment
+  // Finalize order upon verified payment or chosen method
   const finalizeOrder = (paymentDetailsMethod: string, customOrderId?: string, customInvoiceId?: string) => {
     const orderNum = Math.floor(10000 + Math.random() * 90000);
     const finalOrderId = customOrderId || `KV-ORD-${orderNum}`;
@@ -114,8 +121,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
         phone: shippingAddress.phone.trim()
       },
       paymentMethod: paymentDetailsMethod,
-      trackingNumber: `BLRD-KAV-${Math.floor(100000 + Math.random() * 900000)}`,
-      estimatedDelivery: 'August 26, 2026'
+      trackingNumber: `KV-TRK-${Math.floor(100000 + Math.random() * 900000)}`,
+      estimatedDelivery: '4–10 days (Inside India)'
     };
 
     addOrder(newOrder);
@@ -146,12 +153,34 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
     }
 
     setPaymentError(null);
-    setIsProcessingPayment(true);
 
     const orderNum = Math.floor(10000 + Math.random() * 90000);
     const generatedOrderId = `KV-ORD-${orderNum}`;
     const generatedInvoiceId = `KV-INV-2026-${orderNum}`;
 
+    // Handle Direct Instant UPI
+    if (paymentOption === 'direct_upi') {
+      const refNote = upiTransactionRef.trim() ? ` (Ref: ${upiTransactionRef.trim()})` : '';
+      finalizeOrder(`Direct UPI Payment to ${POLICY_CONFIG.UPI_ID}${refNote}`, generatedOrderId, generatedInvoiceId);
+      return;
+    }
+
+    // Handle Cash on Delivery
+    if (paymentOption === 'cod') {
+      finalizeOrder('Cash on Delivery (Concierge Inspection on Doorstep)', generatedOrderId, generatedInvoiceId);
+      return;
+    }
+
+    // Handle Razorpay Direct Payment Link
+    if (paymentOption === 'razorpay_link') {
+      const payLink = `${POLICY_CONFIG.RAZORPAY_PORTAL_LINK}?amount=${total}`;
+      window.open(payLink, '_blank', 'noopener,noreferrer');
+      finalizeOrder(`Razorpay Official Payment Portal (${payLink})`, generatedOrderId, generatedInvoiceId);
+      return;
+    }
+
+    // Handle Standard Razorpay Modal Gateway (Razorpay or Card)
+    setIsProcessingPayment(true);
     initializeRazorpayPayment({
       amountInINR: total,
       orderId: generatedOrderId,
@@ -161,9 +190,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
       customerPhone: shippingAddress.phone.trim(),
       onSuccess: (paymentId) => {
         const methodTitle =
-          paymentMethod === 'upi'
-            ? `Razorpay Instant UPI (${paymentId})`
-            : `Razorpay Card/NetBanking (${paymentId})`;
+          paymentOption === 'card'
+            ? `Razorpay Card/NetBanking (${paymentId})`
+            : `Razorpay Instant UPI (${paymentId})`;
         finalizeOrder(methodTitle, generatedOrderId, generatedInvoiceId);
       },
       onFailure: (err) => {
@@ -172,6 +201,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
       }
     });
   };
+
+  const copyUpiIdToClipboard = () => {
+    navigator.clipboard.writeText(POLICY_CONFIG.UPI_ID);
+    setCopiedUPI(true);
+    setTimeout(() => setCopiedUPI(false), 3000);
+  };
+
+  const upiQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=${POLICY_CONFIG.UPI_ID}%26pn=${encodeURIComponent(POLICY_CONFIG.UPI_NAME)}%26am=${total}%26cu=INR`;
 
   if (cart.length === 0) {
     return (
@@ -184,7 +221,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
             Your Bag is Empty
           </h2>
           <p className="text-xs text-[#6B5846] leading-relaxed">
-            Please select authentic handlooms from our collection to begin checkout.
+            Please select authentic Kuthampully handlooms from our collection to begin checkout.
           </p>
           <button
             onClick={() => navigate('/shop')}
@@ -205,12 +242,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
         <div className="text-center max-w-xl mx-auto mb-6 sm:mb-8 flex flex-col items-center">
           <img
             src={logoImg}
-            alt="KAVISH - Kerala Ethnic Wear"
+            alt="KAVISH - Kuthampully Handlooms"
             className="h-12 sm:h-14 w-auto object-contain cursor-pointer hover:opacity-90 transition-opacity"
             onClick={onNavigateHome}
           />
           <p className="text-[10px] sm:text-xs text-[#D4AF37] font-semibold uppercase tracking-widest mt-1">
-            Secure Atelier Checkout
+            Secure Atelier Checkout • Kuthampully GI Certified
           </p>
         </div>
 
@@ -333,7 +370,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
                         setShippingAddress({ ...shippingAddress, street: e.target.value });
                         if (validationErrors.street) setValidationErrors({ ...validationErrors, street: '' });
                       }}
-                      placeholder="e.g. Flat 4B, Kuthampully Heritage Enclave, Main Road"
+                      placeholder="e.g. Flat 4B, Heritage Enclave, Main Road"
                       className={`w-full border p-3 focus:outline-none focus:border-[#D4AF37] rounded-xl ${
                         validationErrors.street ? 'border-red-500 bg-red-50/50' : 'border-[#E8DDC7]'
                       }`}
@@ -412,15 +449,15 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
                       <div className="flex items-center">
                         <input type="radio" checked readOnly className="mr-3 accent-[#12372A]" />
                         <strong className="text-[#12372A]">
-                          Standard Express Courier ({shippingFee === 0 ? 'Complimentary' : formatPrice(shippingFee)})
+                          Standard Express Handloom Delivery ({formatPrice(shippingFee)})
                         </strong>
                       </div>
                       <span className="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full font-bold uppercase">
-                        {shippingFee === 0 ? 'Free Express' : 'Priority Air'}
+                        {shippingFee === 0 ? 'Complimentary' : 'Standard Rate'}
                       </span>
                     </div>
-                    <p className="text-[#6B5846] mt-1.5 pl-6 font-light">
-                      Delivered in 2–4 business days via BlueDart Air / Delhivery Express with tamper-proof gift box packaging.
+                    <p className="text-[#6B5846] mt-1.5 pl-6 font-light leading-relaxed">
+                      Delivered in <strong>4–10 days (Inside India)</strong> directly from Kuthampully handloom village with tamper-proof luxury gift box packaging.
                     </p>
                   </label>
                 </div>
@@ -451,7 +488,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
                     3. Payment &amp; Consent
                   </h3>
                   <span className="text-[10px] text-green-700 font-bold bg-green-50 px-2.5 py-1 rounded-full border border-green-200">
-                    Razorpay 256-bit SSL Gateway
+                    256-Bit SSL Encrypted
                   </span>
                 </div>
 
@@ -468,46 +505,136 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
                 )}
 
                 <div className="space-y-3 text-xs">
+                  {/* Option 1: Razorpay Instant Gateway */}
                   <label
                     className={`p-4 border rounded-2xl block cursor-pointer transition-all ${
-                      paymentMethod === 'upi' ? 'border-[#12372A] bg-[#FAF8F1] shadow-xs' : 'border-[#E8DDC7]'
+                      paymentOption === 'razorpay' ? 'border-[#12372A] bg-[#FAF8F1] shadow-xs' : 'border-[#E8DDC7]'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
                         <input
                           type="radio"
-                          checked={paymentMethod === 'upi'}
-                          onChange={() => setPaymentMethod('upi')}
+                          checked={paymentOption === 'razorpay'}
+                          onChange={() => setPaymentOption('razorpay')}
                           className="mr-3 accent-[#12372A]"
                         />
-                        <strong className="text-[#12372A]">Instant 1-Click UPI (GPay / PhonePe / Paytm / BHIM / CRED)</strong>
+                        <strong className="text-[#12372A]">Instant Razorpay Checkout (UPI / Cards / NetBanking)</strong>
                       </div>
                       <span className="text-[10px] bg-[#D4AF37] text-[#12372A] px-2 py-0.5 rounded-full font-bold uppercase">
-                        Fastest
+                        Recommended
                       </span>
                     </div>
                     <p className="text-[#6B5846] mt-1 pl-6 font-light">
-                      Zero processing fee. Instant UPI app intent or QR code via Razorpay.
+                      Supports GPay, PhonePe, Paytm, BHIM, all major credit/debit cards, and 50+ Indian banks.
                     </p>
                   </label>
 
+                  {/* Option 2: Direct Instant UPI QR & ID */}
                   <label
                     className={`p-4 border rounded-2xl block cursor-pointer transition-all ${
-                      paymentMethod === 'card' ? 'border-[#12372A] bg-[#FAF8F1] shadow-xs' : 'border-[#E8DDC7]'
+                      paymentOption === 'direct_upi' ? 'border-[#12372A] bg-[#FAF8F1] shadow-xs' : 'border-[#E8DDC7]'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <input
+                          type="radio"
+                          checked={paymentOption === 'direct_upi'}
+                          onChange={() => setPaymentOption('direct_upi')}
+                          className="mr-3 accent-[#12372A]"
+                        />
+                        <strong className="text-[#12372A]">Direct Instant UPI Transfer (sanjayskpy1@oksbi)</strong>
+                      </div>
+                      <span className="text-[10px] bg-[#12372A] text-[#D4AF37] px-2 py-0.5 rounded-full font-bold uppercase">
+                        Instant QR
+                      </span>
+                    </div>
+                    <p className="text-[#6B5846] mt-1 pl-6 font-light">
+                      Scan QR code with any UPI app or send payment to verified UPI ID.
+                    </p>
+
+                    {/* Direct UPI Box when selected */}
+                    {paymentOption === 'direct_upi' && (
+                      <div className="mt-4 p-4 bg-white border border-[#D4AF37] rounded-xl space-y-3">
+                        <div className="flex flex-col sm:flex-row items-center gap-4">
+                          <img
+                            src={upiQrUrl}
+                            alt="Scan to Pay UPI"
+                            className="w-32 h-32 border border-[#E8DDC7] rounded-lg p-1 bg-white shadow-xs"
+                          />
+                          <div className="space-y-2 text-xs flex-1">
+                            <div className="flex items-center gap-2 font-mono font-bold text-[#12372A] bg-[#FAF8F1] p-2 rounded-lg border border-[#E8DDC7]">
+                              <span>UPI ID: {POLICY_CONFIG.UPI_ID}</span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  copyUpiIdToClipboard();
+                                }}
+                                className="ml-auto text-[#12372A] hover:text-[#D4AF37] p-1 cursor-pointer"
+                                title="Copy UPI ID"
+                              >
+                                {copiedUPI ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                              </button>
+                            </div>
+                            <p className="text-[11px] text-[#6B5846]">
+                              1. Scan the QR code or pay <strong>{formatPrice(total)}</strong> to <strong>{POLICY_CONFIG.UPI_ID}</strong>.<br />
+                              2. Enter the UPI Transaction Reference / UTR below (optional):
+                            </p>
+                            <input
+                              type="text"
+                              value={upiTransactionRef}
+                              onChange={(e) => setUpiTransactionRef(e.target.value)}
+                              placeholder="e.g. 423985712903 or UPI Ref"
+                              className="w-full border border-[#E8DDC7] p-2 rounded-lg text-xs bg-[#FAF8F1]"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </label>
+
+                  {/* Option 3: Official Razorpay Payment Portal Link */}
+                  <label
+                    className={`p-4 border rounded-2xl block cursor-pointer transition-all ${
+                      paymentOption === 'razorpay_link' ? 'border-[#12372A] bg-[#FAF8F1] shadow-xs' : 'border-[#E8DDC7]'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <input
+                          type="radio"
+                          checked={paymentOption === 'razorpay_link'}
+                          onChange={() => setPaymentOption('razorpay_link')}
+                          className="mr-3 accent-[#12372A]"
+                        />
+                        <strong className="text-[#12372A]">Pay via Official Razorpay Payment Portal</strong>
+                      </div>
+                      <ExternalLink className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    </div>
+                    <p className="text-[#6B5846] mt-1 pl-6 font-light">
+                      Direct merchant link ({POLICY_CONFIG.RAZORPAY_PORTAL_LINK}) with prefilled amount.
+                    </p>
+                  </label>
+
+                  {/* Option 4: Cash on Delivery */}
+                  <label
+                    className={`p-4 border rounded-2xl block cursor-pointer transition-all ${
+                      paymentOption === 'cod' ? 'border-[#12372A] bg-[#FAF8F1] shadow-xs' : 'border-[#E8DDC7]'
                     }`}
                   >
                     <div className="flex items-center">
                       <input
                         type="radio"
-                        checked={paymentMethod === 'card'}
-                        onChange={() => setPaymentMethod('card')}
+                        checked={paymentOption === 'cod'}
+                        onChange={() => setPaymentOption('cod')}
                         className="mr-3 accent-[#12372A]"
                       />
-                      <strong className="text-[#12372A]">Credit / Debit Card &amp; Net Banking</strong>
+                      <strong className="text-[#12372A]">Cash on Delivery (Doorstep Verification)</strong>
                     </div>
                     <p className="text-[#6B5846] mt-1 pl-6 font-light">
-                      Visa, MasterCard, RuPay, Amex, and 50+ Indian banks supported with 3D Secure OTP.
+                      Pay upon receiving your sealed Kuthampully handloom package at your address.
                     </p>
                   </label>
                 </div>
@@ -556,7 +683,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
                   >
                     <Lock className="w-4 h-4 text-[#D4AF37]" />
                     <span>
-                      {isProcessingPayment ? 'Opening Razorpay Gateway...' : `Pay ${formatPrice(total)} & Complete Order`}
+                      {isProcessingPayment
+                        ? 'Opening Razorpay Gateway...'
+                        : paymentOption === 'direct_upi'
+                        ? `Confirm & Complete Order (${formatPrice(total)})`
+                        : paymentOption === 'cod'
+                        ? `Place Order (${formatPrice(total)} COD)`
+                        : `Pay ${formatPrice(total)} & Complete Order`}
                     </span>
                   </button>
                 </div>
@@ -606,8 +739,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
                 </div>
               )}
               <div className="flex justify-between">
-                <span>Express Courier</span>
-                <span className="font-semibold text-green-700">
+                <span>Standard Delivery</span>
+                <span className="font-semibold text-[#12372A]">
                   {shippingFee === 0 ? 'Complimentary (FREE)' : formatPrice(shippingFee)}
                 </span>
               </div>
@@ -621,9 +754,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
             <div className="p-3 bg-[#FAF8F1] border border-[#E8DDC7] rounded-xl text-[11px] text-[#6B5846] space-y-1">
               <div className="flex items-center gap-1.5 font-bold text-[#12372A]">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span>GI Tag Certified Handloom</span>
+                <span>GI Tag Certified Kuthampully Handloom</span>
               </div>
-              <p>Authentic Chendamangalam craft with {POLICY_CONFIG.RETURN_WINDOW_DAYS}-day hassle-free doorstep size exchange.</p>
+              <p>Authentic Kuthampully GI Tag craft with {POLICY_CONFIG.RETURN_WINDOW_DAYS}-day hassle-free doorstep size exchange.</p>
             </div>
           </div>
 
