@@ -15,7 +15,7 @@ export const OrderManagement: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [editingStatus, setEditingStatus] = useState<OrderStatus>('Processing');
-  const [courierInput, setCourierInput] = useState('BlueDart Air Express');
+  const [courierInput, setCourierInput] = useState('Standard Express Delivery');
   const [awbInput, setAwbInput] = useState('');
 
   const allOrdersList: Order[] = user.orders;
@@ -156,7 +156,7 @@ export const OrderManagement: React.FC = () => {
                           setSelectedOrder(order);
                           setEditingStatus(order.status);
                           setAwbInput(order.trackingNumber || '');
-                          setCourierInput(order.courierProvider || 'BlueDart Air Express');
+                          setCourierInput(order.courierProvider || 'Standard Express Delivery');
                         }}
                         className="bg-[#12372A] text-[#FAF8F1] px-3.5 py-1.5 rounded-xl font-bold uppercase text-[10px] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all border border-[#D4AF37] cursor-pointer"
                       >
@@ -212,8 +212,8 @@ export const OrderManagement: React.FC = () => {
                   <p className="text-[#6B5846] leading-relaxed">
                     Invoice: <strong className="font-mono text-[#D4AF37] font-bold">{selectedOrder.invoiceId || `KV-INV-2026-${selectedOrder.id.replace('KV-ORD-', '')}`}</strong><br />
                     Method: <strong className="text-[#12372A]">{selectedOrder.paymentMethod}</strong><br />
-                    Carrier: <strong>{selectedOrder.courierProvider || 'BlueDart Air Express'}</strong><br />
-                    AWB Tracking: <strong className="font-mono text-[#12372A]">{selectedOrder.trackingNumber}</strong>
+                    Carrier: <strong>{selectedOrder.courierProvider || 'Standard Express Delivery'}</strong><br />
+                    Tracking: <strong className="font-mono text-[#12372A]">{selectedOrder.trackingNumber}</strong>
                   </p>
                 </div>
               </div>
@@ -224,86 +224,60 @@ export const OrderManagement: React.FC = () => {
                 {selectedOrder.items.map((item, idx) => (
                   <div key={idx} className="p-3 border border-[#E8DDC7] rounded-xl flex items-center justify-between bg-[#FAF8F1]">
                     <div className="flex items-center gap-3">
-                      <img src={item.product.images[0]} alt={item.product.name} className="w-10 h-12 object-cover rounded-lg bg-white border border-[#E8DDC7]" />
+                      <img
+                        src={item.product.images[0]}
+                        alt={item.product.name}
+                        className="w-12 h-16 object-cover rounded-lg border border-[#E8DDC7]"
+                      />
                       <div>
-                        <strong className="text-[#12372A] block font-bold">{item.product.name}</strong>
-                        <span className="text-[10px] text-[#6B5846]">Size: {item.size} • Qty: {item.quantity}</span>
+                        <strong className="text-[#12372A] block">{item.product.name}</strong>
+                        <span className="text-[#6B5846] text-[11px]">Size: {item.size} • Color: {item.color.name} • Qty: {item.quantity}</span>
                       </div>
                     </div>
-                    <strong className="font-serif font-bold text-[#12372A] text-sm">{formatPrice(item.price * item.quantity)}</strong>
+                    <strong className="text-[#12372A] font-bold">₹{(item.price * item.quantity).toLocaleString('en-IN')}</strong>
                   </div>
                 ))}
               </div>
 
-              {/* GST Tax & Total Invoice */}
-              <div className="bg-[#FAF8F1] p-4 rounded-2xl border border-[#E8DDC7] space-y-1.5 text-xs">
-                <div className="flex justify-between text-[#6B5846]">
-                  <span>Items Subtotal:</span>
-                  <span>{formatPrice(selectedOrder.subtotal)}</span>
-                </div>
-                {selectedOrder.discount > 0 && (
-                  <div className="flex justify-between text-green-700">
-                    <span>Discount Deducted:</span>
-                    <span>-{formatPrice(selectedOrder.discount)}</span>
-                  </div>
-                )}
-                <div className="flex justify-between text-[#6B5846]">
-                  <span>Shipping Fee:</span>
-                  <span>{selectedOrder.shippingFee === 0 ? 'Complimentary Free' : formatPrice(selectedOrder.shippingFee)}</span>
-                </div>
-                <div className="flex justify-between text-[#6B5846]">
-                  <span>GST Tax (5% Apparel CGST+SGST):</span>
-                  <span>{formatPrice(Math.round(selectedOrder.subtotal * 0.05))}</span>
-                </div>
-                <div className="flex justify-between font-bold text-sm text-[#12372A] pt-2 border-t border-[#E8DDC7]">
-                  <span>Grand Total Paid:</span>
-                  <span className="font-serif text-[#12372A]">{formatPrice(selectedOrder.total)}</span>
-                </div>
-              </div>
-
               {/* Status Update Form */}
-              <form id="order-fulfillment-form" onSubmit={handleUpdateOrderStatus} className="space-y-3 pt-2 border-t border-[#E8DDC7] text-xs">
-                <h4 className="font-serif font-bold text-[#12372A] text-sm">Update Fulfillment Workflow Status</h4>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <form id="order-fulfillment-form" onSubmit={handleUpdateOrderStatus} className="space-y-4 pt-4 border-t border-[#E8DDC7]">
+                <h4 className="font-bold text-[#12372A]">Update Fulfillment Status</h4>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-semibold text-[#6B5846] mb-1">New Order Status</label>
+                    <label className="block font-semibold text-[#6B5846] mb-1">Order Status</label>
                     <select
                       value={editingStatus}
                       onChange={(e) => setEditingStatus(e.target.value as OrderStatus)}
                       className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
                     >
-                      <option value="Pending">Pending</option>
-                      <option value="Confirmed">Confirmed</option>
                       <option value="Processing">Processing</option>
-                      <option value="Packed">Packed</option>
                       <option value="Dispatched">Dispatched</option>
                       <option value="Out for Delivery">Out for Delivery</option>
                       <option value="Delivered">Delivered</option>
                       <option value="Cancelled">Cancelled</option>
-                      <option value="Returned">Returned</option>
-                      <option value="Refunded">Refunded</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-[#6B5846] mb-1">Courier Carrier</label>
+                    <label className="block font-semibold text-[#6B5846] mb-1">Logistics / Delivery Provider</label>
                     <input
                       type="text"
                       value={courierInput}
                       onChange={(e) => setCourierInput(e.target.value)}
+                      placeholder="e.g. Standard Express Delivery"
                       className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#6B5846] mb-1">AWB Tracking Number</label>
+                  <label className="block font-semibold text-[#6B5846] mb-1">Tracking Number</label>
                   <input
                     type="text"
                     value={awbInput}
                     onChange={(e) => setAwbInput(e.target.value)}
-                    placeholder="e.g. BLUEDART-8849102"
+                    placeholder="e.g. KV-TRK-8849102"
                     className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-mono text-xs"
                   />
                 </div>

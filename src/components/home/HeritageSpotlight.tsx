@@ -39,7 +39,7 @@ export const HeritageSpotlight: React.FC<HeritageSpotlightProps> = ({ onNavigate
                 <span className="font-serif font-bold text-sm uppercase tracking-wider">GI Tag Certified</span>
               </div>
               <p className="text-[11px] leading-tight text-[#12372A]/90">
-                Authentic Chendamangalam &amp; Balaramapuram artisan looms verified by Government of India.
+                Authentic Kuthampully Devanga artisan looms verified by Government of India (GI Reg No. 2011).
               </p>
             </div>
           </div>

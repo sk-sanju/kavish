@@ -11,7 +11,7 @@ interface SearchOverlayProps {
 }
 
 const RECENT_SEARCHES = ['Kasavu Tissue Saree', 'Classic Double Mundu', 'Kerala Organic Linen', 'Pattu Pavada'];
-const POPULAR_TAGS = ['Chendamangalam', 'Onam Special', 'Balaramapuram', 'Unbleached Cotton', 'Festive Silk'];
+const POPULAR_TAGS = ['Kuthampully Kasavu', 'Onam Special', 'Kerala Handloom', 'Unbleached Cotton', 'Festive Silk'];
 
 export const SearchOverlay: React.FC<SearchOverlayProps> = ({ onSelectProduct, onSearchCategory }) => {
   const { isSearchOpen, setIsSearchOpen } = useModal();

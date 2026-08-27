@@ -26,9 +26,9 @@ export const ShippingManagement: React.FC = () => {
   };
 
   const zones = [
-    { id: 'z1', name: 'Domestic South India (Kerala, TN, KA)', deliveryTime: '2 - 3 Days', carrier: 'BlueDart Express Air', status: 'Active' },
-    { id: 'z2', name: 'Rest of India (Metro & North)', deliveryTime: '3 - 5 Days', carrier: 'BlueDart / Delhivery', status: 'Active' },
-    { id: 'z3', name: 'International (US, Europe, UAE, Aus)', deliveryTime: '5 - 7 Days', carrier: 'DHL Express Worldwide', status: 'Active' }
+    { id: 'z1', name: 'Domestic Kerala & South India', deliveryTime: '4 - 7 Days', carrier: 'Standard Express Delivery', status: 'Active' },
+    { id: 'z2', name: 'Rest of India (Metro & North)', deliveryTime: '4 - 10 Days', carrier: 'Express Handloom Delivery', status: 'Active' },
+    { id: 'z3', name: 'Special Priority Air Delivery', deliveryTime: '3 - 5 Days', carrier: 'Priority Handloom Air', status: 'Active' }
   ];
 
   return (

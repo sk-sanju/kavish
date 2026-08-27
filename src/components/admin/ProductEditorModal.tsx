@@ -258,7 +258,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                     required
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    placeholder="e.g. Chendamangalam Tissue Kasavu Saree"
+                    placeholder="e.g. Kuthampully Tissue Kasavu Saree"
                     className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] text-xs font-bold text-[#12372A]"
                   />
                 </div>
