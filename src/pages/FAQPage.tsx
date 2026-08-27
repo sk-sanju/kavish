@@ -35,12 +35,12 @@ const FAQS: FAQItem[] = [
   {
     category: 'shipping',
     question: 'How much does delivery cost and how long will it take?',
-    answer: `Shipping is completely FREE across India on all orders of ₹${POLICY_CONFIG.FREE_SHIPPING_THRESHOLD} and above. For orders under ₹${POLICY_CONFIG.FREE_SHIPPING_THRESHOLD}, a flat standard shipping fee of ₹${POLICY_CONFIG.SHIPPING_CHARGE} applies. Metros receive packages in 2–4 business days via BlueDart Air, while rest of India takes 3–6 business days.`
+    answer: `Standard Express Delivery across India is flat ₹${POLICY_CONFIG.SHIPPING_CHARGE}. Orders are dispatched directly from our Kuthampully handloom atelier and delivered within 4–10 days (Inside India).`
   },
   {
     category: 'shipping',
     question: 'How do I track my order once it is shipped?',
-    answer: 'Once your order is handed over to the courier partner, an automated email and SMS notification containing your AWB tracking number is dispatched. You can also enter your Order ID anytime on our Track Order page to view live parcel updates.'
+    answer: 'Once your order is dispatched, an automated email and SMS notification containing your tracking number is sent. You can also enter your Order ID anytime on our Track Order page to view live parcel updates.'
   },
   // Returns & Exchanges
   {

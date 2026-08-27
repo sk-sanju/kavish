@@ -314,9 +314,10 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
                 </button>
                 {openAccordion === 'shipping' && (
                   <div className="p-4 space-y-2 text-[#6B5846] bg-white border-t border-[#E8DDC7]">
-                    <p>• Complimentary shipping on orders above {formatPrice(2000)}.</p>
-                    <p>• Dispatch within 24-48 hours from Kuthampully via BlueDart Air Express.</p>
-                    <p>• 7-day hassle-free size exchange concierge service.</p>
+                    <p>• Standard Express Delivery across India (4–10 days timeline).</p>
+                    <p>• Flat shipping fee of ₹150 for orders inside India.</p>
+                    <p>• Dispatched direct from Kuthampully Handloom Village with GI certification seal.</p>
+                    <p>• 7-day hassle-free doorstep size exchange concierge service.</p>
                   </div>
                 )}
               </div>

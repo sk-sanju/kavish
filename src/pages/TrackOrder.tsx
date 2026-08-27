@@ -92,16 +92,16 @@ export const TrackOrder: React.FC = () => {
           shippingAddress: {
             id: 'addr-mock',
             name: user.name !== 'Valued Customer' ? user.name : 'Valued Patron',
-            phone: user.phone || '+91 98470 55111',
+            phone: user.phone || POLICY_CONFIG.SUPPORT_PHONE,
             street: 'Heritage Villa, M.G. Road',
             city: 'Kochi',
             state: 'Kerala',
             pincode: '682001'
           },
           paymentMethod: 'Razorpay Instant UPI (Verified)',
-          trackingNumber: `BLRD-KAV-${clean.replace(/[^0-9]/g, '') || '948201'}`,
-          courierProvider: 'BlueDart Express Air',
-          estimatedDelivery: 'August 26, 2026'
+          trackingNumber: `KV-TRK-${clean.replace(/[^0-9]/g, '') || '948201'}`,
+          courierProvider: 'Standard Express Delivery',
+          estimatedDelivery: '4–10 days (Inside India)'
         };
         setSearchedOrder(mockOrder);
         setErrorMsg(null);
@@ -125,32 +125,32 @@ export const TrackOrder: React.FC = () => {
     return [
       {
         title: 'Order Placed & Payment Verified',
-        desc: 'Payment authenticated via Razorpay 256-bit gateway',
+        desc: 'Payment authenticated and confirmed',
         time: 'Day 1 • Instant',
         done: true
       },
       {
-        title: 'Chendamangalam Atelier Quality Check',
+        title: 'Kuthampully Atelier Quality Check',
         desc: 'Handloom inspected for weave consistency and GI hallmark tag attached',
-        time: 'Day 1 • Completed',
+        time: 'Day 1–2 • Completed',
         done: true
       },
       {
-        title: 'Handed Over to Express Air Courier',
-        desc: `Package picked up by BlueDart Express Air (AWB: ${searchedOrder?.trackingNumber || 'BLRD-KAV-XXXX'})`,
-        time: 'Day 2 • In Transit',
+        title: 'Dispatched via Express Delivery',
+        desc: `Package dispatched from Kuthampully loom house (Tracking: ${searchedOrder?.trackingNumber || 'KV-TRK-XXXX'})`,
+        time: 'Day 2–3 • In Transit',
         done: isDispatched
       },
       {
         title: 'Out for Doorstep Delivery',
-        desc: 'Courier agent en route to recipient destination address',
-        time: 'Day 3 • Upcoming',
+        desc: 'Delivery executive en route to recipient destination address',
+        time: 'Days 4–10',
         done: isOutForDelivery
       },
       {
         title: 'Delivered to Patron',
         desc: 'Handed over in tamper-evident sealed luxury gift box',
-        time: searchedOrder?.estimatedDelivery || 'Day 4',
+        time: searchedOrder?.estimatedDelivery || '4–10 Days',
         done: isDelivered
       }
     ];
@@ -221,7 +221,7 @@ export const TrackOrder: React.FC = () => {
                   Order #{searchedOrder.id}
                 </h3>
                 <p className="text-xs text-[#E8DDC7] mt-1 font-mono">
-                  AWB: {searchedOrder.trackingNumber} • {searchedOrder.courierProvider || 'BlueDart Air'}
+                  Tracking: {searchedOrder.trackingNumber} • {searchedOrder.courierProvider || 'Standard Express Delivery'}
                 </p>
               </div>
 
@@ -306,7 +306,7 @@ export const TrackOrder: React.FC = () => {
             <Phone className="w-5 h-5 text-[#D4AF37] shrink-0" />
             <div>
               <strong className="text-[#12372A] block font-bold">Have delivery questions?</strong>
-              <p className="text-[#6B5846]">Reach our Chendamangalam logistics desk at {POLICY_CONFIG.SUPPORT_PHONE}</p>
+              <p className="text-[#6B5846]">Reach our Kuthampully Atelier logistics desk at {POLICY_CONFIG.SUPPORT_PHONE}</p>
             </div>
           </div>
           <button

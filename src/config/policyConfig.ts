@@ -9,7 +9,7 @@ export const POLICY_CONFIG = {
   // Brand & Company Identity
   BRAND_NAME: 'KAVISH',
   COMPANY_LEGAL_NAME: 'Kavish Handlooms Pvt. Ltd.',
-  TAGLINE: 'Authentic Kerala Handlooms & GI-Certified Kasavu Weaves',
+  TAGLINE: 'Authentic Kerala Handlooms & GI-Certified Kuthampully Kasavu Weaves',
   GI_TAG_REG_NO: 'Kuthampully GI Reg No. 2011 (Govt. of India)',
   
   // Atelier & Physical Coordinates
@@ -32,11 +32,11 @@ export const POLICY_CONFIG = {
 
   // Shipping & Logistics Parameters
   PROCESSING_TIME: '24–48 hours',
-  STANDARD_DELIVERY_TIME: '2–4 business days (Metros) | 3–6 business days (Rest of India)',
-  EXPRESS_COURIER_PARTNERS: ['BlueDart Air', 'Delhivery Express', 'India Post SpeedPost'],
-  SHIPPING_CHARGE: 150, // INR for orders below threshold
-  FREE_SHIPPING_THRESHOLD: 2000, // INR threshold for complimentary express delivery
-  INTERNATIONAL_SHIPPING_AVAILABLE: false, // Planned for future releases
+  STANDARD_DELIVERY_TIME: '4–10 days (Inside India)',
+  EXPRESS_COURIER_PARTNERS: ['Standard Express Delivery', 'Express Handloom Delivery'],
+  SHIPPING_CHARGE: 150, // Flat ₹150 for orders inside India
+  FREE_SHIPPING_THRESHOLD: 0, // Flat standard delivery across India
+  INTERNATIONAL_SHIPPING_AVAILABLE: false,
 
   // Return, Refund & Exchange Parameters
   RETURN_WINDOW_DAYS: 7, // 7-day hassle-free doorstep exchange / return window
@@ -48,13 +48,15 @@ export const POLICY_CONFIG = {
   // Payment Configuration
   ONLINE_PAYMENTS_ENABLED: true,
   ACCEPTED_PAYMENT_METHODS: [
-    'UPI (Google Pay, PhonePe, Paytm, BHIM, Cred, Any UPI App)',
-    'Credit Cards (Visa, MasterCard, RuPay, American Express, Diners Club)',
+    'Instant UPI (GPay, PhonePe, Paytm, BHIM, CRED, Any UPI App)',
+    'Credit Cards (Visa, MasterCard, RuPay, American Express)',
     'Debit Cards (All Major Indian Banks)',
     'Net Banking (50+ Leading Indian Banks)',
-    'Wallets (Amazon Pay, Mobikwik, Airtel Money)'
+    'Direct UPI Transfer (sanjayskpy1@oksbi)'
   ],
-  COD_ENABLED: false, // Cash on Delivery currently disabled for bespoke handloom authenticity
+  COD_ENABLED: true, // Optional Cash on Delivery for customer convenience
+  UPI_ID: 'sanjayskpy1@oksbi',
+  UPI_NAME: 'Kavish Handlooms',
   PAYMENT_GATEWAY_PROVIDER: 'Razorpay (256-bit SSL Encrypted & PCI-DSS Compliant)',
   RAZORPAY_PORTAL_LINK: 'https://razorpay.me/@kavishbysanjaysuresh',
 

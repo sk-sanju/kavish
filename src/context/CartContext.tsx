@@ -31,7 +31,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const SHIPPING_STORAGE_KEY = 'kavish_shipping_config_v1';
 export const DEFAULT_SHIPPING_CONFIG: ShippingConfig = {
   freeShippingThreshold: 0,
-  standardFlatRate: 0
+  standardFlatRate: 150
 };
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -231,14 +231,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const percentDiscount = Math.round((subtotal * discountPercent) / 100);
   const discount = percentDiscount > 0 ? percentDiscount : discountAmountFixed;
 
-  // Free shipping conditions: cart empty, flat rate is 0, threshold is 0, or subtotal >= threshold
+  // Free shipping conditions: cart empty, flat rate is 0, or subtotal >= threshold (if threshold > 0)
   const isFreeShipping =
     cart.length === 0 ||
     shippingConfig.standardFlatRate === 0 ||
-    shippingConfig.freeShippingThreshold === 0 ||
     (shippingConfig.freeShippingThreshold > 0 && subtotal >= shippingConfig.freeShippingThreshold);
 
-  const shippingFee = isFreeShipping ? 0 : shippingConfig.standardFlatRate;
+  const shippingFee = isFreeShipping ? 0 : (shippingConfig.standardFlatRate || 150);
   const total = Math.max(0, subtotal - discount + shippingFee);
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 

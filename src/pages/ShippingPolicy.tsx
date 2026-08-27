@@ -18,7 +18,7 @@ export const ShippingPolicy: React.FC = () => {
               Shipping &amp; Delivery Policy
             </h1>
             <p className="text-xs sm:text-sm text-[#E8DDC7] font-light leading-relaxed">
-              Complimentary Express Air Courier for all orders over ₹{POLICY_CONFIG.FREE_SHIPPING_THRESHOLD.toLocaleString('en-IN')}
+              Standard Express Delivery across India (4–10 days) | Flat ₹{POLICY_CONFIG.SHIPPING_CHARGE} Shipping Charge
             </p>
           </div>
         </div>
@@ -41,7 +41,7 @@ export const ShippingPolicy: React.FC = () => {
             </div>
             <div>
               <strong className="block text-xs font-bold text-[#12372A]">Delivery: {POLICY_CONFIG.STANDARD_DELIVERY_TIME}</strong>
-              <span className="text-[11px] text-[#6B5846]">Via BlueDart &amp; Delhivery Air</span>
+              <span className="text-[11px] text-[#6B5846]">Pan-India Express Delivery</span>
             </div>
           </div>
 
@@ -50,8 +50,8 @@ export const ShippingPolicy: React.FC = () => {
               <Gift className="w-5 h-5 text-[#D4AF37]" />
             </div>
             <div>
-              <strong className="block text-xs font-bold text-[#12372A]">Free Shipping &gt; ₹{POLICY_CONFIG.FREE_SHIPPING_THRESHOLD}</strong>
-              <span className="text-[11px] text-[#6B5846]">No hidden delivery surcharges</span>
+              <strong className="block text-xs font-bold text-[#12372A]">Shipping Charge: ₹{POLICY_CONFIG.SHIPPING_CHARGE}</strong>
+              <span className="text-[11px] text-[#6B5846]">Flat rate inside India</span>
             </div>
           </div>
         </div>
@@ -66,7 +66,7 @@ export const ShippingPolicy: React.FC = () => {
               <h2 className="font-serif text-lg sm:text-xl font-bold">1. Delivery Locations &amp; Pan-India Coverage</h2>
             </div>
             <p className="text-[#6B5846]">
-              Kavish delivers to over <strong>27,000+ PIN codes across all 28 states and 8 union territories</strong> in India. We partner exclusively with top-tier express courier services including <strong>{POLICY_CONFIG.EXPRESS_COURIER_PARTNERS.join(', ')}</strong> to guarantee prompt and tamper-proof delivery.
+              Kavish delivers across all PIN codes in India. Every handloom piece is safely dispatched from our Kuthampully loom atelier to ensure timely and tamper-proof delivery within <strong>4–10 days (Inside India)</strong>.
             </p>
           </section>
 
@@ -74,30 +74,24 @@ export const ShippingPolicy: React.FC = () => {
           <section className="space-y-3">
             <div className="flex items-center gap-2 text-[#12372A]">
               <Truck className="w-5 h-5 text-[#D4AF37] shrink-0" />
-              <h2 className="font-serif text-lg sm:text-xl font-bold">2. Shipping Charges &amp; Free Delivery Threshold</h2>
+              <h2 className="font-serif text-lg sm:text-xl font-bold">2. Shipping Charges &amp; Timeline</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse border border-[#E8DDC7] text-xs">
                 <thead>
                   <tr className="bg-[#FAF8F1] text-[#12372A]">
-                    <th className="p-3 border border-[#E8DDC7] font-bold">Order Value</th>
-                    <th className="p-3 border border-[#E8DDC7] font-bold">Courier Tier</th>
+                    <th className="p-3 border border-[#E8DDC7] font-bold">Coverage</th>
+                    <th className="p-3 border border-[#E8DDC7] font-bold">Delivery Tier</th>
                     <th className="p-3 border border-[#E8DDC7] font-bold">Shipping Fee</th>
-                    <th className="p-3 border border-[#E8DDC7] font-bold">Estimated Delivery</th>
+                    <th className="p-3 border border-[#E8DDC7] font-bold">Delivery Timeline</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E8DDC7] text-[#6B5846]">
                   <tr>
-                    <td className="p-3 border border-[#E8DDC7] font-semibold text-[#12372A]">₹{POLICY_CONFIG.FREE_SHIPPING_THRESHOLD} and above</td>
-                    <td className="p-3 border border-[#E8DDC7]">BlueDart Express Air / Delhivery Priority</td>
-                    <td className="p-3 border border-[#E8DDC7] font-bold text-green-700">FREE (Complimentary)</td>
-                    <td className="p-3 border border-[#E8DDC7]">2–4 Business Days</td>
-                  </tr>
-                  <tr>
-                    <td className="p-3 border border-[#E8DDC7] font-semibold text-[#12372A]">Under ₹{POLICY_CONFIG.FREE_SHIPPING_THRESHOLD}</td>
-                    <td className="p-3 border border-[#E8DDC7]">Standard Express Surface / Air</td>
-                    <td className="p-3 border border-[#E8DDC7] font-bold">₹{POLICY_CONFIG.SHIPPING_CHARGE} flat fee</td>
-                    <td className="p-3 border border-[#E8DDC7]">3–6 Business Days</td>
+                    <td className="p-3 border border-[#E8DDC7] font-semibold text-[#12372A]">Inside India (All States)</td>
+                    <td className="p-3 border border-[#E8DDC7]">Standard Express Handloom Delivery</td>
+                    <td className="p-3 border border-[#E8DDC7] font-bold text-[#12372A]">₹{POLICY_CONFIG.SHIPPING_CHARGE}</td>
+                    <td className="p-3 border border-[#E8DDC7]">4–10 Days (Inside India)</td>
                   </tr>
                 </tbody>
               </table>
@@ -111,7 +105,7 @@ export const ShippingPolicy: React.FC = () => {
               <h2 className="font-serif text-lg sm:text-xl font-bold">3. Luxury Handloom Packaging &amp; GI Tag Protection</h2>
             </div>
             <p className="text-[#6B5846]">
-              Each handloom saree and garment is wrapped in breathable archival butter-paper, sealed with our authentic Kuthampully GI certification tag, and presented inside a rigid gold-embossed Kavish keepsake atelier box. All packages are encased in waterproof outer courier polybags with tamper-evident security tape.
+              Each handloom saree and garment is wrapped in breathable archival butter-paper, sealed with our authentic Kuthampully GI certification tag, and presented inside a rigid gold-embossed Kavish keepsake atelier box. All packages are encased in waterproof outer polybags with tamper-evident security tape.
             </p>
           </section>
 
@@ -122,7 +116,7 @@ export const ShippingPolicy: React.FC = () => {
               <h2 className="font-serif text-lg sm:text-xl font-bold">4. Real-Time Order Tracking &amp; Notifications</h2>
             </div>
             <p className="text-[#6B5846]">
-              As soon as your parcel is handed over to the courier partner, an automated dispatch notification containing your unique <strong>AWB Tracking Number</strong> is sent via email and SMS. You can also track your live parcel milestones anytime on our dedicated <a href="/track-order" className="text-[#12372A] underline font-semibold">Track Order</a> page.
+              As soon as your parcel is dispatched, an automated dispatch notification containing your unique <strong>Tracking Number</strong> is sent via email and SMS. You can also track your live parcel milestones anytime on our dedicated <a href="/track-order" className="text-[#12372A] underline font-semibold">Track Order</a> page.
             </p>
           </section>
 
@@ -133,7 +127,7 @@ export const ShippingPolicy: React.FC = () => {
               <h2 className="font-serif text-lg sm:text-xl font-bold">5. Failed Deliveries &amp; Address Issues</h2>
             </div>
             <p className="text-[#6B5846]">
-              Our courier partners attempt delivery up to <strong>3 times</strong>. If delivery fails due to an incorrect address or customer unavailability, our concierge team will reach out to coordinate re-dispatch. If the shipment returns to our origin atelier (RTO), we will re-attempt delivery upon receiving updated instructions.
+              Delivery attempts will be made to your designated address. If delivery fails due to an incorrect address or customer unavailability, our concierge team will reach out to coordinate re-dispatch. If the shipment returns to our origin atelier (RTO), we will re-attempt delivery upon receiving updated instructions.
             </p>
           </section>
 

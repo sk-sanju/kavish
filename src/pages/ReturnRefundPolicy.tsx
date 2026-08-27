@@ -85,7 +85,7 @@ export const ReturnRefundPolicy: React.FC = () => {
               <h2 className="font-serif text-lg sm:text-xl font-bold">2. Damaged, Defective or Wrong Item Received</h2>
             </div>
             <p className="text-[#6B5846]">
-              Every parcel undergoes a multi-point quality check by our Chendamangalam craft team prior to dispatch. In the unlikely event that you receive a damaged, defective, or incorrect piece:
+              Every parcel undergoes a multi-point quality check by our Kuthampully master weavers craft team prior to dispatch. In the unlikely event that you receive a damaged, defective, or incorrect piece:
             </p>
             <ul className="space-y-1.5 pl-4 list-disc text-[#6B5846]">
               <li>Please notify our concierge within <strong>48 hours</strong> of delivery with clear photos or an unboxing video.</li>
@@ -125,7 +125,7 @@ export const ReturnRefundPolicy: React.FC = () => {
               <div className="p-4 bg-[#FAF8F1] border border-[#E8DDC7] rounded-xl text-center space-y-1.5">
                 <span className="w-7 h-7 rounded-full bg-[#12372A] text-[#D4AF37] inline-flex items-center justify-center font-bold text-xs">2</span>
                 <strong className="block text-[#12372A] text-xs">Doorstep Pickup</strong>
-                <p className="text-[11px] text-[#6B5846]">Our courier partner (BlueDart/Delhivery) will collect the securely packed parcel from your address within 24–48 hours.</p>
+                <p className="text-[11px] text-[#6B5846]">Our express logistics partner will collect the securely packed parcel from your address within 24–48 hours.</p>
               </div>
 
               <div className="p-4 bg-[#FAF8F1] border border-[#E8DDC7] rounded-xl text-center space-y-1.5">

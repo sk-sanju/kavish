@@ -116,7 +116,7 @@ export const PrivacyPolicy: React.FC = () => {
             </p>
             <ul className="space-y-2 pl-4 list-disc text-[#6B5846]">
               <li><strong className="text-[#12372A]">Payment Gateway Providers:</strong> Razorpay Software Private Limited for secure payment authentication.</li>
-              <li><strong className="text-[#12372A]">Logistics &amp; Courier Partners:</strong> BlueDart Express, Delhivery, and India Post SpeedPost for delivery of your parcel.</li>
+              <li><strong className="text-[#12372A]">Logistics Partners:</strong> Express pan-India delivery partners strictly for safe doorstep dispatch of your parcel.</li>
               <li><strong className="text-[#12372A]">Database &amp; Cloud Infrastructure:</strong> Supabase (PostgreSQL) and Vercel for encrypted data hosting and serverless computing.</li>
               <li><strong className="text-[#12372A]">Legal Compliance:</strong> Government authorities or taxation bodies only when mandated under applicable Indian laws.</li>
             </ul>
