@@ -14,7 +14,7 @@ import {
 import { useAdmin } from '../../context/AdminContext';
 import { useProducts } from '../../context/ProductContext';
 import type { StoreContactConfig } from '../../types';
-import { readImageFileAsDataUrl } from '../../utils/fileUpload';
+import { uploadImageFile } from '../../utils/fileUpload';
 
 export const ContentManagement: React.FC = () => {
   const { storeContent, updateStoreContent, addAuditLog } = useAdmin();
@@ -52,8 +52,8 @@ export const ContentManagement: React.FC = () => {
   const [newFaqA, setNewFaqA] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = (e?: React.FormEvent) => {
+    if (e && e.preventDefault) e.preventDefault();
     const updatedContent = {
       ...storeContent,
       ...form,
@@ -72,6 +72,7 @@ export const ContentManagement: React.FC = () => {
     });
 
     setSaveSuccess(true);
+    alert('Storefront content and atelier updates published live successfully!');
     setTimeout(() => setSaveSuccess(false), 3500);
   };
 
@@ -115,7 +116,7 @@ export const ContentManagement: React.FC = () => {
         )}
       </div>
 
-      <form onSubmit={handleSave} className="space-y-6 text-xs">
+      <form onSubmit={handleSave} noValidate className="space-y-6 text-xs">
 
         {/* Headquarters & Loom House Atelier Info Editor */}
         <div className="bg-white p-6 sm:p-8 border-2 border-[#D4AF37]/30 rounded-3xl shadow-sm space-y-6">
@@ -434,8 +435,8 @@ export const ContentManagement: React.FC = () => {
                     onChange={async (e) => {
                       if (e.target.files && e.target.files[0]) {
                         try {
-                          const dataUrl = await readImageFileAsDataUrl(e.target.files[0]);
-                          setForm({ ...form, bannerImage: dataUrl });
+                          const uploadedUrl = await uploadImageFile(e.target.files[0], 'banners');
+                          setForm({ ...form, bannerImage: uploadedUrl });
                         } catch (err: any) {
                           alert(err.message || 'Failed to upload image.');
                         }
@@ -501,8 +502,9 @@ export const ContentManagement: React.FC = () => {
         </div>
 
         <button
-          type="submit"
-          className="bg-[#12372A] text-[#FAF8F1] px-8 py-3.5 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-md flex items-center gap-2"
+          type="button"
+          onClick={handleSave}
+          className="bg-[#12372A] text-[#FAF8F1] px-8 py-3.5 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all shadow-md flex items-center gap-2 cursor-pointer"
         >
           <Sparkles className="w-4 h-4 text-[#D4AF37]" />
           <span>Publish Live Content &amp; Atelier Updates</span>
