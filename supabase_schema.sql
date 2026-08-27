@@ -215,3 +215,20 @@ CREATE POLICY "Allow All Audit Logs Access" ON public.audit_logs FOR ALL USING (
 CREATE POLICY "Allow All Content Access" ON public.store_content FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow All Admin Users Access" ON public.admin_users FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow All Shipping Access" ON public.shipping_rules FOR ALL USING (true) WITH CHECK (true);
+
+-- 11. SUPABASE STORAGE BUCKET FOR MEDIA (Images, Banners, Categories, Products)
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('store-media', 'store-media', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
+-- Drop existing storage policies if re-running
+DROP POLICY IF EXISTS "Public Media Select Access" ON storage.objects;
+DROP POLICY IF EXISTS "Public Media Insert Access" ON storage.objects;
+DROP POLICY IF EXISTS "Public Media Update Access" ON storage.objects;
+DROP POLICY IF EXISTS "Public Media Delete Access" ON storage.objects;
+
+-- Create Storage Access Policies
+CREATE POLICY "Public Media Select Access" ON storage.objects FOR SELECT USING (bucket_id = 'store-media');
+CREATE POLICY "Public Media Insert Access" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'store-media');
+CREATE POLICY "Public Media Update Access" ON storage.objects FOR UPDATE USING (bucket_id = 'store-media');
+CREATE POLICY "Public Media Delete Access" ON storage.objects FOR DELETE USING (bucket_id = 'store-media');

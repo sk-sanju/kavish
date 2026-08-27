@@ -7,7 +7,7 @@ import {
 import type { CategoryItem, ProductCategory } from '../../types';
 import { useProducts } from '../../context/ProductContext';
 import { INITIAL_CATEGORIES } from '../../data/categories';
-import { readImageFileAsDataUrl } from '../../utils/fileUpload';
+import { uploadImageFile } from '../../utils/fileUpload';
 
 export const DEFAULT_CATEGORIES = INITIAL_CATEGORIES;
 
@@ -86,8 +86,8 @@ export const CategoryManagement: React.FC = () => {
       if (!file.type.startsWith('image/')) {
         throw new Error(`"${file.name}" is not a supported image file.`);
       }
-      const dataUrl = await readImageFileAsDataUrl(file);
-      setForm((prev) => ({ ...prev, image: dataUrl }));
+      const uploadedUrl = await uploadImageFile(file, 'categories');
+      setForm((prev) => ({ ...prev, image: uploadedUrl }));
     } catch (err: any) {
       setUploadCategoryError(err.message || 'Failed to process category image.');
     } finally {

@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { useAdmin, DEFAULT_HERO_BANNERS } from '../../context/AdminContext';
 import type { HeroBanner } from '../../types';
-import { readImageFileAsDataUrl } from '../../utils/fileUpload';
+import { uploadImageFile } from '../../utils/fileUpload';
 
 const PRESET_BANNER_IMAGES = [
   {
@@ -76,8 +76,8 @@ export const BannerManagement: React.FC = () => {
       if (!file.type.startsWith('image/')) {
         throw new Error(`"${file.name}" is not a supported image file.`);
       }
-      const dataUrl = await readImageFileAsDataUrl(file);
-      setForm((prev) => ({ ...prev, image: dataUrl }));
+      const uploadedUrl = await uploadImageFile(file, 'banners');
+      setForm((prev) => ({ ...prev, image: uploadedUrl }));
     } catch (err: any) {
       setUploadBannerError(err.message || 'Failed to process banner image.');
     } finally {

@@ -12,7 +12,6 @@ interface ProductFilterProps {
   totalResults: number;
 }
 
-const FABRICS = ['Pure Organic Cotton', 'Kasavu Cotton Tissue', 'Pure Mulberry Silk', 'European Linen', 'Cotton Silk Blend'];
 const COLLECTIONS = [
   { label: 'Kasavu Masterpieces', value: 'kasavu-masterpieces' },
   { label: 'The Festive Edit', value: 'festive-edit' },
@@ -41,12 +40,6 @@ export const ProductFilter: React.FC<ProductFilterProps> = ({
     const exists = filters.collection.includes(col);
     const updated = exists ? filters.collection.filter(item => item !== col) : [...filters.collection, col];
     onFilterChange({ collection: updated });
-  };
-
-  const toggleFabric = (fab: string) => {
-    const exists = filters.fabric.includes(fab);
-    const updated = exists ? filters.fabric.filter(item => item !== fab) : [...filters.fabric, fab];
-    onFilterChange({ fabric: updated });
   };
 
   const content = (
@@ -130,25 +123,7 @@ export const ProductFilter: React.FC<ProductFilterProps> = ({
         </div>
       </div>
 
-      <div className="space-y-2 pt-2 border-t border-[#E8DDC7]/60">
-        <h4 className="font-serif font-semibold text-sm text-[#12372A] uppercase tracking-wider">Craft &amp; Fabric</h4>
-        <div className="space-y-1.5">
-          {FABRICS.map(fab => {
-            const active = filters.fabric.includes(fab);
-            return (
-              <label key={fab} className="flex items-center gap-2.5 cursor-pointer hover:text-[#D4AF37]">
-                <input
-                  type="checkbox"
-                  checked={active}
-                  onChange={() => toggleFabric(fab)}
-                  className="rounded-sm accent-[#12372A] w-3.5 h-3.5"
-                />
-                <span className={active ? 'font-semibold text-[#12372A]' : ''}>{fab}</span>
-              </label>
-            );
-          })}
-        </div>
-      </div>
+
 
       <div className="pt-2 border-t border-[#E8DDC7]/60">
         <label className="flex items-center gap-2.5 cursor-pointer">

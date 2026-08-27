@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Trash2, Ruler, UploadCloud, ImagePlus, Link as LinkIcon, Loader2, Star } from 'lucide-react';
 import type { Product, ProductCategory, ProductSubcategory } from '../../types';
-import { readImageFileAsDataUrl } from '../../utils/fileUpload';
+import { uploadImageFile } from '../../utils/fileUpload';
 
 interface ProductEditorModalProps {
   product: Partial<Product> | null;
@@ -97,7 +97,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
         if (!file.type.startsWith('image/')) {
           throw new Error(`"${file.name}" is not a supported image file.`);
         }
-        return readImageFileAsDataUrl(file);
+        return uploadImageFile(file, 'products');
       });
 
       const newUrls = await Promise.all(readPromises);

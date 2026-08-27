@@ -1,5 +1,7 @@
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
+
 /**
- * Utility to read and optimize image files from local device storage
+ * Utility to read, upload to Supabase Storage, and optimize image files
  */
 const VALID_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.svg', '.gif', '.bmp', '.avif', '.jfif', '.heic'];
 
@@ -7,6 +9,49 @@ function isImageFile(file: File): boolean {
   if (file.type && file.type.startsWith('image/')) return true;
   const fileName = (file.name || '').toLowerCase();
   return VALID_IMAGE_EXTENSIONS.some((ext) => fileName.endsWith(ext));
+}
+
+export async function uploadImageFile(
+  file: File,
+  folder = 'uploads',
+  maxWidth = 1200,
+  maxHeight = 1200,
+  quality = 0.8
+): Promise<string> {
+  if (!isImageFile(file)) {
+    throw new Error(`"${file.name || 'File'}" is not a supported image (JPG, PNG, WebP, SVG, etc.).`);
+  }
+
+  // 1. Try uploading to Supabase Storage bucket 'store-media'
+  if (isSupabaseConfigured) {
+    try {
+      const fileExt = file.name.split('.').pop() || 'jpg';
+      const cleanExt = fileExt.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const cleanFileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${cleanExt}`;
+
+      const { data, error } = await supabase.storage
+        .from('store-media')
+        .upload(cleanFileName, file, {
+          cacheControl: '3600',
+          upsert: true,
+          contentType: file.type || 'image/jpeg'
+        });
+
+      if (!error && data) {
+        const { data: publicUrlData } = supabase.storage
+          .from('store-media')
+          .getPublicUrl(cleanFileName);
+        if (publicUrlData?.publicUrl) {
+          return publicUrlData.publicUrl;
+        }
+      }
+    } catch (storageErr) {
+      console.warn('Supabase storage upload fallback:', storageErr);
+    }
+  }
+
+  // 2. Fallback: Compress image to compact Data URL
+  return readImageFileAsDataUrl(file, maxWidth, maxHeight, quality);
 }
 
 export async function readImageFileAsDataUrl(
