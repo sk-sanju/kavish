@@ -7,6 +7,7 @@ import {
 import logoImg from '../assets/logo.png';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useProducts } from '../context/ProductContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { initializeRazorpayPayment } from '../utils/razorpay';
 import { sendOrderNotificationEmail } from '../utils/emailService';
@@ -22,8 +23,9 @@ type PaymentOption = 'razorpay' | 'direct_upi' | 'razorpay_link' | 'card' | 'cod
 
 export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNavigateHome }) => {
   const navigate = useNavigate();
-  const { cart, subtotal, discount, shippingFee, total, clearCart } = useCart();
+  const { cart, subtotal, discount, shippingFee, total, clearCart, appliedPromoCode } = useCart();
   const { user, addOrder, setSelectedTrackingOrder } = useAuth();
+  const { deductInventoryForOrder, incrementPromoUsage } = useProducts();
   const { formatPrice } = useCurrency();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -124,6 +126,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
       trackingNumber: `KV-TRK-${Math.floor(100000 + Math.random() * 900000)}`,
       estimatedDelivery: '4–10 days (Inside India)'
     };
+
+    // Deduct stock in real-time in Supabase products table
+    deductInventoryForOrder(cart.map((c) => ({ product: c.product, quantity: c.quantity })));
+
+    // Increment coupon usage in Supabase promo_offers table if applied
+    if (appliedPromoCode) {
+      incrementPromoUsage(appliedPromoCode);
+    }
 
     addOrder(newOrder);
     clearCart();

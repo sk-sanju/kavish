@@ -46,6 +46,9 @@ interface ProductContextType {
   updateReview: (rev: Review) => void;
   deleteReview: (id: string) => void;
 
+  deductInventoryForOrder: (items: { product: Product; quantity: number }[]) => void;
+  incrementPromoUsage: (code: string) => void;
+
   resetToDefaults: () => void;
 }
 
@@ -471,6 +474,55 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     saveReviews(updated);
   };
 
+  const deductInventoryForOrder = (items: { product: Product; quantity: number }[]) => {
+    setProducts(prevProducts => {
+      let updatedProducts = [...prevProducts];
+      items.forEach(it => {
+        updatedProducts = updatedProducts.map(p => {
+          if (p.id === it.product.id || (it.product.sku && p.sku === it.product.sku)) {
+            const currentQty = p.stockCount != null ? p.stockCount : 10;
+            const newQty = Math.max(0, currentQty - it.quantity);
+            const updatedProd: Product = {
+              ...p,
+              stockCount: newQty,
+              inStock: newQty > 0
+            };
+            upsertSupabaseProduct(updatedProd);
+            return updatedProd;
+          }
+          return p;
+        });
+      });
+      try {
+        localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(updatedProducts));
+      } catch (e) {
+        console.error(e);
+      }
+      return updatedProducts;
+    });
+  };
+
+  const incrementPromoUsage = (code: string) => {
+    if (!code) return;
+    const cleanCode = code.trim().toUpperCase();
+    setOffers(prevOffers => {
+      const updatedOffers = prevOffers.map(o => {
+        if (o.code.toUpperCase() === cleanCode) {
+          const updated = { ...o, usageCount: (o.usageCount || 0) + 1 };
+          upsertSupabaseOffer(updated);
+          return updated;
+        }
+        return o;
+      });
+      try {
+        localStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(updatedOffers));
+      } catch (e) {
+        console.error(e);
+      }
+      return updatedOffers;
+    });
+  };
+
   const resetToDefaults = (): void => {
     saveProducts(INITIAL_PRODUCTS);
     saveOffers(INITIAL_OFFERS);
@@ -508,6 +560,8 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         addReview,
         updateReview,
         deleteReview,
+        deductInventoryForOrder,
+        incrementPromoUsage,
         resetToDefaults,
       }}
     >

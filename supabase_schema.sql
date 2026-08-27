@@ -205,13 +205,13 @@ CREATE POLICY "Allow Public Read Store Content" ON public.store_content FOR SELE
 CREATE POLICY "Allow Public Read Shipping" ON public.shipping_rules FOR SELECT USING (true);
 
 -- Allow Public Write / Admin Full Access
-CREATE POLICY "Allow All Products Access" ON public.products FOR ALL USING (true);
-CREATE POLICY "Allow All Categories Access" ON public.categories FOR ALL USING (true);
-CREATE POLICY "Allow All Orders Access" ON public.orders FOR ALL USING (true);
-CREATE POLICY "Allow All Offers Access" ON public.promo_offers FOR ALL USING (true);
-CREATE POLICY "Allow All Reviews Access" ON public.reviews FOR ALL USING (true);
-CREATE POLICY "Allow All Returns Access" ON public.return_requests FOR ALL USING (true);
-CREATE POLICY "Allow All Audit Logs Access" ON public.audit_logs FOR ALL USING (true);
-CREATE POLICY "Allow All Content Access" ON public.store_content FOR ALL USING (true);
-CREATE POLICY "Allow All Admin Users Access" ON public.admin_users FOR ALL USING (true);
-CREATE POLICY "Allow All Shipping Access" ON public.shipping_rules FOR ALL USING (true);
+CREATE POLICY "Allow All Products Access" ON public.products FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow All Categories Access" ON public.categories FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow All Orders Access" ON public.orders FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow All Offers Access" ON public.promo_offers FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow All Reviews Access" ON public.reviews FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow All Returns Access" ON public.return_requests FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow All Audit Logs Access" ON public.audit_logs FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow All Content Access" ON public.store_content FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow All Admin Users Access" ON public.admin_users FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow All Shipping Access" ON public.shipping_rules FOR ALL USING (true) WITH CHECK (true);
