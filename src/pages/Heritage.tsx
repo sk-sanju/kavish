@@ -1,6 +1,7 @@
 import React from 'react';
 import { HERITAGE_STORIES } from '../data/heritage';
 import { ArrowRight, ShieldCheck, MapPin, Award, Heart } from 'lucide-react';
+import { OptimizedImage } from '../components/common/OptimizedImage';
 
 interface HeritageProps {
   onNavigate: (view: string, categoryFilter?: string, collectionFilter?: string) => void;
@@ -68,7 +69,14 @@ export const Heritage: React.FC<HeritageProps> = ({ onNavigate }) => {
           >
             <div className={`lg:col-span-6 ${idx % 2 === 1 ? 'lg:order-2' : 'lg:order-1'}`}>
               <div className="aspect-[4/3] bg-white border border-[#D4AF37]/40 p-3 shadow-xl rounded-3xl overflow-hidden">
-                <img src={story.image} alt={story.title} className="w-full h-full object-cover rounded-2xl" />
+                <OptimizedImage
+                  src={story.image}
+                  alt={`${story.title} - ${story.subtitle}`}
+                  preset="card"
+                  aspectRatio="4/3"
+                  containerClassName="w-full h-full rounded-2xl"
+                  imageClassName="rounded-2xl"
+                />
               </div>
             </div>
 

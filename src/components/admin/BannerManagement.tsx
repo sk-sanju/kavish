@@ -8,6 +8,7 @@ import {
 import { useAdmin, DEFAULT_HERO_BANNERS } from '../../context/AdminContext';
 import type { HeroBanner } from '../../types';
 import { uploadImageFile } from '../../utils/fileUpload';
+import { OptimizedImage } from '../common/OptimizedImage';
 
 const PRESET_BANNER_IMAGES = [
   {
@@ -291,13 +292,16 @@ export const BannerManagement: React.FC = () => {
           
           {/* Background Image with Authentic Gradient Overlay */}
           <div className="absolute inset-0 z-0">
-            <img
+            <OptimizedImage
               src={currentPreview.image}
               alt={currentPreview.tag}
-              className="w-full h-full object-cover opacity-45 transform scale-105 transition-all duration-700 ease-out"
+              preset="banner"
+              priority={true}
+              containerClassName="w-full h-full"
+              imageClassName="opacity-45 transform scale-105 transition-all duration-700 ease-out"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#12372A] via-[#12372A]/85 sm:via-[#12372A]/80 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#12372A] via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#12372A] via-[#12372A]/85 sm:via-[#12372A]/80 to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#12372A] via-transparent to-transparent z-10" />
           </div>
 
           {/* Content Container */}
@@ -400,12 +404,13 @@ export const BannerManagement: React.FC = () => {
                 <div>
                   {/* Thumbnail Card Banner Image */}
                   <div className="h-44 relative overflow-hidden bg-[#FAF8F1]">
-                    <img
+                    <OptimizedImage
                       src={banner.image}
                       alt={banner.tag}
-                      className="w-full h-full object-cover"
+                      preset="card"
+                      containerClassName="w-full h-full"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-10" />
                     
                     <span className="absolute top-3 left-3 bg-[#12372A] text-[#D4AF37] text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full border border-[#D4AF37]">
                       Slide 0{index + 1}
@@ -609,8 +614,13 @@ export const BannerManagement: React.FC = () => {
                 {/* Live Preview */}
                 {form.image && (
                   <div className="relative h-36 rounded-2xl overflow-hidden border border-[#E8DDC7] group shadow-xs">
-                    <img src={form.image} alt="Banner Preview" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3">
+                    <OptimizedImage
+                      src={form.image}
+                      alt="Banner Preview"
+                      preset="card"
+                      containerClassName="w-full h-full"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3 z-10">
                       <p className="text-white text-xs font-bold font-serif">{form.tag || 'Banner Preview'}</p>
                     </div>
                     <div className="absolute top-2 right-2 flex gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">

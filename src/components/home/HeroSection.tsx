@@ -1,8 +1,8 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ArrowRight, Sparkles, Compass } from 'lucide-react';
 import { useAdmin, DEFAULT_HERO_BANNERS } from '../../context/AdminContext';
 import type { HeroBanner } from '../../types';
-import { getOptimizedImageUrl, handleImageError } from '../../utils/imageOptimizer';
+import { OptimizedImage } from '../common/OptimizedImage';
 
 interface HeroSectionProps {
   onNavigate: (view: string, categoryFilter?: string, collectionFilter?: string) => void;
@@ -50,33 +50,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
 
   const safeIdx = (activeIdx >= 0 && activeIdx < bannersList.length) ? activeIdx : 0;
   const current = bannersList[safeIdx] || DEFAULT_HERO_BANNERS[0];
-  const optimizedBannerImg = getOptimizedImageUrl(current.image, { width: 1400, quality: 80 });
-
-  // Preload all other banners in the background for instant sliding transitions
-  useEffect(() => {
-    bannersList.forEach(banner => {
-      if (banner.image) {
-        const img = new Image();
-        img.src = getOptimizedImageUrl(banner.image, { width: 1400, quality: 80 });
-      }
-    });
-  }, [bannersList]);
 
   return (
     <section className="relative bg-[#0F2D22] text-[#FAF8F1] min-h-[75vh] sm:min-h-[85vh] flex items-center overflow-hidden">
       
       {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0 z-0 bg-[#0F2D22]">
-        <img
+        <OptimizedImage
           key={current.id || current.image}
-          src={optimizedBannerImg}
-          alt="Kavish Kerala Luxury Fashion Campaign"
-          className="w-full h-full object-cover opacity-40 sm:opacity-45 transform scale-105 transition-all duration-1000 ease-out"
-          loading="eager"
-          // @ts-ignore
-          fetchpriority="high"
-          decoding="async"
-          onError={handleImageError}
+          src={current.image}
+          alt={current.title || "Kavish Kerala Luxury Fashion Campaign"}
+          preset="banner"
+          priority={true}
+          containerClassName="w-full h-full"
+          imageClassName="opacity-40 sm:opacity-45 transform scale-105 transition-all duration-1000 ease-out"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#12372A] via-[#12372A]/85 sm:via-[#12372A]/80 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#12372A] via-transparent to-transparent" />

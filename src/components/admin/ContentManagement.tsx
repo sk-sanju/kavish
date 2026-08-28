@@ -15,6 +15,7 @@ import { useAdmin } from '../../context/AdminContext';
 import { useProducts } from '../../context/ProductContext';
 import type { StoreContactConfig } from '../../types';
 import { uploadImageFile } from '../../utils/fileUpload';
+import { OptimizedImage } from '../common/OptimizedImage';
 
 export const ContentManagement: React.FC = () => {
   const { storeContent, updateStoreContent, addAuditLog } = useAdmin();
@@ -448,12 +449,13 @@ export const ContentManagement: React.FC = () => {
 
               {form.bannerImage && (
                 <div className="md:col-span-4 relative h-20 rounded-xl overflow-hidden border border-[#D4AF37]/50 shadow-xs">
-                  <img
+                  <OptimizedImage
                     src={form.bannerImage}
                     alt="Banner preview"
-                    className="w-full h-full object-cover"
+                    preset="card"
+                    containerClassName="w-full h-full"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-1.5">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-1.5 z-10">
                     <span className="text-[10px] text-[#FAF8F1] font-semibold truncate">Current Live Image</span>
                   </div>
                 </div>

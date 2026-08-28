@@ -3,6 +3,7 @@ import { Search, X, TrendingUp, Sparkles } from 'lucide-react';
 import { useModal } from '../../context/ModalContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { useProducts } from '../../context/ProductContext';
+import { OptimizedImage } from '../common/OptimizedImage';
 import type { Product } from '../../types';
 
 interface SearchOverlayProps {
@@ -101,11 +102,14 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ onSelectProduct, o
                     onClick={() => handleSelect(prod)}
                     className="bg-white p-3 border border-[#E8DDC7] hover:border-[#D4AF37] cursor-pointer group transition-all"
                   >
-                    <div className="aspect-[3/4] bg-[#FAF8F1] overflow-hidden mb-2">
-                      <img
+                    <div className="aspect-[3/4] bg-[#FAF8F1] overflow-hidden mb-2 rounded-xl">
+                      <OptimizedImage
                         src={prod.images[0]}
                         alt={prod.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        preset="card"
+                        aspectRatio="3/4"
+                        containerClassName="w-full h-full rounded-xl"
+                        imageClassName="group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                     <span className="text-[9px] uppercase font-bold text-[#D4AF37]">{prod.subcategory}</span>

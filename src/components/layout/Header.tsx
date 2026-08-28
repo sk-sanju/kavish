@@ -85,6 +85,9 @@ export const Header: React.FC = () => {
             <img
               src={logoImg}
               alt="KAVISH - Kerala Ethnic Wear"
+              width="160"
+              height="56"
+              decoding="async"
               className="h-10 sm:h-12 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
             />
           </div>

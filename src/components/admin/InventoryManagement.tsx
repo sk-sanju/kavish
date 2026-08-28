@@ -4,6 +4,7 @@ import { Search, X } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';
 import { useAdmin } from '../../context/AdminContext';
 import { useCurrency } from '../../context/CurrencyContext';
+import { OptimizedImage } from '../common/OptimizedImage';
 import type { Product } from '../../types';
 
 export const InventoryManagement: React.FC = () => {
@@ -170,7 +171,13 @@ export const InventoryManagement: React.FC = () => {
                   <tr key={p.id} className="hover:bg-[#FAF8F1] transition-colors">
                     <td className="p-3.5">
                       <div className="flex items-center gap-3">
-                        <img src={p.images[0]} alt={p.name} className="w-9 h-11 object-cover rounded-lg bg-white border border-[#E8DDC7]" />
+                        <OptimizedImage
+                          src={p.images[0]}
+                          alt={p.name}
+                          preset="thumbnail"
+                          aspectRatio="3/4"
+                          containerClassName="w-9 h-11 rounded-lg bg-white border border-[#E8DDC7] shrink-0"
+                        />
                         <div>
                           <strong className="text-[#12372A] block font-bold">{p.name}</strong>
                           <span className="text-[10px] text-[#6B5846]">{p.subcategory}</span>

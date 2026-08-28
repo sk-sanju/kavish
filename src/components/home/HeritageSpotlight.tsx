@@ -1,7 +1,7 @@
 import React from 'react';
 import { Award, Feather, ShieldCheck, Compass } from 'lucide-react';
 import { HERITAGE_STORIES } from '../../data/heritage';
-import { getOptimizedImageUrl, handleImageError } from '../../utils/imageOptimizer';
+import { OptimizedImage } from '../common/OptimizedImage';
 
 interface HeritageSpotlightProps {
   onNavigate: (view: string) => void;
@@ -21,15 +21,15 @@ export const HeritageSpotlight: React.FC<HeritageSpotlightProps> = ({ onNavigate
           {/* Left Visual Card */}
           <div className="relative">
             <div className="aspect-[4/5] border border-[#D4AF37]/40 p-3 bg-[#0B241B] shadow-2xl relative rounded-3xl overflow-hidden">
-              <img
-                src={getOptimizedImageUrl(story.image, { width: 800, quality: 75 })}
-                alt="Kasavu Handloom Weaving Heritage"
-                className="w-full h-full object-cover rounded-2xl"
-                loading="lazy"
-                decoding="async"
-                onError={handleImageError}
+              <OptimizedImage
+                src={story.image}
+                alt="Kasavu Handloom Weaving Heritage - Kuthampully GI Certified"
+                preset="card"
+                aspectRatio="4/5"
+                containerClassName="w-full h-full rounded-2xl"
+                imageClassName="rounded-2xl"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#12372A]/80 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#12372A]/80 via-transparent to-transparent pointer-events-none z-10" />
             </div>
 
             {/* Floating Heritage Badge */}

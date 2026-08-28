@@ -3,7 +3,7 @@ import { ArrowRight, Sparkles, Compass } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';
 import { INITIAL_CATEGORIES } from '../../data/categories';
 import type { CategoryItem, ProductCategory } from '../../types';
-import { getOptimizedImageUrl, handleImageError } from '../../utils/imageOptimizer';
+import { OptimizedImage } from '../common/OptimizedImage';
 
 interface CategoryShowcaseProps {
   onNavigate: (view: string, categoryFilter?: string, collectionFilter?: string) => void;
@@ -124,7 +124,6 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {displayedCategories.map((cat, idx) => {
             const count = getProductCountForCat(cat);
-            const optimizedImg = getOptimizedImageUrl(cat.image, { width: 600, quality: 75 });
             return (
               <div
                 key={cat.id}
@@ -133,15 +132,14 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
               >
                 {/* Visual Category Imagery */}
                 <div className="relative h-64 sm:h-72 overflow-hidden bg-[#FAF8F1]">
-                  <img
-                    src={optimizedImg}
-                    alt={cat.name}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
-                    loading="lazy"
-                    decoding="async"
-                    onError={handleImageError}
+                  <OptimizedImage
+                    src={cat.image}
+                    alt={`${cat.name} Collection - Kavish`}
+                    preset="card"
+                    containerClassName="w-full h-full"
+                    imageClassName="transition-transform duration-700 ease-out group-hover:scale-108"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#12372A]/90 via-[#12372A]/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#12372A]/90 via-[#12372A]/30 to-transparent z-10" />
 
                   {/* Department & Count Badges */}
                   <div className="absolute top-4 left-4 right-4 flex items-center justify-between">

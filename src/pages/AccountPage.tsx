@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { User, Package, MapPin, Truck, Plus, ShieldCheck, LogOut, UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCurrency } from '../context/CurrencyContext';
+import { OptimizedImage } from '../components/common/OptimizedImage';
 import type { Address } from '../types';
 
 export const AccountPage: React.FC = () => {
@@ -169,7 +170,13 @@ export const AccountPage: React.FC = () => {
                         {order.items.map((item, idx) => (
                           <div key={idx} className="flex items-center justify-between text-xs">
                             <div className="flex items-center gap-3">
-                              <img src={item.product.images[0]} alt={item.product.name} className="w-10 sm:w-12 aspect-[3/4] object-cover bg-[#FAF8F1] rounded-lg" />
+                              <OptimizedImage
+                                src={item.product.images[0]}
+                                alt={item.product.name}
+                                preset="thumbnail"
+                                aspectRatio="3/4"
+                                containerClassName="w-10 sm:w-12 aspect-[3/4] rounded-lg shrink-0"
+                              />
                               <div>
                                 <h4 className="font-bold text-[#12372A] line-clamp-1">{item.product.name}</h4>
                                 <span className="text-[10px] text-[#6B5846]">Size: {item.size} • Qty: {item.quantity}</span>

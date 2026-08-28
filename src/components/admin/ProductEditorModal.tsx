@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { X, Trash2, Ruler, UploadCloud, ImagePlus, Link as LinkIcon, Loader2, Star } from 'lucide-react';
 import type { Product, ProductCategory, ProductSubcategory } from '../../types';
 import { uploadImageFile } from '../../utils/fileUpload';
+import { OptimizedImage } from '../common/OptimizedImage';
 
 interface ProductEditorModalProps {
   product: Partial<Product> | null;
@@ -674,7 +675,13 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                           idx === 0 ? 'border-[#D4AF37] ring-2 ring-[#D4AF37]/30' : 'border-[#E8DDC7]'
                         }`}
                       >
-                        <img src={img} alt={`Product view ${idx + 1}`} className="w-full h-full object-cover" />
+                        <OptimizedImage
+                          src={img}
+                          alt={`Product view ${idx + 1}`}
+                          preset="thumbnail"
+                          aspectRatio="3/4"
+                          containerClassName="w-full h-full"
+                        />
                         
                         {/* Cover Badge */}
                         {idx === 0 ? (

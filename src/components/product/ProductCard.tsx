@@ -5,14 +5,15 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useModal } from '../../context/ModalContext';
 import { useCurrency } from '../../context/CurrencyContext';
-import { getOptimizedImageUrl, handleImageError } from '../../utils/imageOptimizer';
+import { OptimizedImage } from '../common/OptimizedImage';
 
 interface ProductCardProps {
   product: Product;
   onSelectProduct?: (product: Product) => void;
+  priority?: boolean;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProduct }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProduct, priority = false }) => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { openQuickView } = useModal();
@@ -36,10 +37,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
     openQuickView(product);
   };
 
-  const [imageLoaded, setImageLoaded] = useState(false);
-
   const rawImg = product.images[currentImageIndex] || product.images[0];
-  const displayImg = getOptimizedImageUrl(rawImg, { width: 450, quality: 75 });
+  const altText = `${product.name} - ${product.fabric} - Kavish Kuthampully`;
 
   return (
     <div
@@ -52,28 +51,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
         onMouseEnter={() => product.images[1] && setCurrentImageIndex(1)}
         onMouseLeave={() => setCurrentImageIndex(0)}
       >
-        {/* Shimmer Skeleton Placeholder */}
-        {!imageLoaded && (
-          <div className="absolute inset-0 bg-[#F2EDE2] animate-pulse" />
-        )}
-
-        <img
-          src={displayImg}
-          alt={product.name}
-          className={`w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-106 ${
-            imageLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          loading="lazy"
-          decoding="async"
-          onLoad={() => setImageLoaded(true)}
-          onError={(e) => {
-            setImageLoaded(true);
-            handleImageError(e);
-          }}
+        <OptimizedImage
+          src={rawImg}
+          alt={altText}
+          preset="card"
+          priority={priority}
+          aspectRatio="3/4"
+          containerClassName="w-full h-full rounded-t-2xl"
+          imageClassName="transition-all duration-700 ease-out group-hover:scale-106"
         />
 
         {/* Floating Badges with Smooth Rounded Pill shape */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10 pointer-events-none">
           {product.isNew && (
             <span className="bg-[#12372A] text-[#FAF8F1] text-[9px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full border border-[#D4AF37]/40 shadow-sm">
               New Arrival
@@ -105,7 +94,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
         </button>
 
         {/* Quick View & Quick Add Floating Bottom Bar */}
-        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-[#12372A]/85 via-[#12372A]/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center gap-2">
+        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-[#12372A]/85 via-[#12372A]/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center gap-2 z-10">
           <button
             onClick={handleQuickViewClick}
             className="flex-1 bg-[#FAF8F1] text-[#12372A] hover:bg-[#D4AF37] hover:text-[#12372A] text-[11px] font-bold uppercase tracking-wider py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5"

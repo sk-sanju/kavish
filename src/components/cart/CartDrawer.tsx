@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, ShoppingBag, Trash2, ArrowRight, Truck, Sparkles, Tag, ShieldCheck } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
+import { OptimizedImage } from '../common/OptimizedImage';
 
 interface CartDrawerProps {
   onProceedToCheckout: () => void;
@@ -106,7 +107,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedToCheckout }) =
               <div key={item.id} className="bg-white p-3.5 border border-[#E8DDC7] rounded-2xl flex gap-3 relative group shadow-xs">
                 {/* Thumbnail */}
                 <div className="w-20 aspect-[3/4] bg-[#FAF8F1] shrink-0 overflow-hidden rounded-xl">
-                  <img src={item.product.images[0]} alt={item.product.name} className="w-full h-full object-cover" />
+                  <OptimizedImage
+                    src={item.product.images[0]}
+                    alt={item.product.name}
+                    preset="thumbnail"
+                    aspectRatio="3/4"
+                    containerClassName="w-full h-full rounded-xl"
+                  />
                 </div>
 
                 {/* Info */}

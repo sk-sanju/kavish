@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
-import { getOptimizedImageUrl, handleImageError } from '../../utils/imageOptimizer';
+import { OptimizedImage } from '../common/OptimizedImage';
 
 const INSTA_IMAGES = [
   'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=400&q=75',
@@ -27,7 +27,7 @@ export const SocialGallery: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12">
           <div>
             <span className="text-xs uppercase tracking-[0.25em] text-[#D4AF37] font-bold block mb-1">
-              Community &amp; Culture
+              Community & Culture
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#12372A]">
               Kavish, In Your World
@@ -55,15 +55,15 @@ export const SocialGallery: React.FC = () => {
               rel="noreferrer"
               className="group aspect-square overflow-hidden bg-[#FAF8F1] relative border border-[#E8DDC7] rounded-2xl shadow-xs"
             >
-              <img
-                src={getOptimizedImageUrl(img, { width: 350, quality: 75 })}
-                alt="Kavish Instagram Styling"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90 group-hover:opacity-100 rounded-2xl"
-                loading="lazy"
-                decoding="async"
-                onError={handleImageError}
+              <OptimizedImage
+                src={img}
+                alt={`Kavish Instagram Community Style ${idx + 1}`}
+                preset="thumbnail"
+                aspectRatio="1/1"
+                containerClassName="w-full h-full rounded-2xl"
+                imageClassName="group-hover:scale-110 transition-transform duration-500 opacity-90 group-hover:opacity-100 rounded-2xl"
               />
-              <div className="absolute inset-0 bg-[#12372A]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[#D4AF37] rounded-2xl">
+              <div className="absolute inset-0 bg-[#12372A]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[#D4AF37] rounded-2xl z-10">
                 <InstagramIcon className="w-6 h-6" />
               </div>
             </a>

@@ -12,6 +12,7 @@ import { useCurrency } from '../context/CurrencyContext';
 import { initializeRazorpayPayment } from '../utils/razorpay';
 import { sendOrderNotificationEmail } from '../utils/emailService';
 import { POLICY_CONFIG } from '../config/policyConfig';
+import { OptimizedImage } from '../components/common/OptimizedImage';
 import type { Address, Order } from '../types';
 
 interface CheckoutPageProps {
@@ -718,10 +719,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
               {cart.map((item) => (
                 <div key={item.id} className="py-2.5 flex justify-between items-center">
                   <div className="flex gap-3 items-center">
-                    <img
+                    <OptimizedImage
                       src={item.product.images[0]}
                       alt={item.product.name}
-                      className="w-12 aspect-[3/4] object-cover rounded-lg border border-[#E8DDC7]"
+                      preset="thumbnail"
+                      aspectRatio="3/4"
+                      containerClassName="w-12 aspect-[3/4] rounded-lg border border-[#E8DDC7] shrink-0"
                     />
                     <div>
                       <h5 className="font-bold text-[#12372A] line-clamp-1">{item.product.name}</h5>

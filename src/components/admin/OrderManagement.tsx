@@ -4,6 +4,7 @@ import { Search, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useAdmin } from '../../context/AdminContext';
 import { useCurrency } from '../../context/CurrencyContext';
+import { OptimizedImage } from '../common/OptimizedImage';
 import type { Order, OrderStatus } from '../../types';
 
 export const OrderManagement: React.FC = () => {
@@ -229,10 +230,12 @@ export const OrderManagement: React.FC = () => {
                 {selectedOrder.items.map((item, idx) => (
                   <div key={idx} className="p-3 border border-[#E8DDC7] rounded-xl flex items-center justify-between bg-[#FAF8F1]">
                     <div className="flex items-center gap-3">
-                      <img
+                      <OptimizedImage
                         src={item.product.images[0]}
                         alt={item.product.name}
-                        className="w-12 h-16 object-cover rounded-lg border border-[#E8DDC7]"
+                        preset="thumbnail"
+                        aspectRatio="3/4"
+                        containerClassName="w-12 h-16 rounded-lg border border-[#E8DDC7] shrink-0"
                       />
                       <div>
                         <strong className="text-[#12372A] block">{item.product.name}</strong>

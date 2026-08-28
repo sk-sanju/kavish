@@ -83,6 +83,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <img
                 src={logoImg}
                 alt="KAVISH - Kerala Ethnic Wear"
+                width="150"
+                height="48"
+                loading="lazy"
+                decoding="async"
                 className="h-12 w-auto object-contain"
               />
             </div>

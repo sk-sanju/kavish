@@ -5,7 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import type { ProductColor } from '../../types';
-import { getOptimizedImageUrl, handleImageError } from '../../utils/imageOptimizer';
+import { OptimizedImage } from '../common/OptimizedImage';
 
 export const QuickViewModal: React.FC = () => {
   const { quickViewProduct, closeQuickView, openSizeGuide } = useModal();
@@ -49,13 +49,14 @@ export const QuickViewModal: React.FC = () => {
 
         <div className="w-full md:w-1/2 p-6 bg-white flex flex-col justify-between border-b md:border-b-0 md:border-r border-[#E8DDC7] rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none">
           <div className="aspect-[3/4] bg-[#FAF8F1] overflow-hidden relative rounded-2xl">
-            <img
-              src={getOptimizedImageUrl(quickViewProduct.images[selectedImage] || quickViewProduct.images[0], { width: 600, quality: 80 })}
-              alt={quickViewProduct.name}
-              className="w-full h-full object-cover transition-all duration-500 rounded-2xl"
-              loading="eager"
-              decoding="async"
-              onError={handleImageError}
+            <OptimizedImage
+              src={quickViewProduct.images[selectedImage] || quickViewProduct.images[0]}
+              alt={`${quickViewProduct.name} - Quick View`}
+              preset="card"
+              priority={true}
+              aspectRatio="3/4"
+              containerClassName="w-full h-full rounded-2xl"
+              imageClassName="transition-all duration-500 rounded-2xl"
             />
           </div>
 
@@ -69,13 +70,12 @@ export const QuickViewModal: React.FC = () => {
                     selectedImage === idx ? 'border-[#12372A] ring-2 ring-[#12372A]' : 'border-transparent opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <img
-                    src={getOptimizedImageUrl(img, { width: 150, quality: 75 })}
-                    alt="Thumbnail"
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                    onError={handleImageError}
+                  <OptimizedImage
+                    src={img}
+                    alt={`${quickViewProduct.name} thumbnail ${idx + 1}`}
+                    preset="thumbnail"
+                    aspectRatio="3/4"
+                    containerClassName="w-full h-full"
                   />
                 </button>
               ))}

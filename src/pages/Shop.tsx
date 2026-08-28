@@ -54,13 +54,16 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
 
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [gridCols, setGridCols] = useState<3 | 4>(3);
+  const [visibleCount, setVisibleCount] = useState(12);
 
   const handleFilterChange = (updated: Partial<FilterState>) => {
     setFilters(prev => ({ ...prev, ...updated }));
+    setVisibleCount(12);
   };
 
   const handleResetFilters = () => {
     setFilters(INITIAL_FILTERS);
+    setVisibleCount(12);
     navigate('/shop');
   };
 
@@ -230,18 +233,35 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
                 </button>
               </div>
             ) : (
-              <div
-                className={`grid grid-cols-1 sm:grid-cols-2 ${
-                  gridCols === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-3 xl:grid-cols-4'
-                } gap-4 sm:gap-6`}
-              >
-                {filteredProducts.map(product => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onSelectProduct={handleProductClick}
-                  />
-                ))}
+              <div className="space-y-8">
+                <div
+                  className={`grid grid-cols-1 sm:grid-cols-2 ${
+                    gridCols === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-3 xl:grid-cols-4'
+                  } gap-4 sm:gap-6`}
+                >
+                  {filteredProducts.slice(0, visibleCount).map((product, idx) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      priority={idx < 4}
+                      onSelectProduct={handleProductClick}
+                    />
+                  ))}
+                </div>
+
+                {visibleCount < filteredProducts.length && (
+                  <div className="text-center pt-4">
+                    <button
+                      onClick={() => setVisibleCount(prev => prev + 12)}
+                      className="bg-[#12372A] text-[#FAF8F1] hover:bg-[#D4AF37] hover:text-[#12372A] px-8 py-3 text-xs font-bold uppercase tracking-widest rounded-xl transition-all shadow-md inline-flex items-center gap-2"
+                    >
+                      <span>Load More Artisanal Pieces</span>
+                      <span className="text-[10px] text-[#E8DDC7] bg-black/30 px-2 py-0.5 rounded-full">
+                        {filteredProducts.length - visibleCount} remaining
+                      </span>
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>

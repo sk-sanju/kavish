@@ -4,8 +4,9 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
  * Utility to compress, optimize, and upload image files
  */
 const VALID_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.svg', '.gif', '.bmp', '.avif', '.jfif', '.heic'];
+const MAX_UPLOAD_FILE_SIZE = 25 * 1024 * 1024; // 25 MB max raw input
 
-function isImageFile(file: File): boolean {
+export function isImageFile(file: File): boolean {
   if (file.type && file.type.startsWith('image/')) return true;
   const fileName = (file.name || '').toLowerCase();
   return VALID_IMAGE_EXTENSIONS.some((ext) => fileName.endsWith(ext));
@@ -16,12 +17,12 @@ function isImageFile(file: File): boolean {
  */
 export async function compressImageToBlob(
   file: File,
-  maxWidth = 1000,
-  maxHeight = 1000,
-  quality = 0.75
+  maxWidth = 1600,
+  maxHeight = 1600,
+  quality = 0.82
 ): Promise<{ blob: Blob; mimeType: string }> {
-  // If SVG or very small, keep as is
-  if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg') || file.size < 50 * 1024) {
+  // If SVG or small vector, keep as is
+  if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg') || file.size < 40 * 1024) {
     return { blob: file, mimeType: file.type || 'image/jpeg' };
   }
 
@@ -53,6 +54,9 @@ export async function compressImageToBlob(
           return;
         }
 
+        // Use high quality image smoothing
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, width, height);
 
         // Prefer modern WebP format
@@ -94,12 +98,16 @@ export async function compressImageToBlob(
 export async function uploadImageFile(
   file: File,
   folder = 'uploads',
-  maxWidth = 1000,
-  maxHeight = 1000,
-  quality = 0.75
+  maxWidth = 1600,
+  maxHeight = 1600,
+  quality = 0.82
 ): Promise<string> {
   if (!isImageFile(file)) {
-    throw new Error(`"${file.name || 'File'}" is not a supported image (JPG, PNG, WebP, SVG, etc.).`);
+    throw new Error(`"${file.name || 'File'}" is not a supported image (JPG, PNG, WebP, SVG, AVIF, etc.).`);
+  }
+
+  if (file.size > MAX_UPLOAD_FILE_SIZE) {
+    throw new Error(`"${file.name}" exceeds the maximum 25MB file size limit.`);
   }
 
   // Pre-compress file into lightweight WebP/JPEG blob
@@ -124,7 +132,7 @@ export async function uploadImageFile(
       const { data, error } = await supabase.storage
         .from('store-media')
         .upload(cleanFileName, uploadBlob, {
-          cacheControl: '31536000', // 1 year immutable cache
+          cacheControl: '31536000, public, immutable', // 1 year immutable browser & CDN caching
           upsert: true,
           contentType: mimeType
         });
@@ -142,8 +150,8 @@ export async function uploadImageFile(
     }
   }
 
-  // 2. Fallback: Compress image to compact Data URL
-  return readImageFileAsDataUrl(file, maxWidth, maxHeight, quality);
+  // 2. Fallback: Compress image to compact Data URL (constrained to smaller dimensions to avoid local storage overflow)
+  return readImageFileAsDataUrl(file, Math.min(maxWidth, 1000), Math.min(maxHeight, 1000), 0.75);
 }
 
 export async function readImageFileAsDataUrl(
@@ -166,7 +174,7 @@ export async function readImageFileAsDataUrl(
         return;
       }
 
-      if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg') || file.size < 50 * 1024) {
+      if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg') || file.size < 40 * 1024) {
         resolve(result);
         return;
       }
@@ -192,6 +200,8 @@ export async function readImageFileAsDataUrl(
             return;
           }
 
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
           ctx.drawImage(img, 0, 0, width, height);
 
           // Try WebP first for smallest data payload

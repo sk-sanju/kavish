@@ -5,6 +5,7 @@ import logoImg from '../assets/logo.png';
 import { useAuth } from '../context/AuthContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { POLICY_CONFIG } from '../config/policyConfig';
+import { OptimizedImage } from '../components/common/OptimizedImage';
 import type { Order } from '../types';
 
 export const OrderSuccess: React.FC = () => {
@@ -147,10 +148,12 @@ export const OrderSuccess: React.FC = () => {
                 <div key={idx} className="py-3 flex justify-between items-center text-xs">
                   <div className="flex items-center gap-3">
                     {item.product.images?.[0] && (
-                      <img
+                      <OptimizedImage
                         src={item.product.images[0]}
                         alt={item.product.name}
-                        className="w-12 h-16 object-cover rounded-lg border border-[#E8DDC7]"
+                        preset="thumbnail"
+                        aspectRatio="3/4"
+                        containerClassName="w-12 h-16 rounded-lg border border-[#E8DDC7] shrink-0"
                       />
                     )}
                     <div>

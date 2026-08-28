@@ -6,6 +6,7 @@ import { useProducts } from '../../context/ProductContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { useAdmin } from '../../context/AdminContext';
 import { ProductEditorModal } from './ProductEditorModal';
+import { OptimizedImage } from '../common/OptimizedImage';
 import type { Product } from '../../types';
 
 export const ProductManagement: React.FC = () => {
@@ -229,10 +230,12 @@ export const ProductManagement: React.FC = () => {
 
                     <td className="p-3.5">
                       <div className="flex items-center gap-3">
-                        <img
+                        <OptimizedImage
                           src={p.images[0]}
                           alt={p.name}
-                          className="w-10 h-12 object-cover rounded-lg bg-[#FAF8F1] border border-[#E8DDC7]"
+                          preset="thumbnail"
+                          aspectRatio="3/4"
+                          containerClassName="w-10 h-12 rounded-lg bg-[#FAF8F1] border border-[#E8DDC7] shrink-0"
                         />
                         <div>
                           <h4 className="font-bold text-[#12372A] text-xs line-clamp-1">{p.name}</h4>

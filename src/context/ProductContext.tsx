@@ -54,12 +54,12 @@ interface ProductContextType {
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-const PRODUCTS_STORAGE_KEY = 'kavish_live_products_v1';
-const CATEGORIES_STORAGE_KEY = 'kavish_live_categories_v1';
-const OFFERS_STORAGE_KEY = 'kavish_live_offers_v1';
-const COLLECTIONS_STORAGE_KEY = 'kavish_live_collections_v1';
-const REVIEWS_STORAGE_KEY = 'kavish_live_reviews_v1';
-const ANNOUNCEMENT_STORAGE_KEY = 'kavish_live_announcement_v1';
+const PRODUCTS_STORAGE_KEY = 'kavish_db_products_v2';
+const CATEGORIES_STORAGE_KEY = 'kavish_db_categories_v2';
+const OFFERS_STORAGE_KEY = 'kavish_db_offers_v2';
+const COLLECTIONS_STORAGE_KEY = 'kavish_db_collections_v2';
+const REVIEWS_STORAGE_KEY = 'kavish_db_reviews_v2';
+const ANNOUNCEMENT_STORAGE_KEY = 'kavish_db_announcement_v2';
 
 function safeStoreProducts(productsToStore: Product[]) {
   try {
@@ -85,7 +85,10 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const saved = localStorage.getItem(PRODUCTS_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const genuine = parsed.filter(p => !p.id.startsWith('kav-'));
+          if (genuine.length > 0) return genuine;
+        }
       }
     } catch (e) {
       console.error('Failed to parse saved products:', e);

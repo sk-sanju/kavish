@@ -7,6 +7,7 @@ import { useProducts } from '../../context/ProductContext';
 import { useAuth } from '../../context/AuthContext';
 import { useAdmin } from '../../context/AdminContext';
 import { useCurrency } from '../../context/CurrencyContext';
+import { OptimizedImage } from '../common/OptimizedImage';
 import type { AdminTab } from './AdminLayout';
 import type { Order } from '../../types';
 
@@ -726,10 +727,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
               topProducts.map(p => (
                 <div key={p.id} className="p-3 bg-[#FAF8F1] border border-[#E8DDC7] rounded-2xl flex items-center justify-between text-xs gap-3 hover:border-[#D4AF37] transition-all">
                   <div className="flex items-center gap-3">
-                    <img
-                      src={p.images?.[0] || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=300&q=80'}
+                    <OptimizedImage
+                      src={p.images?.[0]}
                       alt={p.name}
-                      className="w-10 h-12 object-cover rounded-lg bg-white border border-[#E8DDC7]"
+                      preset="thumbnail"
+                      aspectRatio="3/4"
+                      containerClassName="w-10 h-12 rounded-lg bg-white border border-[#E8DDC7] shrink-0"
                     />
                     <div>
                       <h4 className="font-bold text-[#12372A] line-clamp-1">{p.name}</h4>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ShoppingBag, Trash2, ArrowRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useCurrency } from '../context/CurrencyContext';
+import { OptimizedImage } from '../components/common/OptimizedImage';
 
 interface CartPageProps {
   onProceedToCheckout: () => void;
@@ -76,7 +77,13 @@ export const CartPage: React.FC<CartPageProps> = ({ onProceedToCheckout }) => {
                 {cart.map(item => (
                   <div key={item.id} className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex gap-4">
-                      <img src={item.product.images[0]} alt={item.product.name} className="w-20 aspect-[3/4] object-cover bg-[#FAF8F1] rounded-xl" />
+                      <OptimizedImage
+                        src={item.product.images[0]}
+                        alt={item.product.name}
+                        preset="thumbnail"
+                        aspectRatio="3/4"
+                        containerClassName="w-20 aspect-[3/4] rounded-xl shrink-0"
+                      />
                       <div>
                         <h4 className="font-serif font-bold text-base text-[#12372A]">{item.product.name}</h4>
                         <p className="text-xs text-[#6B5846]">{item.product.subtitle}</p>

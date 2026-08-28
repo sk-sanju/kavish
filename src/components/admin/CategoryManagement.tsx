@@ -8,6 +8,7 @@ import type { CategoryItem, ProductCategory } from '../../types';
 import { useProducts } from '../../context/ProductContext';
 import { INITIAL_CATEGORIES } from '../../data/categories';
 import { uploadImageFile } from '../../utils/fileUpload';
+import { OptimizedImage } from '../common/OptimizedImage';
 
 export const DEFAULT_CATEGORIES = INITIAL_CATEGORIES;
 
@@ -293,12 +294,14 @@ export const CategoryManagement: React.FC = () => {
               >
                 <div>
                   <div className="h-44 relative overflow-hidden bg-[#FAF8F1]">
-                    <img
-                      src={cat.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80'}
+                    <OptimizedImage
+                      src={cat.image}
                       alt={cat.name}
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      preset="card"
+                      containerClassName="w-full h-full"
+                      imageClassName="transform group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent z-10" />
                     
                     <span className="absolute top-3 right-3 bg-[#12372A] text-[#D4AF37] text-[10px] uppercase font-bold px-2.5 py-1 rounded-full border border-[#D4AF37] shadow-sm">
                       {cat.parentCategory}
@@ -436,8 +439,13 @@ export const CategoryManagement: React.FC = () => {
                 {/* Live Preview If Image Exists */}
                 {form.image ? (
                   <div className="relative h-36 rounded-2xl overflow-hidden border border-[#E8DDC7] group shadow-xs">
-                    <img src={form.image} alt="Category Banner Preview" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3">
+                    <OptimizedImage
+                      src={form.image}
+                      alt="Category Banner Preview"
+                      preset="card"
+                      containerClassName="w-full h-full"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3 z-10">
                       <p className="text-white text-xs font-bold font-serif">{form.name || 'Category Name Preview'}</p>
                     </div>
                     <div className="absolute top-2 right-2 flex gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
