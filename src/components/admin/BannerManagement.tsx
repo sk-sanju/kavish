@@ -13,19 +13,19 @@ import { OptimizedImage } from '../common/OptimizedImage';
 const PRESET_BANNER_IMAGES = [
   {
     name: 'Royal Kasavu Saree Edit',
-    url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1800&q=90'
+    url: '/assets/banners/hero_kavish.jpg'
   },
   {
     name: 'Gold Zari Festive Legacy',
-    url: 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1800&q=90'
+    url: '/assets/banners/hero_festive.jpg'
   },
   {
     name: 'Kerala Linen & Mundu',
-    url: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1800&q=90'
+    url: '/assets/banners/hero_men.jpg'
   },
   {
     name: 'Bridal Heritage Weave',
-    url: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1800&q=90'
+    url: '/assets/categories/bridal_festive.jpg'
   }
 ];
 
@@ -55,7 +55,7 @@ export const BannerManagement: React.FC = () => {
     tag: 'Atelier Signature Edit',
     title: '500 Years of\nKuthampully Handloom\nMastery',
     subtitle: 'Royal Kasavu Sarees & Unbleached European Linen Woven for Modern Royalty',
-    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1800&q=90',
+    image: '/assets/banners/hero_kavish.jpg',
     primaryCtaText: 'Shop Collection',
     primaryCtaLink: 'shop',
     secondaryCtaText: 'Explore Our Story',
@@ -100,7 +100,7 @@ export const BannerManagement: React.FC = () => {
       tag: 'New Collection Campaign',
       title: 'Heirloom Kasavu\nHandwoven with Pride',
       subtitle: 'Discover authentic Kuthampully handloom craft, certified GI tag quality, and regal gold zari borders.',
-      image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1800&q=90',
+      image: '/assets/banners/hero_kavish.jpg',
       primaryCtaText: 'Shop Collection',
       primaryCtaLink: 'shop',
       secondaryCtaText: 'Explore Our Story',
@@ -741,7 +741,7 @@ export const BannerManagement: React.FC = () => {
                     type="text"
                     value={form.image || ''}
                     onChange={(e) => setForm({ ...form, image: e.target.value })}
-                    placeholder="https://images.unsplash.com/photo-... or image URL / base64"
+                    placeholder="/assets/banners/... or image URL / base64"
                     className="w-full border border-[#E8DDC7] p-2 rounded-xl bg-[#FAF8F1] text-xs font-mono"
                   />
                 </div>

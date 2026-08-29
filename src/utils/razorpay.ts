@@ -142,7 +142,7 @@ export const initializeRazorpayPayment = async (options: RazorpayPaymentOptions)
     currency: options.currencyCode || 'INR',
     name: POLICY_CONFIG.COMPANY_LEGAL_NAME,
     description: `Order #${options.orderId} • Authentic Kuthampully GI Handlooms`,
-    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=150&auto=format&fit=crop&q=80',
+    image: '/assets/logo.png',
     prefill: {
       name: options.customerName,
       email: options.customerEmail || 'customer@kavish.com',

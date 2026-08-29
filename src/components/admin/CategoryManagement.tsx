@@ -29,7 +29,7 @@ export const CategoryManagement: React.FC = () => {
     name: '',
     parentCategory: 'women',
     slug: '',
-    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80',
+    image: '/assets/categories/women_kasavu.jpg',
     description: '',
     seoTitle: '',
     seoDescription: '',
@@ -173,7 +173,7 @@ export const CategoryManagement: React.FC = () => {
                 name: '',
                 parentCategory: 'women',
                 slug: '',
-                image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80',
+                image: '/assets/categories/women_kasavu.jpg',
                 description: '',
                 seoTitle: '',
                 seoDescription: '',
@@ -267,7 +267,7 @@ export const CategoryManagement: React.FC = () => {
                   name: '',
                   parentCategory: 'women',
                   slug: '',
-                  image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80',
+                  image: '/assets/categories/women_kasavu.jpg',
                   description: '',
                   seoTitle: '',
                   seoDescription: '',
@@ -554,7 +554,7 @@ export const CategoryManagement: React.FC = () => {
                     type="text"
                     value={form.image || ''}
                     onChange={(e) => setForm({ ...form, image: e.target.value })}
-                    placeholder="https://images.unsplash.com/... or image data URL"
+                    placeholder="/assets/categories/... or image data URL"
                     className="w-full border border-[#E8DDC7] p-2 rounded-xl bg-[#FAF8F1] text-xs font-mono"
                   />
                 </div>

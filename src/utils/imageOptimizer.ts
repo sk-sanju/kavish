@@ -4,7 +4,7 @@
  */
 
 // Lightweight high quality fallback placeholder image (Kerala handlooms)
-export const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=75&fm=webp';
+export const FALLBACK_IMAGE = '/assets/banners/hero_kavish.jpg';
 
 export type ImagePreset = 'thumbnail' | 'card' | 'detail' | 'banner' | 'avatar' | 'custom';
 

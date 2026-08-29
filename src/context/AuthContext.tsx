@@ -61,51 +61,48 @@ const ADMIN_ACCOUNTS_STORAGE_KEY = 'kavish_all_admin_accounts_v1';
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<UserProfile>(() => {
-    try {
-      const saved = safeStorage.getItem(USER_STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to load user profile:', e);
-    }
-    return DEFAULT_USER;
-  });
-
-  const [isCustomerLoggedIn, setIsCustomerLoggedIn] = useState<boolean>(() => {
-    const saved = safeStorage.getItem(AUTH_STATUS_KEY);
-    return saved !== null ? saved === 'true' : false;
-  });
-
+  const [user, setUser] = useState<UserProfile>(DEFAULT_USER);
+  const [isCustomerLoggedIn, setIsCustomerLoggedIn] = useState<boolean>(false);
   const [isCustomerAuthModalOpen, setIsCustomerAuthModalOpen] = useState(false);
   const [customerAuthMode, setCustomerAuthMode] = useState<'register' | 'login'>('register');
 
   const [selectedTrackingOrder, setSelectedTrackingOrder] = useState<Order | null>(null);
 
   // Admin Profile & dynamic credentials
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => {
-    return safeStorage.getItem('kavish_admin_auth') === 'true';
-  });
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState<boolean>(false);
-  
-  const [adminProfile, setAdminProfile] = useState<AdminProfile>(() => {
+  const [adminProfile, setAdminProfile] = useState<AdminProfile>(DEFAULT_ADMIN_PROFILE);
+
+  useEffect(() => {
     try {
-      const saved = safeStorage.getItem(ADMIN_PROFILE_STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-      const legacyUsername = safeStorage.getItem('kavish_admin_username');
-      const legacyPasscode = safeStorage.getItem('kavish_admin_passcode');
-      if (legacyUsername || legacyPasscode) {
-        return {
-          ...DEFAULT_ADMIN_PROFILE,
-          name: legacyUsername || DEFAULT_ADMIN_PROFILE.name,
-          email: legacyUsername?.includes('@') ? legacyUsername : DEFAULT_ADMIN_PROFILE.email,
-          password: legacyPasscode || DEFAULT_ADMIN_PROFILE.password
-        };
+      const savedUser = safeStorage.getItem(USER_STORAGE_KEY);
+      if (savedUser) setUser(JSON.parse(savedUser));
+
+      const savedAuth = safeStorage.getItem(AUTH_STATUS_KEY);
+      if (savedAuth !== null) setIsCustomerLoggedIn(savedAuth === 'true');
+
+      const savedAdminAuth = safeStorage.getItem('kavish_admin_auth');
+      if (savedAdminAuth === 'true') setIsAdminLoggedIn(true);
+
+      const savedAdminProf = safeStorage.getItem(ADMIN_PROFILE_STORAGE_KEY);
+      if (savedAdminProf) {
+        setAdminProfile(JSON.parse(savedAdminProf));
+      } else {
+        const legacyUsername = safeStorage.getItem('kavish_admin_username');
+        const legacyPasscode = safeStorage.getItem('kavish_admin_passcode');
+        if (legacyUsername || legacyPasscode) {
+          setAdminProfile({
+            ...DEFAULT_ADMIN_PROFILE,
+            name: legacyUsername || DEFAULT_ADMIN_PROFILE.name,
+            email: legacyUsername?.includes('@') ? legacyUsername : DEFAULT_ADMIN_PROFILE.email,
+            password: legacyPasscode || DEFAULT_ADMIN_PROFILE.password
+          });
+        }
       }
     } catch (e) {
-      console.error('Failed to load admin profile:', e);
+      console.error('Failed to load storage in AuthProvider:', e);
     }
-    return DEFAULT_ADMIN_PROFILE;
-  });
+  }, []);
 
   const adminUsername = adminProfile.name || adminProfile.email;
   const adminPasscode = adminProfile.password || 'admin';

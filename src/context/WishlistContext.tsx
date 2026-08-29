@@ -13,14 +13,26 @@ interface WishlistContextType {
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [wishlist, setWishlist] = useState<Product[]>(() => {
-    const saved = safeStorage.getItem('kavish_wishlist');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [wishlist, setWishlist] = useState<Product[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    safeStorage.setItem('kavish_wishlist', JSON.stringify(wishlist));
-  }, [wishlist]);
+    try {
+      const saved = safeStorage.getItem('kavish_wishlist');
+      if (saved) {
+        setWishlist(JSON.parse(saved));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      safeStorage.setItem('kavish_wishlist', JSON.stringify(wishlist));
+    }
+  }, [wishlist, isLoaded]);
 
   const toggleWishlist = (product: Product) => {
     setWishlist(prev => {

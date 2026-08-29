@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     siteName: 'Kavish Kerala Handlooms',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1200&auto=format&fit=crop&q=80',
+        url: '/assets/banners/hero_kavish.jpg',
         width: 1200,
         height: 630,
         alt: 'Kavish Authentic Kerala Handlooms',
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     title: 'Kavish — Authentic Kerala Handlooms',
     description:
       'Authentic GI-certified Kuthampully handloom Kasavu sarees, double mundus, and luxury linen shirts.',
-    images: ['https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1200&auto=format&fit=crop&q=80'],
+    images: ['/assets/banners/hero_kavish.jpg'],
   },
   icons: {
     icon: '/assets/logo.png',
@@ -70,7 +70,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Google Fonts preconnects */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -109,7 +109,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-[#FAF8F1] text-[#171717] antialiased selection:bg-[#D4AF37] selection:text-white">
+      <body className="bg-[#FAF8F1] text-[#171717] antialiased selection:bg-[#D4AF37] selection:text-white" suppressHydrationWarning>
         {/* Razorpay Checkout SDK */}
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"

@@ -36,7 +36,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
     isNew: product?.isNew ?? true,
     isBestSeller: product?.isBestSeller ?? false,
     isFeatured: product?.isFeatured ?? true,
-    images: product?.images?.length ? product?.images : ['https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80'],
+    images: product?.images?.length ? product?.images : ['/assets/categories/women_kasavu.jpg'],
     sizes: product?.sizes?.length ? product?.sizes : ['38 (S)', '40 (M)', '42 (L)', '44 (XL)'],
     colors: product?.colors?.length ? product?.colors : [{ name: 'Kasavu Gold', hex: '#D4AF37' }, { name: 'Royal Cream', hex: '#FAF8F1' }],
     fabric: product?.fabric || '100% Organic Cotton & 24k Zari',
@@ -68,7 +68,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
         isNew: product.isNew ?? true,
         isBestSeller: product.isBestSeller ?? false,
         isFeatured: product.isFeatured ?? true,
-        images: product.images?.length ? product.images : ['https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80'],
+        images: product.images?.length ? product.images : ['/assets/categories/women_kasavu.jpg'],
         sizes: product.sizes?.length ? product.sizes : ['38 (S)', '40 (M)', '42 (L)', '44 (XL)'],
         colors: product.colors?.length ? product.colors : [{ name: 'Kasavu Gold', hex: '#D4AF37' }, { name: 'Royal Cream', hex: '#FAF8F1' }],
         fabric: product.fabric || '100% Organic Cotton & 24k Zari',
@@ -635,7 +635,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    placeholder="https://images.unsplash.com/... or cloud image link"
+                    placeholder="/assets/... or cloud image link"
                     value={newImageUrl}
                     onChange={(e) => setNewImageUrl(e.target.value)}
                     onKeyDown={(e) => {

@@ -1,7 +1,6 @@
 import React from 'react';
 import { HeroSection } from '../components/home/HeroSection';
 import { CategoryShowcase } from '../components/home/CategoryShowcase';
-import { FeaturedCollections } from '../components/home/FeaturedCollections';
 import { HeritageSpotlight } from '../components/home/HeritageSpotlight';
 import { CuratedProducts } from '../components/home/CuratedProducts';
 import { EditorialQuotes } from '../components/home/EditorialQuotes';
@@ -18,7 +17,6 @@ export const Home: React.FC<HomeProps> = ({ onSelectProduct, onNavigate }) => {
     <div className="animate-fadeIn">
       <HeroSection onNavigate={onNavigate} />
       <CategoryShowcase onNavigate={onNavigate} />
-      <FeaturedCollections onNavigate={onNavigate} />
       <HeritageSpotlight onNavigate={onNavigate} />
       <CuratedProducts onSelectProduct={onSelectProduct} onNavigate={onNavigate} />
       <EditorialQuotes />

@@ -36,24 +36,30 @@ export const DEFAULT_SHIPPING_CONFIG: ShippingConfig = {
 };
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    const saved = safeStorage.getItem('kavish_cart');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [appliedPromoCode, setAppliedPromoCode] = useState<string | null>(null);
   const [discountPercent, setDiscountPercent] = useState<number>(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [shippingConfig, setShippingConfig] = useState<ShippingConfig>(DEFAULT_SHIPPING_CONFIG);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const [shippingConfig, setShippingConfig] = useState<ShippingConfig>(() => {
+  // Load from local storage after client mount
+  useEffect(() => {
     try {
-      const saved = safeStorage.getItem(SHIPPING_STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
+      const savedCart = safeStorage.getItem('kavish_cart');
+      if (savedCart) {
+        setCart(JSON.parse(savedCart));
+      }
+      const savedShipping = safeStorage.getItem(SHIPPING_STORAGE_KEY);
+      if (savedShipping) {
+        setShippingConfig(JSON.parse(savedShipping));
+      }
     } catch (e) {
       console.error(e);
     }
-    return DEFAULT_SHIPPING_CONFIG;
-  });
+    setIsLoaded(true);
+  }, []);
 
   // Load from Supabase across all devices & store views
   useEffect(() => {
@@ -100,8 +106,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    safeStorage.setItem('kavish_cart', JSON.stringify(cart));
-  }, [cart]);
+    if (isLoaded) {
+      safeStorage.setItem('kavish_cart', JSON.stringify(cart));
+    }
+  }, [cart, isLoaded]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);

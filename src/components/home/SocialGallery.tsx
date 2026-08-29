@@ -3,12 +3,12 @@ import { ArrowUpRight } from 'lucide-react';
 import { OptimizedImage } from '../common/OptimizedImage';
 
 const INSTA_IMAGES = [
-  'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=400&q=75',
-  'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=400&q=75',
-  'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=400&q=75',
-  'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=400&q=75',
-  'https://images.unsplash.com/photo-1583391733956-6c78276477e2?auto=format&fit=crop&w=400&q=75',
-  'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?auto=format&fit=crop&w=400&q=75',
+  '/assets/gallery/gallery_01.jpg',
+  '/assets/gallery/gallery_02.jpg',
+  '/assets/gallery/gallery_03.jpg',
+  '/assets/gallery/gallery_04.jpg',
+  '/assets/categories/women_kasavu.jpg',
+  '/assets/categories/kids_ethnic.jpg',
 ];
 
 const InstagramIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (

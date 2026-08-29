@@ -19,9 +19,9 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   const title = `${product.name} — ${product.subcategory}`;
   const description = `${product.subtitle || product.name} crafted in authentic ${product.fabric}. ₹${product.price.toLocaleString('en-IN')} with complimentary delivery.`;
-  const primaryImage = product.images?.[0]?.startsWith('http')
+  const primaryImage = (product.images?.[0]?.startsWith('http') || product.images?.[0]?.startsWith('data:') || product.images?.[0]?.startsWith('/'))
     ? product.images[0]
-    : 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1200&auto=format&fit=crop&q=80';
+    : '/assets/banners/hero_kavish.jpg';
 
   return {
     title,

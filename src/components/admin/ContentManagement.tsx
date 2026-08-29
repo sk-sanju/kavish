@@ -423,7 +423,7 @@ export const ContentManagement: React.FC = () => {
                   type="text"
                   value={form.bannerImage || ''}
                   onChange={(e) => setForm({ ...form, bannerImage: e.target.value })}
-                  placeholder="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1800&q=90"
+                  placeholder="/assets/banners/hero_kavish.jpg"
                   className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] text-xs font-mono"
                 />
                 <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FAF8F1] border border-[#E8DDC7] hover:border-[#D4AF37] rounded-xl text-xs font-semibold text-[#12372A] cursor-pointer transition-all">

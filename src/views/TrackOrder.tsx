@@ -73,7 +73,7 @@ export const TrackOrder: React.FC = () => {
                 rating: 5.0,
                 reviewCount: 42,
                 inStock: true,
-                images: ['https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&auto=format&fit=crop&q=80'],
+                images: ['/assets/categories/women_kasavu.jpg'],
                 sizes: ['Free Size (6.25m with Blouse)'],
                 colors: [{ name: 'Cream & Gold', hex: '#FAF8F1' }],
                 fabric: 'Pure Organic Kuthampully Cotton & Gold Zari',
