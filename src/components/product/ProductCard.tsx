@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Heart, Star, Eye, ShoppingBag } from 'lucide-react';
 import type { Product } from '../../types';
 import { useCart } from '../../context/CartContext';
@@ -18,7 +18,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { openQuickView } = useModal();
   const { formatPrice } = useCurrency();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const isFavorite = isInWishlist(product.id);
 
@@ -37,7 +36,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
     openQuickView(product);
   };
 
-  const rawImg = product.images[currentImageIndex] || product.images[0];
+  const primaryImg = product.images?.[0] || '';
+  const secondaryImg = product.images?.[1];
   const altText = `${product.name} - ${product.fabric} - Kavish Kuthampully`;
 
   return (
@@ -46,20 +46,33 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
       className="group cursor-pointer bg-white border border-[#E8DDC7]/70 hover:border-[#D4AF37] rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col justify-between relative transform hover:-translate-y-1.5"
     >
       {/* Image Stage Container */}
-      <div
-        className="relative aspect-[3/4] overflow-hidden bg-[#FAF8F1] rounded-t-2xl"
-        onMouseEnter={() => product.images[1] && setCurrentImageIndex(1)}
-        onMouseLeave={() => setCurrentImageIndex(0)}
-      >
+      <div className="relative aspect-[3/4] overflow-hidden bg-[#FAF8F1] rounded-t-2xl">
+        {/* Primary Product Image */}
         <OptimizedImage
-          src={rawImg}
+          src={primaryImg}
           alt={altText}
           preset="card"
           priority={priority}
           aspectRatio="3/4"
           containerClassName="w-full h-full rounded-t-2xl"
-          imageClassName="transition-all duration-700 ease-out group-hover:scale-106"
+          imageClassName="transition-transform duration-700 ease-out group-hover:scale-106"
         />
+
+        {/* Secondary Product Image on Hover */}
+        {secondaryImg && (
+          <div className="absolute inset-0 w-full h-full rounded-t-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-[1]">
+            <OptimizedImage
+              src={secondaryImg}
+              alt={`${altText} - Alternate View`}
+              preset="card"
+              priority={true}
+              aspectRatio="3/4"
+              containerClassName="w-full h-full rounded-t-2xl"
+              imageClassName="transition-transform duration-700 ease-out group-hover:scale-106"
+              showSkeleton={false}
+            />
+          </div>
+        )}
 
         {/* Floating Badges with Smooth Rounded Pill shape */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10 pointer-events-none">

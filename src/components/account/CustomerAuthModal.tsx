@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, UserPlus, LogIn, Sparkles, Truck, Award } from 'lucide-react';
-import logoImg from '../../assets/logo.png';
+const logoImg = '/assets/logo.png';
 import { useAuth } from '../../context/AuthContext';
 
 export const CustomerAuthModal: React.FC = () => {

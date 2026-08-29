@@ -1,7 +1,9 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useRouter, usePathname } from 'next/navigation';
 import { Search, Heart, ShoppingBag, User, Menu, X, ChevronDown, ShieldCheck, LogOut, Globe } from 'lucide-react';
-import logoImg from '../../assets/logo.png';
+const logoImg = '/assets/logo.png';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useModal } from '../../context/ModalContext';
@@ -9,8 +11,8 @@ import { useAuth } from '../../context/AuthContext';
 import { useCurrency } from '../../context/CurrencyContext';
 
 export const Header: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const { itemCount, setIsCartOpen } = useCart();
   const { wishlistCount } = useWishlist();
@@ -39,21 +41,19 @@ export const Header: React.FC = () => {
     setIsMobileMenuOpen(false);
     setActiveDropdown(null);
 
-    if (view === 'home') navigate('/');
-    else if (view === 'shop' && categoryFilter) navigate(`/shop/category/${categoryFilter}`);
-    else if (view === 'shop' && collectionFilter) navigate(`/shop/collection/${collectionFilter}`);
-    else if (view === 'shop') navigate('/shop');
-    else if (view === 'cart') navigate('/cart');
-    else if (view === 'checkout') navigate('/checkout');
-    else if (view === 'wishlist') navigate('/wishlist');
-    else if (view === 'account') navigate('/account');
-    else if (view === 'heritage') navigate('/heritage');
-    else if (view === 'contact') navigate('/contact');
-    else if (view === 'admin') navigate('/admin');
-    else navigate(`/${view}`);
+    if (view === 'home') router.push('/');
+    else if (view === 'shop' && categoryFilter) router.push(`/shop/category/${categoryFilter}`);
+    else if (view === 'shop' && collectionFilter) router.push(`/shop/collection/${collectionFilter}`);
+    else if (view === 'shop') router.push('/shop');
+    else if (view === 'cart') router.push('/cart');
+    else if (view === 'checkout') router.push('/checkout');
+    else if (view === 'wishlist') router.push('/wishlist');
+    else if (view === 'account') router.push('/account');
+    else if (view === 'heritage') router.push('/heritage');
+    else if (view === 'contact') router.push('/contact');
+    else if (view === 'admin') router.push('/admin');
+    else router.push(`/${view}`);
   };
-
-  const pathname = location.pathname;
 
   return (
     <header

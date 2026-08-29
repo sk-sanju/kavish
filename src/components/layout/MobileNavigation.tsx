@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useRouter, usePathname } from 'next/navigation';
 import { Home, ShoppingBag, Search, Heart, User } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -7,21 +9,19 @@ import { useModal } from '../../context/ModalContext';
 import { useAuth } from '../../context/AuthContext';
 
 export const MobileNavigation: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const { itemCount, setIsCartOpen } = useCart();
   const { wishlistCount } = useWishlist();
   const { setIsSearchOpen } = useModal();
   const { isCustomerLoggedIn, openCustomerAuthModal } = useAuth();
 
-  const pathname = location.pathname;
-
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#FAF8F1] shadow-2xl py-2 px-3 flex items-center justify-around text-[10px] uppercase tracking-wider font-semibold text-[#171717] glass-header">
       
       <button
-        onClick={() => navigate('/')}
+        onClick={() => router.push('/')}
         className={`flex flex-col items-center gap-1 transition-colors py-1 ${
           pathname === '/' ? 'text-[#12372A] font-bold' : 'hover:text-[#D4AF37]'
         }`}
@@ -31,7 +31,7 @@ export const MobileNavigation: React.FC = () => {
       </button>
 
       <button
-        onClick={() => navigate('/shop')}
+        onClick={() => router.push('/shop')}
         className={`flex flex-col items-center gap-1 transition-colors py-1 ${
           pathname.startsWith('/shop') ? 'text-[#12372A] font-bold' : 'hover:text-[#D4AF37]'
         }`}
@@ -49,7 +49,7 @@ export const MobileNavigation: React.FC = () => {
       </button>
 
       <button
-        onClick={() => navigate('/wishlist')}
+        onClick={() => router.push('/wishlist')}
         className={`flex flex-col items-center gap-1 transition-colors relative py-1 ${
           pathname === '/wishlist' ? 'text-[#12372A] font-bold' : 'hover:text-[#D4AF37]'
         }`}
@@ -83,7 +83,7 @@ export const MobileNavigation: React.FC = () => {
       <button
         onClick={() => {
           if (isCustomerLoggedIn) {
-            navigate('/account');
+            router.push('/account');
           } else {
             openCustomerAuthModal('register');
           }

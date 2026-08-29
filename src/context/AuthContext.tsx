@@ -1,3 +1,4 @@
+import { safeStorage } from '../utils/storage';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { UserProfile, Order, Address, AdminProfile } from '../types';
 import { fetchSupabaseOrders, upsertSupabaseOrder } from '../lib/supabase';
@@ -45,8 +46,8 @@ const DEFAULT_USER: UserProfile = {
 };
 
 const DEFAULT_ADMIN_PROFILE: AdminProfile = {
-  phone: '+91 98470 12345', // Primary Key (PK)
-  name: 'Kavish Master Admin',
+  phone: '+91 98470 12345',
+  name: 'Sanjay Suresh',
   email: 'admin@kavishhandlooms.com',
   password: 'admin',
   role: 'Super Admin'
@@ -62,7 +63,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile>(() => {
     try {
-      const saved = localStorage.getItem(USER_STORAGE_KEY);
+      const saved = safeStorage.getItem(USER_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error('Failed to load user profile:', e);
@@ -71,7 +72,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [isCustomerLoggedIn, setIsCustomerLoggedIn] = useState<boolean>(() => {
-    const saved = localStorage.getItem(AUTH_STATUS_KEY);
+    const saved = safeStorage.getItem(AUTH_STATUS_KEY);
     return saved !== null ? saved === 'true' : false;
   });
 
@@ -82,16 +83,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Admin Profile & dynamic credentials
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => {
-    return localStorage.getItem('kavish_admin_auth') === 'true';
+    return safeStorage.getItem('kavish_admin_auth') === 'true';
   });
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState<boolean>(false);
   
   const [adminProfile, setAdminProfile] = useState<AdminProfile>(() => {
     try {
-      const saved = localStorage.getItem(ADMIN_PROFILE_STORAGE_KEY);
+      const saved = safeStorage.getItem(ADMIN_PROFILE_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
-      const legacyUsername = localStorage.getItem('kavish_admin_username');
-      const legacyPasscode = localStorage.getItem('kavish_admin_passcode');
+      const legacyUsername = safeStorage.getItem('kavish_admin_username');
+      const legacyPasscode = safeStorage.getItem('kavish_admin_passcode');
       if (legacyUsername || legacyPasscode) {
         return {
           ...DEFAULT_ADMIN_PROFILE,
@@ -111,7 +112,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const getStoredAdminAccounts = (): AdminProfile[] => {
     try {
-      const list = localStorage.getItem(ADMIN_ACCOUNTS_STORAGE_KEY);
+      const list = safeStorage.getItem(ADMIN_ACCOUNTS_STORAGE_KEY);
       if (list) return JSON.parse(list);
     } catch (e) {
       console.error(e);
@@ -129,9 +130,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     setAdminProfile(updated);
     try {
-      localStorage.setItem(ADMIN_PROFILE_STORAGE_KEY, JSON.stringify(updated));
-      localStorage.setItem('kavish_admin_username', updated.name);
-      localStorage.setItem('kavish_admin_passcode', updated.password || 'admin');
+      safeStorage.setItem(ADMIN_PROFILE_STORAGE_KEY, JSON.stringify(updated));
+      safeStorage.setItem('kavish_admin_username', updated.name);
+      safeStorage.setItem('kavish_admin_passcode', updated.password || 'admin');
 
       // Update accounts directory
       const accounts = getStoredAdminAccounts();
@@ -141,7 +142,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         accounts.push(updated);
       }
-      localStorage.setItem(ADMIN_ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts));
+      safeStorage.setItem(ADMIN_ACCOUNTS_STORAGE_KEY, JSON.stringify(accounts));
     } catch (e) {
       console.error('Failed to save admin profile:', e);
     }
@@ -163,7 +164,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     updateAdminProfile(newAdmin);
     setIsAdminLoggedIn(true);
-    localStorage.setItem('kavish_admin_auth', 'true');
+    safeStorage.setItem('kavish_admin_auth', 'true');
     setIsAdminLoginModalOpen(false);
     return true;
   };
@@ -181,8 +182,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(updatedUser);
     setIsCustomerLoggedIn(isLoggedIn);
     try {
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
-      localStorage.setItem(AUTH_STATUS_KEY, String(isLoggedIn));
+      safeStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
+      safeStorage.setItem(AUTH_STATUS_KEY, String(isLoggedIn));
     } catch (e) {
       console.error('Failed to save customer data:', e);
     }
@@ -237,7 +238,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logoutCustomer = () => {
     setIsCustomerLoggedIn(false);
-    localStorage.setItem(AUTH_STATUS_KEY, 'false');
+    safeStorage.setItem(AUTH_STATUS_KEY, 'false');
   };
 
   const loginAdmin = (identifier: string, password?: string): boolean => {
@@ -253,7 +254,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         cleanId === 'admin'
       ) {
         setIsAdminLoggedIn(true);
-        localStorage.setItem('kavish_admin_auth', 'true');
+        safeStorage.setItem('kavish_admin_auth', 'true');
         setIsAdminLoginModalOpen(false);
         return true;
       }
@@ -285,11 +286,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (isMatch && isPassCorrect) {
         setAdminProfile(acc);
-        localStorage.setItem(ADMIN_PROFILE_STORAGE_KEY, JSON.stringify(acc));
-        localStorage.setItem('kavish_admin_username', acc.name);
-        localStorage.setItem('kavish_admin_passcode', acc.password || 'admin');
+        safeStorage.setItem(ADMIN_PROFILE_STORAGE_KEY, JSON.stringify(acc));
+        safeStorage.setItem('kavish_admin_username', acc.name);
+        safeStorage.setItem('kavish_admin_passcode', acc.password || 'admin');
         setIsAdminLoggedIn(true);
-        localStorage.setItem('kavish_admin_auth', 'true');
+        safeStorage.setItem('kavish_admin_auth', 'true');
         setIsAdminLoginModalOpen(false);
         return true;
       }
@@ -301,7 +302,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       (lowerInputPass === 'admin' || lowerInputPass === 'admin123' || lowerInputPass === 'kavish')
     ) {
       setIsAdminLoggedIn(true);
-      localStorage.setItem('kavish_admin_auth', 'true');
+      safeStorage.setItem('kavish_admin_auth', 'true');
       setIsAdminLoginModalOpen(false);
       return true;
     }
@@ -311,7 +312,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logoutAdmin = () => {
     setIsAdminLoggedIn(false);
-    localStorage.removeItem('kavish_admin_auth');
+    safeStorage.removeItem('kavish_admin_auth');
   };
 
   useEffect(() => {
@@ -321,7 +322,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(prev => {
           const updated = { ...prev, orders: dbOrders };
           try {
-            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updated));
+            safeStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updated));
           } catch (e) {
             console.error(e);
           }

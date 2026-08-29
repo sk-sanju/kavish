@@ -66,7 +66,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ onAdminLoginSu
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block text-[#6B5846] font-semibold mb-1">Admin Email / Phone (PK) *</label>
+            <label className="block text-[#6B5846] font-semibold mb-1">Admin Email / Phone *</label>
             <div className="relative">
               <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
               <input

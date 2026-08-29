@@ -58,14 +58,21 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   onError,
   ...rest
 }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const isDataOrBlob = typeof src === 'string' && (src.startsWith('data:') || src.startsWith('blob:'));
+  const [isLoaded, setIsLoaded] = useState(isDataOrBlob);
   const [hasError, setHasError] = useState(false);
+  const imgRef = React.useRef<HTMLImageElement>(null);
 
-  // Reset loading state when src changes
+  // Check if image is already loaded/cached or reset loading state when src changes
   useEffect(() => {
-    setIsLoaded(false);
-    setHasError(false);
-  }, [src]);
+    if (isDataOrBlob || (imgRef.current?.complete && imgRef.current.naturalWidth > 0)) {
+      setIsLoaded(true);
+      setHasError(false);
+    } else {
+      setIsLoaded(false);
+      setHasError(false);
+    }
+  }, [src, isDataOrBlob]);
 
   const targetSrc = hasError || !src ? fallbackSrc : src;
 
@@ -111,7 +118,6 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   // Attributes for high-performance priority loading vs lazy loading
   const loadingAttr = priority ? 'eager' : 'lazy';
   const decodingAttr = priority ? 'sync' : 'async';
-  // @ts-ignore fetchpriority is standard in modern HTML/React 18.3+
   const fetchPriorityAttr = priority ? 'high' : 'auto';
 
   // Meaningful accessible alt text
@@ -131,14 +137,14 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       )}
 
       <img
+        ref={imgRef}
         src={optimizedUrl}
         srcSet={computedSrcSet}
         sizes={computedSizes}
         alt={cleanAlt}
         loading={loadingAttr}
         decoding={decodingAttr}
-        // @ts-ignore
-        fetchpriority={fetchPriorityAttr}
+        fetchPriority={fetchPriorityAttr}
         onLoad={handleImgLoad}
         onError={handleImgError}
         className={`w-full h-full object-${fit} transition-opacity duration-500 ease-out ${

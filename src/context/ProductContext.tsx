@@ -1,3 +1,4 @@
+import { safeStorage } from '../utils/storage';
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { Product, PromoOffer, Review, CategoryItem } from '../types';
 import { PRODUCTS as INITIAL_PRODUCTS } from '../data/products';
@@ -63,7 +64,7 @@ const ANNOUNCEMENT_STORAGE_KEY = 'kavish_db_announcement_v2';
 
 function safeStoreProducts(productsToStore: Product[]) {
   try {
-    localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(productsToStore));
+    safeStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(productsToStore));
   } catch (err) {
     try {
       // If full multi-megabyte base64 images exceed browser localStorage 5MB quota,
@@ -72,7 +73,7 @@ function safeStoreProducts(productsToStore: Product[]) {
         ...p,
         images: p.images && p.images.length > 0 ? [p.images[0]] : []
       }));
-      localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(lightweight));
+      safeStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(lightweight));
     } catch (innerErr) {
       console.warn('LocalStorage full, in-memory state will be used.');
     }
@@ -82,7 +83,7 @@ function safeStoreProducts(productsToStore: Product[]) {
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>(() => {
     try {
-      const saved = localStorage.getItem(PRODUCTS_STORAGE_KEY);
+      const saved = safeStorage.getItem(PRODUCTS_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -98,7 +99,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const [categories, setCategories] = useState<CategoryItem[]>(() => {
     try {
-      const saved = localStorage.getItem(CATEGORIES_STORAGE_KEY);
+      const saved = safeStorage.getItem(CATEGORIES_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -111,7 +112,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const [offers, setOffers] = useState<PromoOffer[]>(() => {
     try {
-      const saved = localStorage.getItem(OFFERS_STORAGE_KEY);
+      const saved = safeStorage.getItem(OFFERS_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -124,7 +125,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const [collections, setCollections] = useState<CollectionItem[]>(() => {
     try {
-      const saved = localStorage.getItem(COLLECTIONS_STORAGE_KEY);
+      const saved = safeStorage.getItem(COLLECTIONS_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -137,7 +138,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const [reviews, setReviews] = useState<Review[]>(() => {
     try {
-      const saved = localStorage.getItem(REVIEWS_STORAGE_KEY);
+      const saved = safeStorage.getItem(REVIEWS_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -149,7 +150,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   });
 
   const [announcementText, setAnnouncementTextState] = useState<string>(() => {
-    return localStorage.getItem(ANNOUNCEMENT_STORAGE_KEY) || 'Complimentary Express Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified';
+    return safeStorage.getItem(ANNOUNCEMENT_STORAGE_KEY) || 'Complimentary Express Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified';
   });
 
   // Cross-tab and window sync listener
@@ -190,7 +191,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (!isMounted) return;
       const localSavedCategories = (() => {
         try {
-          const saved = localStorage.getItem(CATEGORIES_STORAGE_KEY);
+          const saved = safeStorage.getItem(CATEGORIES_STORAGE_KEY);
           if (saved) {
             const parsed = JSON.parse(saved);
             if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -204,7 +205,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (dbCategories && dbCategories.length > 0) {
         setCategories(dbCategories);
         try {
-          localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbCategories));
+          safeStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbCategories));
         } catch (e) {
           console.error(e);
         }
@@ -218,7 +219,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (!isMounted || dbOffers === null) return;
       setOffers(dbOffers);
       try {
-        localStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(dbOffers));
+        safeStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(dbOffers));
       } catch (e) {
         console.error(e);
       }
@@ -229,7 +230,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (!isMounted || dbReviews === null) return;
       setReviews(dbReviews);
       try {
-        localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(dbReviews));
+        safeStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(dbReviews));
       } catch (e) {
         console.error(e);
       }
@@ -241,7 +242,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (dbStoreContent.announcementText) {
         setAnnouncementTextState(dbStoreContent.announcementText);
         try {
-          localStorage.setItem(ANNOUNCEMENT_STORAGE_KEY, dbStoreContent.announcementText);
+          safeStorage.setItem(ANNOUNCEMENT_STORAGE_KEY, dbStoreContent.announcementText);
         } catch (e) {
           console.error(e);
         }
@@ -249,7 +250,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (dbStoreContent.categories && Array.isArray(dbStoreContent.categories) && dbStoreContent.categories.length > 0) {
         setCategories(dbStoreContent.categories);
         try {
-          localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbStoreContent.categories));
+          safeStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbStoreContent.categories));
         } catch (e) {
           console.error(e);
         }
@@ -269,7 +270,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const saveCategories = useCallback((newCategories: CategoryItem[]) => {
     setCategories(newCategories);
     try {
-      localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(newCategories));
+      safeStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(newCategories));
     } catch (e) {
       console.error('Failed to save categories:', e);
     }
@@ -278,7 +279,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const saveOffers = useCallback((newOffers: PromoOffer[]) => {
     setOffers(newOffers);
     try {
-      localStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(newOffers));
+      safeStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(newOffers));
     } catch (e) {
       console.error('Failed to save offers:', e);
     }
@@ -287,7 +288,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const saveCollections = useCallback((newCollections: CollectionItem[]) => {
     setCollections(newCollections);
     try {
-      localStorage.setItem(COLLECTIONS_STORAGE_KEY, JSON.stringify(newCollections));
+      safeStorage.setItem(COLLECTIONS_STORAGE_KEY, JSON.stringify(newCollections));
     } catch (e) {
       console.error('Failed to save collections:', e);
     }
@@ -296,7 +297,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const saveReviews = useCallback((newReviews: Review[]) => {
     setReviews(newReviews);
     try {
-      localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(newReviews));
+      safeStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(newReviews));
     } catch (e) {
       console.error('Failed to save reviews:', e);
     }
@@ -304,7 +305,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const setAnnouncementText = (text: string) => {
     setAnnouncementTextState(text);
-    localStorage.setItem(ANNOUNCEMENT_STORAGE_KEY, text);
+    safeStorage.setItem(ANNOUNCEMENT_STORAGE_KEY, text);
     fetchSupabaseStoreContent().then(curr => {
       upsertSupabaseStoreContent({
         announcementText: text,
@@ -545,7 +546,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return o;
       });
       try {
-        localStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(updatedOffers));
+        safeStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(updatedOffers));
       } catch (e) {
         console.error(e);
       }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Truck, RefreshCw, Lock, Mail, Phone, MapPin } from 'lucide-react';
-import logoImg from '../../assets/logo.png';
+const logoImg = '/assets/logo.png';
 import { POLICY_CONFIG } from '../../config/policyConfig';
 
 interface FooterProps {

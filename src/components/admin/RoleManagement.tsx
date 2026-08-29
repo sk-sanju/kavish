@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Plus, Trash2, X } from 'lucide-react';
+import { Plus, Trash2, X, Lock, Phone, Eye, EyeOff } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
+import { useAuth } from '../../context/AuthContext';
 import type { AdminUser, AdminRole } from '../../types';
 
 export const RoleManagement: React.FC = () => {
   const { adminUsers, addAdminUser, deleteAdminUser } = useAdmin();
+  const { registerAdmin } = useAuth();
 
   const [showModal, setShowModal] = useState(false);
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState<Partial<AdminUser>>({
     name: '',
     email: '',
@@ -18,15 +23,27 @@ export const RoleManagement: React.FC = () => {
 
   const handleCreateUser = (e: React.FormEvent) => {
     e.preventDefault();
+    const adminName = form.name?.trim() || 'Staff User';
+    const adminEmail = form.email?.trim() || 'staff@kavishhandlooms.com';
+    const adminPhone = phone.trim() || '+91 98470 00000';
+    const adminPass = password.trim() || 'admin123';
+    const adminRole = (form.role as AdminRole) || 'Store Manager';
+
     addAdminUser({
-      name: form.name || 'Staff User',
-      email: form.email || 'staff@kavishhandlooms.com',
-      role: (form.role as AdminRole) || 'Store Manager',
+      name: adminName,
+      email: adminEmail,
+      role: adminRole,
       status: form.status || 'Active',
       permissions: form.permissions || ['all']
     });
+
+    // Also register auth credentials so the new admin can log in
+    registerAdmin(adminName, adminEmail, adminPhone, adminPass, adminRole);
+
     setShowModal(false);
     setForm({ name: '', email: '', role: 'Store Manager', status: 'Active', permissions: [] });
+    setPhone('');
+    setPassword('');
   };
 
   return (
@@ -149,6 +166,39 @@ export const RoleManagement: React.FC = () => {
                   placeholder="weaver@kavishhandlooms.com"
                   className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
                 />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-[#6B5846] mb-1">Phone Number *</label>
+                <input
+                  type="text"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+91 98470 54321"
+                  className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-[#6B5846] mb-1">Initial Login Password *</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter staff login password"
+                    className="w-full border border-[#E8DDC7] p-2.5 pr-10 rounded-xl bg-[#FAF8F1] font-mono"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-2.5 text-gray-400 hover:text-[#12372A] p-0.5 cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
               <div>

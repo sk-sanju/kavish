@@ -1,3 +1,4 @@
+import { safeStorage } from '../utils/storage';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type {
   AuditLog,
@@ -156,7 +157,7 @@ const AdminContext = createContext<AdminContextType | undefined>(undefined);
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>(() => {
     try {
-      const saved = localStorage.getItem(AUDIT_STORAGE_KEY);
+      const saved = safeStorage.getItem(AUDIT_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error(e);
@@ -166,7 +167,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [returnRequests, setReturnRequests] = useState<ReturnRequest[]>(() => {
     try {
-      const saved = localStorage.getItem(RETURNS_STORAGE_KEY);
+      const saved = safeStorage.getItem(RETURNS_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error(e);
@@ -176,7 +177,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>(() => {
     try {
-      const saved = localStorage.getItem(ADMIN_USERS_STORAGE_KEY);
+      const saved = safeStorage.getItem(ADMIN_USERS_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error(e);
@@ -186,7 +187,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [notifications, setNotifications] = useState<StoreNotification[]>(() => {
     try {
-      const saved = localStorage.getItem(NOTIF_STORAGE_KEY);
+      const saved = safeStorage.getItem(NOTIF_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error(e);
@@ -196,7 +197,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [gstConfig, setGstConfig] = useState<GSTConfig>(() => {
     try {
-      const saved = localStorage.getItem(GST_STORAGE_KEY);
+      const saved = safeStorage.getItem(GST_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error(e);
@@ -206,7 +207,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [heroBanners, setHeroBanners] = useState<HeroBanner[]>(() => {
     try {
-      const saved = localStorage.getItem('kavish_hero_banners_v1');
+      const saved = safeStorage.getItem('kavish_hero_banners_v1');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -219,7 +220,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [storeContent, setStoreContent] = useState<StoreContentConfig>(() => {
     try {
-      const saved = localStorage.getItem(CONTENT_STORAGE_KEY);
+      const saved = safeStorage.getItem(CONTENT_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error(e);
@@ -228,7 +229,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   useEffect(() => {
-    const isAdmin = Boolean(localStorage.getItem('kavish_admin_auth'));
+    const isAdmin = Boolean(safeStorage.getItem('kavish_admin_auth'));
     // Only load internal audit logs and return requests if an admin is logged in
     if (isAdmin) {
       fetchSupabaseAuditLogs().then(dbLogs => {
@@ -247,7 +248,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         if (dbContent.heroBanners && Array.isArray(dbContent.heroBanners) && dbContent.heroBanners.length > 0) {
           setHeroBanners(dbContent.heroBanners);
           try {
-            localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(dbContent.heroBanners));
+            safeStorage.setItem('kavish_hero_banners_v1', JSON.stringify(dbContent.heroBanners));
           } catch (e) {
             console.error(e);
           }
@@ -268,7 +269,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           };
           setHeroBanners([liveBanner]);
           try {
-            localStorage.setItem('kavish_hero_banners_v1', JSON.stringify([liveBanner]));
+            safeStorage.setItem('kavish_hero_banners_v1', JSON.stringify([liveBanner]));
           } catch (e) {
             console.error(e);
           }
@@ -279,28 +280,28 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const saveAuditLogs = (newLogs: AuditLog[]) => {
     setAuditLogs(newLogs);
-    localStorage.setItem(AUDIT_STORAGE_KEY, JSON.stringify(newLogs));
+    safeStorage.setItem(AUDIT_STORAGE_KEY, JSON.stringify(newLogs));
   };
 
   const saveReturnRequests = (newReturns: ReturnRequest[]) => {
     setReturnRequests(newReturns);
-    localStorage.setItem(RETURNS_STORAGE_KEY, JSON.stringify(newReturns));
+    safeStorage.setItem(RETURNS_STORAGE_KEY, JSON.stringify(newReturns));
   };
 
   const saveAdminUsers = (users: AdminUser[]) => {
     setAdminUsers(users);
-    localStorage.setItem(ADMIN_USERS_STORAGE_KEY, JSON.stringify(users));
+    safeStorage.setItem(ADMIN_USERS_STORAGE_KEY, JSON.stringify(users));
   };
 
   const saveNotifications = (notifs: StoreNotification[]) => {
     setNotifications(notifs);
-    localStorage.setItem(NOTIF_STORAGE_KEY, JSON.stringify(notifs));
+    safeStorage.setItem(NOTIF_STORAGE_KEY, JSON.stringify(notifs));
   };
 
   const saveHeroBanners = (newBanners: HeroBanner[]) => {
     setHeroBanners(newBanners);
     try {
-      localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(newBanners));
+      safeStorage.setItem('kavish_hero_banners_v1', JSON.stringify(newBanners));
     } catch (e) {
       console.error('Error saving hero banners to localStorage:', e);
     }
@@ -314,7 +315,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
     setStoreContent(updatedContent);
     try {
-      localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(updatedContent));
+      safeStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(updatedContent));
     } catch (e) {
       console.error('Error saving store content to localStorage:', e);
     }
@@ -480,7 +481,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const updateGSTConfig = (config: Partial<GSTConfig>) => {
     const updated = { ...gstConfig, ...config };
     setGstConfig(updated);
-    localStorage.setItem(GST_STORAGE_KEY, JSON.stringify(updated));
+    safeStorage.setItem(GST_STORAGE_KEY, JSON.stringify(updated));
   };
 
   const updateStoreContent = (content: Partial<StoreContentConfig>) => {
@@ -489,7 +490,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (content.heroBanners && Array.isArray(content.heroBanners) && content.heroBanners.length > 0) {
       updatedHeroBanners = content.heroBanners;
       setHeroBanners(updatedHeroBanners);
-      localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(updatedHeroBanners));
+      safeStorage.setItem('kavish_hero_banners_v1', JSON.stringify(updatedHeroBanners));
     } else if (content.heroTitle !== undefined || content.heroSubtitle !== undefined || content.bannerImage !== undefined) {
       const activeIdx = heroBanners.findIndex(b => b.isActive !== false);
       const targetIdx = activeIdx >= 0 ? activeIdx : 0;
@@ -515,12 +516,12 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }];
       }
       setHeroBanners(updatedHeroBanners);
-      localStorage.setItem('kavish_hero_banners_v1', JSON.stringify(updatedHeroBanners));
+      safeStorage.setItem('kavish_hero_banners_v1', JSON.stringify(updatedHeroBanners));
     }
 
     const updated = { ...storeContent, ...content, heroBanners: updatedHeroBanners };
     setStoreContent(updated);
-    localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(updated));
+    safeStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(updated));
     upsertSupabaseStoreContent(updated);
   };
 

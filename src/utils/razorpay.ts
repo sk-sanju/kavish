@@ -1,3 +1,4 @@
+import { safeStorage } from './storage';
 import { POLICY_CONFIG } from '../config/policyConfig';
 
 declare global {
@@ -13,9 +14,11 @@ export const RAZORPAY_LINK_STORAGE_KEY = 'kavish_razorpay_custom_link';
 export const DEFAULT_RAZORPAY_CUSTOM_PAY_LINK = POLICY_CONFIG.RAZORPAY_PORTAL_LINK;
 
 export const getRazorpayPayLink = (): string => {
+  if (typeof window === 'undefined') return DEFAULT_RAZORPAY_CUSTOM_PAY_LINK;
   return (
-    localStorage.getItem(RAZORPAY_LINK_STORAGE_KEY) ||
-    (import.meta.env.VITE_RAZORPAY_PAY_LINK as string) ||
+    safeStorage.getItem(RAZORPAY_LINK_STORAGE_KEY) ||
+    (process.env.NEXT_PUBLIC_RAZORPAY_PAY_LINK as string) ||
+    (process.env.VITE_RAZORPAY_PAY_LINK as string) ||
     DEFAULT_RAZORPAY_CUSTOM_PAY_LINK
   );
 };
@@ -23,14 +26,16 @@ export const getRazorpayPayLink = (): string => {
 export const openCustomRazorpayPayLink = (amount?: number): void => {
   const baseLink = getRazorpayPayLink();
   const targetUrl = amount ? `${baseLink}?amount=${amount}` : baseLink;
-  window.open(targetUrl, '_blank', 'noopener,noreferrer');
+  if (typeof window !== 'undefined') {
+    window.open(targetUrl, '_blank', 'noopener,noreferrer');
+  }
 };
 
 export const DEFAULT_RAZORPAY_KEY = 'rzp_live_TSV51Y5MxvTIMJ';
 
 export const getRazorpayKey = (): string => {
-  const envKey = import.meta.env.VITE_RAZORPAY_KEY_ID as string | undefined;
-  const storedKey = localStorage.getItem(RAZORPAY_KEY_STORAGE_KEY);
+  const envKey = (process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID) as string | undefined;
+  const storedKey = typeof window !== 'undefined' ? safeStorage.getItem(RAZORPAY_KEY_STORAGE_KEY) : null;
 
   if (storedKey && storedKey.trim() !== '' && storedKey !== 'rzp_test_YOUR_KEY_ID') {
     return storedKey.trim();
@@ -42,21 +47,22 @@ export const getRazorpayKey = (): string => {
 };
 
 export const getRazorpaySecret = (): string => {
-  const envSecret = import.meta.env.VITE_RAZORPAY_KEY_SECRET as string | undefined;
+  const envSecret = (process.env.RAZORPAY_KEY_SECRET || process.env.VITE_RAZORPAY_KEY_SECRET) as string | undefined;
+  const storedSecret = typeof window !== 'undefined' ? safeStorage.getItem(RAZORPAY_SECRET_STORAGE_KEY) : null;
   return (
-    localStorage.getItem(RAZORPAY_SECRET_STORAGE_KEY) ||
+    storedSecret ||
     (envSecret && envSecret.trim().length > 0 ? envSecret.trim() : '')
   );
 };
 
 export const setRazorpayConfig = (keyId: string, keySecret?: string, customLink?: string): void => {
-  if (keyId !== undefined) localStorage.setItem(RAZORPAY_KEY_STORAGE_KEY, keyId.trim());
-  if (keySecret !== undefined) localStorage.setItem(RAZORPAY_SECRET_STORAGE_KEY, keySecret.trim());
-  if (customLink !== undefined) localStorage.setItem(RAZORPAY_LINK_STORAGE_KEY, customLink.trim());
+  if (keyId !== undefined) safeStorage.setItem(RAZORPAY_KEY_STORAGE_KEY, keyId.trim());
+  if (keySecret !== undefined) safeStorage.setItem(RAZORPAY_SECRET_STORAGE_KEY, keySecret.trim());
+  if (customLink !== undefined) safeStorage.setItem(RAZORPAY_LINK_STORAGE_KEY, customLink.trim());
 };
 
 export const setRazorpayKey = (keyId: string): void => {
-  localStorage.setItem(RAZORPAY_KEY_STORAGE_KEY, keyId.trim());
+  safeStorage.setItem(RAZORPAY_KEY_STORAGE_KEY, keyId.trim());
 };
 
 export interface RazorpayPaymentOptions {

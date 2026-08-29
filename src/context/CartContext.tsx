@@ -1,3 +1,4 @@
+import { safeStorage } from '../utils/storage';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Product, CartItem, ProductColor, ShippingConfig } from '../types';
 import { fetchSupabaseShippingConfig, upsertSupabaseShippingConfig } from '../lib/supabase';
@@ -36,7 +37,7 @@ export const DEFAULT_SHIPPING_CONFIG: ShippingConfig = {
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem('kavish_cart');
+    const saved = safeStorage.getItem('kavish_cart');
     return saved ? JSON.parse(saved) : [];
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -46,7 +47,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [shippingConfig, setShippingConfig] = useState<ShippingConfig>(() => {
     try {
-      const saved = localStorage.getItem(SHIPPING_STORAGE_KEY);
+      const saved = safeStorage.getItem(SHIPPING_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     } catch (e) {
       console.error(e);
@@ -61,7 +62,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (dbConfig) {
         setShippingConfig(dbConfig);
         try {
-          localStorage.setItem(SHIPPING_STORAGE_KEY, JSON.stringify(dbConfig));
+          safeStorage.setItem(SHIPPING_STORAGE_KEY, JSON.stringify(dbConfig));
         } catch (e) {
           console.error(e);
         }
@@ -77,7 +78,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     setShippingConfig(cleanConfig);
     try {
-      localStorage.setItem(SHIPPING_STORAGE_KEY, JSON.stringify(cleanConfig));
+      safeStorage.setItem(SHIPPING_STORAGE_KEY, JSON.stringify(cleanConfig));
     } catch (e) {
       console.error(e);
     }
@@ -99,7 +100,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('kavish_cart', JSON.stringify(cart));
+    safeStorage.setItem('kavish_cart', JSON.stringify(cart));
   }, [cart]);
 
   const showToast = (msg: string) => {
@@ -155,7 +156,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // 1. Check dynamic offers from Admin Panel stored in localStorage
     try {
-      const savedOffers = localStorage.getItem('kavish_live_offers_v1');
+      const savedOffers = safeStorage.getItem('kavish_live_offers_v1');
       if (savedOffers) {
         const offersList = JSON.parse(savedOffers);
         if (Array.isArray(offersList)) {

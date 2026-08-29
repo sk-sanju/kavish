@@ -4,7 +4,7 @@ import {
   DollarSign, BarChart3, Layout, Star, Bell, ShieldCheck, History, Settings,
   Search, Plus, LogOut, Menu, X, ArrowLeft, Globe, Image as ImageIcon
 } from 'lucide-react';
-import logoImg from '../../assets/logo.png';
+const logoImg = '/assets/logo.png';
 import { useAuth } from '../../context/AuthContext';
 import { useAdmin } from '../../context/AdminContext';
 import { NotificationCenter } from './NotificationCenter';

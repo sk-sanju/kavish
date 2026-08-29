@@ -1,3 +1,4 @@
+import { safeStorage } from '../utils/storage';
 import React, { createContext, useContext, useState } from 'react';
 
 export interface CurrencyConfig {
@@ -35,7 +36,7 @@ const STORAGE_KEY = 'kavish_currency_preference';
 
 export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currency, setCurrencyState] = useState<CurrencyConfig>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = safeStorage.getItem(STORAGE_KEY);
     if (saved) {
       const found = SUPPORTED_CURRENCIES.find((c) => c.code === saved);
       if (found) return found;
@@ -47,7 +48,7 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const found = SUPPORTED_CURRENCIES.find((c) => c.code === code);
     if (found) {
       setCurrencyState(found);
-      localStorage.setItem(STORAGE_KEY, code);
+      safeStorage.setItem(STORAGE_KEY, code);
     }
   };
 
