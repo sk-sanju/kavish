@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, Truck, ShieldCheck, Globe, ChevronDown, Check } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
@@ -9,9 +11,11 @@ export const AnnouncementBar: React.FC = () => {
   const { currency, setCurrencyByCode, formatPrice, currencies } = useCurrency();
   const { announcementText } = useProducts();
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setMounted(true);
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setIsOpen(false);
@@ -32,15 +36,19 @@ export const AnnouncementBar: React.FC = () => {
         <div className="flex items-center justify-center space-x-2 mx-auto md:mx-0">
           <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] animate-pulse" />
           <span>
-            {announcementText || (amountNeededForFreeShipping > 0 ? (
-              <>
-                Complimentary Express Shipping on orders above <span className="text-[#D4AF37] font-semibold">{formatPrice(2000)}</span>
-              </>
+            {mounted ? (
+              announcementText || (amountNeededForFreeShipping > 0 ? (
+                <>
+                  Complimentary Express Shipping on orders above <span className="text-[#D4AF37] font-semibold">{formatPrice(2000)}</span>
+                </>
+              ) : (
+                <span className="text-[#D4AF37] font-semibold flex items-center gap-1">
+                  <Truck className="w-3.5 h-3.5 inline" /> You have unlocked Complimentary Shipping!
+                </span>
+              ))
             ) : (
-              <span className="text-[#D4AF37] font-semibold flex items-center gap-1">
-                <Truck className="w-3.5 h-3.5 inline" /> You have unlocked Complimentary Shipping!
-              </span>
-            ))}
+              'Complimentary Express Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified'
+            )}
           </span>
         </div>
 

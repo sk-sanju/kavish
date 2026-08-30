@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useState, useMemo } from 'react';
 import { ChevronDown, HelpCircle, ShieldCheck, Truck, RefreshCw, CreditCard, Award, MessageSquare } from 'lucide-react';
 import { POLICY_CONFIG } from '../config/policyConfig';
+import { useAdmin } from '../context/AdminContext';
 
 interface FAQItem {
   question: string;
   answer: string;
-  category: 'authenticity' | 'shipping' | 'returns' | 'payments' | 'sizing';
+  category: 'authenticity' | 'shipping' | 'returns' | 'payments' | 'sizing' | 'general';
 }
 
-const FAQS: FAQItem[] = [
+const BASE_FAQS: FAQItem[] = [
   // Authenticity & GI Tag
   {
     category: 'authenticity',
@@ -67,11 +70,25 @@ const FAQS: FAQItem[] = [
 ];
 
 export const FAQPage: React.FC = () => {
+  const { storeContent } = useAdmin();
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  const filteredFaqs =
-    activeCategory === 'all' ? FAQS : FAQS.filter((f) => f.category === activeCategory);
+  const allFaqs: FAQItem[] = useMemo(() => {
+    const customFaqs: FAQItem[] = (storeContent?.faqItems || []).map(f => ({
+      question: f.question,
+      answer: f.answer,
+      category: 'general' as const
+    }));
+    return [...customFaqs, ...BASE_FAQS];
+  }, [storeContent?.faqItems]);
+
+  const filteredFaqs = useMemo(() => {
+    if (activeCategory === 'all') return allFaqs;
+    return allFaqs.filter((f) => f.category === activeCategory);
+  }, [allFaqs, activeCategory]);
+
+  const cleanWhatsapp = (storeContent?.contactInfo?.whatsappNumber || POLICY_CONFIG.WHATSAPP_NUMBER).replace(/[^0-9]/g, '');
 
   return (
     <div className="py-8 sm:py-12 bg-[#FAF8F1] min-h-screen animate-fadeIn">
@@ -170,7 +187,7 @@ export const FAQPage: React.FC = () => {
           </div>
           <div className="flex gap-3">
             <a
-              href={`https://wa.me/${POLICY_CONFIG.WHATSAPP_NUMBER}`}
+              href={`https://wa.me/${cleanWhatsapp}`}
               target="_blank"
               rel="noreferrer"
               className="bg-[#D4AF37] text-[#12372A] px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-white transition-colors flex items-center gap-2 shadow-md"

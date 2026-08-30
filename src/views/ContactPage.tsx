@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, MessageSquare, ShieldCheck, Award } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';

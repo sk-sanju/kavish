@@ -1,7 +1,10 @@
+'use client';
+
 import React from 'react';
 import { ShieldCheck, Truck, RefreshCw, Lock, Mail, Phone, MapPin } from 'lucide-react';
 const logoImg = '/assets/logo.png';
 import { POLICY_CONFIG } from '../../config/policyConfig';
+import { useAdmin } from '../../context/AdminContext';
 
 interface FooterProps {
   onNavigate: (view: string, categoryFilter?: string, collectionFilter?: string) => void;
@@ -22,6 +25,14 @@ const FacebookIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' 
 );
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const { storeContent } = useAdmin();
+  const contact = storeContent?.contactInfo;
+  const atelierAddress = contact?.addressLine1 
+    ? `${contact.addressLine1}${contact.addressLine2 ? ', ' + contact.addressLine2 : ''}` 
+    : POLICY_CONFIG.ATELIER_ADDRESS.FULL;
+  const supportPhone = contact?.phone || POLICY_CONFIG.SUPPORT_PHONE;
+  const supportEmail = contact?.email || POLICY_CONFIG.SUPPORT_EMAIL;
+  const visitingHours = contact?.visitingHoursLine1 || POLICY_CONFIG.WORKING_HOURS;
 
   return (
     <footer className="bg-[#12372A] text-[#FAF8F1] pt-16 pb-24 lg:pb-12 border-t-2 border-[#D4AF37]/30">
@@ -97,16 +108,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <div className="space-y-1.5 text-xs text-[#E8DDC7]/80 pt-1">
               <p className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                <span>{POLICY_CONFIG.ATELIER_ADDRESS.FULL}</span>
+                <span>{atelierAddress}</span>
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                <span>{POLICY_CONFIG.SUPPORT_PHONE} ({POLICY_CONFIG.WORKING_HOURS})</span>
+                <span>{supportPhone} ({visitingHours})</span>
               </p>
               <p className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
-                <a href={`mailto:${POLICY_CONFIG.SUPPORT_EMAIL}`} className="hover:text-[#D4AF37] underline">
-                  {POLICY_CONFIG.SUPPORT_EMAIL}
+                <a href={`mailto:${supportEmail}`} className="hover:text-[#D4AF37] underline">
+                  {supportEmail}
                 </a>
               </p>
             </div>

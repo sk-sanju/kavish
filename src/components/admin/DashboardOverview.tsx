@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useMemo } from 'react';
 import {
   DollarSign, ShoppingBag, Users, Package, TrendingUp, AlertTriangle, XCircle, CheckCircle2,

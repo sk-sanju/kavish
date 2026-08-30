@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { X, Star, ShoppingBag, Heart, ShieldCheck, Truck, Ruler } from 'lucide-react';
 import { useModal } from '../../context/ModalContext';

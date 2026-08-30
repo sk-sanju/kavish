@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from 'react';
+'use client';
+
+import React, { useState, useMemo, useEffect } from 'react';
 import { ArrowRight, Sparkles, Compass } from 'lucide-react';
 import { useAdmin, DEFAULT_HERO_BANNERS } from '../../context/AdminContext';
 import type { HeroBanner } from '../../types';
@@ -48,6 +50,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
     return DEFAULT_HERO_BANNERS;
   }, [heroBanners, storeContent]);
 
+  // Automatically transition banners every 5 seconds
+  useEffect(() => {
+    if (!bannersList || bannersList.length <= 1) return;
+    const timer = setInterval(() => {
+      setActiveIdx(prev => (prev + 1) % bannersList.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [bannersList.length]);
+
   const safeIdx = (activeIdx >= 0 && activeIdx < bannersList.length) ? activeIdx : 0;
   const current = bannersList[safeIdx] || DEFAULT_HERO_BANNERS[0];
 
@@ -63,7 +74,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
           preset="banner"
           priority={true}
           containerClassName="w-full h-full"
-          imageClassName="opacity-40 sm:opacity-45 transform scale-105 transition-all duration-1000 ease-out"
+          imageClassName="opacity-40 sm:opacity-45 transform scale-105 transition-all duration-1000 ease-out animate-fadeIn"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#12372A] via-[#12372A]/85 sm:via-[#12372A]/80 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#12372A] via-transparent to-transparent" />
@@ -74,18 +85,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
         <div className="max-w-2xl space-y-4 sm:space-y-6">
           
           {/* Campaign Tag */}
-          <div className="inline-flex items-center gap-2 bg-[#D4AF37]/20 border border-[#D4AF37]/60 px-3 py-1 text-[10px] sm:text-xs uppercase font-semibold text-[#D4AF37] tracking-[0.2em]">
+          <div className="inline-flex items-center gap-2 bg-[#D4AF37]/20 border border-[#D4AF37]/60 px-3 py-1 text-[10px] sm:text-xs uppercase font-semibold text-[#D4AF37] tracking-[0.2em] transition-all duration-500">
             <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-pulse" />
             <span>{current.tag}</span>
           </div>
 
           {/* Headline */}
-          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] text-[#FAF8F1] whitespace-pre-line tracking-tight">
+          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] text-[#FAF8F1] whitespace-pre-line tracking-tight transition-all duration-700">
             {current.title}
           </h1>
 
           {/* Subtitle */}
-          <p className="font-sans text-xs sm:text-sm md:text-base text-[#E8DDC7]/90 leading-relaxed max-w-xl font-light">
+          <p className="font-sans text-xs sm:text-sm md:text-base text-[#E8DDC7]/90 leading-relaxed max-w-xl font-light transition-all duration-700">
             {current.subtitle}
           </p>
 
@@ -108,25 +119,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
             </button>
           </div>
 
-          {/* Campaign Switcher Dots */}
+          {/* Subtle Sleek Slide Indicators */}
           {bannersList.length > 1 && (
-            <div className="pt-6 sm:pt-10 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-[#E8DDC7]">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-[#D4AF37]">Campaign Edit:</span>
-              <div className="flex flex-wrap gap-2">
-                {bannersList.map((c, idx) => (
-                  <button
-                    key={c.id}
-                    onClick={() => setActiveIdx(idx)}
-                    className={`px-3 py-1 text-[10px] sm:text-[11px] border transition-all ${
-                      activeIdx === idx
-                        ? 'bg-[#D4AF37] text-[#12372A] font-bold border-[#D4AF37]'
-                        : 'bg-black/30 text-[#E8DDC7] border-white/20 hover:border-[#D4AF37]'
-                    }`}
-                  >
-                    0{idx + 1} • {c.tag.toUpperCase()}
-                  </button>
-                ))}
-              </div>
+            <div className="pt-6 sm:pt-8 flex items-center gap-2">
+              {bannersList.map((c, idx) => (
+                <button
+                  key={c.id || idx}
+                  onClick={() => setActiveIdx(idx)}
+                  aria-label={`Slide ${idx + 1}`}
+                  className={`h-1.5 rounded-full transition-all duration-500 ${
+                    activeIdx === idx
+                      ? 'w-8 bg-[#D4AF37]'
+                      : 'w-2 bg-white/30 hover:bg-white/60'
+                  }`}
+                />
+              ))}
             </div>
           )}
 

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '../context/WishlistContext';

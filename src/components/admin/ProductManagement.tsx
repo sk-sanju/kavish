@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import {
   Search, Plus, Edit, Trash2, Copy, CheckCircle2, XCircle

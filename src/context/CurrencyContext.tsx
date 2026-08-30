@@ -1,3 +1,5 @@
+'use client';
+
 import { safeStorage } from '../utils/storage';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
@@ -64,16 +66,19 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const converted = amountInINR * currency.rate;
 
     if (currency.code === 'INR') {
-      return `${currency.symbol}${Math.round(converted).toLocaleString('en-IN')}`;
+      const rounded = Math.round(converted).toString();
+      const lastThree = rounded.substring(rounded.length - 3);
+      const otherNumbers = rounded.substring(0, rounded.length - 3);
+      const formattedINR = otherNumbers !== '' 
+        ? otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree 
+        : lastThree;
+      return `${currency.symbol}${formattedINR}`;
     }
 
     const showDec = options?.showDecimal ?? (currency.decimals > 0);
-    const formattedVal = converted.toLocaleString('en-US', {
-      minimumFractionDigits: showDec ? currency.decimals : 0,
-      maximumFractionDigits: showDec ? currency.decimals : 0,
-    });
-
-    return `${currency.symbol}${formattedVal}`;
+    const parts = converted.toFixed(showDec ? currency.decimals : 0).split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return `${currency.symbol}${parts.join('.')}`;
   };
 
   return (

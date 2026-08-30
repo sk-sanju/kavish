@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Bell, X, Check, Trash2, Package, Truck, RefreshCw, Star, ShieldCheck } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';

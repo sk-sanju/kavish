@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { X, UserPlus, LogIn, Sparkles, Truck, Award } from 'lucide-react';
 const logoImg = '/assets/logo.png';

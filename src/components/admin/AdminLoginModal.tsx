@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Lock, Mail, ShieldCheck, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';

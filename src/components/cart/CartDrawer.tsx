@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { X, ShoppingBag, Trash2, ArrowRight, Truck, Sparkles, Tag, ShieldCheck } from 'lucide-react';
 import { useCart } from '../../context/CartContext';

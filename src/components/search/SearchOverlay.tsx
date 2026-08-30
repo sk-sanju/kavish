@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Search, X, TrendingUp, Sparkles } from 'lucide-react';
 import { useModal } from '../../context/ModalContext';

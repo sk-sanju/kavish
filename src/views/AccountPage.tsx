@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { User, Package, MapPin, Truck, Plus, ShieldCheck, LogOut, UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';

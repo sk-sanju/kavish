@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useMemo } from 'react';
 import { ArrowRight, Sparkles, Compass } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';

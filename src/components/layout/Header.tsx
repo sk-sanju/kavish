@@ -9,6 +9,7 @@ import { useWishlist } from '../../context/WishlistContext';
 import { useModal } from '../../context/ModalContext';
 import { useAuth } from '../../context/AuthContext';
 import { useCurrency } from '../../context/CurrencyContext';
+import { useProducts } from '../../context/ProductContext';
 
 export const Header: React.FC = () => {
   const router = useRouter();
@@ -17,6 +18,7 @@ export const Header: React.FC = () => {
   const { itemCount, setIsCartOpen } = useCart();
   const { wishlistCount } = useWishlist();
   const { setIsSearchOpen, isMobileMenuOpen, setIsMobileMenuOpen } = useModal();
+  const { collections } = useProducts();
   const {
     isAdminLoggedIn,
     logoutAdmin,
@@ -28,8 +30,10 @@ export const Header: React.FC = () => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 30);
     };
@@ -140,38 +144,35 @@ export const Header: React.FC = () => {
                   <div className="px-4 py-1 text-[10px] uppercase font-bold text-[#D4AF37] tracking-widest border-b border-[#E8DDC7]/60 pb-2 mb-2">
                     Kerala Curated Edits
                   </div>
-                  <button
-                    onClick={() => handleNavClick('shop', undefined, 'kasavu-masterpieces')}
-                    className="w-full text-left px-4 py-2 hover:bg-[#E8DDC7]/30 hover:text-[#12372A] text-xs capitalize tracking-normal flex justify-between items-center"
-                  >
-                    <span>Kasavu Masterpieces</span>
-                    <span className="text-[10px] text-[#D4AF37]">Gold Zari</span>
-                  </button>
-                  <button
-                    onClick={() => handleNavClick('shop', undefined, 'festive-edit')}
-                    className="w-full text-left px-4 py-2 hover:bg-[#E8DDC7]/30 hover:text-[#12372A] text-xs capitalize tracking-normal flex justify-between items-center"
-                  >
-                    <span>The Festive Edit</span>
-                    <span className="text-[10px] text-[#12372A]">Onam &amp; Vishu</span>
-                  </button>
-                  <button
-                    onClick={() => handleNavClick('shop', undefined, 'kerala-classics')}
-                    className="w-full text-left px-4 py-2 hover:bg-[#E8DDC7]/30 hover:text-[#12372A] text-xs capitalize tracking-normal"
-                  >
-                    Kerala Classics
-                  </button>
-                  <button
-                    onClick={() => handleNavClick('shop', undefined, 'everyday-kerala')}
-                    className="w-full text-left px-4 py-2 hover:bg-[#E8DDC7]/30 hover:text-[#12372A] text-xs capitalize tracking-normal"
-                  >
-                    Everyday Organic Linen
-                  </button>
-                  <button
-                    onClick={() => handleNavClick('shop', undefined, 'kids-heritage')}
-                    className="w-full text-left px-4 py-2 hover:bg-[#E8DDC7]/30 hover:text-[#12372A] text-xs capitalize tracking-normal"
-                  >
-                    Kids Heritage Legacy
-                  </button>
+                  {collections && collections.length > 0 ? (
+                    collections.map((col) => (
+                      <button
+                        key={col.id || col.slug}
+                        onClick={() => handleNavClick('shop', undefined, col.slug)}
+                        className="w-full text-left px-4 py-2 hover:bg-[#E8DDC7]/30 hover:text-[#12372A] text-xs capitalize tracking-normal flex justify-between items-center cursor-pointer"
+                      >
+                        <span>{col.title}</span>
+                        {col.tag && <span className="text-[10px] text-[#D4AF37] font-semibold">{col.tag}</span>}
+                      </button>
+                    ))
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => handleNavClick('shop', undefined, 'kasavu-masterpieces')}
+                        className="w-full text-left px-4 py-2 hover:bg-[#E8DDC7]/30 hover:text-[#12372A] text-xs capitalize tracking-normal flex justify-between items-center"
+                      >
+                        <span>Kasavu Masterpieces</span>
+                        <span className="text-[10px] text-[#D4AF37]">Gold Zari</span>
+                      </button>
+                      <button
+                        onClick={() => handleNavClick('shop', undefined, 'festive-edit')}
+                        className="w-full text-left px-4 py-2 hover:bg-[#E8DDC7]/30 hover:text-[#12372A] text-xs capitalize tracking-normal flex justify-between items-center"
+                      >
+                        <span>The Festive Edit</span>
+                        <span className="text-[10px] text-[#12372A]">Onam &amp; Vishu</span>
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -195,7 +196,7 @@ export const Header: React.FC = () => {
             </button>
 
             {/* Admin Console Trigger Button - ONLY VISIBLE WHEN ADMIN LOGGED IN */}
-            {isAdminLoggedIn && (
+            {mounted && isAdminLoggedIn && (
               <div className="flex items-center gap-1 bg-[#12372A] text-[#FAF8F1] px-3 py-1 rounded-full border border-[#D4AF37] shadow-xs">
                 <button
                   onClick={() => handleNavClick('admin')}
@@ -239,11 +240,11 @@ export const Header: React.FC = () => {
                 }
               }}
               className="hidden sm:flex p-2 text-[#171717] hover:text-[#D4AF37] transition-colors focus:outline-none min-h-[44px] min-w-[44px] items-center justify-center relative group"
-              title={isCustomerLoggedIn ? `Account (${user.name})` : 'Create Account / Sign In'}
+              title={mounted && isCustomerLoggedIn ? `Account (${user.name})` : 'Create Account / Sign In'}
               aria-label="Account"
             >
               <User className="w-5 h-5" />
-              {!isCustomerLoggedIn && (
+              {mounted && !isCustomerLoggedIn && (
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#D4AF37] animate-pulse" />
               )}
             </button>
@@ -255,7 +256,7 @@ export const Header: React.FC = () => {
               aria-label="Wishlist"
             >
               <Heart className="w-5 h-5" />
-              {wishlistCount > 0 && (
+              {mounted && wishlistCount > 0 && (
                 <span className="absolute top-1.5 right-1 bg-[#D4AF37] text-[#12372A] font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
                   {wishlistCount}
                 </span>
@@ -270,7 +271,7 @@ export const Header: React.FC = () => {
             >
               <div className="relative">
                 <ShoppingBag className="w-5 h-5" />
-                {itemCount > 0 && (
+                {mounted && itemCount > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 bg-[#12372A] text-[#FAF8F1] font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center border border-[#D4AF37]">
                     {itemCount}
                   </span>

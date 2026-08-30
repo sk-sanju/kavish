@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Trash2, Ruler, UploadCloud, ImagePlus, Link as LinkIcon, Loader2, Star } from 'lucide-react';

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import {
   TrendingUp, Package, Tag, Truck, Users, Percent, RefreshCw, Navigation,

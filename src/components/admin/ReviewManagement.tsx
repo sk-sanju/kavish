@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Star } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';

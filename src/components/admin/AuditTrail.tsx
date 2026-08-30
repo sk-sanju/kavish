@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';

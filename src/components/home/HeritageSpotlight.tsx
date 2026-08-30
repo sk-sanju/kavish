@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Award, Feather, ShieldCheck, Compass } from 'lucide-react';
+import { Feather, ShieldCheck, Compass } from 'lucide-react';
 import { HERITAGE_STORIES } from '../../data/heritage';
 import { OptimizedImage } from '../common/OptimizedImage';
 
@@ -20,27 +22,15 @@ export const HeritageSpotlight: React.FC<HeritageSpotlightProps> = ({ onNavigate
           
           {/* Left Visual Card */}
           <div className="relative">
-            <div className="aspect-[4/5] border border-[#D4AF37]/40 p-3 bg-[#0B241B] shadow-2xl relative rounded-3xl overflow-hidden">
+            <div className="aspect-[4/3] sm:aspect-[5/4] lg:aspect-[4/3] border border-[#D4AF37]/40 p-2 sm:p-3 bg-[#0B241B] shadow-2xl relative rounded-3xl overflow-hidden">
               <OptimizedImage
                 src={story.image}
-                alt="Kasavu Handloom Weaving Heritage - Kuthampully GI Certified"
+                alt="Kasavu Handloom Weaving Heritage"
                 preset="card"
-                aspectRatio="4/5"
-                containerClassName="w-full h-full rounded-2xl"
-                imageClassName="rounded-2xl"
+                aspectRatio="4/3"
+                containerClassName="w-full h-full rounded-2xl overflow-hidden"
+                imageClassName="rounded-2xl object-cover object-center w-full h-full"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#12372A]/80 via-transparent to-transparent pointer-events-none z-10" />
-            </div>
-
-            {/* Floating Heritage Badge */}
-            <div className="absolute -bottom-6 -right-6 bg-[#D4AF37] text-[#12372A] p-6 shadow-2xl rounded-2xl max-w-xs border border-[#12372A] hidden sm:block">
-              <div className="flex items-center gap-2 mb-1">
-                <Award className="w-5 h-5 shrink-0" />
-                <span className="font-serif font-bold text-sm uppercase tracking-wider">GI Tag Certified</span>
-              </div>
-              <p className="text-[11px] leading-tight text-[#12372A]/90">
-                Authentic Kuthampully Devanga artisan looms verified by Government of India (GI Reg No. 2011).
-              </p>
             </div>
           </div>
 

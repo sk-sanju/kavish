@@ -1,3 +1,5 @@
+'use client';
+
 import { safeStorage } from '../utils/storage';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Product } from '../types';

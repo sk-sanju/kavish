@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Home, ShoppingBag, Search, Heart, User } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
@@ -11,6 +11,11 @@ import { useAuth } from '../../context/AuthContext';
 export const MobileNavigation: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { itemCount, setIsCartOpen } = useCart();
   const { wishlistCount } = useWishlist();
@@ -56,7 +61,7 @@ export const MobileNavigation: React.FC = () => {
       >
         <div className="relative">
           <Heart className="w-5 h-5 text-[#D4AF37]" />
-          {wishlistCount > 0 && (
+          {mounted && wishlistCount > 0 && (
             <span className="absolute -top-1 -right-2 bg-[#D4AF37] text-[#12372A] font-bold text-[9px] w-3.5 h-3.5 rounded-full flex items-center justify-center">
               {wishlistCount}
             </span>
@@ -71,7 +76,7 @@ export const MobileNavigation: React.FC = () => {
       >
         <div className="relative">
           <ShoppingBag className="w-5 h-5 text-[#12372A]" />
-          {itemCount > 0 && (
+          {mounted && itemCount > 0 && (
             <span className="absolute -top-1 -right-2 bg-[#12372A] text-[#FAF8F1] font-bold text-[9px] w-3.5 h-3.5 rounded-full flex items-center justify-center border border-[#D4AF37]">
               {itemCount}
             </span>

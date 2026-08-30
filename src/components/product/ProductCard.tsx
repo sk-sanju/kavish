@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Heart, Star, Eye, ShoppingBag } from 'lucide-react';
 import type { Product } from '../../types';
@@ -106,11 +108,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
           <Heart className={`w-4 h-4 transition-transform ${isFavorite ? 'fill-[#D4AF37]' : ''}`} />
         </button>
 
-        {/* Quick View & Quick Add Floating Bottom Bar */}
-        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-[#12372A]/85 via-[#12372A]/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center gap-2 z-10">
+        {/* Quick View & Quick Add Floating Bottom Bar - Permanently Visible */}
+        <div className="absolute inset-x-0 bottom-0 p-2.5 sm:p-3 bg-gradient-to-t from-[#12372A]/90 via-[#12372A]/50 to-transparent flex items-center gap-2 z-10">
           <button
             onClick={handleQuickViewClick}
-            className="flex-1 bg-[#FAF8F1] text-[#12372A] hover:bg-[#D4AF37] hover:text-[#12372A] text-[11px] font-bold uppercase tracking-wider py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5"
+            className="flex-1 bg-[#FAF8F1] text-[#12372A] hover:bg-[#D4AF37] hover:text-[#12372A] active:scale-95 text-[11px] font-bold uppercase tracking-wider py-2 sm:py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <Eye className="w-3.5 h-3.5" />
             <span>Quick View</span>
@@ -118,7 +120,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
 
           <button
             onClick={handleQuickAdd}
-            className="bg-[#12372A] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] text-[11px] font-bold uppercase tracking-wider p-2.5 rounded-xl transition-all border border-[#D4AF37] shadow-sm"
+            className="bg-[#12372A] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] active:scale-95 text-[11px] font-bold uppercase tracking-wider p-2 sm:p-2.5 rounded-xl transition-all border border-[#D4AF37] shadow-sm cursor-pointer"
             title="Quick Add to Bag"
           >
             <ShoppingBag className="w-3.5 h-3.5" />

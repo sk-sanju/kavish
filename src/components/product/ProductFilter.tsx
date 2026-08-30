@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { SlidersHorizontal, X, RotateCcw } from 'lucide-react';
 import type { FilterState } from '../../types';

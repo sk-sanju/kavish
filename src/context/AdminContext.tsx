@@ -1,3 +1,5 @@
+'use client';
+
 import { safeStorage } from '../utils/storage';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type {
@@ -155,80 +157,49 @@ const CONTENT_STORAGE_KEY = 'kavish_store_content_v1';
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [auditLogs, setAuditLogs] = useState<AuditLog[]>(() => {
-    try {
-      const saved = safeStorage.getItem(AUDIT_STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error(e);
-    }
-    return INITIAL_AUDIT_LOGS;
-  });
-
-  const [returnRequests, setReturnRequests] = useState<ReturnRequest[]>(() => {
-    try {
-      const saved = safeStorage.getItem(RETURNS_STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error(e);
-    }
-    return INITIAL_RETURNS;
-  });
-
-  const [adminUsers, setAdminUsers] = useState<AdminUser[]>(() => {
-    try {
-      const saved = safeStorage.getItem(ADMIN_USERS_STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error(e);
-    }
-    return INITIAL_ADMIN_USERS;
-  });
-
-  const [notifications, setNotifications] = useState<StoreNotification[]>(() => {
-    try {
-      const saved = safeStorage.getItem(NOTIF_STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error(e);
-    }
-    return INITIAL_NOTIFICATIONS;
-  });
-
-  const [gstConfig, setGstConfig] = useState<GSTConfig>(() => {
-    try {
-      const saved = safeStorage.getItem(GST_STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error(e);
-    }
-    return DEFAULT_GST_CONFIG;
-  });
-
-  const [heroBanners, setHeroBanners] = useState<HeroBanner[]>(() => {
-    try {
-      const saved = safeStorage.getItem('kavish_hero_banners_v1');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    return DEFAULT_HERO_BANNERS;
-  });
-
-  const [storeContent, setStoreContent] = useState<StoreContentConfig>(() => {
-    try {
-      const saved = safeStorage.getItem(CONTENT_STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error(e);
-    }
-    return { ...DEFAULT_STORE_CONTENT, heroBanners: DEFAULT_HERO_BANNERS };
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>(INITIAL_AUDIT_LOGS);
+  const [returnRequests, setReturnRequests] = useState<ReturnRequest[]>(INITIAL_RETURNS);
+  const [adminUsers, setAdminUsers] = useState<AdminUser[]>(INITIAL_ADMIN_USERS);
+  const [notifications, setNotifications] = useState<StoreNotification[]>(INITIAL_NOTIFICATIONS);
+  const [gstConfig, setGstConfig] = useState<GSTConfig>(DEFAULT_GST_CONFIG);
+  const [heroBanners, setHeroBanners] = useState<HeroBanner[]>(DEFAULT_HERO_BANNERS);
+  const [storeContent, setStoreContent] = useState<StoreContentConfig>({
+    ...DEFAULT_STORE_CONTENT,
+    heroBanners: DEFAULT_HERO_BANNERS
   });
 
   useEffect(() => {
+    try {
+      const savedAudits = safeStorage.getItem(AUDIT_STORAGE_KEY);
+      if (savedAudits) setAuditLogs(JSON.parse(savedAudits));
+
+      const savedReturns = safeStorage.getItem(RETURNS_STORAGE_KEY);
+      if (savedReturns) setReturnRequests(JSON.parse(savedReturns));
+
+      const savedUsers = safeStorage.getItem(ADMIN_USERS_STORAGE_KEY);
+      if (savedUsers) setAdminUsers(JSON.parse(savedUsers));
+
+      const savedNotifs = safeStorage.getItem(NOTIF_STORAGE_KEY);
+      if (savedNotifs) setNotifications(JSON.parse(savedNotifs));
+
+      const savedGst = safeStorage.getItem(GST_STORAGE_KEY);
+      if (savedGst) setGstConfig(JSON.parse(savedGst));
+
+      const savedBanners = safeStorage.getItem('kavish_hero_banners_v1');
+      if (savedBanners) {
+        const parsed = JSON.parse(savedBanners);
+        if (Array.isArray(parsed) && parsed.length > 0) setHeroBanners(parsed);
+      }
+
+      const savedContent = safeStorage.getItem(CONTENT_STORAGE_KEY);
+      if (savedContent) {
+        const parsed = JSON.parse(savedContent);
+        if (parsed) setStoreContent(prev => ({ ...prev, ...parsed }));
+      }
+    } catch (e) {
+      console.error('Error loading admin storage:', e);
+    }
+
     const isAdmin = Boolean(safeStorage.getItem('kavish_admin_auth'));
     // Only load internal audit logs and return requests if an admin is logged in
     if (isAdmin) {

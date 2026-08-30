@@ -1,3 +1,5 @@
+'use client';
+
 import { safeStorage } from '../utils/storage';
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { Product, PromoOffer, Review, CategoryItem } from '../types';
@@ -81,80 +83,58 @@ function safeStoreProducts(productsToStore: Product[]) {
 }
 
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [products, setProducts] = useState<Product[]>(() => {
-    try {
-      const saved = safeStorage.getItem(PRODUCTS_STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const genuine = parsed.filter(p => !p.id.startsWith('kav-'));
-          if (genuine.length > 0) return genuine;
-        }
-      }
-    } catch (e) {
-      console.error('Failed to parse saved products:', e);
-    }
-    return INITIAL_PRODUCTS;
-  });
-
-  const [categories, setCategories] = useState<CategoryItem[]>(() => {
-    try {
-      const saved = safeStorage.getItem(CATEGORIES_STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      console.error('Failed to parse saved categories:', e);
-    }
-    return INITIAL_CATEGORIES;
-  });
-
-  const [offers, setOffers] = useState<PromoOffer[]>(() => {
-    try {
-      const saved = safeStorage.getItem(OFFERS_STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      console.error('Failed to parse saved offers:', e);
-    }
-    return INITIAL_OFFERS;
-  });
-
-  const [collections, setCollections] = useState<CollectionItem[]>(() => {
-    try {
-      const saved = safeStorage.getItem(COLLECTIONS_STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      console.error('Failed to parse saved collections:', e);
-    }
-    return INITIAL_COLLECTIONS;
-  });
-
-  const [reviews, setReviews] = useState<Review[]>(() => {
-    try {
-      const saved = safeStorage.getItem(REVIEWS_STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      console.error('Failed to parse saved reviews:', e);
-    }
-    return INITIAL_REVIEWS;
-  });
-
-  const [announcementText, setAnnouncementTextState] = useState<string>(() => {
-    return safeStorage.getItem(ANNOUNCEMENT_STORAGE_KEY) || 'Complimentary Express Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified';
-  });
+  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
+  const [categories, setCategories] = useState<CategoryItem[]>(INITIAL_CATEGORIES);
+  const [offers, setOffers] = useState<PromoOffer[]>(INITIAL_OFFERS);
+  const [collections, setCollections] = useState<CollectionItem[]>(INITIAL_COLLECTIONS);
+  const [reviews, setReviews] = useState<Review[]>(INITIAL_REVIEWS);
+  const [announcementText, setAnnouncementTextState] = useState<string>(
+    'Complimentary Express Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified'
+  );
 
   // Cross-tab and window sync listener
   useEffect(() => {
+    // 1. Initial client-side load from safeStorage after hydration
+    try {
+      const savedProds = safeStorage.getItem(PRODUCTS_STORAGE_KEY);
+      if (savedProds) {
+        const parsed = JSON.parse(savedProds);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const genuine = parsed.filter(p => !p.id.startsWith('kav-'));
+          if (genuine.length > 0) setProducts(genuine);
+        }
+      }
+
+      const savedCats = safeStorage.getItem(CATEGORIES_STORAGE_KEY);
+      if (savedCats) {
+        const parsed = JSON.parse(savedCats);
+        if (Array.isArray(parsed) && parsed.length > 0) setCategories(parsed);
+      }
+
+      const savedOffs = safeStorage.getItem(OFFERS_STORAGE_KEY);
+      if (savedOffs) {
+        const parsed = JSON.parse(savedOffs);
+        if (Array.isArray(parsed) && parsed.length > 0) setOffers(parsed);
+      }
+
+      const savedCols = safeStorage.getItem(COLLECTIONS_STORAGE_KEY);
+      if (savedCols) {
+        const parsed = JSON.parse(savedCols);
+        if (Array.isArray(parsed) && parsed.length > 0) setCollections(parsed);
+      }
+
+      const savedRevs = safeStorage.getItem(REVIEWS_STORAGE_KEY);
+      if (savedRevs) {
+        const parsed = JSON.parse(savedRevs);
+        if (Array.isArray(parsed) && parsed.length > 0) setReviews(parsed);
+      }
+
+      const savedAnn = safeStorage.getItem(ANNOUNCEMENT_STORAGE_KEY);
+      if (savedAnn) setAnnouncementTextState(savedAnn);
+    } catch (e) {
+      console.error('Error loading client safeStorage:', e);
+    }
+
     const handleStorageChange = (e: StorageEvent) => {
       try {
         if (e.key === PRODUCTS_STORAGE_KEY && e.newValue) {

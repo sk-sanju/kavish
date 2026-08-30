@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Plus, Edit, Trash2, X, Users } from 'lucide-react';

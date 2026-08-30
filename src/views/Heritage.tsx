@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { HERITAGE_STORIES } from '../data/heritage';
 import { ArrowRight, ShieldCheck, MapPin, Award, Heart } from 'lucide-react';

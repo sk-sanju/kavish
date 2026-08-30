@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { X, CheckCircle, Truck, MapPin, Clock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
