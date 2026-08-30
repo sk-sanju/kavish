@@ -56,7 +56,7 @@ export const CuratedProducts: React.FC<CuratedProductsProps> = ({ onSelectProduc
             <p className="text-xs text-[#6B5846]">Products added in the Admin Panel will automatically render here dynamically in real time.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">
             {filtered.map(product => (
               <ProductCard
                 key={product.id}

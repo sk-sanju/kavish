@@ -141,19 +141,67 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
           </div>
         </div>
 
-        {/* Toolbar */}
-        <div className="bg-white p-3 sm:p-4 border border-[#E8DDC7] rounded-2xl mb-6 sm:mb-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
-          
-          <div className="flex items-center justify-between sm:justify-start gap-3">
+        {/* Mobile Quick Filter Chips Bar */}
+        <div className="lg:hidden mb-4 -mx-1 px-1">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+            {/* Filter Toggle Button */}
             <button
               onClick={() => setIsMobileFilterOpen(true)}
-              className="lg:hidden bg-[#12372A] text-[#FAF8F1] px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl flex items-center gap-2"
+              className={`shrink-0 px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs ${
+                activePillsCount > 0
+                  ? 'bg-[#12372A] text-[#FAF8F1] border-[#12372A]'
+                  : 'bg-white text-gray-800 border-gray-300 hover:border-gray-400'
+              }`}
             >
-              <SlidersHorizontal className="w-4 h-4 text-[#D4AF37]" />
-              <span>Filter ({activePillsCount})</span>
+              <span className="w-4 h-4 rounded bg-gray-100 text-gray-900 text-[10px] font-bold flex items-center justify-center">
+                {activePillsCount > 0 ? activePillsCount : '1'}
+              </span>
+              <SlidersHorizontal className="w-3.5 h-3.5" />
             </button>
 
-            <div className="hidden lg:flex flex-wrap items-center gap-2 text-xs">
+            {/* Price Dropdown Chip */}
+            <div className="relative shrink-0">
+              <select
+                value={filters.sortBy}
+                onChange={(e) => handleFilterChange({ sortBy: e.target.value as any })}
+                className="appearance-none bg-white border border-gray-300 text-gray-800 text-xs font-medium pl-3 pr-7 py-1.5 rounded-lg shadow-xs cursor-pointer focus:outline-none focus:border-[#D4AF37]"
+              >
+                <option value="recommended">Price ▾</option>
+                <option value="price-low-high">Price: Low to High</option>
+                <option value="price-high-low">Price: High to Low</option>
+                <option value="newest">Newest Arrivals</option>
+                <option value="rating">Top Rated</option>
+              </select>
+            </div>
+
+            {/* In Stock / Express Chip */}
+            <button
+              onClick={() => handleFilterChange({ inStockOnly: !filters.inStockOnly })}
+              className={`shrink-0 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all shadow-xs ${
+                filters.inStockOnly
+                  ? 'bg-[#12372A] text-[#FAF8F1] border-[#12372A]'
+                  : 'bg-white text-gray-700 border-gray-300'
+              }`}
+            >
+              Delivery in 1-2 Days ▾
+            </button>
+
+            {/* Clear All Chip */}
+            {activePillsCount > 0 && (
+              <button
+                onClick={handleResetFilters}
+                className="shrink-0 px-3 py-1.5 rounded-lg border border-red-200 text-red-600 bg-red-50 text-xs font-medium shadow-xs"
+              >
+                Clear All
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Desktop Toolbar */}
+        <div className="hidden lg:flex bg-white p-3 sm:p-4 border border-[#E8DDC7] rounded-2xl mb-6 sm:mb-8 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center justify-between sm:justify-start gap-3">
+            <div className="flex flex-wrap items-center gap-2 text-xs">
               <span className="text-[11px] font-bold text-[#6B5846] uppercase tracking-wider">Active:</span>
               {filters.gender.map(g => (
                 <span key={g} className="bg-[#FAF8F1] border border-[#D4AF37]/50 px-2.5 py-1 rounded-full text-[11px] text-[#12372A] font-medium flex items-center gap-1">
@@ -175,13 +223,13 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
             </div>
           </div>
 
-          <div className="flex items-center justify-between sm:justify-end space-x-3 w-full sm:w-auto">
-            <div className="flex items-center gap-2 text-xs flex-1 sm:flex-initial">
+          <div className="flex items-center justify-end space-x-3">
+            <div className="flex items-center gap-2 text-xs">
               <span className="text-[#6B5846] uppercase tracking-wider font-semibold text-[11px] whitespace-nowrap">Sort:</span>
               <select
                 value={filters.sortBy}
                 onChange={(e) => handleFilterChange({ sortBy: e.target.value as any })}
-                className="bg-[#FAF8F1] border border-[#E8DDC7] px-2.5 py-1.5 text-xs text-[#12372A] font-semibold focus:outline-none focus:border-[#D4AF37] cursor-pointer rounded-xl w-full sm:w-auto"
+                className="bg-[#FAF8F1] border border-[#E8DDC7] px-2.5 py-1.5 text-xs text-[#12372A] font-semibold focus:outline-none focus:border-[#D4AF37] cursor-pointer rounded-xl"
               >
                 <option value="recommended">Curated / Recommended</option>
                 <option value="price-low-high">Price: Low to High</option>
@@ -191,7 +239,7 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
               </select>
             </div>
 
-            <div className="hidden sm:flex items-center gap-1 border-l border-[#E8DDC7] pl-3">
+            <div className="flex items-center gap-1 border-l border-[#E8DDC7] pl-3">
               <button
                 onClick={() => setGridCols(3)}
                 className={`p-1.5 rounded-lg ${gridCols === 3 ? 'text-[#12372A] bg-[#E8DDC7]/40' : 'text-gray-400'}`}
@@ -208,7 +256,6 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
               </button>
             </div>
           </div>
-
         </div>
 
         <div className="flex gap-8">
@@ -236,10 +283,11 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
               </div>
             ) : (
               <div className="space-y-8">
+                {/* 2 columns on mobile, 3/4 on larger screens */}
                 <div
-                  className={`grid grid-cols-1 sm:grid-cols-2 ${
+                  className={`grid grid-cols-2 sm:grid-cols-2 ${
                     gridCols === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-3 xl:grid-cols-4'
-                  } gap-4 sm:gap-6`}
+                  } gap-2.5 sm:gap-4 md:gap-6`}
                 >
                   {filteredProducts.slice(0, visibleCount).map((product, idx) => (
                     <ProductCard
