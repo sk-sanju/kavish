@@ -39,7 +39,7 @@ export const HERITAGE_STORIES: HeritageStory[] = [
     title: 'The Royal Kasavu Signature',
     subtitle: 'From Temple Ceremonies to Global Haute Couture',
     description: 'The golden Kasavu border of Kuthampully is synonymous with Kerala’s celebratory spirit — worn during Onam, Vishu, royal weddings, and sacred festivities. Kavish honors this legacy while tailoring modern relaxed silhouettes for discerning patrons worldwide.',
-    image: '/assets/heritage/heritage_gitag.jpg',
+    image: '/assets/heritage/royal_kasavu_weaver.jpg',
     details: [
       'Certified 100% authentic Kuthampully GI Handloom',
       'Tarnish-resistant electroplated gold thread protection',
