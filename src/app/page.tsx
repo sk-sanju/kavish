@@ -19,6 +19,7 @@ export default function HomePage() {
 
   const handleNavigate = (view: string, categoryFilter?: string, collectionFilter?: string) => {
     if (view === 'home') router.push('/');
+    else if (view === 'shop' && categoryFilter && collectionFilter) router.push(`/shop/category/${collectionFilter}?dept=${categoryFilter}`);
     else if (view === 'shop' && categoryFilter) router.push(`/shop/category/${categoryFilter}`);
     else if (view === 'shop' && collectionFilter) router.push(`/shop/collection/${collectionFilter}`);
     else if (view === 'shop') router.push('/shop');

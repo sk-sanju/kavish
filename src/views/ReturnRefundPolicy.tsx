@@ -1,8 +1,14 @@
+'use client';
+
 import React from 'react';
 import { RefreshCw, CheckCircle2, AlertTriangle, Truck, Clock, ShieldCheck, HelpCircle } from 'lucide-react';
 import { POLICY_CONFIG } from '../config/policyConfig';
+import { useAdmin } from '../context/AdminContext';
 
 export const ReturnRefundPolicy: React.FC = () => {
+  const { storeContent } = useAdmin();
+  const contact = storeContent?.contactInfo;
+  const whatsappNumber = (contact?.whatsappNumber || POLICY_CONFIG.WHATSAPP_NUMBER).replace(/[^0-9]/g, '');
   return (
     <div className="py-8 sm:py-12 bg-[#FAF8F1] min-h-screen animate-fadeIn">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -160,7 +166,7 @@ export const ReturnRefundPolicy: React.FC = () => {
               <p className="text-xs text-[#E8DDC7]">Our dedicated atelier concierge team is available 6 days a week.</p>
             </div>
             <a
-              href={`https://wa.me/${POLICY_CONFIG.WHATSAPP_NUMBER}`}
+              href={`https://wa.me/${whatsappNumber}`}
               target="_blank"
               rel="noreferrer"
               className="bg-[#D4AF37] text-[#12372A] px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-white transition-colors shadow-md whitespace-nowrap"

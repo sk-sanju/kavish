@@ -101,8 +101,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (savedProds) {
         const parsed = JSON.parse(savedProds);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          const genuine = parsed.filter(p => !p.id.startsWith('kav-'));
-          if (genuine.length > 0) setProducts(genuine);
+          setProducts(parsed);
         }
       }
 
@@ -160,42 +159,63 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     let isMounted = true;
 
-    // 1. Fetch products independently
+    // 1. Fetch live products from local server API
+    fetch('/api/products')
+      .then(res => res.json())
+      .then(data => {
+        if (!isMounted || !data?.success || !Array.isArray(data.products) || data.products.length === 0) return;
+        setProducts(data.products);
+        safeStoreProducts(data.products);
+      })
+      .catch(err => console.warn('Local API products sync error:', err));
+
+    // Also try Supabase if configured
     fetchSupabaseProducts().then((dbProducts) => {
-      if (!isMounted || dbProducts === null) return;
+      if (!isMounted || dbProducts === null || dbProducts.length === 0) return;
       setProducts(dbProducts);
       safeStoreProducts(dbProducts);
-    }).catch(err => console.warn('Products sync error:', err));
+    }).catch(err => console.warn('Supabase products sync error:', err));
 
-    // 2. Fetch categories independently
+    // 2. Fetch live categories from local server API
+    fetch('/api/categories')
+      .then(res => res.json())
+      .then(data => {
+        if (!isMounted || !data?.success || !Array.isArray(data.categories) || data.categories.length === 0) return;
+        setCategories(data.categories);
+        try {
+          safeStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(data.categories));
+        } catch (e) {
+          console.error(e);
+        }
+      })
+      .catch(err => console.warn('Local API categories sync error:', err));
+
+    // Also try Supabase categories
     fetchSupabaseCategories().then((dbCategories) => {
-      if (!isMounted) return;
-      const localSavedCategories = (() => {
-        try {
-          const saved = safeStorage.getItem(CATEGORIES_STORAGE_KEY);
-          if (saved) {
-            const parsed = JSON.parse(saved);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-          }
-        } catch (e) {
-          console.error(e);
-        }
-        return null;
-      })();
-
-      if (dbCategories && dbCategories.length > 0) {
-        setCategories(dbCategories);
-        try {
-          safeStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbCategories));
-        } catch (e) {
-          console.error(e);
-        }
-      } else if (localSavedCategories && localSavedCategories.length > 0) {
-        setCategories(localSavedCategories);
+      if (!isMounted || !dbCategories || dbCategories.length === 0) return;
+      setCategories(dbCategories);
+      try {
+        safeStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(dbCategories));
+      } catch (e) {
+        console.error(e);
       }
-    }).catch(err => console.warn('Categories sync error:', err));
+    }).catch(err => console.warn('Supabase categories sync error:', err));
 
-    // 3. Fetch offers independently
+    // 3. Fetch offers independently from API and Supabase
+    fetch('/api/offers')
+      .then(res => res.ok ? res.json() : null)
+      .then(apiOffers => {
+        if (!isMounted || !Array.isArray(apiOffers) || apiOffers.length === 0) return;
+        setOffers(apiOffers);
+        try {
+          safeStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(apiOffers));
+          safeStorage.setItem('kavish_live_offers_v1', JSON.stringify(apiOffers));
+        } catch (e) {
+          console.error(e);
+        }
+      })
+      .catch(err => console.warn('API offers sync error:', err));
+
     fetchSupabaseOffers().then((dbOffers) => {
       if (!isMounted || dbOffers === null) return;
       setOffers(dbOffers);
@@ -206,7 +226,20 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
     }).catch(err => console.warn('Offers sync error:', err));
 
-    // 4. Fetch reviews independently
+    // 4. Fetch reviews independently from API and Supabase
+    fetch('/api/reviews')
+      .then(res => res.ok ? res.json() : null)
+      .then(apiReviews => {
+        if (!isMounted || !Array.isArray(apiReviews) || apiReviews.length === 0) return;
+        setReviews(apiReviews);
+        try {
+          safeStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(apiReviews));
+        } catch (e) {
+          console.error(e);
+        }
+      })
+      .catch(err => console.warn('API reviews sync error:', err));
+
     fetchSupabaseReviews().then((dbReviews) => {
       if (!isMounted || dbReviews === null) return;
       setReviews(dbReviews);
@@ -218,6 +251,21 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }).catch(err => console.warn('Reviews sync error:', err));
 
     // 5. Fetch store content & announcement text independently
+    fetch('/api/store-content')
+      .then(res => res.json())
+      .then(data => {
+        if (!isMounted || !data?.success || !data.content) return;
+        if (data.content.announcementText) {
+          setAnnouncementTextState(data.content.announcementText);
+          try {
+            safeStorage.setItem(ANNOUNCEMENT_STORAGE_KEY, data.content.announcementText);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      })
+      .catch(err => console.warn('API store content sync error:', err));
+
     fetchSupabaseStoreContent().then((dbStoreContent) => {
       if (!isMounted || !dbStoreContent) return;
       if (dbStoreContent.announcementText) {
@@ -288,6 +336,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const setAnnouncementText = (text: string) => {
     setAnnouncementTextState(text);
     safeStorage.setItem(ANNOUNCEMENT_STORAGE_KEY, text);
+    fetch('/api/store-content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ announcementText: text })
+    }).catch(err => console.warn('Sync announcement to API error:', err));
     fetchSupabaseStoreContent().then(curr => {
       upsertSupabaseStoreContent({
         announcementText: text,
@@ -316,6 +369,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
     const updated = [newCat, ...categories.filter(c => c.id !== newCat.id)];
     saveCategories(updated);
+    fetch('/api/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newCat)
+    }).catch(err => console.warn('Sync category to API error:', err));
     upsertSupabaseCategory(newCat);
     syncAllSupabaseCategories(updated);
     return newCat;
@@ -324,6 +382,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const updateCategory = (updatedCat: CategoryItem): void => {
     const updated = categories.map((c) => (c.id === updatedCat.id ? { ...updatedCat } : c));
     saveCategories(updated);
+    fetch('/api/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedCat)
+    }).catch(err => console.warn('Update category to API error:', err));
     upsertSupabaseCategory(updatedCat);
     syncAllSupabaseCategories(updated);
   };
@@ -331,6 +394,9 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const deleteCategory = (id: string): void => {
     const updated = categories.filter((c) => c.id !== id);
     saveCategories(updated);
+    fetch(`/api/categories?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE'
+    }).catch(err => console.warn('Delete category from API error:', err));
     removeSupabaseCategory(id);
     syncAllSupabaseCategories(updated);
   };
@@ -339,7 +405,14 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const updated = categories.map((c) => (c.id === id ? { ...c, status: c.status === 'Active' ? 'Disabled' : 'Active' } as CategoryItem : c));
     saveCategories(updated);
     const toggled = updated.find(c => c.id === id);
-    if (toggled) upsertSupabaseCategory(toggled);
+    if (toggled) {
+      fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(toggled)
+      }).catch(err => console.warn('Toggle category status error:', err));
+      upsertSupabaseCategory(toggled);
+    }
     syncAllSupabaseCategories(updated);
   };
 
@@ -377,6 +450,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     const updated = [newProd, ...products];
     saveProducts(updated);
+    fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newProd)
+    }).catch(err => console.warn('Add product API sync error:', err));
     upsertSupabaseProduct(newProd);
     return newProd;
   };
@@ -384,18 +462,35 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const updateProduct = (updatedProd: Product): void => {
     const updated = products.map((p) => (p.id === updatedProd.id ? { ...updatedProd } : p));
     saveProducts(updated);
+    fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedProd)
+    }).catch(err => console.warn('Update product API sync error:', err));
     upsertSupabaseProduct(updatedProd);
   };
 
   const deleteProduct = (id: string): void => {
     const updated = products.filter((p) => p.id !== id);
     saveProducts(updated);
+    fetch(`/api/products?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE'
+    }).catch(err => console.warn('Delete product API sync error:', err));
     removeSupabaseProduct(id);
   };
 
   const toggleStockStatus = (id: string): void => {
     const updated = products.map((p) => (p.id === id ? { ...p, inStock: !p.inStock } : p));
     saveProducts(updated);
+    const toggled = updated.find(p => p.id === id);
+    if (toggled) {
+      fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(toggled)
+      }).catch(err => console.warn('Toggle stock API sync error:', err));
+      upsertSupabaseProduct(toggled);
+    }
   };
 
   const addOffer = (offerForm: Partial<PromoOffer>): PromoOffer => {
@@ -415,6 +510,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     const updated = [newOffer, ...offers];
     saveOffers(updated);
+    fetch('/api/offers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newOffer)
+    }).catch(err => console.warn('Add offer API sync error:', err));
     upsertSupabaseOffer(newOffer);
     return newOffer;
   };
@@ -422,17 +522,34 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const updateOffer = (updatedOffer: PromoOffer): void => {
     const updated = offers.map((o) => (o.id === updatedOffer.id ? { ...updatedOffer } : o));
     saveOffers(updated);
+    fetch('/api/offers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedOffer)
+    }).catch(err => console.warn('Update offer API sync error:', err));
     upsertSupabaseOffer(updatedOffer);
   };
 
   const toggleOfferStatus = (id: string): void => {
     const updated = offers.map((o) => (o.id === id ? { ...o, isActive: !o.isActive } : o));
     saveOffers(updated);
+    const toggled = updated.find(o => o.id === id);
+    if (toggled) {
+      fetch('/api/offers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(toggled)
+      }).catch(err => console.warn('Toggle offer API sync error:', err));
+      upsertSupabaseOffer(toggled);
+    }
   };
 
   const deleteOffer = (id: string): void => {
     const updated = offers.filter((o) => o.id !== id);
     saveOffers(updated);
+    fetch(`/api/offers?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE'
+    }).catch(err => console.warn('Delete offer API sync error:', err));
   };
 
   const addCollection = (colForm: Partial<CollectionItem>): CollectionItem => {
@@ -473,9 +590,15 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
       verified: true,
       helpfulCount: 1,
+      status: reviewForm.status || 'Approved'
     };
     const updated = [newRev, ...reviews];
     saveReviews(updated);
+    fetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newRev)
+    }).catch(err => console.warn('Add review API sync error:', err));
     upsertSupabaseReview(newRev);
     return newRev;
   };
@@ -483,12 +606,20 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const updateReview = (rev: Review): void => {
     const updated = reviews.map((r) => (r.id === rev.id ? rev : r));
     saveReviews(updated);
+    fetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rev)
+    }).catch(err => console.warn('Update review API sync error:', err));
     upsertSupabaseReview(rev);
   };
 
   const deleteReview = (id: string): void => {
     const updated = reviews.filter((r) => r.id !== id);
     saveReviews(updated);
+    fetch(`/api/reviews?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE'
+    }).catch(err => console.warn('Delete review API sync error:', err));
   };
 
   const deductInventoryForOrder = (items: { product: Product; quantity: number }[]) => {

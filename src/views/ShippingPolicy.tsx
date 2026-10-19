@@ -1,8 +1,29 @@
+'use client';
+
 import React from 'react';
-import { Truck, Clock, ShieldCheck, MapPin, Gift, AlertCircle, PackageCheck } from 'lucide-react';
+import { Truck, Clock, ShieldCheck, MapPin, Gift, AlertCircle, PackageCheck, Phone, Mail } from 'lucide-react';
 import { POLICY_CONFIG } from '../config/policyConfig';
+import { useCart } from '../context/CartContext';
+import { useAdmin } from '../context/AdminContext';
 
 export const ShippingPolicy: React.FC = () => {
+  const { shippingConfig } = useCart();
+  const { storeContent } = useAdmin();
+
+  const standardRate = shippingConfig?.standardFlatRate ?? POLICY_CONFIG.SHIPPING_CHARGE;
+  const freeThreshold = shippingConfig?.freeShippingThreshold ?? POLICY_CONFIG.FREE_SHIPPING_THRESHOLD;
+  const contact = storeContent?.contactInfo;
+
+  const rateDisplayText = standardRate === 0 
+    ? 'Complimentary Free Delivery' 
+    : `Flat ₹${standardRate} Shipping Charge`;
+
+  const thresholdNote = freeThreshold > 0
+    ? ` (Free on orders above ₹${freeThreshold})`
+    : standardRate === 0
+      ? ' (100% Free on all orders)'
+      : '';
+
   return (
     <div className="py-8 sm:py-12 bg-[#FAF8F1] min-h-screen animate-fadeIn">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,7 +39,7 @@ export const ShippingPolicy: React.FC = () => {
               Shipping &amp; Delivery Policy
             </h1>
             <p className="text-xs sm:text-sm text-[#E8DDC7] font-light leading-relaxed">
-              Standard Express Delivery across India (4–10 days) | Flat ₹{POLICY_CONFIG.SHIPPING_CHARGE} Shipping Charge
+              Standard Express Delivery across India (4–10 days) | {rateDisplayText}{thresholdNote}
             </p>
           </div>
         </div>
@@ -50,8 +71,12 @@ export const ShippingPolicy: React.FC = () => {
               <Gift className="w-5 h-5 text-[#D4AF37]" />
             </div>
             <div>
-              <strong className="block text-xs font-bold text-[#12372A]">Shipping Charge: ₹{POLICY_CONFIG.SHIPPING_CHARGE}</strong>
-              <span className="text-[11px] text-[#6B5846]">Flat rate inside India</span>
+              <strong className="block text-xs font-bold text-[#12372A]">
+                Shipping: {standardRate === 0 ? 'Free' : `₹${standardRate}`}
+              </strong>
+              <span className="text-[11px] text-[#6B5846]">
+                {freeThreshold > 0 ? `Free over ₹${freeThreshold}` : 'Across India'}
+              </span>
             </div>
           </div>
         </div>
@@ -90,7 +115,14 @@ export const ShippingPolicy: React.FC = () => {
                   <tr>
                     <td className="p-3 border border-[#E8DDC7] font-semibold text-[#12372A]">Inside India (All States)</td>
                     <td className="p-3 border border-[#E8DDC7]">Standard Express Handloom Delivery</td>
-                    <td className="p-3 border border-[#E8DDC7] font-bold text-[#12372A]">₹{POLICY_CONFIG.SHIPPING_CHARGE}</td>
+                    <td className="p-3 border border-[#E8DDC7] font-bold text-[#12372A]">
+                      {standardRate === 0 ? 'FREE' : `₹${standardRate}`}
+                      {freeThreshold > 0 && (
+                        <span className="block text-[11px] font-normal text-emerald-700">
+                          (Complimentary on orders ≥ ₹{freeThreshold})
+                        </span>
+                      )}
+                    </td>
                     <td className="p-3 border border-[#E8DDC7]">4–10 Days (Inside India)</td>
                   </tr>
                 </tbody>
@@ -127,8 +159,18 @@ export const ShippingPolicy: React.FC = () => {
               <h2 className="font-serif text-lg sm:text-xl font-bold">5. Failed Deliveries &amp; Address Issues</h2>
             </div>
             <p className="text-[#6B5846]">
-              Delivery attempts will be made to your designated address. If delivery fails due to an incorrect address or customer unavailability, our concierge team will reach out to coordinate re-dispatch. If the shipment returns to our origin atelier (RTO), we will re-attempt delivery upon receiving updated instructions.
+              Delivery attempts will be made to your designated address. If delivery fails due to an incorrect address or customer unavailability, our concierge team will reach out to coordinate re-dispatch.
             </p>
+            <div className="bg-[#FAF8F1] p-4 rounded-xl border border-[#E8DDC7] text-xs flex flex-wrap items-center gap-4 mt-2">
+              <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-[#D4AF37]" />
+                <span>Concierge: <strong>{contact?.phone || POLICY_CONFIG.SUPPORT_PHONE}</strong></span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-[#D4AF37]" />
+                <span>Email: <a href={`mailto:${contact?.email || POLICY_CONFIG.SUPPORT_EMAIL}`} className="underline text-[#12372A] font-semibold">{contact?.email || POLICY_CONFIG.SUPPORT_EMAIL}</a></span>
+              </div>
+            </div>
           </section>
 
         </div>

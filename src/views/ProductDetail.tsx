@@ -24,7 +24,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
   const { products, reviews, addReview } = useProducts();
 
   const targetId = params.id || propProduct?.id;
-  const product = (targetId ? products.find(p => p.id === targetId) : null) || propProduct || products[0];
+  const product = propProduct || (targetId ? products.find(p => p.id === targetId) : null) || (targetId ? undefined : products[0]);
 
   const [newReviewTitle, setNewReviewTitle] = useState('');
   const [newReviewComment, setNewReviewComment] = useState('');
@@ -456,22 +456,30 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            {reviews.map(rev => (
-              <div key={rev.id} className="bg-white p-5 border border-[#E8DDC7] rounded-2xl shadow-xs">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h4 className="font-serif font-bold text-[#12372A] text-sm">{rev.title}</h4>
-                    <span className="text-[10px] text-[#6B5846]">{rev.author} • {rev.location}</span>
+            {reviews
+              .filter(rev => (rev.status === undefined || rev.status === 'Approved') && (!rev.productId || !product || rev.productId === product.id))
+              .map(rev => (
+                <div key={rev.id} className="bg-white p-5 border border-[#E8DDC7] rounded-2xl shadow-xs">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h4 className="font-serif font-bold text-[#12372A] text-sm">{rev.title}</h4>
+                      <span className="text-[10px] text-[#6B5846]">{rev.author} • {rev.location}</span>
+                    </div>
+                    <div className="flex text-[#D4AF37]">
+                      {[...Array(rev.rating)].map((_, i) => (
+                        <Star key={i} className="w-3.5 h-3.5 fill-[#D4AF37]" />
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex text-[#D4AF37]">
-                    {[...Array(rev.rating)].map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-[#D4AF37]" />
-                    ))}
-                  </div>
+                  <p className="text-xs text-[#6B5846] leading-relaxed italic">{rev.comment}</p>
+                  {rev.adminResponse && (
+                    <div className="mt-3 p-3 bg-[#12372A] text-[#FAF8F1] rounded-xl text-xs space-y-1">
+                      <strong className="text-[#D4AF37] font-serif block">Kavish Atelier Official Response:</strong>
+                      <p>{rev.adminResponse}</p>
+                    </div>
+                  )}
                 </div>
-                <p className="text-xs text-[#6B5846] leading-relaxed italic">{rev.comment}</p>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
 

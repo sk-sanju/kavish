@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Trash2, Ruler, UploadCloud, ImagePlus, Link as LinkIcon, Loader2, Star } from 'lucide-react';
 import type { Product, ProductCategory, ProductSubcategory } from '../../types';
+import { useProducts } from '../../context/ProductContext';
 import { uploadImageFile } from '../../utils/fileUpload';
 import { OptimizedImage } from '../common/OptimizedImage';
 
@@ -14,6 +15,7 @@ interface ProductEditorModalProps {
 }
 
 export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product, onSave, onClose }) => {
+  const { categories } = useProducts();
   const [activeTab, setActiveTab] = useState<'basic' | 'pricing' | 'inventory' | 'variants' | 'media' | 'sizechart'>('basic');
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -343,14 +345,27 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#6B5846] mb-1">Subcategory</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block font-semibold text-[#6B5846]">Subcategory / Category</label>
+                    {categories.length > 0 && (
+                      <span className="text-[10px] text-[#D4AF37] font-semibold">Select or type</span>
+                    )}
+                  </div>
                   <input
                     type="text"
+                    list="category-suggestions"
                     value={form.subcategory}
                     onChange={(e) => setForm({ ...form, subcategory: e.target.value as ProductSubcategory })}
                     placeholder="e.g. Kasavu Sarees, Double Mundu"
-                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] text-xs"
+                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] text-xs font-semibold text-[#12372A]"
                   />
+                  <datalist id="category-suggestions">
+                    {categories
+                      .filter(c => !form.category || c.parentCategory === form.category)
+                      .map(c => (
+                        <option key={c.id} value={c.name} />
+                      ))}
+                  </datalist>
                 </div>
 
                 <div>

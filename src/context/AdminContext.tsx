@@ -212,6 +212,24 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }).catch(err => console.warn('Return requests load error:', err));
     }
 
+    // Fetch live store content and banners from local server API
+    fetch('/api/store-content')
+      .then(res => res.json())
+      .then(data => {
+        if (!data?.success || !data?.content) return;
+        const dbContent = data.content;
+        setStoreContent(prev => ({ ...prev, ...dbContent }));
+        if (dbContent.heroBanners && Array.isArray(dbContent.heroBanners) && dbContent.heroBanners.length > 0) {
+          setHeroBanners(dbContent.heroBanners);
+          try {
+            safeStorage.setItem('kavish_hero_banners_v1', JSON.stringify(dbContent.heroBanners));
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      })
+      .catch(err => console.warn('API store content load error:', err));
+
     // Hero banners & store content are loaded for storefront display
     fetchSupabaseStoreContent().then(dbContent => {
       if (dbContent) {
@@ -290,6 +308,11 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } catch (e) {
       console.error('Error saving store content to localStorage:', e);
     }
+    fetch('/api/store-content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedContent)
+    }).catch(err => console.warn('Sync store content to API error:', err));
     upsertSupabaseStoreContent(updatedContent);
   };
 
@@ -493,6 +516,11 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const updated = { ...storeContent, ...content, heroBanners: updatedHeroBanners };
     setStoreContent(updated);
     safeStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(updated));
+    fetch('/api/store-content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updated)
+    }).catch(err => console.warn('Sync store content to API error:', err));
     upsertSupabaseStoreContent(updated);
   };
 

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { PRODUCTS } from '../../../data/products';
+import { getProductById } from '../../../lib/serverStore';
 import { ProductDetail } from '../../../views/ProductDetail';
 
 interface ProductPageProps {
@@ -8,7 +8,7 @@ interface ProductPageProps {
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { id } = await params;
-  const product = PRODUCTS.find((p) => p.id === id);
+  const product = getProductById(id);
 
   if (!product) {
     return {
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params;
-  const product = PRODUCTS.find((p) => p.id === id);
+  const product = getProductById(id);
 
   const jsonLd = product
     ? {

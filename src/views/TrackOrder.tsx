@@ -88,7 +88,22 @@ export const TrackOrder: React.FC = () => {
       // Ignore parse error
     }
 
-    // 4. Try remote Supabase database lookup
+    // 4. Try server orders API lookup
+    try {
+      const apiRes = await fetch(`/api/orders?id=${encodeURIComponent(clean)}`);
+      if (apiRes.ok) {
+        const orderData = await apiRes.json();
+        if (orderData && orderData.id) {
+          setSearchedOrder(orderData);
+          setIsSearching(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('API order search error:', err);
+    }
+
+    // 5. Try remote Supabase database lookup
     try {
       const remoteOrder = await fetchSupabaseOrderById(clean);
       if (remoteOrder) {

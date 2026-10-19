@@ -18,7 +18,7 @@ export const Header: React.FC = () => {
   const { itemCount, setIsCartOpen } = useCart();
   const { wishlistCount } = useWishlist();
   const { setIsSearchOpen, isMobileMenuOpen, setIsMobileMenuOpen } = useModal();
-  const { collections } = useProducts();
+  const { collections, categories } = useProducts();
   const {
     isAdminLoggedIn,
     logoutAdmin,
@@ -172,6 +172,45 @@ export const Header: React.FC = () => {
                         <span className="text-[10px] text-[#12372A]">Onam &amp; Vishu</span>
                       </button>
                     </>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Dropdown: Categories */}
+            <div
+              className="relative"
+              onMouseEnter={() => setActiveDropdown('categories')}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <button
+                onClick={() => handleNavClick('shop')}
+                className="flex items-center space-x-1 hover:text-[#D4AF37] transition-colors py-2"
+              >
+                <span>Categories</span>
+                <ChevronDown className="w-3 h-3 text-[#D4AF37]" />
+              </button>
+
+              {activeDropdown === 'categories' && (
+                <div className="absolute top-full left-0 w-64 bg-[#FAF8F1] border border-[#D4AF37]/30 shadow-xl py-3 rounded-2xl animate-fadeIn z-50">
+                  <div className="px-4 py-1 text-[10px] uppercase font-bold text-[#D4AF37] tracking-widest border-b border-[#E8DDC7]/60 pb-2 mb-2">
+                    Atelier Handloom Weaves
+                  </div>
+                  {categories && categories.length > 0 ? (
+                    categories
+                      .filter(c => c.status !== 'Disabled')
+                      .map((cat) => (
+                        <button
+                          key={cat.id || cat.slug}
+                          onClick={() => handleNavClick('shop', cat.parentCategory, cat.slug)}
+                          className="w-full text-left px-4 py-2 hover:bg-[#E8DDC7]/30 hover:text-[#12372A] text-xs capitalize tracking-normal flex justify-between items-center cursor-pointer"
+                        >
+                          <span>{cat.name}</span>
+                          <span className="text-[10px] text-[#D4AF37] uppercase font-semibold">{cat.parentCategory}</span>
+                        </button>
+                      ))
+                  ) : (
+                    <div className="px-4 py-2 text-xs text-gray-400">No categories active</div>
                   )}
                 </div>
               )}
@@ -331,6 +370,25 @@ export const Header: React.FC = () => {
               <span>Kids Heritage</span>
               <span className="text-xs text-[#D4AF37] font-normal">Pattu Pavada</span>
             </button>
+
+            {categories && categories.length > 0 && (
+              <div className="py-2 border-b border-[#E8DDC7]">
+                <span className="text-[10px] uppercase font-bold text-[#D4AF37] tracking-widest block mb-1">
+                  Browse by Category
+                </span>
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                  {categories.filter(c => c.status !== 'Disabled').map(cat => (
+                    <button
+                      key={cat.id}
+                      onClick={() => handleNavClick('shop', cat.parentCategory, cat.slug)}
+                      className="px-2.5 py-1 text-xs bg-white border border-[#E8DDC7] rounded-lg text-[#12372A] hover:border-[#D4AF37]"
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <button
               onClick={() => handleNavClick('heritage')}

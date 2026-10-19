@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { SlidersHorizontal, Grid3X3, LayoutGrid, X } from 'lucide-react';
 import { ProductCard } from '../components/product/ProductCard';
 import { ProductFilter } from '../components/product/ProductFilter';
@@ -39,28 +39,40 @@ const COLLECTION_ALIASES: Record<string, string[]> = {
 export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, onSelectProduct }) => {
   const { products } = useProducts();
   const params = useParams() as { category?: string; collection?: string };
+  const searchParams = useSearchParams();
   const router = useRouter();
 
-  const activeCat = params.category || initialCategory;
-  const activeCol = params.collection || initialCollection;
+  const activeCat = params.category || initialCategory || searchParams?.get('category') || undefined;
+  const activeCol = params.collection || initialCollection || searchParams?.get('collection') || undefined;
+  const activeDept = searchParams?.get('dept') || undefined;
   const isDirectDept = ['women', 'men', 'kids'].includes((activeCat || '').toLowerCase());
 
-  const [filters, setFilters] = useState<FilterState>(() => ({
-    ...INITIAL_FILTERS,
-    gender: isDirectDept && activeCat ? [activeCat.toLowerCase()] : [],
-    category: !isDirectDept && activeCat ? [activeCat.toLowerCase()] : [],
-    collection: activeCol ? [activeCol] : [],
-  }));
+  const [filters, setFilters] = useState<FilterState>(() => {
+    const initialGenders: string[] = [];
+    if (isDirectDept && activeCat) initialGenders.push(activeCat.toLowerCase());
+    if (activeDept && !initialGenders.includes(activeDept.toLowerCase())) initialGenders.push(activeDept.toLowerCase());
+
+    return {
+      ...INITIAL_FILTERS,
+      gender: initialGenders,
+      category: !isDirectDept && activeCat ? [activeCat.toLowerCase()] : [],
+      collection: activeCol ? [activeCol] : [],
+    };
+  });
 
   useEffect(() => {
     const isDept = ['women', 'men', 'kids'].includes((activeCat || '').toLowerCase());
+    const genders: string[] = [];
+    if (isDept && activeCat) genders.push(activeCat.toLowerCase());
+    if (activeDept && !genders.includes(activeDept.toLowerCase())) genders.push(activeDept.toLowerCase());
+
     setFilters(prev => ({
       ...prev,
-      gender: isDept && activeCat ? [activeCat.toLowerCase()] : [],
-      category: !isDept && activeCat ? [activeCat.toLowerCase()] : [],
-      collection: activeCol ? [activeCol] : [],
+      gender: genders,
+      category: !isDept && activeCat ? [activeCat.toLowerCase()] : prev.category,
+      collection: activeCol ? [activeCol] : prev.collection,
     }));
-  }, [activeCat, activeCol]);
+  }, [activeCat, activeCol, activeDept]);
 
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [gridCols, setGridCols] = useState<3 | 4>(3);
@@ -83,15 +95,17 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
         return false;
       }
       if (filters.category.length > 0) {
-        const catFilter = filters.category[0].toLowerCase().replace(/-/g, ' ');
-        const pSub = (product.subcategory || '').toLowerCase();
-        const pName = (product.name || '').toLowerCase();
-        const pCat = (product.category || '').toLowerCase();
-        const matchesCategory = pSub.includes(catFilter) ||
-          catFilter.includes(pSub) ||
-          pName.includes(catFilter) ||
-          pCat.includes(catFilter) ||
-          (product.tags && product.tags.some(t => t.toLowerCase().includes(catFilter)));
+        const matchesCategory = filters.category.some(cat => {
+          const catFilter = cat.toLowerCase().replace(/-/g, ' ');
+          const pSub = (product.subcategory || '').toLowerCase();
+          const pName = (product.name || '').toLowerCase();
+          const pCat = (product.category || '').toLowerCase();
+          return pSub.includes(catFilter) ||
+            catFilter.includes(pSub) ||
+            pName.includes(catFilter) ||
+            pCat.includes(catFilter) ||
+            (product.tags && product.tags.some(t => t.toLowerCase().includes(catFilter)));
+        });
         if (!matchesCategory) return false;
       }
       if (filters.collection.length > 0) {

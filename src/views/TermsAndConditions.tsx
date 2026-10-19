@@ -1,8 +1,14 @@
+'use client';
+
 import React from 'react';
 import { FileText, Award, Truck, RefreshCw, AlertCircle, Scale, Mail } from 'lucide-react';
 import { POLICY_CONFIG } from '../config/policyConfig';
+import { useAdmin } from '../context/AdminContext';
 
 export const TermsAndConditions: React.FC = () => {
+  const { storeContent } = useAdmin();
+  const legalEmail = storeContent?.contactInfo?.email || POLICY_CONFIG.SUPPORT_EMAIL;
+
   return (
     <div className="py-8 sm:py-12 bg-[#FAF8F1] min-h-screen animate-fadeIn">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -124,7 +130,7 @@ export const TermsAndConditions: React.FC = () => {
             </p>
             <div className="bg-[#FAF8F1] p-4 rounded-xl border border-[#E8DDC7] text-xs flex items-center gap-2 mt-2">
               <Mail className="w-4 h-4 text-[#D4AF37] shrink-0" />
-              <span>For legal inquiries, contact: <a href={`mailto:${POLICY_CONFIG.SUPPORT_EMAIL}`} className="underline font-bold text-[#12372A]">{POLICY_CONFIG.SUPPORT_EMAIL}</a></span>
+              <span>For legal inquiries, contact: <a href={`mailto:${legalEmail}`} className="underline font-bold text-[#12372A]">{legalEmail}</a></span>
             </div>
           </section>
 

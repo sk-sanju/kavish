@@ -46,7 +46,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [shippingConfig, setShippingConfig] = useState<ShippingConfig>(DEFAULT_SHIPPING_CONFIG);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load from local storage after client mount
+  // Load from local storage and API after client mount
   useEffect(() => {
     try {
       const savedCart = safeStorage.getItem('kavish_cart');
@@ -60,20 +60,36 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (e) {
       console.error(e);
     }
+
+    // Fetch live shipping config from server API
+    fetch('/api/shipping')
+      .then(res => res.ok ? res.json() : null)
+      .then(apiConfig => {
+        if (apiConfig && typeof apiConfig.standardFlatRate === 'number') {
+          setShippingConfig(apiConfig);
+          try {
+            safeStorage.setItem(SHIPPING_STORAGE_KEY, JSON.stringify(apiConfig));
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      })
+      .catch(err => console.warn('Fetch shipping API error:', err));
+
     setIsLoaded(true);
   }, []);
 
-  // Load from Supabase across all devices & store views
+  // Load from Supabase across all devices & store views if available
   useEffect(() => {
     async function loadDbShippingConfig() {
-      const dbConfig = await fetchSupabaseShippingConfig();
-      if (dbConfig) {
-        setShippingConfig(dbConfig);
-        try {
+      try {
+        const dbConfig = await fetchSupabaseShippingConfig();
+        if (dbConfig) {
+          setShippingConfig(dbConfig);
           safeStorage.setItem(SHIPPING_STORAGE_KEY, JSON.stringify(dbConfig));
-        } catch (e) {
-          console.error(e);
         }
+      } catch (err) {
+        console.warn('Supabase shipping fetch error:', err);
       }
     }
     loadDbShippingConfig();
@@ -90,6 +106,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (e) {
       console.error(e);
     }
+
+    // Sync to Server API
+    fetch('/api/shipping', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cleanConfig)
+    }).catch(err => console.warn('Save shipping API error:', err));
+
     upsertSupabaseShippingConfig(cleanConfig);
   };
 

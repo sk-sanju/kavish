@@ -1,8 +1,20 @@
+'use client';
+
 import React from 'react';
 import { ShieldCheck, Lock, Eye, Server, RefreshCw, Mail, Phone, MapPin, CheckCircle2 } from 'lucide-react';
 import { POLICY_CONFIG } from '../config/policyConfig';
+import { useAdmin } from '../context/AdminContext';
 
 export const PrivacyPolicy: React.FC = () => {
+  const { storeContent } = useAdmin();
+  const contact = storeContent?.contactInfo;
+  const atelierAddress = contact?.addressLine1
+    ? `${contact.addressLine1}${contact.addressLine2 ? ', ' + contact.addressLine2 : ''}`
+    : POLICY_CONFIG.ATELIER_ADDRESS.FULL;
+  const conciergeEmail = contact?.email || POLICY_CONFIG.SUPPORT_EMAIL;
+  const conciergePhone = contact?.phone || POLICY_CONFIG.SUPPORT_PHONE;
+  const workingHours = contact?.visitingHoursLine1 || POLICY_CONFIG.WORKING_HOURS;
+
   return (
     <div className="py-8 sm:py-12 bg-[#FAF8F1] min-h-screen animate-fadeIn">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -142,15 +154,15 @@ export const PrivacyPolicy: React.FC = () => {
             <div className="bg-[#FAF8F1] p-5 rounded-2xl border border-[#E8DDC7] space-y-2 text-xs">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-[#D4AF37]" />
-                <span><strong>Atelier Address:</strong> {POLICY_CONFIG.ATELIER_ADDRESS.FULL}</span>
+                <span><strong>Atelier Address:</strong> {atelierAddress}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-[#D4AF37]" />
-                <span><strong>Concierge Email:</strong> <a href={`mailto:${POLICY_CONFIG.SUPPORT_EMAIL}`} className="underline text-[#12372A] font-semibold">{POLICY_CONFIG.SUPPORT_EMAIL}</a></span>
+                <span><strong>Concierge Email:</strong> <a href={`mailto:${conciergeEmail}`} className="underline text-[#12372A] font-semibold">{conciergeEmail}</a></span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#D4AF37]" />
-                <span><strong>Direct Phone / WhatsApp:</strong> {POLICY_CONFIG.SUPPORT_PHONE} ({POLICY_CONFIG.WORKING_HOURS})</span>
+                <span><strong>Direct Phone / WhatsApp:</strong> {conciergePhone} ({workingHours})</span>
               </div>
             </div>
           </section>

@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { SlidersHorizontal, X, RotateCcw } from 'lucide-react';
 import type { FilterState } from '../../types';
 import { useCurrency } from '../../context/CurrencyContext';
+import { useProducts } from '../../context/ProductContext';
 
 interface ProductFilterProps {
   filters: FilterState;
@@ -31,11 +32,25 @@ export const ProductFilter: React.FC<ProductFilterProps> = ({
   totalResults,
 }) => {
   const { formatPrice } = useCurrency();
+  const { categories } = useProducts();
+
+  const activeCategories = useMemo(() => {
+    return (categories || []).filter(c => c.status !== 'Disabled');
+  }, [categories]);
 
   const toggleGender = (g: string) => {
     const exists = filters.gender.includes(g);
     const updated = exists ? filters.gender.filter(item => item !== g) : [...filters.gender, g];
     onFilterChange({ gender: updated });
+  };
+
+  const toggleCategory = (catSlug: string) => {
+    const clean = catSlug.toLowerCase();
+    const exists = filters.category.some(c => c.toLowerCase() === clean);
+    const updated = exists
+      ? filters.category.filter(c => c.toLowerCase() !== clean)
+      : [...filters.category, clean];
+    onFilterChange({ category: updated });
   };
 
   const toggleCollection = (col: string) => {
@@ -82,6 +97,36 @@ export const ProductFilter: React.FC<ProductFilterProps> = ({
           })}
         </div>
       </div>
+
+      {activeCategories.length > 0 && (
+        <div className="space-y-2 pt-2 border-t border-[#E8DDC7]/60">
+          <h4 className="font-serif font-semibold text-sm text-[#12372A] uppercase tracking-wider">Categories</h4>
+          <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+            {activeCategories.map(cat => {
+              const catSlug = (cat.slug || '').toLowerCase();
+              const catName = (cat.name || '').toLowerCase();
+              const active = filters.category.some(c => {
+                const clean = c.toLowerCase();
+                return clean === catSlug || clean === catName || clean.replace(/-/g, ' ') === catName;
+              });
+              return (
+                <label key={cat.id} className="flex items-center justify-between gap-2.5 cursor-pointer hover:text-[#D4AF37]">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={active}
+                      onChange={() => toggleCategory(cat.slug || cat.name)}
+                      className="rounded-sm accent-[#12372A] w-3.5 h-3.5"
+                    />
+                    <span className={active ? 'font-semibold text-[#12372A]' : ''}>{cat.name}</span>
+                  </div>
+                  <span className="text-[10px] text-gray-400 capitalize">{cat.parentCategory}</span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="space-y-2 pt-2 border-t border-[#E8DDC7]/60">
         <h4 className="font-serif font-semibold text-sm text-[#12372A] uppercase tracking-wider">Signature Collection</h4>

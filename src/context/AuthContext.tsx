@@ -61,6 +61,7 @@ const USER_STORAGE_KEY = 'kavish_customer_profile';
 const AUTH_STATUS_KEY = 'kavish_customer_auth_status';
 const ADMIN_PROFILE_STORAGE_KEY = 'kavish_admin_profile_v2';
 const ADMIN_ACCOUNTS_STORAGE_KEY = 'kavish_all_admin_accounts_v1';
+const ADMIN_ORDERS_STORAGE_KEY = 'kavish_all_orders_v1';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -244,17 +245,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const refreshAdminOrders = async () => {
+    // 1. Load from local master storage
     try {
-      const dbOrders = await fetchSupabaseOrders();
-      if (dbOrders !== null) {
-        setAdminOrders(dbOrders);
+      const localMaster = safeStorage.getItem(ADMIN_ORDERS_STORAGE_KEY);
+      if (localMaster) {
+        const parsed = JSON.parse(localMaster);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setAdminOrders(parsed);
+        }
       }
     } catch (e) {
-      console.error('Failed to refresh admin orders:', e);
+      console.error('Failed to read local master orders:', e);
+    }
+
+    // 2. Fetch from /api/orders
+    try {
+      const res = await fetch('/api/orders');
+      if (res.ok) {
+        const apiOrders = await res.json();
+        if (Array.isArray(apiOrders) && apiOrders.length > 0) {
+          setAdminOrders(apiOrders);
+          try {
+            safeStorage.setItem(ADMIN_ORDERS_STORAGE_KEY, JSON.stringify(apiOrders));
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('API orders fetch error:', e);
+    }
+
+    // 3. Fallback to Supabase if available
+    try {
+      const dbOrders = await fetchSupabaseOrders();
+      if (dbOrders !== null && Array.isArray(dbOrders) && dbOrders.length > 0) {
+        setAdminOrders(dbOrders);
+        safeStorage.setItem(ADMIN_ORDERS_STORAGE_KEY, JSON.stringify(dbOrders));
+      }
+    } catch (e) {
+      console.warn('Supabase orders fetch error:', e);
     }
   };
 
-  // Only load all orders from Supabase when authorized administrator is logged in
+  // Only load all orders when authorized administrator is logged in
   useEffect(() => {
     if (isAdminLoggedIn) {
       refreshAdminOrders();
@@ -339,8 +373,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     saveUserData(updated, isCustomerLoggedIn);
 
-    // Also update admin live orders view
-    setAdminOrders(prev => [order, ...prev.filter(o => o.id !== order.id)]);
+    // Update master orders storage and state
+    setAdminOrders(prev => {
+      const newOrders = [order, ...prev.filter(o => o.id !== order.id)];
+      try {
+        safeStorage.setItem(ADMIN_ORDERS_STORAGE_KEY, JSON.stringify(newOrders));
+      } catch (e) {
+        console.error(e);
+      }
+      return newOrders;
+    });
+
+    // Sync to Server API
+    fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(order)
+    }).catch(err => console.warn('Order API sync error:', err));
+
     upsertSupabaseOrder(order);
   };
 
@@ -351,7 +401,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     saveUserData(updated, isCustomerLoggedIn);
 
-    setAdminOrders(prev => prev.map(o => o.id === order.id ? order : o));
+    setAdminOrders(prev => {
+      const newOrders = prev.map(o => o.id === order.id ? order : o);
+      try {
+        safeStorage.setItem(ADMIN_ORDERS_STORAGE_KEY, JSON.stringify(newOrders));
+      } catch (e) {
+        console.error(e);
+      }
+      return newOrders;
+    });
+
+    // Sync to Server API
+    fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(order)
+    }).catch(err => console.warn('Order API sync error:', err));
+
     upsertSupabaseOrder(order);
   };
 
