@@ -28,6 +28,14 @@ const INITIAL_FILTERS: FilterState = {
   searchQuery: '',
 };
 
+const COLLECTION_ALIASES: Record<string, string[]> = {
+  'kasavu-masterpieces': ['kasavu-masterpieces', 'festive-edit', 'women-kasavu', 'tissue-sarees'],
+  'ceremonial-classics': ['ceremonial-classics', 'kerala-classics', 'men-mundu', 'dhotis'],
+  'flax-linen': ['flax-linen', 'linen-edit', 'men-shirts', 'linen'],
+  'festive-edit': ['festive-edit', 'kasavu-masterpieces'],
+  'kerala-classics': ['kerala-classics', 'ceremonial-classics']
+};
+
 export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, onSelectProduct }) => {
   const { products } = useProducts();
   const params = useParams() as { category?: string; collection?: string };
@@ -86,8 +94,16 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
           (product.tags && product.tags.some(t => t.toLowerCase().includes(catFilter)));
         if (!matchesCategory) return false;
       }
-      if (filters.collection.length > 0 && !filters.collection.includes(product.collection)) {
-        return false;
+      if (filters.collection.length > 0) {
+        const matchesCollection = filters.collection.some(filterCol => {
+          if (product.collection === filterCol) return true;
+          const allowedAliases = COLLECTION_ALIASES[filterCol] || [];
+          if (allowedAliases.includes(product.collection)) return true;
+          const colSlug = filterCol.toLowerCase().replace(/-/g, ' ');
+          return (product.subcategory || '').toLowerCase().includes(colSlug) ||
+                 (product.collection || '').toLowerCase().includes(filterCol.toLowerCase());
+        });
+        if (!matchesCollection) return false;
       }
       if (filters.fabric.length > 0 && !filters.fabric.some(f => product.fabric.toLowerCase().includes(f.toLowerCase()))) {
         return false;

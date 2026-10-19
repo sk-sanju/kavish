@@ -121,19 +121,42 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const addToCart = (product: Product, selectedSize: string, selectedColor: ProductColor, quantity = 1) => {
-    const itemId = `${product.id}-${selectedSize}-${selectedColor.name}`;
+    if (!product.inStock && !product.allowBackorders) {
+      showToast(`"${product.name}" is currently sold out.`);
+      return;
+    }
+
+    const availableStock = product.stockCount != null ? Math.max(0, product.stockCount) : 10;
+    if (availableStock <= 0 && !product.allowBackorders) {
+      showToast(`"${product.name}" is currently sold out.`);
+      return;
+    }
+
+    const safeQty = Math.max(1, Math.floor(quantity));
+    const sizeName = selectedSize || (product.sizes?.[0] || 'Free Size');
+    const colorItem = selectedColor || (product.colors?.[0] || { name: 'Kasavu Gold', hex: '#D4AF37' });
+    const itemId = `${product.id}-${sizeName}-${colorItem.name}`;
     
     setCart(prev => {
       const existing = prev.find(item => item.id === itemId);
+      const existingQty = existing ? existing.quantity : 0;
+      let targetQty = existingQty + safeQty;
+
+      if (!product.allowBackorders && targetQty > availableStock) {
+        targetQty = availableStock;
+        showToast(`Only ${availableStock} units available for "${product.name}". Bag updated to max stock.`);
+      } else {
+        showToast(`Added "${product.name}" to your shopping bag.`);
+      }
+
       if (existing) {
         return prev.map(item =>
-          item.id === itemId ? { ...item, quantity: item.quantity + quantity } : item
+          item.id === itemId ? { ...item, quantity: targetQty } : item
         );
       }
-      return [...prev, { id: itemId, product, selectedSize, selectedColor, quantity }];
+      return [...prev, { id: itemId, product, selectedSize: sizeName, selectedColor: colorItem, quantity: targetQty }];
     });
 
-    showToast(`Added "${product.name}" to your shopping bag.`);
     setIsCartOpen(true);
   };
 
@@ -146,7 +169,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       removeFromCart(id);
       return;
     }
-    setCart(prev => prev.map(item => item.id === id ? { ...item, quantity } : item));
+    setCart(prev => prev.map(item => {
+      if (item.id !== id) return item;
+      const maxStock = item.product.stockCount != null ? Math.max(0, item.product.stockCount) : 10;
+      let finalQty = Math.floor(quantity);
+      if (!item.product.allowBackorders && finalQty > maxStock) {
+        finalQty = maxStock;
+        showToast(`Maximum available stock for "${item.product.name}" is ${maxStock}.`);
+      }
+      return { ...item, quantity: finalQty };
+    }));
   };
 
   const [discountAmountFixed, setDiscountAmountFixed] = useState<number>(0);
@@ -162,13 +194,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const cleanCode = code.trim().toUpperCase();
     if (!cleanCode) return { success: false, message: 'Please enter a coupon code.' };
 
-    const currentSubtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const currentSubtotal = cart.reduce((sum, item) => sum + Math.max(0, item.product.price) * item.quantity, 0);
 
-    // 1. Check dynamic offers from Admin Panel stored in localStorage
+    // 1. Check dynamic offers from Admin Panel stored in localStorage (check both keys)
     try {
-      const savedOffers = safeStorage.getItem('kavish_live_offers_v1');
-      if (savedOffers) {
-        const offersList = JSON.parse(savedOffers);
+      const rawOffers = safeStorage.getItem('kavish_db_offers_v2') || safeStorage.getItem('kavish_live_offers_v1');
+      if (rawOffers) {
+        const offersList = JSON.parse(rawOffers);
         if (Array.isArray(offersList)) {
           const matched = offersList.find(
             (o: any) => o.code && o.code.toUpperCase() === cleanCode && (o.isActive === undefined || o.isActive === true)
@@ -202,12 +234,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setAppliedPromoCode(cleanCode);
             if (matched.discountType === 'fixed') {
               setDiscountPercent(0);
-              setDiscountAmountFixed(matched.discountValue || 0);
+              const fixedVal = Math.min(currentSubtotal, Number(matched.discountValue) || 0);
+              setDiscountAmountFixed(fixedVal);
               return { success: true, message: `₹${matched.discountValue} Off Discount Applied!` };
             } else {
               setDiscountAmountFixed(0);
-              setDiscountPercent(matched.discountValue || 10);
-              return { success: true, message: `${matched.discountValue}% Heritage Discount Applied!` };
+              const pctVal = Math.min(100, Math.max(0, Number(matched.discountValue) || 10));
+              setDiscountPercent(pctVal);
+              return { success: true, message: `${pctVal}% Heritage Discount Applied!` };
             }
           }
         }
@@ -238,9 +272,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setDiscountAmountFixed(0);
   };
 
-  const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const subtotal = Math.max(0, cart.reduce((sum, item) => sum + Math.max(0, item.product.price) * Math.max(1, item.quantity), 0));
   const percentDiscount = Math.round((subtotal * discountPercent) / 100);
-  const discount = percentDiscount > 0 ? percentDiscount : discountAmountFixed;
+  const discount = Math.min(subtotal, percentDiscount > 0 ? percentDiscount : discountAmountFixed);
 
   // Free shipping conditions: cart empty, flat rate is 0, or subtotal >= threshold (if threshold > 0)
   const isFreeShipping =
@@ -248,9 +282,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     shippingConfig.standardFlatRate === 0 ||
     (shippingConfig.freeShippingThreshold > 0 && subtotal >= shippingConfig.freeShippingThreshold);
 
-  const shippingFee = isFreeShipping ? 0 : (shippingConfig.standardFlatRate || 150);
+  const shippingFee = isFreeShipping ? 0 : Math.max(0, shippingConfig.standardFlatRate || 150);
   const total = Math.max(0, subtotal - discount + shippingFee);
-  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const itemCount = cart.reduce((sum, item) => sum + Math.max(1, item.quantity), 0);
 
   const effectiveThreshold = shippingConfig.freeShippingThreshold > 0 ? shippingConfig.freeShippingThreshold : 0;
   const freeShippingProgress = effectiveThreshold === 0 ? 100 : Math.min(100, (subtotal / effectiveThreshold) * 100);

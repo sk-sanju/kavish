@@ -123,6 +123,7 @@ function mapOrderFromDb(row: any): Order {
     invoiceId: row.invoice_id || `KV-INV-2026-${row.id ? row.id.replace('KV-ORD-', '') : '001'}`,
     date: row.date,
     status: row.status,
+    paymentStatus: row.payment_status || (row.status === 'Cancelled' ? 'Refunded' : 'Pending'),
     items: Array.isArray(row.items) ? row.items : [],
     subtotal: Number(row.subtotal),
     discount: Number(row.discount ?? 0),
@@ -146,6 +147,7 @@ function mapOrderToDb(o: Order): Record<string, any> {
     invoice_id: o.invoiceId || `KV-INV-2026-${o.id.replace('KV-ORD-', '')}`,
     date: o.date,
     status: o.status,
+    payment_status: o.paymentStatus || (o.status === 'Processing' || o.status === 'Delivered' ? 'Paid' : 'Pending'),
     items: o.items,
     subtotal: o.subtotal,
     discount: o.discount,
@@ -483,6 +485,27 @@ export async function fetchSupabaseOrders(): Promise<Order[] | null> {
     const { data, error } = res as any;
     if (error || !data) return null;
     return data.map(mapOrderFromDb);
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function fetchSupabaseOrderById(orderId: string): Promise<Order | null> {
+  if (!isSupabaseConfigured) return null;
+  try {
+    const clean = orderId.trim();
+    const formattedId = clean.startsWith('KV-ORD-') ? clean : `KV-ORD-${clean}`;
+    const res = await withTimeout(
+      supabase
+        .from('orders')
+        .select('*')
+        .or(`id.eq.${clean},id.eq.${formattedId},invoice_id.eq.${clean},tracking_number.eq.${clean}`)
+        .limit(1)
+        .maybeSingle()
+    );
+    const { data, error } = res as any;
+    if (error || !data) return null;
+    return mapOrderFromDb(data);
   } catch (err) {
     return null;
   }

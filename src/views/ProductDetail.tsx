@@ -58,12 +58,16 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
   }
 
   const isFavorite = isInWishlist(product.id);
+  const isOutOfStock = !product.inStock && !product.allowBackorders;
+  const maxStock = product.allowBackorders ? 99 : (product.stockCount ?? 10);
 
   const handleAddToCart = () => {
+    if (isOutOfStock) return;
     addToCart(product, selectedSize, selectedColor, quantity);
   };
 
   const handleBuyNow = () => {
+    if (isOutOfStock) return;
     addToCart(product, selectedSize, selectedColor, quantity);
     if (onProceedToCheckout) {
       onProceedToCheckout();
@@ -216,19 +220,36 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
               </div>
             </div>
 
+            {/* Stock Availability Status */}
+            {isOutOfStock ? (
+              <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-xl text-xs font-semibold flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-red-600 inline-block animate-ping" />
+                <span>Currently Sold Out. Crafting more on traditional Kuthampully handlooms.</span>
+              </div>
+            ) : product.stockCount != null && product.stockCount <= 5 ? (
+              <div className="p-2.5 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-xs font-semibold flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-amber-600 inline-block" />
+                <span>Only {product.stockCount} left in atelier stock — order soon!</span>
+              </div>
+            ) : null}
+
             <div className="pt-2 border-t border-[#E8DDC7]/60 flex items-center gap-4">
               <span className="text-xs uppercase font-semibold text-[#171717] tracking-wider">Quantity:</span>
               <div className="flex items-center border border-[#E8DDC7] bg-[#FAF8F1] rounded-xl overflow-hidden">
                 <button
+                  type="button"
+                  disabled={isOutOfStock || quantity <= 1}
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-3 py-1.5 text-xs font-bold hover:bg-[#E8DDC7]"
+                  className="px-3 py-1.5 text-xs font-bold hover:bg-[#E8DDC7] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   -
                 </button>
-                <span className="px-4 py-1.5 text-xs font-bold text-[#12372A]">{quantity}</span>
+                <span className="px-4 py-1.5 text-xs font-bold text-[#12372A]">{isOutOfStock ? 0 : quantity}</span>
                 <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="px-3 py-1.5 text-xs font-bold hover:bg-[#E8DDC7]"
+                  type="button"
+                  disabled={isOutOfStock || (!product.allowBackorders && quantity >= maxStock)}
+                  onClick={() => setQuantity(Math.min(!product.allowBackorders ? maxStock : 99, quantity + 1))}
+                  className="px-3 py-1.5 text-xs font-bold hover:bg-[#E8DDC7] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   +
                 </button>
@@ -238,16 +259,23 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
             <div className="space-y-3 pt-4 border-t border-[#E8DDC7]">
               <div className="flex gap-2 sm:gap-3">
                 <button
+                  type="button"
+                  disabled={isOutOfStock}
                   onClick={handleAddToCart}
-                  className="flex-1 bg-[#12372A] text-[#FAF8F1] hover:bg-[#D4AF37] hover:text-[#12372A] py-3.5 sm:py-4 text-xs font-bold uppercase tracking-widest transition-all rounded-xl flex items-center justify-center gap-2 border border-[#D4AF37] shadow-md"
+                  className={`flex-1 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-widest transition-all rounded-xl flex items-center justify-center gap-2 border shadow-md ${
+                    isOutOfStock
+                      ? 'bg-gray-200 text-gray-500 border-gray-300 cursor-not-allowed shadow-none'
+                      : 'bg-[#12372A] text-[#FAF8F1] hover:bg-[#D4AF37] hover:text-[#12372A] border-[#D4AF37] cursor-pointer'
+                  }`}
                 >
                   <ShoppingBag className="w-4 h-4" />
-                  <span>Add to Shopping Bag</span>
+                  <span>{isOutOfStock ? 'Sold Out' : 'Add to Shopping Bag'}</span>
                 </button>
 
                 <button
+                  type="button"
                   onClick={() => toggleWishlist(product)}
-                  className={`p-3.5 sm:p-4 border border-[#E8DDC7] hover:border-[#12372A] transition-all rounded-xl ${
+                  className={`p-3.5 sm:p-4 border border-[#E8DDC7] hover:border-[#12372A] transition-all rounded-xl cursor-pointer ${
                     isFavorite ? 'bg-[#12372A] text-[#D4AF37]' : 'bg-white text-[#171717]'
                   }`}
                   title="Wishlist"
@@ -257,10 +285,16 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
               </div>
 
               <button
+                type="button"
+                disabled={isOutOfStock}
                 onClick={handleBuyNow}
-                className="w-full bg-[#D4AF37] text-[#12372A] hover:bg-[#FAF8F1] py-3.5 text-xs font-bold uppercase tracking-widest transition-all rounded-xl border border-[#12372A]"
+                className={`w-full py-3.5 text-xs font-bold uppercase tracking-widest transition-all rounded-xl border ${
+                  isOutOfStock
+                    ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                    : 'bg-[#D4AF37] text-[#12372A] hover:bg-[#FAF8F1] border-[#12372A] cursor-pointer'
+                }`}
               >
-                Buy Now (Express Checkout)
+                {isOutOfStock ? 'Unavailable' : 'Buy Now (Express Checkout)'}
               </button>
             </div>
 

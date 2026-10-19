@@ -5,12 +5,14 @@ import { createPortal } from 'react-dom';
 import { Search, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useAdmin } from '../../context/AdminContext';
+import { useProducts } from '../../context/ProductContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { OptimizedImage } from '../common/OptimizedImage';
-import type { Order, OrderStatus } from '../../types';
+import type { Order, OrderStatus, PaymentStatus } from '../../types';
 
 export const OrderManagement: React.FC = () => {
-  const { user, updateOrder } = useAuth();
+  const { adminOrders, user, updateOrder } = useAuth();
+  const { restoreInventoryForOrder } = useProducts();
   const { addAuditLog, addNotification } = useAdmin();
   const { formatPrice } = useCurrency();
 
@@ -18,10 +20,11 @@ export const OrderManagement: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [editingStatus, setEditingStatus] = useState<OrderStatus>('Processing');
+  const [editingPaymentStatus, setEditingPaymentStatus] = useState<PaymentStatus>('Pending');
   const [courierInput, setCourierInput] = useState('Standard Express Delivery');
   const [awbInput, setAwbInput] = useState('');
 
-  const allOrdersList: Order[] = user.orders;
+  const allOrdersList: Order[] = adminOrders.length > 0 ? adminOrders : user.orders;
 
   const filteredOrders = allOrdersList.filter(o => {
     const matchesSearch =
@@ -37,9 +40,21 @@ export const OrderManagement: React.FC = () => {
     if (!selectedOrder) return;
 
     const previousStatus = selectedOrder.status;
+    const previousPaymentStatus = selectedOrder.paymentStatus || 'Pending';
+
+    // Restore inventory if transitioned to Cancelled or Refunded
+    if (
+      (editingStatus === 'Cancelled' || editingPaymentStatus === 'Refunded') &&
+      previousStatus !== 'Cancelled' &&
+      previousPaymentStatus !== 'Refunded'
+    ) {
+      restoreInventoryForOrder(selectedOrder.items);
+    }
+
     const updatedOrder: Order = {
       ...selectedOrder,
       status: editingStatus,
+      paymentStatus: editingPaymentStatus,
       trackingNumber: awbInput.trim() || selectedOrder.trackingNumber,
       courierProvider: courierInput.trim() || selectedOrder.courierProvider
     };
@@ -49,21 +64,20 @@ export const OrderManagement: React.FC = () => {
     addAuditLog({
       adminName: 'Sanjay Suresh (Super Admin)',
       adminRole: 'Super Admin',
-      action: `Updated Order #${selectedOrder.id} status to ${editingStatus}`,
+      action: `Updated Order #${selectedOrder.id} [Fulfillment: ${editingStatus}, Payment: ${editingPaymentStatus}]`,
       entity: 'Order',
       entityId: selectedOrder.id,
-      previousValue: previousStatus,
-      newValue: editingStatus
+      previousValue: `${previousStatus} (${previousPaymentStatus})`,
+      newValue: `${editingStatus} (${editingPaymentStatus})`
     });
 
     addNotification({
-      title: `Order Status Updated: ${selectedOrder.id}`,
-      message: `Status changed to ${editingStatus} for ${selectedOrder.shippingAddress.name}`,
+      title: `Order Updated: ${selectedOrder.id}`,
+      message: `Status: ${editingStatus} | Payment: ${editingPaymentStatus} for ${selectedOrder.shippingAddress.name}`,
       type: 'order'
     });
 
     setSelectedOrder(null);
-    alert(`Order #${selectedOrder.id} status updated successfully to "${editingStatus}"!`);
   };
 
   return (
@@ -153,9 +167,20 @@ export const OrderManagement: React.FC = () => {
                     <td className="p-3.5 font-mono text-[10px] text-[#12372A]">{order.paymentMethod}</td>
 
                     <td className="p-3.5">
-                      <span className="bg-[#12372A] text-[#D4AF37] text-[10px] font-bold uppercase px-3 py-1 rounded-full border border-[#D4AF37]">
-                        {order.status}
-                      </span>
+                      <div className="flex flex-col gap-1 items-start">
+                        <span className="bg-[#12372A] text-[#D4AF37] text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full border border-[#D4AF37]">
+                          {order.status}
+                        </span>
+                        <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full border ${
+                          order.paymentStatus === 'Paid'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                            : order.paymentStatus === 'Refunded'
+                            ? 'bg-rose-50 text-rose-700 border-rose-300'
+                            : 'bg-amber-50 text-amber-700 border-amber-300'
+                        }`}>
+                          Pay: {order.paymentStatus || 'Pending'}
+                        </span>
+                      </div>
                     </td>
 
                     <td className="p-3.5 text-right">
@@ -163,6 +188,7 @@ export const OrderManagement: React.FC = () => {
                         onClick={() => {
                           setSelectedOrder(order);
                           setEditingStatus(order.status);
+                          setEditingPaymentStatus(order.paymentStatus || 'Pending');
                           setAwbInput(order.trackingNumber || '');
                           setCourierInput(order.courierProvider || 'Standard Express Delivery');
                         }}
@@ -253,7 +279,7 @@ export const OrderManagement: React.FC = () => {
               <form id="order-fulfillment-form" onSubmit={handleUpdateOrderStatus} className="space-y-4 pt-4 border-t border-[#E8DDC7]">
                 <h4 className="font-bold text-[#12372A]">Update Fulfillment Status</h4>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className="block font-semibold text-[#6B5846] mb-1">Order Status</label>
                     <select
@@ -270,7 +296,21 @@ export const OrderManagement: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-[#6B5846] mb-1">Logistics / Delivery Provider</label>
+                    <label className="block font-semibold text-[#6B5846] mb-1">Payment Status</label>
+                    <select
+                      value={editingPaymentStatus}
+                      onChange={(e) => setEditingPaymentStatus(e.target.value as PaymentStatus)}
+                      className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Paid">Paid (Verified)</option>
+                      <option value="Failed">Failed</option>
+                      <option value="Refunded">Refunded</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-[#6B5846] mb-1">Logistics Provider</label>
                     <input
                       type="text"
                       value={courierInput}

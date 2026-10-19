@@ -29,14 +29,14 @@ interface ChartPoint {
 
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigateTab }) => {
   const { products, categories } = useProducts();
-  const { user } = useAuth();
+  const { adminOrders, user } = useAuth();
   const { auditLogs } = useAdmin();
   const { formatPrice } = useCurrency();
 
   const [dateFilter, setDateFilter] = useState<DateFilterType>('30days');
   const [hoveredPointIndex, setHoveredPointIndex] = useState<number | null>(null);
 
-  const orders: Order[] = user?.orders || [];
+  const orders: Order[] = adminOrders.length > 0 ? adminOrders : user?.orders || [];
 
   // ==========================================
   // HELPER: Robust Date Parser
@@ -59,24 +59,28 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
   const monthOrders = useMemo(() => orders.filter(o => parseOrderDate(o.date).getTime() >= thirtyDaysAgo), [orders, thirtyDaysAgo]);
   const yearOrders = useMemo(() => orders.filter(o => parseOrderDate(o.date).getTime() >= yearStart), [orders, yearStart]);
 
+  // Valid non-cancelled orders for net revenue calculations
+  const isRevenueOrder = (o: Order) => o.status !== 'Cancelled' && o.status !== 'Returned' && o.paymentStatus !== 'Refunded';
+
   // Sales aggregates
-  const totalSales = useMemo(() => orders.reduce((acc, o) => acc + (o.total || 0), 0), [orders]);
-  const todaysSales = useMemo(() => todayOrders.reduce((acc, o) => acc + (o.total || 0), 0), [todayOrders]);
-  const weeksSales = useMemo(() => weekOrders.reduce((acc, o) => acc + (o.total || 0), 0), [weekOrders]);
-  const monthsSales = useMemo(() => monthOrders.reduce((acc, o) => acc + (o.total || 0), 0), [monthOrders]);
-  const yearsSales = useMemo(() => yearOrders.reduce((acc, o) => acc + (o.total || 0), 0), [yearOrders]);
+  const validOrders = useMemo(() => orders.filter(isRevenueOrder), [orders]);
+  const totalSales = useMemo(() => validOrders.reduce((acc, o) => acc + (o.total || 0), 0), [validOrders]);
+  const todaysSales = useMemo(() => todayOrders.filter(isRevenueOrder).reduce((acc, o) => acc + (o.total || 0), 0), [todayOrders]);
+  const weeksSales = useMemo(() => weekOrders.filter(isRevenueOrder).reduce((acc, o) => acc + (o.total || 0), 0), [weekOrders]);
+  const monthsSales = useMemo(() => monthOrders.filter(isRevenueOrder).reduce((acc, o) => acc + (o.total || 0), 0), [monthOrders]);
+  const yearsSales = useMemo(() => yearOrders.filter(isRevenueOrder).reduce((acc, o) => acc + (o.total || 0), 0), [yearOrders]);
 
   // Filtered active revenue for the current view
   const activePeriodRevenue = useMemo(() => {
     switch (dateFilter) {
       case 'today':
-        return todaysSales || (totalSales > 0 ? totalSales : 0);
+        return todaysSales;
       case '7days':
-        return weeksSales || (totalSales > 0 ? totalSales : 0);
+        return weeksSales;
       case '30days':
-        return monthsSales || (totalSales > 0 ? totalSales : 0);
+        return monthsSales;
       case 'year':
-        return yearsSales || (totalSales > 0 ? totalSales : 0);
+        return yearsSales;
       default:
         return totalSales;
     }
@@ -86,7 +90,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
   const totalOrdersCount = orders.length;
   const pendingOrdersCount = orders.filter(o => o.status === 'Pending' || o.status === 'Processing' || o.status === 'Confirmed' || o.status === 'Packed').length;
   const completedOrdersCount = orders.filter(o => o.status === 'Delivered').length;
-  const cancelledOrdersCount = orders.filter(o => o.status === 'Cancelled' || o.status === 'Returned').length;
+  const cancelledOrdersCount = orders.filter(o => o.status === 'Cancelled' || o.status === 'Returned' || o.paymentStatus === 'Refunded').length;
 
   const totalCustomersCount = Math.max(user?.email ? 1 : 0, new Set(orders.map(o => o.shippingAddress?.phone || o.shippingAddress?.name)).size);
   const newCustomersCount = totalCustomersCount;
@@ -95,7 +99,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
   const lowStockCount = products.filter(p => (p.stockCount ?? 10) > 0 && (p.stockCount ?? 10) <= (p.lowStockThreshold || 5)).length;
   const outOfStockCount = products.filter(p => !p.inStock || (p.stockCount ?? 10) === 0).length;
 
-  const averageOrderValue = totalOrdersCount > 0 ? Math.round(totalSales / totalOrdersCount) : 0;
+  const averageOrderValue = validOrders.length > 0 ? Math.round(totalSales / validOrders.length) : 0;
   const conversionRate = totalOrdersCount > 0 ? Math.min(12.5, +(3.2 + totalOrdersCount * 0.45).toFixed(2)) : 0;
 
   // ==========================================

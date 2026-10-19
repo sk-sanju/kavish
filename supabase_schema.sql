@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
   id TEXT PRIMARY KEY,
   date TEXT NOT NULL,
   status TEXT NOT NULL,
+  payment_status TEXT DEFAULT 'Pending',
   items JSONB NOT NULL,
   subtotal NUMERIC NOT NULL,
   discount NUMERIC DEFAULT 0,
@@ -77,6 +78,9 @@ CREATE TABLE IF NOT EXISTS public.orders (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Migration for existing orders tables
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS payment_status TEXT DEFAULT 'Pending';
+
 -- 4. PROMO OFFERS & COUPONS TABLE
 CREATE TABLE IF NOT EXISTS public.promo_offers (
   id TEXT PRIMARY KEY,
@@ -89,11 +93,15 @@ CREATE TABLE IF NOT EXISTS public.promo_offers (
   start_date TEXT,
   is_active BOOLEAN DEFAULT true,
   usage_count INTEGER DEFAULT 0,
+  usage_limit INTEGER,
   per_customer_limit INTEGER DEFAULT 1,
   is_first_order_only BOOLEAN DEFAULT false,
   description TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Migration for existing promo_offers
+ALTER TABLE public.promo_offers ADD COLUMN IF NOT EXISTS usage_limit INTEGER;
 
 -- 5. REVIEWS & RATINGS TABLE
 CREATE TABLE IF NOT EXISTS public.reviews (
@@ -196,25 +204,48 @@ ALTER TABLE public.store_content ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.shipping_rules ENABLE ROW LEVEL SECURITY;
 
+-- Drop legacy insecure wildcard policies if present
+DROP POLICY IF EXISTS "Allow All Products Access" ON public.products;
+DROP POLICY IF EXISTS "Allow All Categories Access" ON public.categories;
+DROP POLICY IF EXISTS "Allow All Orders Access" ON public.orders;
+DROP POLICY IF EXISTS "Allow All Offers Access" ON public.promo_offers;
+DROP POLICY IF EXISTS "Allow All Reviews Access" ON public.reviews;
+DROP POLICY IF EXISTS "Allow All Returns Access" ON public.return_requests;
+DROP POLICY IF EXISTS "Allow All Audit Logs Access" ON public.audit_logs;
+DROP POLICY IF EXISTS "Allow All Content Access" ON public.store_content;
+DROP POLICY IF EXISTS "Allow All Admin Users Access" ON public.admin_users;
+DROP POLICY IF EXISTS "Allow All Shipping Access" ON public.shipping_rules;
+
 -- Allow Public Read Access for Storefront
 CREATE POLICY "Allow Public Read Products" ON public.products FOR SELECT USING (true);
 CREATE POLICY "Allow Public Read Categories" ON public.categories FOR SELECT USING (true);
-CREATE POLICY "Allow Public Read Offers" ON public.promo_offers FOR SELECT USING (true);
-CREATE POLICY "Allow Public Read Reviews" ON public.reviews FOR SELECT USING (true);
+CREATE POLICY "Allow Public Read Offers" ON public.promo_offers FOR SELECT USING (is_active = true);
+CREATE POLICY "Allow Public Read Reviews" ON public.reviews FOR SELECT USING (status = 'Approved');
 CREATE POLICY "Allow Public Read Store Content" ON public.store_content FOR SELECT USING (true);
 CREATE POLICY "Allow Public Read Shipping" ON public.shipping_rules FOR SELECT USING (true);
 
--- Allow Public Write / Admin Full Access
-CREATE POLICY "Allow All Products Access" ON public.products FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow All Categories Access" ON public.categories FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow All Orders Access" ON public.orders FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow All Offers Access" ON public.promo_offers FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow All Reviews Access" ON public.reviews FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow All Returns Access" ON public.return_requests FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow All Audit Logs Access" ON public.audit_logs FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow All Content Access" ON public.store_content FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow All Admin Users Access" ON public.admin_users FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "Allow All Shipping Access" ON public.shipping_rules FOR ALL USING (true) WITH CHECK (true);
+-- Storefront Customer Order Creation (Customers can insert their checkout order)
+CREATE POLICY "Allow Customer Insert Orders" ON public.orders FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow Customer Read Orders" ON public.orders FOR SELECT USING (true);
+
+-- Customer Review Submission & Return Requests
+CREATE POLICY "Allow Customer Insert Reviews" ON public.reviews FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow Customer Insert Returns" ON public.return_requests FOR INSERT WITH CHECK (true);
+
+-- Admin & Service Role Full Access (Service Role and authenticated admins can manage records)
+CREATE POLICY "Admin Full Access Products" ON public.products FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+CREATE POLICY "Admin Full Access Categories" ON public.categories FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+CREATE POLICY "Admin Full Access Orders" ON public.orders FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+CREATE POLICY "Admin Full Access Offers" ON public.promo_offers FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+CREATE POLICY "Admin Full Access Reviews" ON public.reviews FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+CREATE POLICY "Admin Full Access Returns" ON public.return_requests FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+CREATE POLICY "Admin Full Access Content" ON public.store_content FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+CREATE POLICY "Admin Full Access Shipping" ON public.shipping_rules FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+CREATE POLICY "Admin Full Access Audit Logs" ON public.audit_logs FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+
+-- Admin Users: NEVER expose admin credentials to anon public
+CREATE POLICY "Admin Users Protected Access" ON public.admin_users FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+
 
 -- 11. SUPABASE STORAGE BUCKET FOR MEDIA (Images, Banners, Categories, Products)
 INSERT INTO storage.buckets (id, name, public) 

@@ -47,18 +47,15 @@ export const getRazorpayKey = (): string => {
 };
 
 export const getRazorpaySecret = (): string => {
+  // Secret should only exist in server-side environment variables, never read from client storage
   const envSecret = (process.env.RAZORPAY_KEY_SECRET || process.env.VITE_RAZORPAY_KEY_SECRET) as string | undefined;
-  const storedSecret = typeof window !== 'undefined' ? safeStorage.getItem(RAZORPAY_SECRET_STORAGE_KEY) : null;
-  return (
-    storedSecret ||
-    (envSecret && envSecret.trim().length > 0 ? envSecret.trim() : '')
-  );
+  return envSecret && envSecret.trim().length > 0 ? envSecret.trim() : '';
 };
 
-export const setRazorpayConfig = (keyId: string, keySecret?: string, customLink?: string): void => {
+export const setRazorpayConfig = (keyId: string, _keySecret?: string, customLink?: string): void => {
   if (keyId !== undefined) safeStorage.setItem(RAZORPAY_KEY_STORAGE_KEY, keyId.trim());
-  if (keySecret !== undefined) safeStorage.setItem(RAZORPAY_SECRET_STORAGE_KEY, keySecret.trim());
   if (customLink !== undefined) safeStorage.setItem(RAZORPAY_LINK_STORAGE_KEY, customLink.trim());
+  // Note: keySecret is deliberately not stored in localStorage to protect payment secrets
 };
 
 export const setRazorpayKey = (keyId: string): void => {
@@ -94,7 +91,7 @@ export const loadRazorpaySDK = (): Promise<boolean> => {
 };
 
 /**
- * Verifies Razorpay payment signature via server-side verification endpoint
+ * Cryptographically verifies Razorpay payment signature via trusted server-side verification endpoint
  */
 export async function verifyPaymentOnServer(payload: {
   razorpay_order_id?: string;
@@ -109,20 +106,23 @@ export async function verifyPaymentOnServer(payload: {
       body: JSON.stringify(payload)
     });
 
-    if (res.ok) {
-      const data = await res.json();
-      return { verified: data.verified !== false, message: data.message };
+    const data = await res.json().catch(() => ({}));
+
+    if (res.ok && data.verified === true) {
+      return { verified: true, message: data.message };
     }
-  } catch {
-    // In static dev mode where serverless API is not running locally, pass client-verified token
-  }
 
-  // If client received a valid non-empty razorpay_payment_id from Razorpay SDK
-  if (payload.razorpay_payment_id && payload.razorpay_payment_id.startsWith('pay_')) {
-    return { verified: true };
+    return {
+      verified: false,
+      message: data.error || 'Payment signature mismatch or verification rejected by server.'
+    };
+  } catch (err: any) {
+    console.error('Server payment verification network error:', err);
+    return {
+      verified: false,
+      message: 'Network error communicating with payment verification server. Please contact support.'
+    };
   }
-
-  return { verified: false, message: 'Invalid payment response' };
 }
 
 export const initializeRazorpayPayment = async (options: RazorpayPaymentOptions): Promise<void> => {

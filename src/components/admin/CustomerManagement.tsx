@@ -3,11 +3,16 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Search, Plus, X } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import { useAdmin } from '../../context/AdminContext';
 import { useCurrency } from '../../context/CurrencyContext';
-import type { UserProfile } from '../../types';
+import { safeStorage } from '../../utils/storage';
+import type { UserProfile, Order } from '../../types';
+
+const CRM_STORAGE_KEY = 'kavish_crm_customers_v1';
 
 export const CustomerManagement: React.FC = () => {
+  const { adminOrders, user } = useAuth();
   const { addAuditLog } = useAdmin();
   const { formatPrice } = useCurrency();
 
@@ -19,7 +24,65 @@ export const CustomerManagement: React.FC = () => {
   const [newCustEmail, setNewCustEmail] = useState('');
   const [newCustPhone, setNewCustPhone] = useState('');
 
-  const [customersList, setCustomersList] = useState<UserProfile[]>([]);
+  const [customPatrons, setCustomPatrons] = useState<UserProfile[]>(() => {
+    try {
+      const stored = safeStorage.getItem(CRM_STORAGE_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Dynamically aggregate patrons from orders + registered profile + custom CRM additions
+  const customersList: UserProfile[] = React.useMemo(() => {
+    const patronMap = new Map<string, UserProfile>();
+
+    // 1. Add current registered user if available
+    if (user && user.name && user.name !== 'Valued Customer') {
+      patronMap.set(user.email.toLowerCase(), {
+        ...user,
+        status: user.status || 'Active',
+        totalSpent: (user.orders || []).reduce((acc, o) => (o.status !== 'Cancelled' ? acc + (o.total || 0) : acc), 0),
+        createdAt: 'Current Member',
+        internalNotes: user.internalNotes || 'Registered online customer'
+      });
+    }
+
+    // 2. Aggregate patrons from orders (adminOrders or user.orders)
+    const sourceOrders: Order[] = adminOrders.length > 0 ? adminOrders : user.orders || [];
+    sourceOrders.forEach(o => {
+      const key = (o.shippingAddress.phone || o.shippingAddress.name || o.id).toLowerCase();
+      const existing = patronMap.get(key);
+      const orderTotal = o.status !== 'Cancelled' && o.status !== 'Refunded' ? (o.total || 0) : 0;
+
+      if (existing) {
+        existing.totalSpent = (existing.totalSpent || 0) + orderTotal;
+        if (!existing.orders.some(ex => ex.id === o.id)) {
+          existing.orders.push(o);
+        }
+      } else {
+        patronMap.set(key, {
+          id: `crm-${o.id}`,
+          name: o.shippingAddress.name || 'Valued Patron',
+          email: `${o.shippingAddress.name.toLowerCase().replace(/\s+/g, '.')}@patron.kavish`,
+          phone: o.shippingAddress.phone || 'N/A',
+          status: 'Active',
+          totalSpent: orderTotal,
+          createdAt: o.date,
+          internalNotes: `Customer from Order #${o.id}`,
+          addresses: [o.shippingAddress],
+          orders: [o]
+        });
+      }
+    });
+
+    // 3. Merge manually added CRM patrons
+    customPatrons.forEach(cp => {
+      patronMap.set(cp.id || cp.email.toLowerCase(), cp);
+    });
+
+    return Array.from(patronMap.values());
+  }, [adminOrders, user, customPatrons]);
 
   const filteredCustomers = customersList.filter(c =>
     c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -28,9 +91,9 @@ export const CustomerManagement: React.FC = () => {
   );
 
   const handleToggleCustomerStatus = (id: string) => {
-    setCustomersList(customersList.map(c => {
+    const updated = customPatrons.map(c => {
       if (c.id === id) {
-        const newStatus = c.status === 'Active' ? 'Disabled' : 'Active';
+        const newStatus: 'Active' | 'Disabled' = c.status === 'Active' ? 'Disabled' : 'Active';
         addAuditLog({
           adminName: 'Sanjay Suresh (Super Admin)',
           adminRole: 'Super Admin',
@@ -42,7 +105,9 @@ export const CustomerManagement: React.FC = () => {
         return { ...c, status: newStatus };
       }
       return c;
-    }));
+    });
+    setCustomPatrons(updated);
+    safeStorage.setItem(CRM_STORAGE_KEY, JSON.stringify(updated));
   };
 
   const handleAddCustomer = (e: React.FormEvent) => {
@@ -60,7 +125,10 @@ export const CustomerManagement: React.FC = () => {
       orders: []
     };
 
-    setCustomersList([newCust, ...customersList]);
+    const updated = [newCust, ...customPatrons];
+    setCustomPatrons(updated);
+    safeStorage.setItem(CRM_STORAGE_KEY, JSON.stringify(updated));
+
     addAuditLog({
       adminName: 'Sanjay Suresh (Super Admin)',
       adminRole: 'Super Admin',
@@ -77,8 +145,9 @@ export const CustomerManagement: React.FC = () => {
 
   const handleSaveNotes = () => {
     if (!selectedCustomer) return;
-    setCustomersList(customersList.map(c => c.id === selectedCustomer.id ? { ...c, internalNotes: internalNotesInput } : c));
-    alert('Internal CRM notes updated!');
+    const updated = customPatrons.map(c => c.id === selectedCustomer.id ? { ...c, internalNotes: internalNotesInput } : c);
+    setCustomPatrons(updated);
+    safeStorage.setItem(CRM_STORAGE_KEY, JSON.stringify(updated));
   };
 
   return (

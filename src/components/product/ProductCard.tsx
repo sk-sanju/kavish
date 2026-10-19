@@ -22,10 +22,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
   const { formatPrice } = useCurrency();
 
   const isFavorite = isInWishlist(product.id);
+  const isOutOfStock = !product.inStock && !product.allowBackorders;
+  const defaultSize = (product.sizes && product.sizes.length > 0) ? product.sizes[0] : 'Standard';
+  const defaultColor = (product.colors && product.colors.length > 0) ? product.colors[0] : { name: 'Gold Kasavu', hex: '#D4AF37' };
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
-    addToCart(product, product.sizes[0], product.colors[0], 1);
+    if (isOutOfStock) return;
+    addToCart(product, defaultSize, defaultColor, 1);
   };
 
   const handleWishlistClick = (e: React.MouseEvent) => {
@@ -108,8 +112,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
 
           <button
             onClick={handleQuickAdd}
-            className="bg-[#12372A] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] active:scale-95 text-[10px] font-bold uppercase tracking-wider p-1.5 rounded-lg transition-all border border-[#D4AF37] shadow-sm cursor-pointer"
-            title="Quick Add to Bag"
+            disabled={isOutOfStock}
+            className={`text-[10px] font-bold uppercase tracking-wider p-1.5 rounded-lg transition-all border shadow-sm ${
+              isOutOfStock
+                ? 'bg-neutral-200 text-neutral-400 border-neutral-300 cursor-not-allowed opacity-60'
+                : 'bg-[#12372A] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] active:scale-95 border-[#D4AF37] cursor-pointer'
+            }`}
+            title={isOutOfStock ? "Out of Stock" : "Quick Add to Bag"}
           >
             <ShoppingBag className="w-3.5 h-3.5" />
           </button>
@@ -152,9 +161,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
           </div>
 
           {/* Stock / Urgency Tag */}
-          <p className="text-[9px] sm:text-[10px] text-red-600 font-semibold mt-0.5">
-            Only few left
-          </p>
+          {isOutOfStock ? (
+            <p className="text-[9px] sm:text-[10px] text-neutral-500 font-semibold mt-0.5">
+              Sold Out
+            </p>
+          ) : product.stockCount && product.stockCount <= 5 ? (
+            <p className="text-[9px] sm:text-[10px] text-red-600 font-semibold mt-0.5">
+              Only {product.stockCount} left
+            </p>
+          ) : (
+            <p className="text-[9px] sm:text-[10px] text-emerald-700 font-medium mt-0.5">
+              In Stock
+            </p>
+          )}
 
           {/* Delivery estimate */}
           <p className="text-[9px] sm:text-[10px] text-gray-500 font-light mt-0.5">
@@ -177,10 +196,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
           </button>
           <button
             onClick={handleQuickAdd}
-            className="bg-[#12372A] text-[#FAF8F1] p-1.5 rounded-lg flex items-center justify-center border border-[#D4AF37]"
-            title="Add to Bag"
+            disabled={isOutOfStock}
+            className={`p-1.5 rounded-lg flex items-center justify-center border ${
+              isOutOfStock
+                ? 'bg-neutral-200 text-neutral-400 border-neutral-300 cursor-not-allowed opacity-60'
+                : 'bg-[#12372A] text-[#FAF8F1] border-[#D4AF37]'
+            }`}
+            title={isOutOfStock ? "Out of Stock" : "Add to Bag"}
           >
-            <ShoppingBag className="w-3 h-3 text-[#D4AF37]" />
+            <ShoppingBag className={`w-3 h-3 ${isOutOfStock ? 'text-neutral-400' : 'text-[#D4AF37]'}`} />
           </button>
         </div>
       </div>

@@ -6,26 +6,49 @@ export async function POST(req: Request) {
     const body = await req.json().catch(() => ({}));
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, order_id } = body;
 
-    if (!razorpay_payment_id) {
+    if (!razorpay_payment_id || typeof razorpay_payment_id !== 'string') {
       return NextResponse.json(
-        { verified: false, error: 'Missing razorpay_payment_id' },
+        { verified: false, error: 'Missing or invalid razorpay_payment_id' },
         { status: 400 }
       );
     }
 
-    const secret =
+    // Validate payment ID format (e.g. pay_xxxxxxxxxxxxxx)
+    if (!/^pay_[a-zA-Z0-9]+$/.test(razorpay_payment_id.trim())) {
+      return NextResponse.json(
+        { verified: false, error: 'Invalid payment ID format' },
+        { status: 400 }
+      );
+    }
+
+    const secret = (
       process.env.RAZORPAY_KEY_SECRET ||
       process.env.VITE_RAZORPAY_KEY_SECRET ||
-      '';
+      ''
+    ).trim();
 
-    // If order_id and signature are provided with a configured secret, verify HMAC SHA256
-    if (secret && razorpay_order_id && razorpay_signature) {
+    // In production or whenever secret is configured, require both razorpay_order_id and razorpay_signature
+    if (secret) {
+      if (!razorpay_order_id || !razorpay_signature) {
+        return NextResponse.json(
+          {
+            verified: false,
+            error: 'Missing razorpay_order_id or razorpay_signature required for cryptographic verification.',
+          },
+          { status: 400 }
+        );
+      }
+
       const generatedSignature = crypto
         .createHmac('sha256', secret)
         .update(`${razorpay_order_id}|${razorpay_payment_id}`)
         .digest('hex');
 
-      if (generatedSignature !== razorpay_signature) {
+      // Use timing-safe comparison to prevent timing side-channel attacks
+      const genBuf = Buffer.from(generatedSignature, 'hex');
+      const sigBuf = Buffer.from(razorpay_signature, 'hex');
+
+      if (genBuf.length !== sigBuf.length || !crypto.timingSafeEqual(genBuf, sigBuf)) {
         return NextResponse.json(
           {
             verified: false,
@@ -34,6 +57,8 @@ export async function POST(req: Request) {
           { status: 400 }
         );
       }
+    } else {
+      console.warn('[SECURITY WARNING] RAZORPAY_KEY_SECRET is not configured on server. Verification relying on gateway transaction payload format.');
     }
 
     return NextResponse.json({
@@ -53,3 +78,4 @@ export async function POST(req: Request) {
     );
   }
 }
+

@@ -193,15 +193,49 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
     });
   };
 
+  const [validationError, setValidationError] = useState<string | null>(null);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setValidationError(null);
+
+    const title = form.name?.trim();
+    if (!title) {
+      setValidationError('Product title is required.');
+      setActiveTab('basic');
+      return;
+    }
+
+    const price = Number(form.price);
+    if (isNaN(price) || price <= 0) {
+      setValidationError('Price must be a valid positive amount (greater than ₹0).');
+      setActiveTab('pricing');
+      return;
+    }
+
+    const stock = Number(form.stockCount);
+    if (isNaN(stock) || stock < 0) {
+      setValidationError('Stock count must be a non-negative number (0 or higher).');
+      setActiveTab('inventory');
+      return;
+    }
+
+    const origPrice = form.originalPrice !== undefined && form.originalPrice !== null ? Number(form.originalPrice) : undefined;
+    if (origPrice !== undefined && origPrice < 0) {
+      setValidationError('Original MRP price cannot be negative.');
+      setActiveTab('pricing');
+      return;
+    }
+
     onSave({
       ...form,
+      name: title,
       id: product?.id || form.id,
-      price: Number(form.price),
-      originalPrice: form.originalPrice ? Number(form.originalPrice) : undefined,
+      price: price,
+      originalPrice: origPrice,
       costPrice: form.costPrice ? Number(form.costPrice) : undefined,
-      stockCount: form.stockCount !== undefined ? Number(form.stockCount) : 10,
+      stockCount: stock,
+      inStock: stock > 0 ? (form.inStock ?? true) : false
     });
   };
 
@@ -249,6 +283,11 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6 text-xs">
+          {validationError && (
+            <div className="p-3 bg-red-50 text-red-700 border border-red-200 rounded-xl font-medium">
+              {validationError}
+            </div>
+          )}
           
           {/* TAB 1: BASIC INFO */}
           {activeTab === 'basic' && (

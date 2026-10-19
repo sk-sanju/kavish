@@ -6,12 +6,14 @@ import { Search, Truck, CheckCircle2, Clock, MapPin, Package, AlertCircle, Phone
 import { useAuth } from '../context/AuthContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { POLICY_CONFIG } from '../config/policyConfig';
+import { fetchSupabaseOrderById } from '../lib/supabase';
+import { safeStorage } from '../utils/storage';
 import type { Order } from '../types';
 
 export const TrackOrder: React.FC = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, selectedTrackingOrder } = useAuth();
   const { formatPrice } = useCurrency();
 
   const [inputQuery, setInputQuery] = useState('');
@@ -28,7 +30,7 @@ export const TrackOrder: React.FC = () => {
     }
   }, [searchParams, user.orders]);
 
-  const findOrder = (query: string) => {
+  const findOrder = async (query: string) => {
     const clean = query.trim().toUpperCase();
     if (!clean) {
       setErrorMsg('Please enter a valid Order ID (e.g., KV-ORD-12345) or Tracking AWB number.');
@@ -39,79 +41,68 @@ export const TrackOrder: React.FC = () => {
     setIsSearching(true);
     setErrorMsg(null);
 
-    setTimeout(() => {
+    // 1. Check selectedTrackingOrder
+    if (
+      selectedTrackingOrder &&
+      (selectedTrackingOrder.id.toUpperCase() === clean ||
+        selectedTrackingOrder.id.replace('KV-ORD-', '') === clean ||
+        (selectedTrackingOrder.trackingNumber && selectedTrackingOrder.trackingNumber.toUpperCase().includes(clean)) ||
+        (selectedTrackingOrder.invoiceId && selectedTrackingOrder.invoiceId.toUpperCase().includes(clean)))
+    ) {
+      setSearchedOrder(selectedTrackingOrder);
       setIsSearching(false);
-      // Search in user orders or generate live tracking state
-      const found = user.orders.find(
-        (o) =>
-          o.id.toUpperCase() === clean ||
-          o.id.replace('KV-ORD-', '') === clean ||
-          (o.trackingNumber && o.trackingNumber.toUpperCase().includes(clean)) ||
-          (o.invoiceId && o.invoiceId.toUpperCase().includes(clean))
-      );
+      return;
+    }
 
-      if (found) {
-        setSearchedOrder(found);
-        setErrorMsg(null);
-      } else if (clean.startsWith('KV-') || clean.startsWith('BLRD') || clean.length >= 5) {
-        // Fallback realistic mockup for direct link tracking
-        const mockOrder: Order = {
-          id: clean.startsWith('KV-ORD-') ? clean : `KV-ORD-${clean}`,
-          invoiceId: `KV-INV-2026-${clean.replace(/[^0-9]/g, '') || '8921'}`,
-          date: 'August 23, 2026',
-          status: 'Dispatched',
-          items: [
-            {
-              product: {
-                id: 'prod-sample',
-                name: 'Kuthampully Royal Kasavu Zari Saree',
-                subtitle: 'Authentic 24k Gold Zari Border',
-                category: 'women',
-                subcategory: 'Kasavu Sarees',
-                collection: 'Kasavu Masterpieces',
-                price: 4950,
-                rating: 5.0,
-                reviewCount: 42,
-                inStock: true,
-                images: ['/assets/categories/women_kasavu.jpg'],
-                sizes: ['Free Size (6.25m with Blouse)'],
-                colors: [{ name: 'Cream & Gold', hex: '#FAF8F1' }],
-                fabric: 'Pure Organic Kuthampully Cotton & Gold Zari',
-                details: ['GI Tag Certified', 'Traditional Temple Border'],
-                careInstructions: ['Dry Clean Only'],
-                sku: 'KAV-KAS-01'
-              },
-              size: 'Free Size',
-              color: { name: 'Cream & Gold', hex: '#FAF8F1' },
-              quantity: 1,
-              price: 4950
-            }
-          ],
-          subtotal: 4950,
-          discount: 0,
-          shippingFee: 0,
-          total: 4950,
-          shippingAddress: {
-            id: 'addr-mock',
-            name: user.name !== 'Valued Customer' ? user.name : 'Valued Patron',
-            phone: user.phone || POLICY_CONFIG.SUPPORT_PHONE,
-            street: 'Heritage Villa, M.G. Road',
-            city: 'Kochi',
-            state: 'Kerala',
-            pincode: '682001'
-          },
-          paymentMethod: 'Razorpay Instant UPI (Verified)',
-          trackingNumber: `KV-TRK-${clean.replace(/[^0-9]/g, '') || '948201'}`,
-          courierProvider: 'Standard Express Delivery',
-          estimatedDelivery: '4–10 days (Inside India)'
-        };
-        setSearchedOrder(mockOrder);
-        setErrorMsg(null);
-      } else {
-        setErrorMsg(`No active shipment found matching "${clean}". Please verify your Order ID from your confirmation email.`);
-        setSearchedOrder(null);
+    // 2. Search in user orders
+    const foundInUser = (user.orders || []).find(
+      (o) =>
+        o.id.toUpperCase() === clean ||
+        o.id.replace('KV-ORD-', '') === clean ||
+        (o.trackingNumber && o.trackingNumber.toUpperCase().includes(clean)) ||
+        (o.invoiceId && o.invoiceId.toUpperCase().includes(clean))
+    );
+
+    if (foundInUser) {
+      setSearchedOrder(foundInUser);
+      setIsSearching(false);
+      return;
+    }
+
+    // 3. Check locally stored recent orders
+    try {
+      const recentRaw = safeStorage.getItem('kavish_recent_order');
+      if (recentRaw) {
+        const recent: Order = JSON.parse(recentRaw);
+        if (
+          recent.id.toUpperCase() === clean ||
+          recent.id.replace('KV-ORD-', '') === clean ||
+          (recent.trackingNumber && recent.trackingNumber.toUpperCase().includes(clean))
+        ) {
+          setSearchedOrder(recent);
+          setIsSearching(false);
+          return;
+        }
       }
-    }, 400);
+    } catch {
+      // Ignore parse error
+    }
+
+    // 4. Try remote Supabase database lookup
+    try {
+      const remoteOrder = await fetchSupabaseOrderById(clean);
+      if (remoteOrder) {
+        setSearchedOrder(remoteOrder);
+        setIsSearching(false);
+        return;
+      }
+    } catch (err) {
+      console.warn('Remote order search error:', err);
+    }
+
+    setIsSearching(false);
+    setErrorMsg(`No active shipment found matching "${clean}". Please verify your Order ID from your confirmation email/SMS or reach out to our customer care team.`);
+    setSearchedOrder(null);
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {

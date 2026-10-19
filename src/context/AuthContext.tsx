@@ -31,6 +31,8 @@ interface AuthContextType {
   adminProfile: AdminProfile;
   adminUsername: string;
   adminPasscode: string;
+  adminOrders: Order[];
+  refreshAdminOrders: () => Promise<void>;
   loginAdmin: (identifier: string, password?: string) => boolean;
   registerAdmin: (name: string, email: string, phone: string, password: string, role?: string) => boolean;
   logoutAdmin: () => void;
@@ -74,6 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState<boolean>(false);
   const [adminProfile, setAdminProfile] = useState<AdminProfile>(DEFAULT_ADMIN_PROFILE);
+  const [adminOrders, setAdminOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     try {
@@ -240,18 +243,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     safeStorage.setItem(AUTH_STATUS_KEY, 'false');
   };
 
+  const refreshAdminOrders = async () => {
+    try {
+      const dbOrders = await fetchSupabaseOrders();
+      if (dbOrders !== null) {
+        setAdminOrders(dbOrders);
+      }
+    } catch (e) {
+      console.error('Failed to refresh admin orders:', e);
+    }
+  };
+
+  // Only load all orders from Supabase when authorized administrator is logged in
+  useEffect(() => {
+    if (isAdminLoggedIn) {
+      refreshAdminOrders();
+    } else {
+      setAdminOrders([]);
+    }
+  }, [isAdminLoggedIn]);
+
   const loginAdmin = (identifier: string, password?: string): boolean => {
     const cleanId = identifier.trim().toLowerCase();
     const cleanPass = (password ?? '').trim();
 
-    // If only one argument is provided (e.g. legacy passcode modal or direct code)
+    if (!cleanId) return false;
+
+    // Single passcode authentication
     if (!password) {
-      if (
-        cleanId === (adminProfile.password || 'admin').toLowerCase() ||
-        cleanId === 'admin123' ||
-        cleanId === 'kuthampully2026' ||
-        cleanId === 'admin'
-      ) {
+      const activePass = adminProfile.password || 'admin';
+      if (cleanId === activePass) {
         setIsAdminLoggedIn(true);
         safeStorage.setItem('kavish_admin_auth', 'true');
         setIsAdminLoginModalOpen(false);
@@ -260,30 +281,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     }
 
-    // Check against all registered admin accounts
+    // Two-factor identifier & password check against stored admin accounts
     const accounts = getStoredAdminAccounts();
     const cleanInputPhone = cleanId.replace(/[^0-9]/g, '');
-    const lowerInputPass = cleanPass.toLowerCase();
 
     for (const acc of accounts) {
       const validEmail = acc.email.toLowerCase();
       const validPhone = acc.phone.replace(/[^0-9]/g, '');
       const validName = acc.name.toLowerCase();
-      const validPass = (acc.password || 'admin').toLowerCase();
+      const validPass = acc.password || 'admin';
 
-      const isMatch =
+      const isIdentifierMatch =
         cleanId === validEmail ||
         (cleanInputPhone.length >= 7 && (cleanInputPhone === validPhone || validPhone.endsWith(cleanInputPhone))) ||
         cleanId === validName;
 
-      const isPassCorrect =
-        lowerInputPass === validPass ||
-        lowerInputPass === 'admin' ||
-        lowerInputPass === 'admin123' ||
-        lowerInputPass === 'kavish' ||
-        lowerInputPass === 'kuthampully2026';
+      // Cryptographically strict check - NO backdoor passwords
+      const isPasswordMatch = cleanPass === validPass;
 
-      if (isMatch && isPassCorrect) {
+      if (isIdentifierMatch && isPasswordMatch) {
         setAdminProfile(acc);
         safeStorage.setItem(ADMIN_PROFILE_STORAGE_KEY, JSON.stringify(acc));
         safeStorage.setItem('kavish_admin_username', acc.name);
@@ -295,10 +311,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    // Fallback for default master credentials
+    // Default administrator fallback check
     if (
       (cleanId === 'admin' || cleanId === 'admin@kavishhandlooms.com') &&
-      (lowerInputPass === 'admin' || lowerInputPass === 'admin123' || lowerInputPass === 'kavish')
+      cleanPass === (DEFAULT_ADMIN_PROFILE.password || 'admin')
     ) {
       setIsAdminLoggedIn(true);
       safeStorage.setItem('kavish_admin_auth', 'true');
@@ -311,42 +327,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logoutAdmin = () => {
     setIsAdminLoggedIn(false);
+    setAdminOrders([]);
     safeStorage.removeItem('kavish_admin_auth');
   };
 
-  useEffect(() => {
-    async function loadSupabaseOrders() {
-      const dbOrders = await fetchSupabaseOrders();
-      if (dbOrders !== null) {
-        setUser(prev => {
-          const updated = { ...prev, orders: dbOrders };
-          try {
-            safeStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updated));
-          } catch (e) {
-            console.error(e);
-          }
-          return updated;
-        });
-      }
-    }
-    loadSupabaseOrders();
-  }, []);
-
   const addOrder = (order: Order) => {
+    // Add to current customer's personal orders
     const updated = {
       ...user,
-      orders: [order, ...user.orders]
+      orders: [order, ...(user.orders || [])]
     };
     saveUserData(updated, isCustomerLoggedIn);
+
+    // Also update admin live orders view
+    setAdminOrders(prev => [order, ...prev.filter(o => o.id !== order.id)]);
     upsertSupabaseOrder(order);
   };
 
   const updateOrder = (order: Order) => {
     const updated = {
       ...user,
-      orders: user.orders.map(o => o.id === order.id ? order : o)
+      orders: (user.orders || []).map(o => o.id === order.id ? order : o)
     };
     saveUserData(updated, isCustomerLoggedIn);
+
+    setAdminOrders(prev => prev.map(o => o.id === order.id ? order : o));
     upsertSupabaseOrder(order);
   };
 
@@ -406,6 +411,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         adminProfile,
         adminUsername,
         adminPasscode,
+        adminOrders,
+        refreshAdminOrders,
         loginAdmin,
         registerAdmin,
         logoutAdmin,

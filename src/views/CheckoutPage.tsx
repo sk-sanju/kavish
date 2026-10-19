@@ -100,7 +100,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
   };
 
   // Finalize order upon verified payment or chosen method
-  const finalizeOrder = (paymentDetailsMethod: string, customOrderId?: string, customInvoiceId?: string) => {
+  const finalizeOrder = (
+    paymentDetailsMethod: string,
+    customOrderId?: string,
+    customInvoiceId?: string,
+    paymentStatus: 'Pending' | 'Paid' = 'Pending',
+    fulfillmentStatus: 'Pending' | 'Confirmed' | 'Processing' = 'Pending'
+  ) => {
     const orderNum = Math.floor(10000 + Math.random() * 90000);
     const finalOrderId = customOrderId || `KV-ORD-${orderNum}`;
     const finalInvoiceId = customInvoiceId || `KV-INV-2026-${orderNum}`;
@@ -109,7 +115,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
       id: finalOrderId,
       invoiceId: finalInvoiceId,
       date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-      status: 'Processing',
+      status: fulfillmentStatus,
+      paymentStatus: paymentStatus,
       items: cart.map((c) => ({
         product: c.product,
         size: c.selectedSize,
@@ -155,6 +162,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
   };
 
   const handleProcessPayment = () => {
+    if (isProcessingPayment) return;
+
     if (!agreedToTerms) {
       setPaymentError('Please accept the store Terms & Conditions and Privacy Policy to proceed.');
       return;
@@ -165,34 +174,61 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
       return;
     }
 
+    // Re-verify address fields before payment
+    if (!validateAddressForm()) {
+      setStep(1);
+      return;
+    }
+
     setPaymentError(null);
 
     const orderNum = Math.floor(10000 + Math.random() * 90000);
     const generatedOrderId = `KV-ORD-${orderNum}`;
     const generatedInvoiceId = `KV-INV-2026-${orderNum}`;
 
-    // Handle Direct Instant UPI
+    // Handle Direct Instant UPI (Awaiting manual bank/UPI reconciliation)
     if (paymentOption === 'direct_upi') {
+      setIsProcessingPayment(true);
       const refNote = upiTransactionRef.trim() ? ` (Ref: ${upiTransactionRef.trim()})` : '';
-      finalizeOrder(`Direct UPI Payment to ${POLICY_CONFIG.UPI_ID}${refNote}`, generatedOrderId, generatedInvoiceId);
+      finalizeOrder(
+        `Direct UPI Payment to ${POLICY_CONFIG.UPI_ID}${refNote}`,
+        generatedOrderId,
+        generatedInvoiceId,
+        'Pending',
+        'Pending'
+      );
       return;
     }
 
-    // Handle Cash on Delivery
+    // Handle Cash on Delivery (Payment collected at doorstep)
     if (paymentOption === 'cod') {
-      finalizeOrder('Cash on Delivery (Concierge Inspection on Doorstep)', generatedOrderId, generatedInvoiceId);
+      setIsProcessingPayment(true);
+      finalizeOrder(
+        'Cash on Delivery (Concierge Inspection on Doorstep)',
+        generatedOrderId,
+        generatedInvoiceId,
+        'Pending',
+        'Confirmed'
+      );
       return;
     }
 
     // Handle Razorpay Direct Payment Link
     if (paymentOption === 'razorpay_link') {
+      setIsProcessingPayment(true);
       const payLink = `${POLICY_CONFIG.RAZORPAY_PORTAL_LINK}?amount=${total}`;
       window.open(payLink, '_blank', 'noopener,noreferrer');
-      finalizeOrder(`Razorpay Official Payment Portal (${payLink})`, generatedOrderId, generatedInvoiceId);
+      finalizeOrder(
+        `Razorpay Official Payment Portal (${payLink})`,
+        generatedOrderId,
+        generatedInvoiceId,
+        'Pending',
+        'Pending'
+      );
       return;
     }
 
-    // Handle Standard Razorpay Modal Gateway (Razorpay or Card)
+    // Handle Standard Razorpay Modal Gateway (Razorpay Instant UPI or Card)
     setIsProcessingPayment(true);
     initializeRazorpayPayment({
       amountInINR: total,
@@ -206,7 +242,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
           paymentOption === 'card'
             ? `Razorpay Card/NetBanking (${paymentId})`
             : `Razorpay Instant UPI (${paymentId})`;
-        finalizeOrder(methodTitle, generatedOrderId, generatedInvoiceId);
+        finalizeOrder(methodTitle, generatedOrderId, generatedInvoiceId, 'Paid', 'Processing');
       },
       onFailure: (err) => {
         setIsProcessingPayment(false);

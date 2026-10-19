@@ -50,6 +50,7 @@ interface ProductContextType {
   deleteReview: (id: string) => void;
 
   deductInventoryForOrder: (items: { product: Product; quantity: number }[]) => void;
+  restoreInventoryForOrder: (items: { product: Product; quantity: number }[]) => void;
   incrementPromoUsage: (code: string) => void;
 
   resetToDefaults: () => void;
@@ -260,6 +261,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setOffers(newOffers);
     try {
       safeStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(newOffers));
+      safeStorage.setItem('kavish_live_offers_v1', JSON.stringify(newOffers));
     } catch (e) {
       console.error('Failed to save offers:', e);
     }
@@ -513,6 +515,30 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   };
 
+  const restoreInventoryForOrder = (items: { product: Product; quantity: number }[]) => {
+    setProducts(prevProducts => {
+      let updatedProducts = [...prevProducts];
+      items.forEach(it => {
+        updatedProducts = updatedProducts.map(p => {
+          if (p.id === it.product.id || (it.product.sku && p.sku === it.product.sku)) {
+            const currentQty = p.stockCount != null ? p.stockCount : 10;
+            const newQty = currentQty + (it.quantity || 1);
+            const updatedProd: Product = {
+              ...p,
+              stockCount: newQty,
+              inStock: newQty > 0
+            };
+            upsertSupabaseProduct(updatedProd);
+            return updatedProd;
+          }
+          return p;
+        });
+      });
+      safeStoreProducts(updatedProducts);
+      return updatedProducts;
+    });
+  };
+
   const incrementPromoUsage = (code: string) => {
     if (!code) return;
     const cleanCode = code.trim().toUpperCase();
@@ -527,6 +553,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       });
       try {
         safeStorage.setItem(OFFERS_STORAGE_KEY, JSON.stringify(updatedOffers));
+        safeStorage.setItem('kavish_live_offers_v1', JSON.stringify(updatedOffers));
       } catch (e) {
         console.error(e);
       }
@@ -572,6 +599,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         updateReview,
         deleteReview,
         deductInventoryForOrder,
+        restoreInventoryForOrder,
         incrementPromoUsage,
         resetToDefaults,
       }}

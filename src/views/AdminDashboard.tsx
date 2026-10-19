@@ -22,6 +22,7 @@ import { ReviewManagement } from '../components/admin/ReviewManagement';
 import { RoleManagement } from '../components/admin/RoleManagement';
 import { AuditTrail } from '../components/admin/AuditTrail';
 import { SettingsManagement } from '../components/admin/SettingsManagement';
+import { NotificationCenter } from '../components/admin/NotificationCenter';
 
 export const AdminDashboard: React.FC = () => {
   const { isAdminLoggedIn } = useAuth();
@@ -55,7 +56,12 @@ export const AdminDashboard: React.FC = () => {
       {activeTab === 'roles' && <RoleManagement />}
       {activeTab === 'audit' && <AuditTrail />}
       {activeTab === 'settings' && <SettingsManagement />}
-      {activeTab === 'notifications' && <DashboardOverview onNavigateTab={setActiveTab} />}
+      {activeTab === 'notifications' && (
+        <>
+          <DashboardOverview onNavigateTab={setActiveTab} />
+          <NotificationCenter onClose={() => setActiveTab('overview')} />
+        </>
+      )}
     </AdminLayout>
   );
 };

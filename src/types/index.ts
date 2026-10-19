@@ -126,6 +126,8 @@ export type OrderStatus =
   | 'Refunded'
   | 'Quality Check';
 
+export type PaymentStatus = 'Pending' | 'Paid' | 'Failed' | 'Refunded';
+
 export interface OrderItem {
   product: Product;
   size: string;
@@ -139,6 +141,7 @@ export interface Order {
   invoiceId?: string; // Invoice ID e.g. KV-INV-2026-83921
   date: string;
   status: OrderStatus;
+  paymentStatus?: PaymentStatus;
   items: OrderItem[];
   subtotal: number;
   discount: number;
