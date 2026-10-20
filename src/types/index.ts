@@ -259,7 +259,6 @@ export type AdminRole =
   | 'Store Manager'
   | 'Product Manager'
   | 'Order Manager'
-  | 'Inventory Manager'
   | 'Marketing Manager'
   | 'Accountant'
   | 'Support Staff';

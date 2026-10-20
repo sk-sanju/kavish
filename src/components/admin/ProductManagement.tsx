@@ -121,7 +121,7 @@ export const ProductManagement: React.FC = () => {
             Catalog Management
           </span>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#12372A] mt-0.5">
-            Store Product Inventory ({products.length})
+            Store Product Catalog ({products.length})
           </h1>
         </div>
 

@@ -210,11 +210,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('return-refund-policy')} className="hover:text-[#D4AF37] cursor-pointer text-left">
-                  Return &amp; Refund Policy
-                </button>
-              </li>
-              <li>
                 <button onClick={() => onNavigate('account')} className="hover:text-[#D4AF37] cursor-pointer text-left">
                   My Account &amp; Order History
                 </button>

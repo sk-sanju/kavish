@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Bell, X, Check, Trash2, Package, Truck, RefreshCw, Star, ShieldCheck } from 'lucide-react';
+import { Bell, X, Check, Trash2, Truck, Star, ShieldCheck } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 
 interface NotificationCenterProps {
@@ -14,8 +14,6 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ onClose 
   const getIcon = (type: string) => {
     switch (type) {
       case 'order': return <Truck className="w-4 h-4 text-[#D4AF37]" />;
-      case 'stock': return <Package className="w-4 h-4 text-red-500" />;
-      case 'return': return <RefreshCw className="w-4 h-4 text-amber-500" />;
       case 'review': return <Star className="w-4 h-4 text-yellow-500" />;
       default: return <ShieldCheck className="w-4 h-4 text-[#12372A]" />;
     }

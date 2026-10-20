@@ -345,7 +345,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
                   onClick={() => toggleAccordion('shipping')}
                   className="w-full p-3 bg-[#FAF8F1] flex justify-between items-center font-bold text-[#12372A]"
                 >
-                  <span>Shipping, Delivery &amp; Returns</span>
+                  <span>Shipping &amp; Delivery</span>
                   {openAccordion === 'shipping' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </button>
                 {openAccordion === 'shipping' && (
@@ -353,7 +353,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
                     <p>• Standard Express Delivery across India (4–10 days timeline).</p>
                     <p>• Flat shipping fee of ₹150 for orders inside India.</p>
                     <p>• Dispatched direct from Kuthampully Handloom Village with GI certification seal.</p>
-                    <p>• 7-day hassle-free doorstep size exchange concierge service.</p>
                   </div>
                 )}
               </div>

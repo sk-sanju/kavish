@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import {
-  DollarSign, ShoppingBag, Users, Package, TrendingUp, AlertTriangle, XCircle, CheckCircle2,
+  DollarSign, ShoppingBag, Users, Package, TrendingUp, XCircle, CheckCircle2,
   Clock, ArrowUpRight, ArrowDownRight, Award, Activity, Filter
 } from 'lucide-react';
 import { useProducts } from '../../context/ProductContext';
@@ -96,8 +96,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
   const newCustomersCount = totalCustomersCount;
 
   const totalProductsCount = products.length;
-  const lowStockCount = products.filter(p => (p.stockCount ?? 10) > 0 && (p.stockCount ?? 10) <= (p.lowStockThreshold || 5)).length;
-  const outOfStockCount = products.filter(p => !p.inStock || (p.stockCount ?? 10) === 0).length;
 
   const averageOrderValue = validOrders.length > 0 ? Math.round(totalSales / validOrders.length) : 0;
   const conversionRate = totalOrdersCount > 0 ? Math.min(12.5, +(3.2 + totalOrdersCount * 0.45).toFixed(2)) : 0;
@@ -431,8 +429,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
     { title: 'Total Customers', value: String(totalCustomersCount), change: '+100%', isUp: true, comparison: 'registered patrons', targetTab: 'customers', icon: Users },
     { title: 'New Customers', value: String(newCustomersCount), change: 'Active', isUp: true, comparison: 'joined recently', targetTab: 'customers', icon: Users },
     { title: 'Total Products', value: String(totalProductsCount), change: `${totalProductsCount} items`, isUp: true, comparison: 'active in catalog', targetTab: 'products', icon: Package },
-    { title: 'Low Stock Products', value: String(lowStockCount), change: lowStockCount > 0 ? 'Requires reorder' : 'Healthy stock', isUp: lowStockCount === 0, comparison: 'units < 5', targetTab: 'inventory', icon: AlertTriangle },
-    { title: 'Out-of-Stock Products', value: String(outOfStockCount), change: outOfStockCount > 0 ? 'Action needed' : 'All available', isUp: outOfStockCount === 0, comparison: '0 units remaining', targetTab: 'inventory', icon: XCircle },
     { title: 'Average Order Value', value: formatPrice(averageOrderValue), change: averageOrderValue > 0 ? '+6.8%' : '0%', isUp: true, comparison: 'vs store benchmark', targetTab: 'analytics', icon: Award },
     { title: 'Conversion Rate', value: `${conversionRate}%`, change: '+0.4%', isUp: true, comparison: 'vs store benchmark', targetTab: 'analytics', icon: TrendingUp },
   ];

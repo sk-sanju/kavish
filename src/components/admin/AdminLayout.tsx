@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import {
-  TrendingUp, Package, Tag, Truck, Users, Percent, RefreshCw, Navigation,
+  TrendingUp, Package, Truck, Users, Percent, Navigation,
   DollarSign, BarChart3, Layout, Star, Bell, ShieldCheck, History, Settings,
   Search, Plus, LogOut, Menu, X, ArrowLeft, Globe, Image as ImageIcon
 } from 'lucide-react';
@@ -16,11 +16,9 @@ export type AdminTab =
   | 'banners'
   | 'products'
   | 'categories'
-  | 'inventory'
   | 'orders'
   | 'customers'
   | 'discounts'
-  | 'returns'
   | 'shipping'
   | 'financials'
   | 'analytics'
@@ -60,10 +58,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
     { id: 'orders', label: 'Order Management', icon: Truck, badge: 'Live' },
     { id: 'products', label: 'Product Catalog', icon: Package },
     { id: 'categories', label: 'Category Manager', icon: Layout },
-    { id: 'inventory', label: 'Inventory Control', icon: Tag, badge: 'Stock' },
     { id: 'customers', label: 'Customer CRM', icon: Users },
     { id: 'discounts', label: 'Discounts & Coupons', icon: Percent },
-    { id: 'returns', label: 'Returns & Refunds', icon: RefreshCw },
     { id: 'shipping', label: 'Shipping & Logistics', icon: Navigation },
     { id: 'financials', label: 'GST & Financials', icon: DollarSign },
     { id: 'analytics', label: 'Analytics & Reports', icon: BarChart3 },

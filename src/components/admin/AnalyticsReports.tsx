@@ -56,7 +56,7 @@ export const AnalyticsReports: React.FC = () => {
           <div className="p-4 bg-[#FAF8F1] border border-[#E8DDC7] rounded-2xl flex flex-col justify-between space-y-3">
             <div>
               <strong className="font-bold text-[#12372A] block text-sm">Product Catalog Export</strong>
-              <p className="text-[11px] text-[#6B5846]">Full product list, SKUs, category specs, prices &amp; inventory levels.</p>
+              <p className="text-[11px] text-[#6B5846]">Full product list, SKUs, category specs &amp; prices.</p>
             </div>
             <button
               onClick={() => handleExportCSV('products')}

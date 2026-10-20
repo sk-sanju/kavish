@@ -50,7 +50,7 @@ export const AdminLoginPage: React.FC = () => {
               Admin Login
             </h1>
             <p className="text-xs text-[#6B5846] mt-1 font-light">
-              Authorized staff access for inventory, orders &amp; store management.
+              Authorized staff access for catalog, orders &amp; store management.
             </p>
           </div>
         </div>

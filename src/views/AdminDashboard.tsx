@@ -9,11 +9,9 @@ import { DashboardOverview } from '../components/admin/DashboardOverview';
 import { BannerManagement } from '../components/admin/BannerManagement';
 import { ProductManagement } from '../components/admin/ProductManagement';
 import { CategoryManagement } from '../components/admin/CategoryManagement';
-import { InventoryManagement } from '../components/admin/InventoryManagement';
 import { OrderManagement } from '../components/admin/OrderManagement';
 import { CustomerManagement } from '../components/admin/CustomerManagement';
 import { DiscountManagement } from '../components/admin/DiscountManagement';
-import { ReturnsManagement } from '../components/admin/ReturnsManagement';
 import { ShippingManagement } from '../components/admin/ShippingManagement';
 import { FinancialManagement } from '../components/admin/FinancialManagement';
 import { AnalyticsReports } from '../components/admin/AnalyticsReports';
@@ -43,11 +41,9 @@ export const AdminDashboard: React.FC = () => {
       {activeTab === 'banners' && <BannerManagement />}
       {activeTab === 'products' && <ProductManagement />}
       {activeTab === 'categories' && <CategoryManagement />}
-      {activeTab === 'inventory' && <InventoryManagement />}
       {activeTab === 'orders' && <OrderManagement />}
       {activeTab === 'customers' && <CustomerManagement />}
       {activeTab === 'discounts' && <DiscountManagement />}
-      {activeTab === 'returns' && <ReturnsManagement />}
       {activeTab === 'shipping' && <ShippingManagement />}
       {activeTab === 'financials' && <FinancialManagement />}
       {activeTab === 'analytics' && <AnalyticsReports />}

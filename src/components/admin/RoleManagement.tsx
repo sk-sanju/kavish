@@ -213,7 +213,6 @@ export const RoleManagement: React.FC = () => {
                   <option value="Store Manager">Store Manager</option>
                   <option value="Product Manager">Product Manager</option>
                   <option value="Order Manager">Order Manager</option>
-                  <option value="Inventory Manager">Inventory Manager</option>
                   <option value="Accountant">Accountant</option>
                   <option value="Support Staff">Support Staff</option>
                 </select>

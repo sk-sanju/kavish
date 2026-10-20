@@ -129,8 +129,7 @@ const DEFAULT_STORE_CONTENT: StoreContentConfig = {
   bannerImage: '/assets/banners/hero_kavish.jpg',
   featuredCollectionIds: ['col-kasavu', 'col-festive', 'col-everyday'],
   faqItems: [
-    { question: 'Are all Kavish garments certified authentic handloom?', answer: 'Yes, every Kavish product carries the official Government GI Tag (Reg 2011) woven in Kuthampully, Thrissur.' },
-    { question: 'What is your size exchange policy?', answer: 'We offer a complimentary 7-day doorstep size exchange concierge across India.' }
+    { question: 'Are all Kavish garments certified authentic handloom?', answer: 'Yes, every Kavish product carries the official Government GI Tag (Reg 2011) woven in Kuthampully, Thrissur.' }
   ],
   policyText: 'Kavish Handlooms Pvt. Ltd. guarantees 100% authentic Devanga artisan craftsmanship.',
   contactInfo: {

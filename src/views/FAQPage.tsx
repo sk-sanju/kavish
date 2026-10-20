@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { ChevronDown, HelpCircle, ShieldCheck, Truck, RefreshCw, CreditCard, Award, MessageSquare } from 'lucide-react';
+import { ChevronDown, HelpCircle, ShieldCheck, Truck, CreditCard, Award, MessageSquare } from 'lucide-react';
 import { POLICY_CONFIG } from '../config/policyConfig';
 import { useAdmin } from '../context/AdminContext';
 
 interface FAQItem {
   question: string;
   answer: string;
-  category: 'authenticity' | 'shipping' | 'returns' | 'payments' | 'sizing' | 'general';
+  category: 'authenticity' | 'shipping' | 'payments' | 'sizing' | 'general';
 }
 
 const BASE_FAQS: FAQItem[] = [
@@ -44,17 +44,6 @@ const BASE_FAQS: FAQItem[] = [
     category: 'shipping',
     question: 'How do I track my order once it is shipped?',
     answer: 'Once your order is dispatched, an automated email and SMS notification containing your tracking number is sent. You can also enter your Order ID anytime on our Track Order page to view live parcel updates.'
-  },
-  // Returns & Exchanges
-  {
-    category: 'returns',
-    question: 'What is your return and size exchange policy?',
-    answer: `We offer a hassle-free ${POLICY_CONFIG.RETURN_WINDOW_DAYS}-day doorstep exchange and return window. If an item does not fit or meets any quality concerns, simply contact our concierge team for complimentary doorstep reverse pickup.`
-  },
-  {
-    category: 'returns',
-    question: 'How long does a refund take to reach my account?',
-    answer: `Upon receiving and verifying the returned parcel at our atelier, refunds are processed within ${POLICY_CONFIG.REFUND_PROCESSING_DAYS} back to your original payment method (UPI: 24–48 hours; Cards/Net Banking: 5–7 business days).`
   },
   // Payments
   {
@@ -105,7 +94,7 @@ export const FAQPage: React.FC = () => {
               Frequently Asked Questions
             </h1>
             <p className="text-xs sm:text-sm text-[#E8DDC7] font-light leading-relaxed">
-              Everything you need to know about our Kuthampully handlooms, ordering, express shipping, and seamless returns.
+              Everything you need to know about our Kuthampully handlooms, ordering, and express shipping.
             </p>
           </div>
         </div>
@@ -117,7 +106,6 @@ export const FAQPage: React.FC = () => {
             { id: 'authenticity', label: 'Authenticity & GI Tag', icon: Award },
             { id: 'sizing', label: 'Sizing & Customization', icon: ShieldCheck },
             { id: 'shipping', label: 'Shipping & Delivery', icon: Truck },
-            { id: 'returns', label: 'Returns & Refunds', icon: RefreshCw },
             { id: 'payments', label: 'Payments & Security', icon: CreditCard },
           ].map((cat) => {
             const Icon = cat.icon;
