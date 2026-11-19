@@ -11,20 +11,27 @@ import { OptimizedImage } from '../common/OptimizedImage';
 
 interface ProductCardProps {
   product: Product;
+  onSelect?: (product: Product) => void;
   onSelectProduct?: (product: Product) => void;
   priority?: boolean;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProduct, priority = false }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onSelectProduct, priority = false }) => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { openQuickView } = useModal();
   const { formatPrice } = useCurrency();
 
+  const handleSelect = () => {
+    if (onSelect) onSelect(product);
+    else if (onSelectProduct) onSelectProduct(product);
+  };
+
   const isFavorite = isInWishlist(product.id);
   const isOutOfStock = !product.inStock && !product.allowBackorders;
-  const defaultSize = (product.sizes && product.sizes.length > 0) ? product.sizes[0] : 'Standard';
-  const defaultColor = (product.colors && product.colors.length > 0) ? product.colors[0] : { name: 'Gold Kasavu', hex: '#D4AF37' };
+  const isLowStock = !isOutOfStock && product.stockCount != null && product.stockCount > 0 && product.stockCount <= (product.lowStockThreshold || 5);
+  const defaultSize = (product.sizes && product.sizes.length > 0) ? product.sizes[0] : 'Free Size';
+  const defaultColor = (product.colors && product.colors.length > 0) ? product.colors[0] : { name: 'Kasavu Gold', hex: '#B99A61' };
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -44,15 +51,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
 
   const primaryImg = product.images?.[0] || '';
   const secondaryImg = product.images?.[1];
-  const altText = `${product.name} - ${product.fabric} - Kavish Kuthampully`;
+  const altText = `${product.name} - ${product.fabric} - Kavish Kerala Handlooms`;
 
   return (
     <div
-      onClick={() => onSelectProduct && onSelectProduct(product)}
-      className="group cursor-pointer bg-white border border-[#E8DDC7]/60 hover:border-[#D4AF37] rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative transform hover:-translate-y-1"
+      onClick={handleSelect}
+      className="group cursor-pointer bg-white border border-[#E8DFD0] hover:border-[#B99A61] rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-400 flex flex-col justify-between relative transform hover:-translate-y-1.5"
     >
       {/* Image Stage Container */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-[#FAF8F1] rounded-t-2xl">
+      <div className="relative aspect-[3/4] overflow-hidden bg-[#F8F5EF] rounded-t-2xl">
         {/* Primary Product Image */}
         <OptimizedImage
           src={primaryImg}
@@ -69,7 +76,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
           <div className="absolute inset-0 w-full h-full rounded-t-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-[1]">
             <OptimizedImage
               src={secondaryImg}
-              alt={`${altText} - Alternate View`}
+              alt={`${altText} - Alternate Angle`}
               preset="card"
               priority={true}
               aspectRatio="3/4"
@@ -83,40 +90,40 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
         {/* Floating Wishlist Heart Button (Top Right) */}
         <button
           onClick={handleWishlistClick}
-          className={`absolute top-2 right-2 sm:top-2.5 sm:right-2.5 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm ${
+          className={`absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm cursor-pointer ${
             isFavorite
-              ? 'bg-[#12372A] text-[#D4AF37] scale-105'
-              : 'bg-white/90 text-gray-700 hover:bg-[#12372A] hover:text-[#D4AF37]'
+              ? 'bg-[#641E2B] text-[#B99A61] scale-105'
+              : 'bg-white/90 text-[#292522] hover:bg-[#641E2B] hover:text-[#B99A61]'
           }`}
           title={isFavorite ? 'Remove from Wishlist' : 'Add to Wishlist'}
         >
-          <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform ${isFavorite ? 'fill-[#D4AF37]' : ''}`} />
+          <Heart className={`w-4 h-4 transition-transform ${isFavorite ? 'fill-[#B99A61]' : ''}`} />
         </button>
 
         {/* Floating Rating Pill (Bottom Left of Image) */}
-        <div className="absolute bottom-2 left-2 z-10 bg-white/95 backdrop-blur-xs text-[#171717] px-1.5 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 shadow-xs border border-black/5">
+        <div className="absolute bottom-2.5 left-2.5 z-10 bg-white/95 backdrop-blur-xs text-[#292522] px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1 shadow-xs border border-[#E8DFD0]">
           <span>{product.rating}</span>
-          <Star className="w-2.5 h-2.5 fill-[#0F766E] text-[#0F766E]" />
-          <span className="text-gray-400 font-normal">| {product.reviewCount || 12}</span>
+          <Star className="w-2.5 h-2.5 fill-[#B99A61] text-[#B99A61]" />
+          <span className="text-gray-400 font-normal">| {product.reviewCount || 8}</span>
         </div>
 
         {/* Quick View & Quick Add Floating Bottom Bar - Desktop & Hover */}
-        <div className="hidden sm:flex absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-[#12372A]/90 via-[#12372A]/50 to-transparent items-center gap-1.5 z-10">
+        <div className="hidden sm:flex absolute inset-x-0 bottom-0 p-2.5 bg-gradient-to-t from-[#46141D]/90 via-[#46141D]/50 to-transparent items-center gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <button
             onClick={handleQuickViewClick}
-            className="flex-1 bg-[#FAF8F1] text-[#12372A] hover:bg-[#D4AF37] hover:text-[#12372A] active:scale-95 text-[10px] font-bold uppercase tracking-wider py-1.5 rounded-lg transition-all shadow-sm flex items-center justify-center gap-1 cursor-pointer"
+            className="flex-1 bg-[#F8F5EF] text-[#641E2B] hover:bg-[#B99A61] hover:text-[#46141D] active:scale-95 text-[10px] font-bold uppercase tracking-wider py-2 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
           >
-            <Eye className="w-3 h-3" />
+            <Eye className="w-3.5 h-3.5" />
             <span>Quick View</span>
           </button>
 
           <button
             onClick={handleQuickAdd}
             disabled={isOutOfStock}
-            className={`text-[10px] font-bold uppercase tracking-wider p-1.5 rounded-lg transition-all border shadow-sm ${
+            className={`text-[10px] font-bold uppercase tracking-wider p-2 rounded-xl transition-all border shadow-sm ${
               isOutOfStock
                 ? 'bg-neutral-200 text-neutral-400 border-neutral-300 cursor-not-allowed opacity-60'
-                : 'bg-[#12372A] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] active:scale-95 border-[#D4AF37] cursor-pointer'
+                : 'bg-[#641E2B] text-[#B99A61] hover:bg-[#B99A61] hover:text-[#46141D] active:scale-95 border-[#B99A61] cursor-pointer'
             }`}
             title={isOutOfStock ? "Out of Stock" : "Quick Add to Bag"}
           >
@@ -126,89 +133,53 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
       </div>
 
       {/* Card Content Details */}
-      <div className="p-2.5 sm:p-3.5 flex-1 flex flex-col justify-between bg-white rounded-b-2xl">
+      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between bg-white rounded-b-2xl">
         <div>
-          {/* Brand and Tag */}
-          <div className="flex items-center gap-1.5 mb-1">
-            <span className="bg-purple-100 text-purple-800 text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded tracking-wide uppercase">
-              {product.isNew ? 'TRENDY' : product.isBestSeller ? 'BESTSELLER' : 'HANDLOOM'}
+          {/* Brand and Badge */}
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <span className="bg-[#641E2B]/10 text-[#641E2B] text-[8px] sm:text-[9px] font-bold px-2 py-0.5 rounded-full tracking-wide uppercase">
+              {product.isBestSeller ? 'BESTSELLER' : product.isNew ? 'NEW ARRIVAL' : 'GI HANDLOOM'}
             </span>
-            <span className="font-bold text-[10px] sm:text-[11px] uppercase tracking-wider text-[#12372A]">
+            <span className="font-bold text-[10px] sm:text-[11px] uppercase tracking-wider text-[#B99A61]">
               KAVISH
             </span>
           </div>
 
           {/* Product Name */}
-          <h3 className="text-[11px] sm:text-xs text-neutral-700 font-normal group-hover:text-[#12372A] transition-colors line-clamp-1">
+          <h3 className="text-xs sm:text-sm text-[#292522] font-semibold group-hover:text-[#641E2B] transition-colors line-clamp-1">
             {product.name}
           </h3>
 
-          {/* Price Line with Green % Off */}
-          <div className="flex flex-wrap items-baseline gap-1 sm:gap-1.5 mt-1">
-            {product.discountPercentage ? (
-              <span className="text-[10px] sm:text-xs font-bold text-emerald-700 flex items-center">
-                ↓{product.discountPercentage}%
-              </span>
-            ) : null}
-            {product.originalPrice && (
-              <span className="text-[10px] sm:text-[11px] text-gray-400 line-through">
+          {/* Price Line with Savings */}
+          <div className="flex flex-wrap items-baseline gap-1.5 sm:gap-2 mt-1.5">
+            <span className="text-sm sm:text-base font-bold text-[#641E2B]">
+              {formatPrice(product.price)}
+            </span>
+            {product.originalPrice && product.originalPrice > product.price && (
+              <span className="text-xs text-gray-400 line-through">
                 {formatPrice(product.originalPrice)}
               </span>
             )}
-            <span className="text-xs sm:text-sm font-bold text-[#12372A]">
-              {formatPrice(product.price)}
-            </span>
+            {product.discountPercentage ? (
+              <span className="text-[10px] sm:text-xs font-bold text-[#B99A61]">
+                ({product.discountPercentage}% OFF)
+              </span>
+            ) : null}
           </div>
-
-          {/* Stock / Urgency Tag */}
-          {isOutOfStock ? (
-            <p className="text-[9px] sm:text-[10px] text-neutral-500 font-semibold mt-0.5">
-              Sold Out
-            </p>
-          ) : product.stockCount && product.stockCount <= 5 ? (
-            <p className="text-[9px] sm:text-[10px] text-red-600 font-semibold mt-0.5">
-              Only {product.stockCount} left
-            </p>
-          ) : (
-            <p className="text-[9px] sm:text-[10px] text-emerald-700 font-medium mt-0.5">
-              In Stock
-            </p>
-          )}
-
-          {/* Delivery estimate */}
-          <p className="text-[9px] sm:text-[10px] text-gray-500 font-light mt-0.5">
-            Get it by <span className="font-medium text-gray-700">2-3 Days</span>
-          </p>
-
-          {/* Hashtag */}
-          <p className="text-[9px] sm:text-[10px] text-gray-400 font-medium mt-0.5">
-            #{product.subcategory ? product.subcategory.replace(/\s+/g, '') : 'Kasavu'}
-          </p>
         </div>
 
-        {/* Mobile Quick Add Button */}
-        <div className="sm:hidden mt-2 pt-2 border-t border-gray-100 flex items-center justify-between gap-1">
-          <button
-            onClick={handleQuickViewClick}
-            className="flex-1 bg-[#FAF8F1] text-[#12372A] hover:bg-[#D4AF37] text-[9px] font-bold uppercase tracking-wider py-1.5 rounded-lg text-center"
-          >
-            Quick View
-          </button>
-          <button
-            onClick={handleQuickAdd}
-            disabled={isOutOfStock}
-            className={`p-1.5 rounded-lg flex items-center justify-center border ${
-              isOutOfStock
-                ? 'bg-neutral-200 text-neutral-400 border-neutral-300 cursor-not-allowed opacity-60'
-                : 'bg-[#12372A] text-[#FAF8F1] border-[#D4AF37]'
-            }`}
-            title={isOutOfStock ? "Out of Stock" : "Add to Bag"}
-          >
-            <ShoppingBag className={`w-3 h-3 ${isOutOfStock ? 'text-neutral-400' : 'text-[#D4AF37]'}`} />
-          </button>
+        {/* Stock Status Indicator */}
+        <div className="mt-2.5 pt-2 border-t border-[#E8DFD0]/60 flex items-center justify-between text-[10px]">
+          {isOutOfStock ? (
+            <span className="text-red-700 font-bold">Out of Stock</span>
+          ) : isLowStock ? (
+            <span className="text-amber-700 font-bold">Only {product.stockCount} Left</span>
+          ) : (
+            <span className="text-emerald-700 font-medium">In Stock</span>
+          )}
+          <span className="text-[#6E685D] truncate max-w-[110px]">{product.fabric || '100% Handloom'}</span>
         </div>
       </div>
-
     </div>
   );
 };

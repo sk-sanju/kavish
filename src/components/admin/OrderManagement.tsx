@@ -8,10 +8,10 @@ import { useAdmin } from '../../context/AdminContext';
 import { useProducts } from '../../context/ProductContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { OptimizedImage } from '../common/OptimizedImage';
-import type { Order, OrderStatus, PaymentStatus } from '../../types';
+import type { Order, OrderStatus, PaymentStatus, OrderTimelineEntry } from '../../types';
 
 export const OrderManagement: React.FC = () => {
-  const { adminOrders, user, updateOrder } = useAuth();
+  const { adminOrders, user, updateOrder, adminProfile } = useAuth();
   const { restoreInventoryForOrder } = useProducts();
   const { addAuditLog, addNotification } = useAdmin();
   const { formatPrice } = useCurrency();
@@ -51,19 +51,30 @@ export const OrderManagement: React.FC = () => {
       restoreInventoryForOrder(selectedOrder.items);
     }
 
+    const staffName = adminProfile?.name || 'Super Admin';
+    const newTimelineEntry: OrderTimelineEntry = {
+      id: `tl-${Date.now()}`,
+      previousStatus: previousStatus,
+      newStatus: editingStatus,
+      timestamp: new Date().toISOString(),
+      staffName: staffName,
+      remarks: `Order status set to ${editingStatus} (Payment: ${editingPaymentStatus}) via Order Management`
+    };
+
     const updatedOrder: Order = {
       ...selectedOrder,
       status: editingStatus,
       paymentStatus: editingPaymentStatus,
       trackingNumber: awbInput.trim() || selectedOrder.trackingNumber,
-      courierProvider: courierInput.trim() || selectedOrder.courierProvider
+      courierProvider: courierInput.trim() || selectedOrder.courierProvider,
+      timeline: [...(selectedOrder.timeline || []), newTimelineEntry]
     };
 
     updateOrder(updatedOrder);
 
     addAuditLog({
-      adminName: 'Sanjay Suresh (Super Admin)',
-      adminRole: 'Super Admin',
+      adminName: staffName,
+      adminRole: adminProfile?.role || 'Super Admin',
       action: `Updated Order #${selectedOrder.id} [Fulfillment: ${editingStatus}, Payment: ${editingPaymentStatus}]`,
       entity: 'Order',
       entityId: selectedOrder.id,
@@ -84,19 +95,19 @@ export const OrderManagement: React.FC = () => {
     <div className="space-y-6 animate-fadeIn">
       
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DDC7] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#D4AF37] block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#B99A61] block">
             Fulfillment &amp; Dispatch
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#12372A] mt-0.5">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-0.5">
             Order Fulfillment Center ({allOrdersList.length})
           </h1>
         </div>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-white p-4 border border-[#E8DDC7] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between text-xs">
+      <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between text-xs">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
           <input
@@ -104,14 +115,14 @@ export const OrderManagement: React.FC = () => {
             placeholder="Search by Order ID (KV-ORD-...), Invoice ID, or customer name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full border border-[#E8DDC7] pl-10 pr-4 py-2 rounded-xl bg-[#FAF8F1]"
+            className="w-full border border-[#E8DFD0] pl-10 pr-4 py-2 rounded-xl bg-[#F8F5EF]"
           />
         </div>
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="border border-[#E8DDC7] px-3 py-2 bg-[#FAF8F1] rounded-xl font-semibold text-[#12372A]"
+          className="border border-[#E8DFD0] px-3 py-2 bg-[#F8F5EF] rounded-xl font-semibold text-[#641E2B]"
         >
           <option value="all">All Order Statuses</option>
           <option value="Pending">Pending</option>
@@ -128,10 +139,10 @@ export const OrderManagement: React.FC = () => {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white border border-[#E8DDC7] rounded-2xl shadow-xs overflow-hidden">
+      <div className="bg-white border border-[#E8DFD0] rounded-2xl shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#12372A] text-[#FAF8F1] uppercase text-[10px] tracking-wider">
+            <thead className="bg-[#641E2B] text-[#F8F5EF] uppercase text-[10px] tracking-wider">
               <tr>
                 <th className="p-3.5">Order &amp; Invoice ID</th>
                 <th className="p-3.5">Customer</th>
@@ -143,32 +154,32 @@ export const OrderManagement: React.FC = () => {
                 <th className="p-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E8DDC7]">
+            <tbody className="divide-y divide-[#E8DFD0]">
               {filteredOrders.map(order => {
                 const invId = order.invoiceId || `KV-INV-2026-${order.id.replace('KV-ORD-', '')}`;
                 return (
-                  <tr key={order.id} className="hover:bg-[#FAF8F1] transition-colors">
+                  <tr key={order.id} className="hover:bg-[#F8F5EF] transition-colors">
                     <td className="p-3.5">
-                      <strong className="font-bold font-serif text-[#12372A] text-sm block">{order.id}</strong>
-                      <span className="font-mono text-[10px] text-[#D4AF37] font-semibold">{invId}</span>
+                      <strong className="font-bold font-serif text-[#641E2B] text-sm block">{order.id}</strong>
+                      <span className="font-mono text-[10px] text-[#B99A61] font-semibold">{invId}</span>
                     </td>
 
                     <td className="p-3.5">
-                      <strong className="text-[#12372A] block">{order.shippingAddress.name}</strong>
-                      <span className="text-[10px] text-[#6B5846]">{order.shippingAddress.city}, {order.shippingAddress.state}</span>
+                      <strong className="text-[#641E2B] block">{order.shippingAddress.name}</strong>
+                      <span className="text-[10px] text-[#6E685D]">{order.shippingAddress.city}, {order.shippingAddress.state}</span>
                     </td>
 
-                    <td className="p-3.5 text-[#6B5846]">{order.date}</td>
+                    <td className="p-3.5 text-[#6E685D]">{order.date}</td>
 
                     <td className="p-3.5 font-bold">{order.items.length} Item(s)</td>
 
-                    <td className="p-3.5 font-serif font-bold text-[#12372A] text-sm">{formatPrice(order.total)}</td>
+                    <td className="p-3.5 font-serif font-bold text-[#641E2B] text-sm">{formatPrice(order.total)}</td>
 
-                    <td className="p-3.5 font-mono text-[10px] text-[#12372A]">{order.paymentMethod}</td>
+                    <td className="p-3.5 font-mono text-[10px] text-[#641E2B]">{order.paymentMethod}</td>
 
                     <td className="p-3.5">
                       <div className="flex flex-col gap-1 items-start">
-                        <span className="bg-[#12372A] text-[#D4AF37] text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full border border-[#D4AF37]">
+                        <span className="bg-[#641E2B] text-[#B99A61] text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full border border-[#B99A61]">
                           {order.status}
                         </span>
                         <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full border ${
@@ -192,7 +203,7 @@ export const OrderManagement: React.FC = () => {
                           setAwbInput(order.trackingNumber || '');
                           setCourierInput(order.courierProvider || 'Standard Express Delivery');
                         }}
-                        className="bg-[#12372A] text-[#FAF8F1] px-3.5 py-1.5 rounded-xl font-bold uppercase text-[10px] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all border border-[#D4AF37] cursor-pointer"
+                        className="bg-[#641E2B] text-[#F8F5EF] px-3.5 py-1.5 rounded-xl font-bold uppercase text-[10px] hover:bg-[#B99A61] hover:text-[#641E2B] transition-all border border-[#B99A61] cursor-pointer"
                       >
                         Manage Order
                       </button>
@@ -211,18 +222,18 @@ export const OrderManagement: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[88vh]">
             
             {/* Modal Header */}
-            <div className="p-5 bg-[#12372A] text-[#FAF8F1] flex justify-between items-start shrink-0">
+            <div className="p-5 bg-[#641E2B] text-[#F8F5EF] flex justify-between items-start shrink-0">
               <div>
-                <span className="text-[10px] uppercase font-bold text-[#D4AF37] tracking-widest block">Order Specification &amp; Dispatch</span>
+                <span className="text-[10px] uppercase font-bold text-[#B99A61] tracking-widest block">Order Specification &amp; Dispatch</span>
                 <div className="flex items-center gap-3 mt-1">
-                  <h3 className="font-serif font-bold text-xl text-[#FAF8F1]">{selectedOrder.id}</h3>
-                  <span className="bg-[#D4AF37] text-[#12372A] text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full">
+                  <h3 className="font-serif font-bold text-xl text-[#F8F5EF]">{selectedOrder.id}</h3>
+                  <span className="bg-[#B99A61] text-[#641E2B] text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full">
                     {selectedOrder.invoiceId || `KV-INV-2026-${selectedOrder.id.replace('KV-ORD-', '')}`}
                   </span>
                 </div>
-                <span className="text-xs text-[#E8DDC7]/80 block mt-0.5">Placed on {selectedOrder.date}</span>
+                <span className="text-xs text-[#E8DFD0]/80 block mt-0.5">Placed on {selectedOrder.date}</span>
               </div>
-              <button onClick={() => setSelectedOrder(null)} className="p-1 text-[#E8DDC7] hover:text-white cursor-pointer">
+              <button onClick={() => setSelectedOrder(null)} className="p-1 text-[#E8DFD0] hover:text-white cursor-pointer">
                 <X className="w-6 h-6" />
               </button>
             </div>
@@ -230,10 +241,10 @@ export const OrderManagement: React.FC = () => {
             {/* Modal Scrollable Body */}
             <div className="p-6 overflow-y-auto space-y-6 text-xs flex-1">
               {/* Address & Delivery */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#FAF8F1] p-4 rounded-2xl border border-[#E8DDC7] text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#F8F5EF] p-4 rounded-2xl border border-[#E8DFD0] text-xs">
                 <div>
-                  <h4 className="font-bold text-[#12372A] mb-1">Shipping &amp; Delivery Address</h4>
-                  <p className="text-[#6B5846] leading-relaxed">
+                  <h4 className="font-bold text-[#641E2B] mb-1">Shipping &amp; Delivery Address</h4>
+                  <p className="text-[#6E685D] leading-relaxed">
                     <strong>{selectedOrder.shippingAddress.name}</strong><br />
                     {selectedOrder.shippingAddress.street}<br />
                     {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} - {selectedOrder.shippingAddress.pincode}<br />
@@ -242,50 +253,50 @@ export const OrderManagement: React.FC = () => {
                 </div>
 
                 <div>
-                  <h4 className="font-bold text-[#12372A] mb-1">Payment &amp; Invoice Reference</h4>
-                  <p className="text-[#6B5846] leading-relaxed">
-                    Invoice: <strong className="font-mono text-[#D4AF37] font-bold">{selectedOrder.invoiceId || `KV-INV-2026-${selectedOrder.id.replace('KV-ORD-', '')}`}</strong><br />
-                    Method: <strong className="text-[#12372A]">{selectedOrder.paymentMethod}</strong><br />
+                  <h4 className="font-bold text-[#641E2B] mb-1">Payment &amp; Invoice Reference</h4>
+                  <p className="text-[#6E685D] leading-relaxed">
+                    Invoice: <strong className="font-mono text-[#B99A61] font-bold">{selectedOrder.invoiceId || `KV-INV-2026-${selectedOrder.id.replace('KV-ORD-', '')}`}</strong><br />
+                    Method: <strong className="text-[#641E2B]">{selectedOrder.paymentMethod}</strong><br />
                     Carrier: <strong>{selectedOrder.courierProvider || 'Standard Express Delivery'}</strong><br />
-                    Tracking: <strong className="font-mono text-[#12372A]">{selectedOrder.trackingNumber}</strong>
+                    Tracking: <strong className="font-mono text-[#641E2B]">{selectedOrder.trackingNumber}</strong>
                   </p>
                 </div>
               </div>
 
               {/* Ordered Garments */}
               <div className="space-y-2 text-xs">
-                <h4 className="font-bold text-[#12372A]">Ordered Items</h4>
+                <h4 className="font-bold text-[#641E2B]">Ordered Items</h4>
                 {selectedOrder.items.map((item, idx) => (
-                  <div key={idx} className="p-3 border border-[#E8DDC7] rounded-xl flex items-center justify-between bg-[#FAF8F1]">
+                  <div key={idx} className="p-3 border border-[#E8DFD0] rounded-xl flex items-center justify-between bg-[#F8F5EF]">
                     <div className="flex items-center gap-3">
                       <OptimizedImage
                         src={item.product.images[0]}
                         alt={item.product.name}
                         preset="thumbnail"
                         aspectRatio="3/4"
-                        containerClassName="w-12 h-16 rounded-lg border border-[#E8DDC7] shrink-0"
+                        containerClassName="w-12 h-16 rounded-lg border border-[#E8DFD0] shrink-0"
                       />
                       <div>
-                        <strong className="text-[#12372A] block">{item.product.name}</strong>
-                        <span className="text-[#6B5846] text-[11px]">Size: {item.size} • Color: {item.color.name} • Qty: {item.quantity}</span>
+                        <strong className="text-[#641E2B] block">{item.product.name}</strong>
+                        <span className="text-[#6E685D] text-[11px]">Size: {item.size} • Color: {item.color.name} • Qty: {item.quantity}</span>
                       </div>
                     </div>
-                    <strong className="text-[#12372A] font-bold">₹{(item.price * item.quantity).toLocaleString('en-IN')}</strong>
+                    <strong className="text-[#641E2B] font-bold">₹{(item.price * item.quantity).toLocaleString('en-IN')}</strong>
                   </div>
                 ))}
               </div>
 
               {/* Status Update Form */}
-              <form id="order-fulfillment-form" onSubmit={handleUpdateOrderStatus} className="space-y-4 pt-4 border-t border-[#E8DDC7]">
-                <h4 className="font-bold text-[#12372A]">Update Fulfillment Status</h4>
+              <form id="order-fulfillment-form" onSubmit={handleUpdateOrderStatus} className="space-y-4 pt-4 border-t border-[#E8DFD0]">
+                <h4 className="font-bold text-[#641E2B]">Update Fulfillment Status</h4>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="block font-semibold text-[#6B5846] mb-1">Order Status</label>
+                    <label className="block font-semibold text-[#6E685D] mb-1">Order Status</label>
                     <select
                       value={editingStatus}
                       onChange={(e) => setEditingStatus(e.target.value as OrderStatus)}
-                      className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
+                      className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
                     >
                       <option value="Processing">Processing</option>
                       <option value="Dispatched">Dispatched</option>
@@ -296,11 +307,11 @@ export const OrderManagement: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-[#6B5846] mb-1">Payment Status</label>
+                    <label className="block font-semibold text-[#6E685D] mb-1">Payment Status</label>
                     <select
                       value={editingPaymentStatus}
                       onChange={(e) => setEditingPaymentStatus(e.target.value as PaymentStatus)}
-                      className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
+                      className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
                     >
                       <option value="Pending">Pending</option>
                       <option value="Paid">Paid (Verified)</option>
@@ -310,43 +321,43 @@ export const OrderManagement: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-[#6B5846] mb-1">Logistics Provider</label>
+                    <label className="block font-semibold text-[#6E685D] mb-1">Logistics Provider</label>
                     <input
                       type="text"
                       value={courierInput}
                       onChange={(e) => setCourierInput(e.target.value)}
                       placeholder="e.g. Standard Express Delivery"
-                      className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
+                      className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#6B5846] mb-1">Tracking Number</label>
+                  <label className="block font-semibold text-[#6E685D] mb-1">Tracking Number</label>
                   <input
                     type="text"
                     value={awbInput}
                     onChange={(e) => setAwbInput(e.target.value)}
                     placeholder="e.g. KV-TRK-8849102"
-                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-mono text-xs"
+                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-mono text-xs"
                   />
                 </div>
               </form>
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 bg-[#FAF8F1] border-t border-[#E8DDC7] flex gap-3 shrink-0">
+            <div className="p-4 bg-[#F8F5EF] border-t border-[#E8DFD0] flex gap-3 shrink-0">
               <button
                 type="submit"
                 form="order-fulfillment-form"
-                className="flex-1 bg-[#12372A] text-[#FAF8F1] py-3 font-bold uppercase text-xs rounded-xl hover:bg-[#D4AF37] hover:text-[#12372A] transition-all border border-[#D4AF37] cursor-pointer"
+                className="flex-1 bg-[#641E2B] text-[#F8F5EF] py-3 font-bold uppercase text-xs rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-all border border-[#B99A61] cursor-pointer"
               >
                 Update Status &amp; Save Tracking Info
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedOrder(null)}
-                className="px-5 py-3 border border-[#E8DDC7] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all cursor-pointer"
+                className="px-5 py-3 border border-[#E8DFD0] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all cursor-pointer"
               >
                 Close
               </button>

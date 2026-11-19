@@ -2,7 +2,7 @@
 
 import { safeStorage } from '../utils/storage';
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { Product, PromoOffer, Review, CategoryItem } from '../types';
+import type { Product, PromoOffer, Review, CategoryItem, StockAdjustment } from '../types';
 import { PRODUCTS as INITIAL_PRODUCTS } from '../data/products';
 import { INITIAL_OFFERS } from '../data/offers';
 import { COLLECTIONS as INITIAL_COLLECTIONS } from '../data/collections';
@@ -49,6 +49,8 @@ interface ProductContextType {
   updateReview: (rev: Review) => void;
   deleteReview: (id: string) => void;
 
+  stockAdjustments: StockAdjustment[];
+  adjustStock: (productId: string, newStock: number, staffName: string, reason: string, variantId?: string) => void;
   deductInventoryForOrder: (items: { product: Product; quantity: number }[]) => void;
   restoreInventoryForOrder: (items: { product: Product; quantity: number }[]) => void;
   incrementPromoUsage: (code: string) => void;
@@ -64,6 +66,7 @@ const OFFERS_STORAGE_KEY = 'kavish_db_offers_v2';
 const COLLECTIONS_STORAGE_KEY = 'kavish_db_collections_v2';
 const REVIEWS_STORAGE_KEY = 'kavish_db_reviews_v2';
 const ANNOUNCEMENT_STORAGE_KEY = 'kavish_db_announcement_v2';
+const ADJUSTMENTS_STORAGE_KEY = 'kavish_stock_adjustments_v1';
 
 function safeStoreProducts(productsToStore: Product[]) {
   try {
@@ -89,6 +92,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [offers, setOffers] = useState<PromoOffer[]>(INITIAL_OFFERS);
   const [collections, setCollections] = useState<CollectionItem[]>(INITIAL_COLLECTIONS);
   const [reviews, setReviews] = useState<Review[]>(INITIAL_REVIEWS);
+  const [stockAdjustments, setStockAdjustments] = useState<StockAdjustment[]>([]);
   const [announcementText, setAnnouncementTextState] = useState<string>(
     'Complimentary Express Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified'
   );
@@ -127,6 +131,12 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (savedRevs) {
         const parsed = JSON.parse(savedRevs);
         if (Array.isArray(parsed) && parsed.length > 0) setReviews(parsed);
+      }
+
+      const savedAdj = safeStorage.getItem(ADJUSTMENTS_STORAGE_KEY);
+      if (savedAdj) {
+        const parsed = JSON.parse(savedAdj);
+        if (Array.isArray(parsed) && parsed.length > 0) setStockAdjustments(parsed);
       }
 
       const savedAnn = safeStorage.getItem(ANNOUNCEMENT_STORAGE_KEY);
@@ -438,7 +448,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       isFeatured: productForm.isFeatured ?? true,
       images: productForm.images?.length ? productForm.images : ['/assets/categories/women_kasavu.jpg'],
       sizes: productForm.sizes?.length ? productForm.sizes : ['Free Size'],
-      colors: productForm.colors?.length ? productForm.colors : [{ name: 'Kasavu Gold', hex: '#D4AF37' }],
+      colors: productForm.colors?.length ? productForm.colors : [{ name: 'Kasavu Gold', hex: '#B99A61' }],
       fabric: productForm.fabric || '100% Pure Organic Cotton',
       details: productForm.details?.length ? productForm.details : ['100% Authentic Handloom with Kerala Govt GI Tag'],
       careInstructions: productForm.careInstructions?.length ? productForm.careInstructions : ['Dry Clean Only'],
@@ -692,6 +702,71 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   };
 
+  const adjustStock = (
+    productId: string,
+    newStock: number,
+    staffName: string,
+    reason: string,
+    variantId?: string
+  ) => {
+    let targetProduct: Product | undefined;
+    let prevStock = 0;
+
+    setProducts(prevProducts => {
+      const updated = prevProducts.map(p => {
+        if (p.id === productId) {
+          targetProduct = p;
+          prevStock = p.stockCount != null ? p.stockCount : 10;
+          const safeCount = Math.max(0, newStock);
+          const updatedProd: Product = {
+            ...p,
+            stockCount: safeCount,
+            inStock: safeCount > 0
+          };
+          if (variantId && updatedProd.variants) {
+            updatedProd.variants = updatedProd.variants.map(v => 
+              v.id === variantId ? { ...v, stock: safeCount } : v
+            );
+          }
+          upsertSupabaseProduct(updatedProd);
+          return updatedProd;
+        }
+        return p;
+      });
+      safeStoreProducts(updated);
+      return updated;
+    });
+
+    const currentProd = targetProduct || products.find(p => p.id === productId);
+    if (currentProd) {
+      const safeCount = Math.max(0, newStock);
+      const newAdjustment: StockAdjustment = {
+        id: `adj-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        productId,
+        productName: currentProd.name,
+        sku: currentProd.sku,
+        variantId,
+        type: newStock > prevStock ? 'add' : newStock < prevStock ? 'deduct' : 'set',
+        quantity: Math.abs(newStock - prevStock),
+        previousStock: prevStock,
+        newStock: safeCount,
+        reason: reason || 'Manual inventory adjustment',
+        staffName: staffName || 'Admin Staff',
+        timestamp: new Date().toISOString()
+      };
+
+      setStockAdjustments(prev => {
+        const next = [newAdjustment, ...prev];
+        try {
+          safeStorage.setItem(ADJUSTMENTS_STORAGE_KEY, JSON.stringify(next));
+        } catch (e) {
+          console.error(e);
+        }
+        return next;
+      });
+    }
+  };
+
   const resetToDefaults = (): void => {
     saveProducts(INITIAL_PRODUCTS);
     saveOffers(INITIAL_OFFERS);
@@ -709,12 +784,14 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         offers,
         collections,
         reviews,
+        stockAdjustments,
         announcementText,
         setAnnouncementText,
         addProduct,
         updateProduct,
         deleteProduct,
         toggleStockStatus,
+        adjustStock,
         addCategory,
         updateCategory,
         deleteCategory,

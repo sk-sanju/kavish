@@ -50,12 +50,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
     return DEFAULT_HERO_BANNERS;
   }, [heroBanners, storeContent]);
 
-  // Automatically transition banners every 5 seconds
+  // Automatically transition banners every 6 seconds
   useEffect(() => {
     if (!bannersList || bannersList.length <= 1) return;
     const timer = setInterval(() => {
       setActiveIdx(prev => (prev + 1) % bannersList.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(timer);
   }, [bannersList.length]);
 
@@ -63,10 +63,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
   const current = bannersList[safeIdx] || DEFAULT_HERO_BANNERS[0];
 
   return (
-    <section className="relative bg-[#0F2D22] text-[#FAF8F1] min-h-[75vh] sm:min-h-[85vh] flex items-center overflow-hidden">
+    <section className="relative bg-[#46141D] text-[#F8F5EF] min-h-[75vh] sm:min-h-[85vh] flex items-center overflow-hidden">
       
       {/* Background Image with Gradient Overlay */}
-      <div className="absolute inset-0 z-0 bg-[#0F2D22]">
+      <div className="absolute inset-0 z-0 bg-[#46141D]">
         <OptimizedImage
           key={current.id || current.image}
           src={current.image}
@@ -76,8 +76,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
           containerClassName="w-full h-full"
           imageClassName="opacity-40 sm:opacity-45 transform scale-105 transition-all duration-1000 ease-out animate-fadeIn"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#12372A] via-[#12372A]/85 sm:via-[#12372A]/80 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#12372A] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#46141D] via-[#46141D]/90 sm:via-[#46141D]/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#46141D] via-transparent to-transparent" />
       </div>
 
       {/* Content Container */}
@@ -85,18 +85,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
         <div className="max-w-2xl space-y-4 sm:space-y-6">
           
           {/* Campaign Tag */}
-          <div className="inline-flex items-center gap-2 bg-[#D4AF37]/20 border border-[#D4AF37]/60 px-3 py-1 text-[10px] sm:text-xs uppercase font-semibold text-[#D4AF37] tracking-[0.2em] transition-all duration-500">
+          <div className="inline-flex items-center gap-2 bg-[#B99A61]/20 border border-[#B99A61]/60 px-3 py-1 text-[10px] sm:text-xs uppercase font-semibold text-[#B99A61] tracking-[0.2em] transition-all duration-500 rounded-full">
             <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-pulse" />
             <span>{current.tag}</span>
           </div>
 
           {/* Headline */}
-          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] text-[#FAF8F1] whitespace-pre-line tracking-tight transition-all duration-700">
+          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] text-[#F8F5EF] whitespace-pre-line tracking-tight transition-all duration-700">
             {current.title}
           </h1>
 
           {/* Subtitle */}
-          <p className="font-sans text-xs sm:text-sm md:text-base text-[#E8DDC7]/90 leading-relaxed max-w-xl font-light transition-all duration-700">
+          <p className="font-sans text-xs sm:text-sm md:text-base text-[#F8F5EF]/90 leading-relaxed max-w-xl font-light transition-all duration-700">
             {current.subtitle}
           </p>
 
@@ -104,7 +104,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
           <div className="pt-2 sm:pt-4 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
             <button
               onClick={() => onNavigate(current.primaryCtaLink || 'shop', undefined, current.collectionSlug || undefined)}
-              className="bg-[#D4AF37] text-[#12372A] hover:bg-[#FAF8F1] hover:text-[#12372A] px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-[0.2em] transition-all shadow-xl flex items-center justify-center gap-3 border border-[#D4AF37]"
+              className="bg-[#B99A61] text-[#46141D] hover:bg-[#F8F5EF] hover:text-[#46141D] px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-[0.2em] transition-all shadow-xl flex items-center justify-center gap-3 border border-[#B99A61] cursor-pointer rounded-full"
             >
               <span>{current.primaryCtaText || 'Shop Collection'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -112,14 +112,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
 
             <button
               onClick={() => onNavigate(current.secondaryCtaLink || 'heritage')}
-              className="bg-transparent text-[#FAF8F1] border border-[#FAF8F1]/40 hover:border-[#D4AF37] hover:text-[#D4AF37] px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3"
+              className="bg-transparent text-[#F8F5EF] border border-[#F8F5EF]/40 hover:border-[#B99A61] hover:text-[#B99A61] px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 cursor-pointer rounded-full"
             >
               <Compass className="w-4 h-4" />
               <span>{current.secondaryCtaText || 'Explore Our Story'}</span>
             </button>
           </div>
 
-          {/* Subtle Sleek Slide Indicators */}
+          {/* Slide Indicators */}
           {bannersList.length > 1 && (
             <div className="pt-6 sm:pt-8 flex items-center gap-2">
               {bannersList.map((c, idx) => (
@@ -127,9 +127,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
                   key={c.id || idx}
                   onClick={() => setActiveIdx(idx)}
                   aria-label={`Slide ${idx + 1}`}
-                  className={`h-1.5 rounded-full transition-all duration-500 ${
+                  className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
                     activeIdx === idx
-                      ? 'w-8 bg-[#D4AF37]'
+                      ? 'w-8 bg-[#B99A61]'
                       : 'w-2 bg-white/30 hover:bg-white/60'
                   }`}
                 />

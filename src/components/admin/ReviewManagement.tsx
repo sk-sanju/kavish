@@ -37,12 +37,12 @@ export const ReviewManagement: React.FC = () => {
     <div className="space-y-6 animate-fadeIn">
       
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DDC7] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#D4AF37] block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#B99A61] block">
             Patron Feedback &amp; Ratings
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#12372A] mt-0.5">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-0.5">
             Review Moderation Console ({reviews.length})
           </h1>
         </div>
@@ -51,7 +51,7 @@ export const ReviewManagement: React.FC = () => {
       {/* Reviews Grid */}
       <div className="space-y-4">
         {reviews.map(r => (
-          <div key={r.id} className="bg-white p-5 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-3">
+          <div key={r.id} className="bg-white p-5 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-3">
             <div className="flex justify-between items-start">
               <div>
                 <div className="flex items-center gap-2">
@@ -60,9 +60,9 @@ export const ReviewManagement: React.FC = () => {
                       <Star key={i} className={`w-4 h-4 ${i < r.rating ? 'fill-current' : 'text-gray-300'}`} />
                     ))}
                   </div>
-                  <strong className="text-[#12372A] font-bold text-sm">{r.title}</strong>
+                  <strong className="text-[#641E2B] font-bold text-sm">{r.title}</strong>
                 </div>
-                <span className="text-xs text-[#6B5846]">By {r.author} • {r.location} • {r.date}</span>
+                <span className="text-xs text-[#6E685D]">By {r.author} • {r.location} • {r.date}</span>
               </div>
 
               <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase border ${
@@ -72,19 +72,19 @@ export const ReviewManagement: React.FC = () => {
               </span>
             </div>
 
-            <p className="text-xs text-[#171717] font-light italic bg-[#FAF8F1] p-3 rounded-xl border border-[#E8DDC7]">
+            <p className="text-xs text-[#171717] font-light italic bg-[#F8F5EF] p-3 rounded-xl border border-[#E8DFD0]">
               "{r.comment}"
             </p>
 
             {r.adminResponse && (
-              <div className="p-3 bg-[#12372A] text-[#FAF8F1] rounded-xl text-xs space-y-1">
-                <strong className="text-[#D4AF37] font-serif block">Kavish Atelier Official Response:</strong>
+              <div className="p-3 bg-[#641E2B] text-[#F8F5EF] rounded-xl text-xs space-y-1">
+                <strong className="text-[#B99A61] font-serif block">Kavish Atelier Official Response:</strong>
                 <p>{r.adminResponse}</p>
               </div>
             )}
 
             {/* Actions Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#E8DDC7] text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#E8DFD0] text-xs">
               <div className="flex gap-2">
                 <button
                   onClick={() => handleUpdateStatus(r, 'Approved')}
@@ -113,11 +113,11 @@ export const ReviewManagement: React.FC = () => {
                   placeholder="Write official atelier staff response..."
                   value={responseInput[r.id] || ''}
                   onChange={(e) => setResponseInput({ ...responseInput, [r.id]: e.target.value })}
-                  className="flex-1 border border-[#E8DDC7] p-1.5 rounded-xl bg-[#FAF8F1] text-xs"
+                  className="flex-1 border border-[#E8DFD0] p-1.5 rounded-xl bg-[#F8F5EF] text-xs"
                 />
                 <button
                   onClick={() => handleSendResponse(r)}
-                  className="bg-[#12372A] text-[#FAF8F1] px-3 py-1.5 rounded-xl font-bold uppercase text-[10px] border border-[#D4AF37]"
+                  className="bg-[#641E2B] text-[#F8F5EF] px-3 py-1.5 rounded-xl font-bold uppercase text-[10px] border border-[#B99A61]"
                 >
                   Respond
                 </button>

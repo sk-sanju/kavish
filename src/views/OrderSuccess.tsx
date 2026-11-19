@@ -50,27 +50,27 @@ export const OrderSuccess: React.FC = () => {
 
   if (!order) {
     return (
-      <div className="py-16 bg-[#FAF8F1] min-h-screen animate-fadeIn flex items-center justify-center p-4">
-        <div className="bg-white p-8 sm:p-12 border border-[#E8DDC7] rounded-3xl shadow-xl max-w-lg text-center space-y-5">
-          <div className="w-16 h-16 rounded-full bg-[#12372A] text-[#D4AF37] flex items-center justify-center mx-auto shadow-md">
+      <div className="py-16 bg-[#F8F5EF] min-h-screen animate-fadeIn flex items-center justify-center p-4">
+        <div className="bg-white p-8 sm:p-12 border border-[#E8DFD0] rounded-3xl shadow-xl max-w-lg text-center space-y-5">
+          <div className="w-16 h-16 rounded-full bg-[#641E2B] text-[#B99A61] flex items-center justify-center mx-auto shadow-md">
             <ShoppingBag className="w-8 h-8" />
           </div>
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#12372A]">
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B]">
             No Active Order Found
           </h2>
-          <p className="text-xs text-[#6B5846] leading-relaxed">
+          <p className="text-xs text-[#6E685D] leading-relaxed">
             If you recently completed a payment, you can track your parcel using your Order ID, or browse our latest handloom arrivals.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <button
               onClick={() => router.push('/track-order')}
-              className="flex-1 bg-[#12372A] text-[#FAF8F1] hover:bg-[#D4AF37] hover:text-[#12372A] py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
+              className="flex-1 bg-[#641E2B] text-[#F8F5EF] hover:bg-[#B99A61] hover:text-[#641E2B] py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
             >
               Track by Order ID
             </button>
             <button
               onClick={() => router.push('/shop')}
-              className="flex-1 bg-white text-[#12372A] border border-[#12372A] hover:bg-[#FAF8F1] py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
+              className="flex-1 bg-white text-[#641E2B] border border-[#641E2B] hover:bg-[#F8F5EF] py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
             >
               Shop Handlooms
             </button>
@@ -81,7 +81,7 @@ export const OrderSuccess: React.FC = () => {
   }
 
   return (
-    <div className="py-8 sm:py-12 bg-[#FAF8F1] min-h-screen animate-fadeIn pb-24">
+    <div className="py-8 sm:py-12 bg-[#F8F5EF] min-h-screen animate-fadeIn pb-24">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Brand Header */}
@@ -92,53 +92,53 @@ export const OrderSuccess: React.FC = () => {
             className="h-12 sm:h-14 w-auto object-contain cursor-pointer hover:opacity-90 transition-opacity"
             onClick={() => router.push('/')}
           />
-          <p className="text-[10px] sm:text-xs text-[#D4AF37] font-semibold uppercase tracking-widest mt-1">
+          <p className="text-[10px] sm:text-xs text-[#B99A61] font-semibold uppercase tracking-widest mt-1">
             Order Confirmation &amp; Tax Receipt
           </p>
         </div>
 
         {/* Success Card */}
-        <div className="bg-white p-6 sm:p-10 border border-[#D4AF37] shadow-2xl rounded-3xl space-y-6">
+        <div className="bg-white p-6 sm:p-10 border border-[#B99A61] shadow-2xl rounded-3xl space-y-6">
           
           {/* Confirmed Banner */}
-          <div className="text-center space-y-2 border-b border-[#E8DDC7] pb-6">
-            <div className="w-16 h-16 rounded-full bg-[#12372A] text-[#D4AF37] flex items-center justify-center mx-auto shadow-md">
+          <div className="text-center space-y-2 border-b border-[#E8DFD0] pb-6">
+            <div className="w-16 h-16 rounded-full bg-[#641E2B] text-[#B99A61] flex items-center justify-center mx-auto shadow-md">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <h1 className="font-serif text-2xl sm:text-4xl font-bold text-[#12372A]">
+            <h1 className="font-serif text-2xl sm:text-4xl font-bold text-[#641E2B]">
               Order Confirmed!
             </h1>
-            <p className="text-xs sm:text-sm text-[#6B5846]">
-              Thank you, <strong className="text-[#12372A]">{order.shippingAddress.name}</strong>. Your order <strong className="text-[#12372A]">#{order.id}</strong> has been received and assigned to our Kuthampully master weaving atelier.
+            <p className="text-xs sm:text-sm text-[#6E685D]">
+              Thank you, <strong className="text-[#641E2B]">{order.shippingAddress.name}</strong>. Your order <strong className="text-[#641E2B]">#{order.id}</strong> has been received and assigned to our Kuthampully master weaving atelier.
             </p>
           </div>
 
           {/* Key Reference Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#FAF8F1] p-4 rounded-2xl border border-[#E8DDC7] text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#F8F5EF] p-4 rounded-2xl border border-[#E8DFD0] text-xs">
             <div>
-              <span className="text-[10px] text-[#6B5846] uppercase tracking-wider block">Order ID</span>
-              <strong className="font-mono text-[#12372A] text-xs sm:text-sm">{order.id}</strong>
+              <span className="text-[10px] text-[#6E685D] uppercase tracking-wider block">Order ID</span>
+              <strong className="font-mono text-[#641E2B] text-xs sm:text-sm">{order.id}</strong>
             </div>
             <div>
-              <span className="text-[10px] text-[#6B5846] uppercase tracking-wider block">Tax Invoice</span>
-              <strong className="font-mono text-[#D4AF37] text-xs sm:text-sm">{order.invoiceId || `KV-INV-2026-${order.id.replace('KV-ORD-', '')}`}</strong>
+              <span className="text-[10px] text-[#6E685D] uppercase tracking-wider block">Tax Invoice</span>
+              <strong className="font-mono text-[#B99A61] text-xs sm:text-sm">{order.invoiceId || `KV-INV-2026-${order.id.replace('KV-ORD-', '')}`}</strong>
             </div>
             <div>
-              <span className="text-[10px] text-[#6B5846] uppercase tracking-wider block">Order Date</span>
-              <strong className="text-[#12372A]">{order.date}</strong>
+              <span className="text-[10px] text-[#6E685D] uppercase tracking-wider block">Order Date</span>
+              <strong className="text-[#641E2B]">{order.date}</strong>
             </div>
             <div>
-              <span className="text-[10px] text-[#6B5846] uppercase tracking-wider block">Est. Delivery</span>
+              <span className="text-[10px] text-[#6E685D] uppercase tracking-wider block">Est. Delivery</span>
               <strong className="text-green-800">{order.estimatedDelivery || POLICY_CONFIG.STANDARD_DELIVERY_TIME}</strong>
             </div>
           </div>
 
           {/* Ordered Products Table */}
           <div className="space-y-3">
-            <h3 className="font-serif text-base sm:text-lg font-bold text-[#12372A]">
+            <h3 className="font-serif text-base sm:text-lg font-bold text-[#641E2B]">
               Ordered Items
             </h3>
-            <div className="divide-y divide-[#E8DDC7] border-y border-[#E8DDC7]">
+            <div className="divide-y divide-[#E8DFD0] border-y border-[#E8DFD0]">
               {order.items.map((item, idx) => (
                 <div key={idx} className="py-3 flex justify-between items-center text-xs">
                   <div className="flex items-center gap-3">
@@ -148,17 +148,17 @@ export const OrderSuccess: React.FC = () => {
                         alt={item.product.name}
                         preset="thumbnail"
                         aspectRatio="3/4"
-                        containerClassName="w-12 h-16 rounded-lg border border-[#E8DDC7] shrink-0"
+                        containerClassName="w-12 h-16 rounded-lg border border-[#E8DFD0] shrink-0"
                       />
                     )}
                     <div>
-                      <h4 className="font-bold text-[#12372A]">{item.product.name}</h4>
-                      <p className="text-[10px] text-[#6B5846]">
+                      <h4 className="font-bold text-[#641E2B]">{item.product.name}</h4>
+                      <p className="text-[10px] text-[#6E685D]">
                         Size: {item.size} • Color: {item.color.name} • Qty: {item.quantity}
                       </p>
                     </div>
                   </div>
-                  <strong className="text-xs font-bold text-[#12372A]">
+                  <strong className="text-xs font-bold text-[#641E2B]">
                     {formatPrice(item.price * item.quantity)}
                   </strong>
                 </div>
@@ -169,23 +169,23 @@ export const OrderSuccess: React.FC = () => {
           {/* Pricing Breakdown & Shipping Address */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
             
-            <div className="p-4 bg-[#FAF8F1] rounded-2xl border border-[#E8DDC7] text-xs space-y-2 self-start">
-              <div className="flex items-center gap-1.5 font-bold text-[#12372A] border-b border-[#E8DDC7] pb-2">
-                <MapPin className="w-4 h-4 text-[#D4AF37]" />
+            <div className="p-4 bg-[#F8F5EF] rounded-2xl border border-[#E8DFD0] text-xs space-y-2 self-start">
+              <div className="flex items-center gap-1.5 font-bold text-[#641E2B] border-b border-[#E8DFD0] pb-2">
+                <MapPin className="w-4 h-4 text-[#B99A61]" />
                 <span>Shipping Address</span>
               </div>
-              <p className="text-[#6B5846] leading-relaxed">
-                <strong className="text-[#12372A]">{order.shippingAddress.name}</strong><br />
+              <p className="text-[#6E685D] leading-relaxed">
+                <strong className="text-[#641E2B]">{order.shippingAddress.name}</strong><br />
                 {order.shippingAddress.street}<br />
                 {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}<br />
                 Phone: {order.shippingAddress.phone}
               </p>
             </div>
 
-            <div className="p-4 bg-[#FAF8F1] rounded-2xl border border-[#E8DDC7] text-xs space-y-2">
-              <div className="flex justify-between text-[#6B5846]">
+            <div className="p-4 bg-[#F8F5EF] rounded-2xl border border-[#E8DFD0] text-xs space-y-2">
+              <div className="flex justify-between text-[#6E685D]">
                 <span>Subtotal:</span>
-                <span className="font-semibold text-[#171717]">{formatPrice(order.subtotal)}</span>
+                <span className="font-semibold text-[#292522]">{formatPrice(order.subtotal)}</span>
               </div>
               {order.discount > 0 && (
                 <div className="flex justify-between text-green-700">
@@ -193,17 +193,17 @@ export const OrderSuccess: React.FC = () => {
                   <span>-{formatPrice(order.discount)}</span>
                 </div>
               )}
-              <div className="flex justify-between text-[#6B5846]">
+              <div className="flex justify-between text-[#6E685D]">
                 <span>Express Courier Delivery:</span>
                 <span className="font-semibold text-green-700">
                   {order.shippingFee === 0 ? 'FREE' : formatPrice(order.shippingFee)}
                 </span>
               </div>
-              <div className="flex justify-between text-[#6B5846] pt-1 border-t border-[#E8DDC7]/60">
+              <div className="flex justify-between text-[#6E685D] pt-1 border-t border-[#E8DFD0]/60">
                 <span>Payment Reference:</span>
-                <span className="font-mono text-[11px] text-[#12372A] truncate max-w-[180px]">{order.paymentMethod}</span>
+                <span className="font-mono text-[11px] text-[#641E2B] truncate max-w-[180px]">{order.paymentMethod}</span>
               </div>
-              <div className="flex justify-between text-sm sm:text-base font-serif font-bold text-[#12372A] pt-2 border-t border-[#E8DDC7]">
+              <div className="flex justify-between text-sm sm:text-base font-serif font-bold text-[#641E2B] pt-2 border-t border-[#E8DFD0]">
                 <span>Total Amount Paid:</span>
                 <span>{formatPrice(order.total)}</span>
               </div>
@@ -220,18 +220,18 @@ export const OrderSuccess: React.FC = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-3 pt-4 border-t border-[#E8DDC7]">
+          <div className="flex flex-wrap gap-3 pt-4 border-t border-[#E8DFD0]">
             <button
               onClick={handleTrack}
-              className="flex-1 bg-[#12372A] text-[#FAF8F1] hover:bg-[#D4AF37] hover:text-[#12372A] py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all border border-[#D4AF37] shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-1 bg-[#641E2B] text-[#F8F5EF] hover:bg-[#B99A61] hover:text-[#641E2B] py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all border border-[#B99A61] shadow-md flex items-center justify-center gap-2 cursor-pointer"
             >
-              <Truck className="w-4 h-4 text-[#D4AF37]" />
+              <Truck className="w-4 h-4 text-[#B99A61]" />
               <span>Track Live Package</span>
             </button>
 
             <button
               onClick={handlePrint}
-              className="px-5 py-3.5 bg-white text-[#12372A] border border-[#12372A] hover:bg-[#FAF8F1] text-xs font-bold uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 cursor-pointer"
+              className="px-5 py-3.5 bg-white text-[#641E2B] border border-[#641E2B] hover:bg-[#F8F5EF] text-xs font-bold uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 cursor-pointer"
             >
               <Printer className="w-4 h-4" />
               <span>Print Receipt</span>
@@ -239,7 +239,7 @@ export const OrderSuccess: React.FC = () => {
 
             <button
               onClick={() => router.push('/shop')}
-              className="flex-1 bg-white text-[#12372A] border border-[#12372A] hover:bg-[#FAF8F1] py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-1 bg-white text-[#641E2B] border border-[#641E2B] hover:bg-[#F8F5EF] py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Continue Shopping</span>
               <ArrowRight className="w-4 h-4" />

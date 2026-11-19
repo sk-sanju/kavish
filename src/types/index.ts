@@ -74,6 +74,10 @@ export interface Product {
   fitInformation?: string;
   sku: string;
   tags?: string[];
+  description?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  status?: 'Active' | 'Draft' | 'Archived';
   sizeChart?: SizeChartConfig;
   createdAt?: string;
   updatedAt?: string;
@@ -115,18 +119,50 @@ export interface Address {
 
 export type OrderStatus =
   | 'Pending'
+  | 'New Order'
   | 'Confirmed'
   | 'Processing'
   | 'Packed'
+  | 'Ready to Dispatch'
+  | 'Shipped'
   | 'Dispatched'
   | 'Out for Delivery'
   | 'Delivered'
+  | 'Payment Pending'
+  | 'Payment Failed'
   | 'Cancelled'
+  | 'Return Requested'
+  | 'Return Approved'
+  | 'Refund Pending'
   | 'Returned'
   | 'Refunded'
   | 'Quality Check';
 
 export type PaymentStatus = 'Pending' | 'Paid' | 'Failed' | 'Refunded';
+
+export interface OrderTimelineEntry {
+  id: string;
+  previousStatus: string;
+  newStatus: string;
+  timestamp: string;
+  staffName: string;
+  remarks?: string;
+}
+
+export interface StockAdjustment {
+  id: string;
+  productId: string;
+  productName: string;
+  sku: string;
+  variantId?: string;
+  type: 'add' | 'deduct' | 'set';
+  quantity: number;
+  previousStock: number;
+  newStock: number;
+  reason: string;
+  staffName: string;
+  timestamp: string;
+}
 
 export interface OrderItem {
   product: Product;
@@ -154,8 +190,13 @@ export interface Order {
   paymentMethod: string;
   trackingNumber: string;
   courierProvider?: string;
+  trackingUrl?: string;
+  dispatchDate?: string;
   estimatedDelivery: string;
   notes?: string;
+  internalNotes?: string;
+  assignedStaff?: string;
+  timeline?: OrderTimelineEntry[];
 }
 
 export interface UserProfile {
@@ -257,8 +298,10 @@ export interface CategoryItem {
 export type AdminRole =
   | 'Super Admin'
   | 'Store Manager'
-  | 'Product Manager'
   | 'Order Manager'
+  | 'Inventory Manager'
+  | 'Customer Support'
+  | 'Product Manager'
   | 'Marketing Manager'
   | 'Accountant'
   | 'Support Staff';

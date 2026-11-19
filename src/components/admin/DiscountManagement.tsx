@@ -122,48 +122,48 @@ export const DiscountManagement: React.FC = () => {
     <div className="space-y-6 animate-fadeIn">
       
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DDC7] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#D4AF37] block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#B99A61] block">
             Promotional Engine
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#12372A] mt-0.5">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-0.5">
             Discounts &amp; Coupon Codes ({offers.length})
           </h1>
         </div>
 
         <button
           onClick={handleOpenCreate}
-          className="bg-[#12372A] text-[#FAF8F1] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#D4AF37] hover:text-[#12372A] transition-all flex items-center gap-2 border border-[#D4AF37] shadow-sm self-start sm:self-auto"
+          className="bg-[#641E2B] text-[#F8F5EF] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-all flex items-center gap-2 border border-[#B99A61] shadow-sm self-start sm:self-auto"
         >
-          <Plus className="w-4 h-4 text-[#D4AF37]" />
+          <Plus className="w-4 h-4 text-[#B99A61]" />
           <span>Create Coupon Code</span>
         </button>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
-        <div className="bg-white p-4 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-1">
-          <span className="text-[#6B5846]">Active Coupons</span>
-          <div className="font-serif text-xl font-bold text-[#12372A]">{activeCount} Codes</div>
+        <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-1">
+          <span className="text-[#6E685D]">Active Coupons</span>
+          <div className="font-serif text-xl font-bold text-[#641E2B]">{activeCount} Codes</div>
           <span className="text-[10px] text-green-700 font-bold">Usable at checkout</span>
         </div>
 
-        <div className="bg-white p-4 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-1">
-          <span className="text-[#6B5846]">Total Usage Count</span>
-          <div className="font-serif text-xl font-bold text-[#12372A]">{totalUsage} Users</div>
+        <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-1">
+          <span className="text-[#6E685D]">Total Usage Count</span>
+          <div className="font-serif text-xl font-bold text-[#641E2B]">{totalUsage} Users</div>
           <span className="text-[10px] text-gray-500">Applied by patrons</span>
         </div>
 
-        <div className="bg-white p-4 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-1">
-          <span className="text-[#6B5846]">Estimated Discounts Given</span>
-          <div className="font-serif text-xl font-bold text-[#12372A]">{formatPrice(totalDiscountGiven)}</div>
+        <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-1">
+          <span className="text-[#6E685D]">Estimated Discounts Given</span>
+          <div className="font-serif text-xl font-bold text-[#641E2B]">{formatPrice(totalDiscountGiven)}</div>
           <span className="text-[10px] text-gray-500">Savings provided</span>
         </div>
 
-        <div className="bg-white p-4 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-1">
-          <span className="text-[#6B5846]">Top Code</span>
-          <div className="font-mono text-lg font-bold text-[#D4AF37] uppercase">
+        <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-1">
+          <span className="text-[#6E685D]">Top Code</span>
+          <div className="font-mono text-lg font-bold text-[#B99A61] uppercase">
             {offers[0]?.code || 'KAVISH10'}
           </div>
           <span className="text-[10px] text-gray-500">{offers[0]?.description || 'Welcome Discount'}</span>
@@ -171,11 +171,11 @@ export const DiscountManagement: React.FC = () => {
       </div>
 
       {/* Coupons Table */}
-      <div className="bg-white border border-[#E8DDC7] rounded-2xl shadow-xs overflow-hidden">
+      <div className="bg-white border border-[#E8DFD0] rounded-2xl shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-[#12372A] text-[#FAF8F1] font-serif uppercase tracking-wider text-[10px]">
+              <tr className="bg-[#641E2B] text-[#F8F5EF] font-serif uppercase tracking-wider text-[10px]">
                 <th className="p-3.5">Coupon Code</th>
                 <th className="p-3.5">Discount Rule</th>
                 <th className="p-3.5">Min Order Spend</th>
@@ -185,17 +185,17 @@ export const DiscountManagement: React.FC = () => {
                 <th className="p-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E8DDC7]">
+            <tbody className="divide-y divide-[#E8DFD0]">
               {offers.map(o => {
                 const isLimitReached = o.usageLimit != null && o.usageLimit > 0 && (o.usageCount || 0) >= o.usageLimit;
 
                 return (
-                  <tr key={o.id} className="hover:bg-[#FAF8F1] transition-colors">
-                    <td className="p-3.5 font-mono text-sm font-bold text-[#12372A] uppercase">
+                  <tr key={o.id} className="hover:bg-[#F8F5EF] transition-colors">
+                    <td className="p-3.5 font-mono text-sm font-bold text-[#641E2B] uppercase">
                       <div className="flex items-center gap-2">
                         <span>{o.code}</span>
                         {o.description && (
-                          <span className="text-[10px] font-sans font-normal text-[#6B5846] hidden sm:inline">
+                          <span className="text-[10px] font-sans font-normal text-[#6E685D] hidden sm:inline">
                             ({o.description})
                           </span>
                         )}
@@ -203,7 +203,7 @@ export const DiscountManagement: React.FC = () => {
                     </td>
 
                     <td className="p-3.5 font-bold">
-                      <span className="bg-[#FAF8F1] px-2.5 py-1 rounded-lg border border-[#E8DDC7] text-[#12372A]">
+                      <span className="bg-[#F8F5EF] px-2.5 py-1 rounded-lg border border-[#E8DFD0] text-[#641E2B]">
                         {o.discountType === 'percentage' ? `${o.discountValue}% OFF` : `₹${o.discountValue} OFF`}
                       </span>
                     </td>
@@ -212,9 +212,9 @@ export const DiscountManagement: React.FC = () => {
 
                     <td className="p-3.5">
                       <div className="flex items-center gap-1.5 font-mono">
-                        <Users className="w-3.5 h-3.5 text-[#6B5846]" />
-                        <span className="font-bold text-[#12372A]">{o.usageCount || 0}</span>
-                        <span className="text-[#6B5846]">
+                        <Users className="w-3.5 h-3.5 text-[#6E685D]" />
+                        <span className="font-bold text-[#641E2B]">{o.usageCount || 0}</span>
+                        <span className="text-[#6E685D]">
                           {o.usageLimit ? `/ ${o.usageLimit} users` : 'users (Unlimited)'}
                         </span>
                         {isLimitReached && (
@@ -225,7 +225,7 @@ export const DiscountManagement: React.FC = () => {
                       </div>
                     </td>
 
-                    <td className="p-3.5 font-mono text-[#6B5846]">{o.expiryDate}</td>
+                    <td className="p-3.5 font-mono text-[#6E685D]">{o.expiryDate}</td>
 
                     <td className="p-3.5">
                       <button
@@ -242,7 +242,7 @@ export const DiscountManagement: React.FC = () => {
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => handleOpenEdit(o)}
-                          className="p-1.5 text-[#12372A] hover:bg-[#12372A]/10 rounded-lg transition-colors"
+                          className="p-1.5 text-[#641E2B] hover:bg-[#641E2B]/10 rounded-lg transition-colors"
                           title="Edit Coupon"
                         >
                           <Edit className="w-4 h-4" />
@@ -274,16 +274,16 @@ export const DiscountManagement: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh] my-auto">
             
             {/* Modal Fixed Header */}
-            <div className="p-5 bg-[#12372A] text-[#FAF8F1] flex items-center justify-between shrink-0">
+            <div className="p-5 bg-[#641E2B] text-[#F8F5EF] flex items-center justify-between shrink-0">
               <div>
-                <h3 className="font-serif font-bold text-lg text-[#FAF8F1]">
+                <h3 className="font-serif font-bold text-lg text-[#F8F5EF]">
                   {editingOffer ? `Edit Promo Code: ${editingOffer.code}` : 'Create New Promo Code'}
                 </h3>
-                <p className="text-xs text-[#E8DDC7]/80">
+                <p className="text-xs text-[#E8DFD0]/80">
                   {editingOffer ? 'Modify discount value, user usage limits & rules' : 'Configure discount rules, user eligibility & limits'}
                 </p>
               </div>
-              <button onClick={() => setShowModal(false)} className="p-1 text-[#E8DDC7] hover:text-white">
+              <button onClick={() => setShowModal(false)} className="p-1 text-[#E8DFD0] hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -291,75 +291,75 @@ export const DiscountManagement: React.FC = () => {
             {/* Modal Scrollable Form Body */}
             <form id="coupon-modal-form" onSubmit={handleSaveCoupon} className="p-6 overflow-y-auto space-y-4 text-xs flex-1">
               <div>
-                <label className="block font-semibold text-[#6B5846] mb-1">Coupon Code *</label>
+                <label className="block font-semibold text-[#6E685D] mb-1">Coupon Code *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. KAVISH2026"
                   value={form.code}
                   onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })}
-                  className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-mono text-sm font-bold uppercase text-[#12372A]"
+                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-mono text-sm font-bold uppercase text-[#641E2B]"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-[#6B5846] mb-1">Discount Type</label>
+                  <label className="block font-semibold text-[#6E685D] mb-1">Discount Type</label>
                   <select
                     value={form.discountType}
                     onChange={(e) => setForm({ ...form, discountType: e.target.value as 'percentage' | 'fixed' })}
-                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
+                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
                   >
                     <option value="percentage">Percentage (%)</option>
                     <option value="fixed">Fixed Amount (₹)</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block font-semibold text-[#6B5846] mb-1">Discount Value</label>
+                  <label className="block font-semibold text-[#6E685D] mb-1">Discount Value</label>
                   <input
                     type="number"
                     required
                     min={1}
                     value={form.discountValue}
                     onChange={(e) => setForm({ ...form, discountValue: Number(e.target.value) })}
-                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
+                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-[#6B5846] mb-1">Min Order Amount (₹)</label>
+                  <label className="block font-semibold text-[#6E685D] mb-1">Min Order Amount (₹)</label>
                   <input
                     type="number"
                     min={0}
                     value={form.minOrderAmount}
                     onChange={(e) => setForm({ ...form, minOrderAmount: Number(e.target.value) })}
-                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
+                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-[#6B5846] mb-1">Expiry Date</label>
+                  <label className="block font-semibold text-[#6E685D] mb-1">Expiry Date</label>
                   <input
                     type="date"
                     required
                     value={form.expiryDate}
                     onChange={(e) => setForm({ ...form, expiryDate: e.target.value })}
-                    className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1] font-bold text-[#12372A]"
+                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
                   />
                 </div>
               </div>
 
               {/* User Count & Usage Limit Section */}
-              <div className="p-3.5 bg-[#FAF8F1] border border-[#E8DDC7] rounded-2xl space-y-3">
+              <div className="p-3.5 bg-[#F8F5EF] border border-[#E8DFD0] rounded-2xl space-y-3">
                 <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-[#D4AF37]" />
-                  <span className="font-serif font-bold text-[#12372A]">User Count &amp; Redemption Limits</span>
+                  <Users className="w-4 h-4 text-[#B99A61]" />
+                  <span className="font-serif font-bold text-[#641E2B]">User Count &amp; Redemption Limits</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-semibold text-[#6B5846] mb-1">
+                    <label className="block font-semibold text-[#6E685D] mb-1">
                       Max User Limit (Total Uses)
                     </label>
                     <input
@@ -373,15 +373,15 @@ export const DiscountManagement: React.FC = () => {
                           usageLimit: e.target.value ? Number(e.target.value) : undefined
                         })
                       }
-                      className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-white text-[#12372A] font-bold"
+                      className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-white text-[#641E2B] font-bold"
                     />
-                    <p className="text-[10px] text-[#6B5846] mt-0.5">
+                    <p className="text-[10px] text-[#6E685D] mt-0.5">
                       Leave empty for unlimited customer redemptions.
                     </p>
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-[#6B5846] mb-1">
+                    <label className="block font-semibold text-[#6E685D] mb-1">
                       Current Used Count
                     </label>
                     <input
@@ -389,9 +389,9 @@ export const DiscountManagement: React.FC = () => {
                       min={0}
                       value={form.usageCount ?? 0}
                       onChange={(e) => setForm({ ...form, usageCount: Number(e.target.value) })}
-                      className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-white text-[#12372A] font-mono font-bold"
+                      className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-white text-[#641E2B] font-mono font-bold"
                     />
-                    <p className="text-[10px] text-[#6B5846] mt-0.5">
+                    <p className="text-[10px] text-[#6E685D] mt-0.5">
                       Times this coupon has been applied so far.
                     </p>
                   </div>
@@ -399,27 +399,27 @@ export const DiscountManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6B5846] mb-1">Offer Description</label>
+                <label className="block font-semibold text-[#6E685D] mb-1">Offer Description</label>
                 <input
                   type="text"
                   placeholder="e.g. Festive discount on Kerala Kasavu handlooms"
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className="w-full border border-[#E8DDC7] p-2.5 rounded-xl bg-[#FAF8F1]"
+                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF]"
                 />
               </div>
 
               {/* Status Toggle */}
               <div className="flex items-center justify-between pt-1">
-                <label className="font-semibold text-[#6B5846]">Coupon Status</label>
+                <label className="font-semibold text-[#6E685D]">Coupon Status</label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={form.isActive}
                     onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-                    className="accent-[#12372A] w-4 h-4 rounded"
+                    className="accent-[#641E2B] w-4 h-4 rounded"
                   />
-                  <span className="font-bold text-[#12372A]">
+                  <span className="font-bold text-[#641E2B]">
                     {form.isActive ? 'Active (Live on checkout)' : 'Disabled'}
                   </span>
                 </label>
@@ -427,18 +427,18 @@ export const DiscountManagement: React.FC = () => {
             </form>
 
             {/* Modal Fixed Footer */}
-            <div className="p-4 bg-[#FAF8F1] border-t border-[#E8DDC7] flex gap-3 shrink-0">
+            <div className="p-4 bg-[#F8F5EF] border-t border-[#E8DFD0] flex gap-3 shrink-0">
               <button
                 type="submit"
                 form="coupon-modal-form"
-                className="flex-1 bg-[#12372A] text-[#FAF8F1] py-3 uppercase font-bold text-xs rounded-xl border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#12372A] transition-all"
+                className="flex-1 bg-[#641E2B] text-[#F8F5EF] py-3 uppercase font-bold text-xs rounded-xl border border-[#B99A61] hover:bg-[#B99A61] hover:text-[#641E2B] transition-all"
               >
                 {editingOffer ? 'Update Coupon Code' : 'Publish Coupon Code'}
               </button>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-5 py-3 border border-[#E8DDC7] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all"
+                className="px-5 py-3 border border-[#E8DFD0] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all"
               >
                 Cancel
               </button>

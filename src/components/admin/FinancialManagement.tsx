@@ -55,98 +55,98 @@ export const FinancialManagement: React.FC = () => {
     <div className="space-y-6 animate-fadeIn">
       
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DDC7] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#D4AF37] block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#B99A61] block">
             Indian Clothing Tax &amp; Revenue Overview
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#12372A] mt-0.5">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-0.5">
             GST &amp; Financial Management (HSN: {gstConfig.hsnCode})
           </h1>
         </div>
 
         <button
           onClick={handleExportGstReport}
-          className="bg-[#12372A] text-[#FAF8F1] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#D4AF37] hover:text-[#12372A] transition-all flex items-center gap-2 border border-[#D4AF37] shadow-sm self-start sm:self-auto"
+          className="bg-[#641E2B] text-[#F8F5EF] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-all flex items-center gap-2 border border-[#B99A61] shadow-sm self-start sm:self-auto"
         >
-          <Download className="w-4 h-4 text-[#D4AF37]" />
+          <Download className="w-4 h-4 text-[#B99A61]" />
           <span>Export GST Report (CSV)</span>
         </button>
       </div>
 
       {/* 8 Financial Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-        <div className="bg-white p-4 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-1">
-          <span className="text-[#6B5846]">Gross Sales</span>
-          <div className="font-serif text-xl font-bold text-[#12372A]">{formatPrice(grossSales)}</div>
+        <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-1">
+          <span className="text-[#6E685D]">Gross Sales</span>
+          <div className="font-serif text-xl font-bold text-[#641E2B]">{formatPrice(grossSales)}</div>
           <span className="text-[10px] text-gray-500">Before discounts &amp; refunds</span>
         </div>
 
-        <div className="bg-white p-4 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-1">
-          <span className="text-[#6B5846]">Net Sales Realized</span>
+        <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-1">
+          <span className="text-[#6E685D]">Net Sales Realized</span>
           <div className="font-serif text-xl font-bold text-green-700">{formatPrice(netSales)}</div>
           <span className="text-[10px] text-green-700 font-bold">After discounts &amp; returns</span>
         </div>
 
-        <div className="bg-white p-4 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-1">
-          <span className="text-[#6B5846]">Total GST Collected (5%)</span>
-          <div className="font-serif text-xl font-bold text-[#D4AF37]">{formatPrice(totalGstCollected)}</div>
+        <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-1">
+          <span className="text-[#6E685D]">Total GST Collected (5%)</span>
+          <div className="font-serif text-xl font-bold text-[#B99A61]">{formatPrice(totalGstCollected)}</div>
           <span className="text-[10px] text-gray-500">CGST + SGST Combined</span>
         </div>
 
-        <div className="bg-white p-4 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-1">
-          <span className="text-[#6B5846]">Net Revenue Realized</span>
-          <div className="font-serif text-xl font-bold text-[#12372A]">{formatPrice(netRevenue)}</div>
+        <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-1">
+          <span className="text-[#6E685D]">Net Revenue Realized</span>
+          <div className="font-serif text-xl font-bold text-[#641E2B]">{formatPrice(netRevenue)}</div>
           <span className="text-[10px] text-gray-500">After 2% Razorpay fees</span>
         </div>
       </div>
 
       {/* GST Breakdown Detail Card */}
-      <div className="bg-white p-6 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-4">
-        <h3 className="font-serif font-bold text-lg text-[#12372A] border-b border-[#E8DDC7] pb-3">
+      <div className="bg-white p-6 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-4">
+        <h3 className="font-serif font-bold text-lg text-[#641E2B] border-b border-[#E8DFD0] pb-3">
           Apparel Handloom GST Tax Split (HSN 5208)
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="p-4 bg-[#FAF8F1] border border-[#E8DDC7] rounded-2xl space-y-1">
-            <span className="text-[#6B5846]">Taxable Turnover Value:</span>
-            <div className="font-serif text-lg font-bold text-[#12372A]">{formatPrice(taxableAmount)}</div>
+          <div className="p-4 bg-[#F8F5EF] border border-[#E8DFD0] rounded-2xl space-y-1">
+            <span className="text-[#6E685D]">Taxable Turnover Value:</span>
+            <div className="font-serif text-lg font-bold text-[#641E2B]">{formatPrice(taxableAmount)}</div>
             <span className="text-[10px] text-gray-500">Net sales minus tax</span>
           </div>
 
-          <div className="p-4 bg-[#FAF8F1] border border-[#E8DDC7] rounded-2xl space-y-1">
-            <span className="text-[#6B5846]">CGST (2.5% Intra-State):</span>
-            <div className="font-serif text-lg font-bold text-[#12372A]">{formatPrice(cgstAmount)}</div>
+          <div className="p-4 bg-[#F8F5EF] border border-[#E8DFD0] rounded-2xl space-y-1">
+            <span className="text-[#6E685D]">CGST (2.5% Intra-State):</span>
+            <div className="font-serif text-lg font-bold text-[#641E2B]">{formatPrice(cgstAmount)}</div>
             <span className="text-[10px] text-gray-500">Central Goods &amp; Services Tax</span>
           </div>
 
-          <div className="p-4 bg-[#FAF8F1] border border-[#E8DDC7] rounded-2xl space-y-1">
-            <span className="text-[#6B5846]">SGST (2.5% Kerala State):</span>
-            <div className="font-serif text-lg font-bold text-[#12372A]">{formatPrice(sgstAmount)}</div>
+          <div className="p-4 bg-[#F8F5EF] border border-[#E8DFD0] rounded-2xl space-y-1">
+            <span className="text-[#6E685D]">SGST (2.5% Kerala State):</span>
+            <div className="font-serif text-lg font-bold text-[#641E2B]">{formatPrice(sgstAmount)}</div>
             <span className="text-[10px] text-gray-500">State Goods &amp; Services Tax</span>
           </div>
         </div>
 
         {/* GST Configuration Editor */}
-        <div className="pt-4 border-t border-[#E8DDC7] space-y-3">
-          <h4 className="font-serif font-bold text-[#12372A]">Store GST Settings &amp; Rules</h4>
+        <div className="pt-4 border-t border-[#E8DFD0] space-y-3">
+          <h4 className="font-serif font-bold text-[#641E2B]">Store GST Settings &amp; Rules</h4>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <div>
-              <label className="block font-semibold text-[#6B5846] mb-1">Standard Apparel GST Rate (%)</label>
+              <label className="block font-semibold text-[#6E685D] mb-1">Standard Apparel GST Rate (%)</label>
               <input
                 type="number"
                 value={gstConfig.gstRate}
                 onChange={(e) => updateGSTConfig({ gstRate: Number(e.target.value) })}
-                className="w-full border border-[#E8DDC7] p-2 rounded-xl bg-[#FAF8F1] font-bold"
+                className="w-full border border-[#E8DFD0] p-2 rounded-xl bg-[#F8F5EF] font-bold"
               />
             </div>
             <div>
-              <label className="block font-semibold text-[#6B5846] mb-1">HSN Commodity Code</label>
+              <label className="block font-semibold text-[#6E685D] mb-1">HSN Commodity Code</label>
               <input
                 type="text"
                 value={gstConfig.hsnCode}
                 onChange={(e) => updateGSTConfig({ hsnCode: e.target.value })}
-                className="w-full border border-[#E8DDC7] p-2 rounded-xl bg-[#FAF8F1] font-mono"
+                className="w-full border border-[#E8DFD0] p-2 rounded-xl bg-[#F8F5EF] font-mono"
               />
             </div>
             <div className="flex items-center pt-5">
@@ -155,7 +155,7 @@ export const FinancialManagement: React.FC = () => {
                   type="checkbox"
                   checked={gstConfig.includeTaxInPrice}
                   onChange={(e) => updateGSTConfig({ includeTaxInPrice: e.target.checked })}
-                  className="accent-[#12372A] w-4 h-4"
+                  className="accent-[#641E2B] w-4 h-4"
                 />
                 <span>Prices Displayed Include GST</span>
               </label>

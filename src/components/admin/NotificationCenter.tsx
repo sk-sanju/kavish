@@ -13,9 +13,9 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ onClose 
 
   const getIcon = (type: string) => {
     switch (type) {
-      case 'order': return <Truck className="w-4 h-4 text-[#D4AF37]" />;
+      case 'order': return <Truck className="w-4 h-4 text-[#B99A61]" />;
       case 'review': return <Star className="w-4 h-4 text-yellow-500" />;
-      default: return <ShieldCheck className="w-4 h-4 text-[#12372A]" />;
+      default: return <ShieldCheck className="w-4 h-4 text-[#641E2B]" />;
     }
   };
 
@@ -24,19 +24,19 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ onClose 
       <div className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col">
         
         {/* Header */}
-        <div className="p-4 bg-[#12372A] text-[#FAF8F1] flex items-center justify-between">
+        <div className="p-4 bg-[#641E2B] text-[#F8F5EF] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Bell className="w-5 h-5 text-[#D4AF37]" />
+            <Bell className="w-5 h-5 text-[#B99A61]" />
             <h3 className="font-serif font-bold text-base">Atelier Admin Notifications</h3>
           </div>
-          <button onClick={onClose} className="p-1 text-[#E8DDC7] hover:text-white">
+          <button onClick={onClose} className="p-1 text-[#E8DFD0] hover:text-white">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Action bar */}
-        <div className="p-3 bg-[#FAF8F1] border-b border-[#E8DDC7] flex justify-between items-center text-xs">
-          <span className="text-[#6B5846] font-semibold">
+        <div className="p-3 bg-[#F8F5EF] border-b border-[#E8DFD0] flex justify-between items-center text-xs">
+          <span className="text-[#6E685D] font-semibold">
             {notifications.filter(n => !n.read).length} Unread Alerts
           </span>
           {notifications.length > 0 && (
@@ -52,7 +52,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ onClose 
         {/* List */}
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {notifications.length === 0 ? (
-            <div className="text-center py-12 text-xs text-[#6B5846]">
+            <div className="text-center py-12 text-xs text-[#6E685D]">
               No unread notifications. Everything is up to date!
             </div>
           ) : (
@@ -62,21 +62,21 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ onClose 
                 onClick={() => markNotificationAsRead(n.id)}
                 className={`p-3.5 rounded-2xl border transition-all cursor-pointer space-y-1 ${
                   n.read
-                    ? 'bg-white border-[#E8DDC7] opacity-75'
-                    : 'bg-[#FAF8F1] border-[#D4AF37] shadow-xs'
+                    ? 'bg-white border-[#E8DFD0] opacity-75'
+                    : 'bg-[#F8F5EF] border-[#B99A61] shadow-xs'
                 }`}
               >
                 <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2 font-bold text-[#12372A]">
+                  <div className="flex items-center gap-2 font-bold text-[#641E2B]">
                     {getIcon(n.type)}
                     <span>{n.title}</span>
                   </div>
                   <span className="text-[10px] text-gray-400 font-mono">{n.timestamp}</span>
                 </div>
-                <p className="text-xs text-[#6B5846] pl-6 font-light">{n.message}</p>
+                <p className="text-xs text-[#6E685D] pl-6 font-light">{n.message}</p>
                 {!n.read && (
                   <div className="pl-6 pt-1">
-                    <span className="text-[10px] text-[#D4AF37] font-bold uppercase flex items-center gap-1">
+                    <span className="text-[10px] text-[#B99A61] font-bold uppercase flex items-center gap-1">
                       <Check className="w-3 h-3" /> Click to mark read
                     </span>
                   </div>

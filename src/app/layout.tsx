@@ -7,7 +7,7 @@ import { AppShell } from '../components/layout/AppShell';
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#12372A',
+  themeColor: '#641E2B',
 };
 
 export const metadata: Metadata = {
@@ -109,7 +109,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-[#FAF8F1] text-[#171717] antialiased selection:bg-[#D4AF37] selection:text-white" suppressHydrationWarning>
+      <body className="bg-[#F8F5EF] text-[#292522] antialiased selection:bg-[#B99A61] selection:text-white" suppressHydrationWarning>
         {/* Razorpay Checkout SDK */}
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"

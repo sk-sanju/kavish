@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { SlidersHorizontal, Grid3X3, LayoutGrid, X } from 'lucide-react';
+import { SlidersHorizontal, Grid3X3, LayoutGrid, X, Sparkles } from 'lucide-react';
 import { ProductCard } from '../components/product/ProductCard';
 import { ProductFilter } from '../components/product/ProductFilter';
 import { useProducts } from '../context/ProductContext';
@@ -21,7 +21,7 @@ const INITIAL_FILTERS: FilterState = {
   fabric: [],
   sizes: [],
   colors: [],
-  priceRange: [500, 15000],
+  priceRange: [500, 20000],
   minRating: 0,
   inStockOnly: false,
   sortBy: 'recommended',
@@ -45,6 +45,7 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
   const activeCat = params.category || initialCategory || searchParams?.get('category') || undefined;
   const activeCol = params.collection || initialCollection || searchParams?.get('collection') || undefined;
   const activeDept = searchParams?.get('dept') || undefined;
+  const urlSearchQuery = searchParams?.get('q') || '';
   const isDirectDept = ['women', 'men', 'kids'].includes((activeCat || '').toLowerCase());
 
   const [filters, setFilters] = useState<FilterState>(() => {
@@ -57,6 +58,7 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
       gender: initialGenders,
       category: !isDirectDept && activeCat ? [activeCat.toLowerCase()] : [],
       collection: activeCol ? [activeCol] : [],
+      searchQuery: urlSearchQuery
     };
   });
 
@@ -71,8 +73,9 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
       gender: genders,
       category: !isDept && activeCat ? [activeCat.toLowerCase()] : prev.category,
       collection: activeCol ? [activeCol] : prev.collection,
+      searchQuery: urlSearchQuery || prev.searchQuery
     }));
-  }, [activeCat, activeCol, activeDept]);
+  }, [activeCat, activeCol, activeDept, urlSearchQuery]);
 
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [gridCols, setGridCols] = useState<3 | 4>(3);
@@ -91,100 +94,135 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
+      // 1. Department Filter
       if (filters.gender.length > 0 && !filters.gender.includes(product.category)) {
         return false;
       }
+
+      // 2. Category Filter
       if (filters.category.length > 0) {
         const matchesCategory = filters.category.some(cat => {
           const catFilter = cat.toLowerCase().replace(/-/g, ' ');
           const pSub = (product.subcategory || '').toLowerCase();
-          const pName = (product.name || '').toLowerCase();
           const pCat = (product.category || '').toLowerCase();
-          return pSub.includes(catFilter) ||
-            catFilter.includes(pSub) ||
-            pName.includes(catFilter) ||
-            pCat.includes(catFilter) ||
-            (product.tags && product.tags.some(t => t.toLowerCase().includes(catFilter)));
+          return pSub.includes(catFilter) || pCat.includes(catFilter);
         });
         if (!matchesCategory) return false;
       }
+
+      // 3. Collection Filter
       if (filters.collection.length > 0) {
-        const matchesCollection = filters.collection.some(filterCol => {
-          if (product.collection === filterCol) return true;
-          const allowedAliases = COLLECTION_ALIASES[filterCol] || [];
-          if (allowedAliases.includes(product.collection)) return true;
-          const colSlug = filterCol.toLowerCase().replace(/-/g, ' ');
-          return (product.subcategory || '').toLowerCase().includes(colSlug) ||
-                 (product.collection || '').toLowerCase().includes(filterCol.toLowerCase());
+        const matchesCollection = filters.collection.some(col => {
+          const target = col.toLowerCase();
+          const pCol = (product.collection || '').toLowerCase();
+          const pName = product.name.toLowerCase();
+          const aliases = COLLECTION_ALIASES[target] || [target];
+          return (
+            pCol === target ||
+            aliases.some(a => pCol.includes(a) || pName.includes(a.replace(/-/g, ' ')))
+          );
         });
         if (!matchesCollection) return false;
       }
-      if (filters.fabric.length > 0 && !filters.fabric.some(f => product.fabric.toLowerCase().includes(f.toLowerCase()))) {
+
+      // 4. Fabric Filter
+      if (filters.fabric.length > 0 && !filters.fabric.includes(product.fabric)) {
         return false;
       }
-      if (product.price > filters.priceRange[1]) {
+
+      // 5. Sizes Filter
+      if (filters.sizes.length > 0 && !filters.sizes.some(s => product.sizes?.includes(s))) {
         return false;
       }
-      if (filters.inStockOnly && !product.inStock) {
+
+      // 6. Colors Filter
+      if (filters.colors.length > 0 && !filters.colors.some(c => product.colors?.some(pc => pc.name === c))) {
         return false;
       }
+
+      // 7. Price Range Filter
+      if (product.price < filters.priceRange[0] || product.price > filters.priceRange[1]) {
+        return false;
+      }
+
+      // 8. In Stock Only
+      if (filters.inStockOnly && !product.inStock && !product.allowBackorders) {
+        return false;
+      }
+
+      // 9. Search Query
+      if (filters.searchQuery) {
+        const q = filters.searchQuery.toLowerCase();
+        const matchesQuery =
+          product.name.toLowerCase().includes(q) ||
+          product.fabric.toLowerCase().includes(q) ||
+          product.category.toLowerCase().includes(q) ||
+          product.subcategory.toLowerCase().includes(q) ||
+          (product.tags && product.tags.some(t => t.toLowerCase().includes(q))) ||
+          product.sku.toLowerCase().includes(q);
+        if (!matchesQuery) return false;
+      }
+
       return true;
     }).sort((a, b) => {
       if (filters.sortBy === 'price-low-high') return a.price - b.price;
       if (filters.sortBy === 'price-high-low') return b.price - a.price;
-      if (filters.sortBy === 'rating') return b.rating - a.rating;
       if (filters.sortBy === 'newest') return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
+      if (filters.sortBy === 'rating') return (b.rating || 5) - (a.rating || 5);
       return 0;
     });
-  }, [filters]);
+  }, [products, filters]);
 
-  const activePillsCount = filters.gender.length + filters.collection.length + filters.fabric.length + (filters.inStockOnly ? 1 : 0);
+  const activePillsCount =
+    filters.gender.length +
+    filters.category.length +
+    filters.collection.length +
+    filters.sizes.length +
+    filters.colors.length +
+    (filters.inStockOnly ? 1 : 0);
 
   const handleProductClick = (product: Product) => {
     if (onSelectProduct) {
       onSelectProduct(product);
+    } else {
+      router.push(`/product/${product.id}`);
     }
-    router.push(`/product/${product.id}`);
   };
 
   return (
-    <div className="py-8 sm:py-12 bg-[#FAF8F1] min-h-screen animate-fadeIn">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+    <div className="py-8 sm:py-12 bg-[#F8F5EF] min-h-screen pb-24 animate-fadeIn">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="border-b border-[#E8DDC7] pb-6 sm:pb-8 mb-6 sm:mb-8">
-          <div className="text-[10px] sm:text-xs text-[#6B5846] uppercase tracking-wider mb-2">
-            <span className="cursor-pointer hover:underline" onClick={() => router.push('/')}>Home</span> <span className="mx-1">•</span> <span className="text-[#12372A] font-bold">Shop Collection</span>
+        {/* Header Title Section */}
+        <div className="mb-6 sm:mb-8">
+          <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#B99A61] font-bold mb-1">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Kavish Master Handlooms</span>
           </div>
-
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
-            <div>
-              <h1 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-bold text-[#12372A] uppercase tracking-tight">
-                {activeCat ? `${activeCat} Attire` : activeCol ? activeCol.replace('-', ' ') : 'All Collections'}
-              </h1>
-              <p className="text-xs text-[#6B5846] mt-1 max-w-xl">
-                Handcrafted Kerala Kasavu sarees, handloom mundus, European linen shirts, and kids legacy wear.
-              </p>
-            </div>
-            <span className="text-xs font-bold text-[#D4AF37] shrink-0">
-              Showing {filteredProducts.length} Artisanal Items
-            </span>
-          </div>
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#641E2B]">
+            {activeCol
+              ? activeCol.replace(/-/g, ' ').toUpperCase()
+              : activeCat
+              ? `${activeCat.toUpperCase()} COLLECTION`
+              : filters.searchQuery
+              ? `SEARCH: "${filters.searchQuery}"`
+              : 'All Kerala Handlooms'}
+          </h1>
+          <p className="text-xs sm:text-sm text-[#292522]/70 mt-1 max-w-xl font-light">
+            Crafted in Kuthampully, Thrissur. Every Kasavu thread and unbleached cotton drape embodies 500 years of Devanga master weaving tradition.
+          </p>
         </div>
 
-        {/* Mobile Quick Filter Chips Bar */}
-        <div className="lg:hidden mb-4 -mx-1 px-1">
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-            {/* Filter Toggle Button */}
+        {/* Mobile Horizontal Quick-Filter Bar */}
+        <div className="lg:hidden mb-4">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
             <button
               onClick={() => setIsMobileFilterOpen(true)}
-              className={`shrink-0 px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs ${
-                activePillsCount > 0
-                  ? 'bg-[#12372A] text-[#FAF8F1] border-[#12372A]'
-                  : 'bg-white text-gray-800 border-gray-300 hover:border-gray-400'
-              }`}
+              className="shrink-0 flex items-center gap-1.5 bg-white border border-[#B99A61] px-3.5 py-1.5 rounded-xl text-xs font-bold text-[#641E2B] shadow-xs cursor-pointer"
             >
-              <span className="w-4 h-4 rounded bg-gray-100 text-gray-900 text-[10px] font-bold flex items-center justify-center">
-                {activePillsCount > 0 ? activePillsCount : '1'}
+              <span>Filters</span>
+              <span className="w-4 h-4 rounded-full bg-[#641E2B] text-[#F8F5EF] text-[10px] flex items-center justify-center">
+                {activePillsCount}
               </span>
               <SlidersHorizontal className="w-3.5 h-3.5" />
             </button>
@@ -194,9 +232,9 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
               <select
                 value={filters.sortBy}
                 onChange={(e) => handleFilterChange({ sortBy: e.target.value as any })}
-                className="appearance-none bg-white border border-gray-300 text-gray-800 text-xs font-medium pl-3 pr-7 py-1.5 rounded-lg shadow-xs cursor-pointer focus:outline-none focus:border-[#D4AF37]"
+                className="appearance-none bg-white border border-[#E8DFD0] text-[#292522] text-xs font-medium pl-3 pr-7 py-1.5 rounded-xl shadow-xs cursor-pointer focus:outline-none focus:border-[#B99A61]"
               >
-                <option value="recommended">Price ▾</option>
+                <option value="recommended">Sort: Recommended</option>
                 <option value="price-low-high">Price: Low to High</option>
                 <option value="price-high-low">Price: High to Low</option>
                 <option value="newest">Newest Arrivals</option>
@@ -204,23 +242,23 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
               </select>
             </div>
 
-            {/* In Stock / Express Chip */}
+            {/* In Stock Chip */}
             <button
               onClick={() => handleFilterChange({ inStockOnly: !filters.inStockOnly })}
-              className={`shrink-0 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all shadow-xs ${
+              className={`shrink-0 px-3 py-1.5 rounded-xl border text-xs font-medium transition-all shadow-xs cursor-pointer ${
                 filters.inStockOnly
-                  ? 'bg-[#12372A] text-[#FAF8F1] border-[#12372A]'
-                  : 'bg-white text-gray-700 border-gray-300'
+                  ? 'bg-[#641E2B] text-[#F8F5EF] border-[#641E2B]'
+                  : 'bg-white text-[#292522] border-[#E8DFD0]'
               }`}
             >
-              Delivery in 1-2 Days ▾
+              In Stock Only
             </button>
 
             {/* Clear All Chip */}
             {activePillsCount > 0 && (
               <button
                 onClick={handleResetFilters}
-                className="shrink-0 px-3 py-1.5 rounded-lg border border-red-200 text-red-600 bg-red-50 text-xs font-medium shadow-xs"
+                className="shrink-0 px-3 py-1.5 rounded-xl border border-red-200 text-red-600 bg-red-50 text-xs font-medium shadow-xs cursor-pointer"
               >
                 Clear All
               </button>
@@ -229,67 +267,87 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
         </div>
 
         {/* Desktop Toolbar */}
-        <div className="hidden lg:flex bg-white p-3 sm:p-4 border border-[#E8DDC7] rounded-2xl mb-6 sm:mb-8 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
+        <div className="hidden lg:flex bg-white p-3.5 sm:p-4 border border-[#E8DFD0] rounded-2xl mb-6 sm:mb-8 flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
           <div className="flex items-center justify-between sm:justify-start gap-3">
             <div className="flex flex-wrap items-center gap-2 text-xs">
-              <span className="text-[11px] font-bold text-[#6B5846] uppercase tracking-wider">Active:</span>
+              <span className="text-[11px] font-bold text-[#6E685D] uppercase tracking-wider">Active:</span>
               {filters.gender.map(g => (
-                <span key={g} className="bg-[#FAF8F1] border border-[#D4AF37]/50 px-2.5 py-1 rounded-full text-[11px] text-[#12372A] font-medium flex items-center gap-1">
+                <span key={g} className="bg-[#F8F5EF] border border-[#B99A61]/50 px-2.5 py-1 rounded-full text-[11px] text-[#641E2B] font-medium flex items-center gap-1">
                   Dept: {g}
                   <X className="w-3 h-3 cursor-pointer hover:text-red-700" onClick={() => handleFilterChange({ gender: filters.gender.filter(x => x !== g) })} />
                 </span>
               ))}
-              {filters.collection.map(c => (
-                <span key={c} className="bg-[#FAF8F1] border border-[#D4AF37]/50 px-2.5 py-1 rounded-full text-[11px] text-[#12372A] font-medium flex items-center gap-1">
-                  {c}
-                  <X className="w-3 h-3 cursor-pointer hover:text-red-700" onClick={() => handleFilterChange({ collection: filters.collection.filter(x => x !== c) })} />
+              {filters.category.map(c => (
+                <span key={c} className="bg-[#F8F5EF] border border-[#B99A61]/50 px-2.5 py-1 rounded-full text-[11px] text-[#641E2B] font-medium flex items-center gap-1">
+                  Category: {c}
+                  <X className="w-3 h-3 cursor-pointer hover:text-red-700" onClick={() => handleFilterChange({ category: filters.category.filter(x => x !== c) })} />
                 </span>
               ))}
+              {filters.sizes.map(s => (
+                <span key={s} className="bg-[#F8F5EF] border border-[#B99A61]/50 px-2.5 py-1 rounded-full text-[11px] text-[#641E2B] font-medium flex items-center gap-1">
+                  Size: {s}
+                  <X className="w-3 h-3 cursor-pointer hover:text-red-700" onClick={() => handleFilterChange({ sizes: filters.sizes.filter(x => x !== s) })} />
+                </span>
+              ))}
+              {filters.colors.map(col => (
+                <span key={col} className="bg-[#F8F5EF] border border-[#B99A61]/50 px-2.5 py-1 rounded-full text-[11px] text-[#641E2B] font-medium flex items-center gap-1">
+                  Color: {col}
+                  <X className="w-3 h-3 cursor-pointer hover:text-red-700" onClick={() => handleFilterChange({ colors: filters.colors.filter(x => x !== col) })} />
+                </span>
+              ))}
+              {filters.inStockOnly && (
+                <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-full text-[11px] font-medium flex items-center gap-1">
+                  In Stock Only
+                  <X className="w-3 h-3 cursor-pointer hover:text-red-700" onClick={() => handleFilterChange({ inStockOnly: false })} />
+                </span>
+              )}
               {activePillsCount > 0 && (
-                <button onClick={handleResetFilters} className="text-[#D4AF37] hover:underline font-bold text-[11px] ml-2">
+                <button onClick={handleResetFilters} className="text-[#B99A61] hover:underline text-[11px] font-semibold ml-2 cursor-pointer">
                   Clear All
                 </button>
               )}
             </div>
           </div>
 
-          <div className="flex items-center justify-end space-x-3">
-            <div className="flex items-center gap-2 text-xs">
-              <span className="text-[#6B5846] uppercase tracking-wider font-semibold text-[11px] whitespace-nowrap">Sort:</span>
-              <select
-                value={filters.sortBy}
-                onChange={(e) => handleFilterChange({ sortBy: e.target.value as any })}
-                className="bg-[#FAF8F1] border border-[#E8DDC7] px-2.5 py-1.5 text-xs text-[#12372A] font-semibold focus:outline-none focus:border-[#D4AF37] cursor-pointer rounded-xl"
-              >
-                <option value="recommended">Curated / Recommended</option>
-                <option value="price-low-high">Price: Low to High</option>
-                <option value="price-high-low">Price: High to Low</option>
-                <option value="newest">Newest Arrivals</option>
-                <option value="rating">Highest Rated</option>
-              </select>
-            </div>
-
-            <div className="flex items-center gap-1 border-l border-[#E8DDC7] pl-3">
+          <div className="flex items-center gap-3 self-end sm:self-auto">
+            {/* Grid Column Selector */}
+            <div className="hidden md:flex items-center border border-[#E8DFD0] rounded-xl overflow-hidden p-0.5">
               <button
                 onClick={() => setGridCols(3)}
-                className={`p-1.5 rounded-lg ${gridCols === 3 ? 'text-[#12372A] bg-[#E8DDC7]/40' : 'text-gray-400'}`}
+                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${gridCols === 3 ? 'bg-[#641E2B] text-[#F8F5EF]' : 'text-gray-500 hover:text-black'}`}
                 title="3 Columns"
               >
                 <Grid3X3 className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setGridCols(4)}
-                className={`p-1.5 rounded-lg ${gridCols === 4 ? 'text-[#12372A] bg-[#E8DDC7]/40' : 'text-gray-400'}`}
+                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${gridCols === 4 ? 'bg-[#641E2B] text-[#F8F5EF]' : 'text-gray-500 hover:text-black'}`}
                 title="4 Columns"
               >
                 <LayoutGrid className="w-4 h-4" />
               </button>
             </div>
+
+            {/* Sorting Dropdown */}
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-[#6E685D] uppercase font-bold tracking-wider">Sort:</span>
+              <select
+                value={filters.sortBy}
+                onChange={(e) => handleFilterChange({ sortBy: e.target.value as any })}
+                className="border border-[#E8DFD0] text-xs font-semibold text-[#641E2B] bg-[#F8F5EF] px-3 py-1.5 rounded-xl cursor-pointer focus:outline-none focus:border-[#B99A61]"
+              >
+                <option value="recommended">Featured &amp; Recommended</option>
+                <option value="price-low-high">Price: Low to High</option>
+                <option value="price-high-low">Price: High to Low</option>
+                <option value="newest">Newest Loom Additions</option>
+                <option value="rating">Patron Rating</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        <div className="flex gap-8">
-          
+        {/* Main Shop Layout: Sidebar + Product Grid */}
+        <div className="flex gap-8 items-start">
           <ProductFilter
             filters={filters}
             onFilterChange={handleFilterChange}
@@ -301,51 +359,44 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
 
           <div className="flex-1">
             {filteredProducts.length === 0 ? (
-              <div className="bg-white p-8 sm:p-12 text-center border border-[#E8DDC7] rounded-3xl space-y-4 shadow-xs">
-                <p className="font-serif text-xl sm:text-2xl font-bold text-[#12372A]">No Garments Match Selected Filters</p>
-                <p className="text-xs text-[#6B5846]">Try resetting price range or clearing fabric filters to view more items.</p>
+              <div className="bg-white border border-[#E8DFD0] rounded-3xl p-12 text-center space-y-4 shadow-xs">
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#641E2B]">No Matching Garments Found</h3>
+                <p className="text-xs text-[#6E685D] max-w-md mx-auto">
+                  Try clearing your active filters or expanding your price and category criteria.
+                </p>
                 <button
                   onClick={handleResetFilters}
-                  className="bg-[#12372A] text-[#FAF8F1] px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-[#D4AF37] hover:text-[#12372A] transition-colors rounded-xl shadow-md"
+                  className="bg-[#641E2B] text-[#F8F5EF] px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-[#B99A61] hover:text-[#46141D] transition-all cursor-pointer"
                 >
                   Reset All Filters
                 </button>
               </div>
             ) : (
-              <div className="space-y-8">
-                {/* 2 columns on mobile, 3/4 on larger screens */}
-                <div
-                  className={`grid grid-cols-2 sm:grid-cols-2 ${
-                    gridCols === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-3 xl:grid-cols-4'
-                  } gap-2.5 sm:gap-4 md:gap-6`}
-                >
+              <>
+                <div className={`grid grid-cols-2 sm:grid-cols-2 ${gridCols === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-3 sm:gap-6`}>
                   {filteredProducts.slice(0, visibleCount).map((product, idx) => (
                     <ProductCard
                       key={product.id}
                       product={product}
-                      priority={idx < 4}
                       onSelectProduct={handleProductClick}
+                      priority={idx < 4}
                     />
                   ))}
                 </div>
 
                 {visibleCount < filteredProducts.length && (
-                  <div className="text-center pt-4">
+                  <div className="mt-12 text-center">
                     <button
                       onClick={() => setVisibleCount(prev => prev + 12)}
-                      className="bg-[#12372A] text-[#FAF8F1] hover:bg-[#D4AF37] hover:text-[#12372A] px-8 py-3 text-xs font-bold uppercase tracking-widest rounded-xl transition-all shadow-md inline-flex items-center gap-2"
+                      className="bg-white border border-[#E8DFD0] hover:border-[#B99A61] text-[#641E2B] hover:bg-[#F8F5EF] px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-xs cursor-pointer"
                     >
-                      <span>Load More Artisanal Pieces</span>
-                      <span className="text-[10px] text-[#E8DDC7] bg-black/30 px-2 py-0.5 rounded-full">
-                        {filteredProducts.length - visibleCount} remaining
-                      </span>
+                      Load More Garments ({filteredProducts.length - visibleCount} Remaining)
                     </button>
                   </div>
                 )}
-              </div>
+              </>
             )}
           </div>
-
         </div>
 
       </div>

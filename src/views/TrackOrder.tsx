@@ -2,13 +2,41 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Search, Truck, CheckCircle2, Clock, MapPin, Package, AlertCircle, Phone, ArrowRight } from 'lucide-react';
+import { 
+  Search, Truck, CheckCircle2, Clock, MapPin, Package, AlertCircle, 
+  Phone, ArrowRight, ExternalLink, Calendar, ShieldCheck, UserCheck 
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { POLICY_CONFIG } from '../config/policyConfig';
 import { fetchSupabaseOrderById } from '../lib/supabase';
 import { safeStorage } from '../utils/storage';
-import type { Order } from '../types';
+import type { Order, OrderStatus } from '../types';
+
+// The 8 standard pipeline steps in order
+const STANDARD_PIPELINE_STAGES: { status: OrderStatus; label: string; desc: string }[] = [
+  { status: 'New Order', label: 'Order Received', desc: 'Order placed & payment verified' },
+  { status: 'Confirmed', label: 'Order Confirmed', desc: 'Atelier verified & assigned to loom master' },
+  { status: 'Processing', label: 'Artisan Weaving', desc: 'Quality inspection & weave verification' },
+  { status: 'Packed', label: 'Luxury Packed', desc: 'GI hallmark tag attached & sealed in gift box' },
+  { status: 'Ready to Dispatch', label: 'Ready for Pickup', desc: 'Manifested for courier partner handoff' },
+  { status: 'Shipped', label: 'In Transit', desc: 'En route from Kuthampully loom house' },
+  { status: 'Out for Delivery', label: 'Out for Delivery', desc: 'Courier agent en route to recipient destination' },
+  { status: 'Delivered', label: 'Delivered', desc: 'Handed over in tamper-evident sealed luxury box' }
+];
+
+const STAGE_ORDER: Record<string, number> = {
+  'Pending': 0,
+  'New Order': 0,
+  'Confirmed': 1,
+  'Processing': 2,
+  'Packed': 3,
+  'Ready to Dispatch': 4,
+  'Dispatched': 5,
+  'Shipped': 5,
+  'Out for Delivery': 6,
+  'Delivered': 7
+};
 
 export const TrackOrder: React.FC = () => {
   const searchParams = useSearchParams();
@@ -116,7 +144,7 @@ export const TrackOrder: React.FC = () => {
     }
 
     setIsSearching(false);
-    setErrorMsg(`No active shipment found matching "${clean}". Please verify your Order ID from your confirmation email/SMS or reach out to our customer care team.`);
+    setErrorMsg(`No active shipment found matching "${clean}". Please verify your Order ID from your confirmation email/SMS or reach out to our customer concierge.`);
     setSearchedOrder(null);
   };
 
@@ -125,67 +153,32 @@ export const TrackOrder: React.FC = () => {
     findOrder(inputQuery);
   };
 
-  const getTimelineSteps = (status: string) => {
-    const isDispatched = status === 'Dispatched' || status === 'Out for Delivery' || status === 'Delivered';
-    const isOutForDelivery = status === 'Out for Delivery' || status === 'Delivered';
-    const isDelivered = status === 'Delivered';
-
-    return [
-      {
-        title: 'Order Placed & Payment Verified',
-        desc: 'Payment authenticated and confirmed',
-        time: 'Day 1 • Instant',
-        done: true
-      },
-      {
-        title: 'Kuthampully Atelier Quality Check',
-        desc: 'Handloom inspected for weave consistency and GI hallmark tag attached',
-        time: 'Day 1–2 • Completed',
-        done: true
-      },
-      {
-        title: 'Dispatched via Express Delivery',
-        desc: `Package dispatched from Kuthampully loom house (Tracking: ${searchedOrder?.trackingNumber || 'KV-TRK-XXXX'})`,
-        time: 'Day 2–3 • In Transit',
-        done: isDispatched
-      },
-      {
-        title: 'Out for Doorstep Delivery',
-        desc: 'Delivery executive en route to recipient destination address',
-        time: 'Days 4–10',
-        done: isOutForDelivery
-      },
-      {
-        title: 'Delivered to Patron',
-        desc: 'Handed over in tamper-evident sealed luxury gift box',
-        time: searchedOrder?.estimatedDelivery || '4–10 Days',
-        done: isDelivered
-      }
-    ];
-  };
+  const currentStageIndex = searchedOrder ? (STAGE_ORDER[searchedOrder.status] ?? 0) : 0;
+  const isCancelled = searchedOrder?.status === 'Cancelled';
+  const isReturnFlow = searchedOrder?.status?.startsWith('Return') || searchedOrder?.status?.startsWith('Refund');
 
   return (
-    <div className="py-8 sm:py-12 bg-[#FAF8F1] min-h-screen animate-fadeIn pb-24">
+    <div className="py-8 sm:py-12 bg-[#F8F5EF] min-h-screen animate-fadeIn pb-24">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Banner */}
-        <div className="bg-[#12372A] text-[#FAF8F1] p-8 sm:p-12 rounded-3xl shadow-xl mb-8 relative overflow-hidden text-center sm:text-left">
-          <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-[#D4AF37]/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="bg-[#641E2B] text-[#F8F5EF] p-8 sm:p-12 rounded-3xl shadow-xl mb-8 relative overflow-hidden text-center sm:text-left border border-[#B99A61]/30">
+          <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-[#B99A61]/10 rounded-full blur-2xl pointer-events-none" />
           <div className="relative z-10 max-w-3xl space-y-3">
-            <span className="text-xs uppercase tracking-[0.25em] text-[#D4AF37] font-bold block">
-              Real-Time Courier Tracking
+            <span className="text-xs uppercase tracking-[0.25em] text-[#B99A61] font-bold block">
+              Direct From Kuthampully Loom House
             </span>
             <h1 className="font-serif text-3xl sm:text-5xl font-bold leading-tight">
-              Track Your Order
+              Track Your Shipment
             </h1>
-            <p className="text-xs sm:text-sm text-[#E8DDC7] font-light leading-relaxed">
-              Enter your Order Reference ID (e.g. <code>KV-ORD-83921</code>) or AWB Tracking Number to view live milestones.
+            <p className="text-xs sm:text-sm text-[#E8DFD0] font-light leading-relaxed">
+              Enter your Order ID (e.g. <code className="bg-[#4A1520] px-2 py-0.5 rounded text-[#B99A61]">KV-ORD-83921</code>) or Courier AWB Tracking Number to view live weaving &amp; logistics milestones.
             </p>
           </div>
         </div>
 
         {/* Search Bar Container */}
-        <div className="bg-white p-6 sm:p-8 border border-[#E8DDC7] rounded-3xl shadow-xs mb-8">
+        <div className="bg-white p-6 sm:p-8 border border-[#E8DFD0] rounded-3xl shadow-sm mb-8">
           <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -194,16 +187,16 @@ export const TrackOrder: React.FC = () => {
                 value={inputQuery}
                 onChange={(e) => setInputQuery(e.target.value)}
                 placeholder="Enter Order ID (e.g. KV-ORD-12345) or Tracking AWB..."
-                className="w-full pl-12 pr-4 py-3.5 bg-[#FAF8F1] border border-[#E8DDC7] rounded-xl text-xs sm:text-sm text-[#12372A] font-medium focus:outline-none focus:border-[#D4AF37] uppercase"
+                className="w-full pl-12 pr-4 py-3.5 bg-[#F8F5EF] border border-[#E8DFD0] rounded-xl text-xs sm:text-sm text-[#641E2B] font-medium focus:outline-none focus:border-[#B99A61] uppercase transition-colors"
               />
             </div>
             <button
               type="submit"
               disabled={isSearching}
-              className="bg-[#12372A] text-[#FAF8F1] hover:bg-[#D4AF37] hover:text-[#12372A] px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all border border-[#D4AF37] shadow-md flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+              className="bg-[#641E2B] text-[#F8F5EF] hover:bg-[#B99A61] hover:text-[#641E2B] px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all border border-[#B99A61] shadow-md flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
             >
-              <Truck className="w-4 h-4 text-[#D4AF37]" />
-              <span>{isSearching ? 'Tracking...' : 'Track Package'}</span>
+              <Truck className="w-4 h-4 text-[#B99A61]" />
+              <span>{isSearching ? 'Verifying...' : 'Track Package'}</span>
             </button>
           </form>
 
@@ -217,88 +210,199 @@ export const TrackOrder: React.FC = () => {
 
         {/* Search Results / Tracking Timeline */}
         {searchedOrder && (
-          <div className="bg-white p-6 sm:p-10 border border-[#D4AF37] rounded-3xl shadow-xl space-y-8 animate-fadeIn">
+          <div className="bg-white p-6 sm:p-10 border border-[#B99A61] rounded-3xl shadow-xl space-y-8 animate-fadeIn">
             
             {/* Status Header Box */}
-            <div className="bg-[#12372A] text-[#FAF8F1] p-6 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-[#D4AF37]">
+            <div className="bg-[#641E2B] text-[#F8F5EF] p-6 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-[#B99A61]">
               <div>
-                <span className="text-[10px] uppercase font-bold text-[#D4AF37] tracking-widest block mb-0.5">
+                <span className="text-[10px] uppercase font-bold text-[#B99A61] tracking-widest block mb-0.5">
                   Shipment Status
                 </span>
-                <h3 className="font-serif text-2xl font-bold">
+                <h3 className="font-serif text-2xl font-bold text-white">
                   Order #{searchedOrder.id}
                 </h3>
-                <p className="text-xs text-[#E8DDC7] mt-1 font-mono">
-                  Tracking: {searchedOrder.trackingNumber} • {searchedOrder.courierProvider || 'Standard Express Delivery'}
-                </p>
-              </div>
-
-              <div className="text-left sm:text-right bg-[#0B241B] p-3 rounded-xl border border-[#D4AF37]/30">
-                <span className="text-[10px] uppercase text-[#D4AF37] block">Estimated Delivery</span>
-                <strong className="font-serif text-base text-[#FAF8F1]">{searchedOrder.estimatedDelivery || POLICY_CONFIG.STANDARD_DELIVERY_TIME}</strong>
-              </div>
-            </div>
-
-            {/* Visual Timeline */}
-            <div className="space-y-6 relative pl-6 sm:pl-8 border-l-2 border-[#D4AF37]/40 text-xs">
-              {getTimelineSteps(searchedOrder.status).map((step, idx) => (
-                <div key={idx} className="relative">
-                  <div
-                    className={`absolute -left-[31px] sm:-left-[39px] top-0 w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all ${
-                      step.done
-                        ? 'bg-[#12372A] border-[#D4AF37] text-[#D4AF37] shadow-sm'
-                        : 'bg-white border-gray-300 text-gray-400'
-                    }`}
-                  >
-                    {step.done ? <CheckCircle2 className="w-4 h-4 fill-[#12372A]" /> : <Clock className="w-3.5 h-3.5" />}
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className={`font-serif text-sm sm:text-base font-bold ${step.done ? 'text-[#12372A]' : 'text-gray-400'}`}>
-                        {step.title}
-                      </h4>
-                      <span className="text-[10px] text-[#6B5846] font-medium bg-[#FAF8F1] px-2 py-0.5 rounded-full border border-[#E8DDC7]">
-                        {step.time}
-                      </span>
-                    </div>
-                    <p className="text-xs text-[#6B5846]">{step.desc}</p>
-                  </div>
+                <div className="flex flex-wrap items-center gap-2 text-xs text-[#E8DFD0] mt-1 font-mono">
+                  <span>Courier: <strong className="text-white">{searchedOrder.courierProvider || 'Standard Express'}</strong></span>
+                  {searchedOrder.trackingNumber && (
+                    <>
+                      <span>•</span>
+                      <span>AWB: <strong className="text-[#B99A61]">{searchedOrder.trackingNumber}</strong></span>
+                    </>
+                  )}
+                  {searchedOrder.dispatchDate && (
+                    <>
+                      <span>•</span>
+                      <span>Dispatched: <strong className="text-white">{new Date(searchedOrder.dispatchDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</strong></span>
+                    </>
+                  )}
                 </div>
-              ))}
+              </div>
+
+              <div className="flex items-center gap-3">
+                {searchedOrder.trackingUrl && (
+                  <a
+                    href={searchedOrder.trackingUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#B99A61] text-[#641E2B] hover:bg-[#D9BA78] font-bold text-xs uppercase tracking-wider transition-colors shadow-sm"
+                  >
+                    <span>Courier Portal</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                )}
+                <div className="text-left sm:text-right bg-[#4A1520] p-3 rounded-xl border border-[#B99A61]/30">
+                  <span className="text-[10px] uppercase text-[#B99A61] block">Estimated Delivery</span>
+                  <strong className="font-serif text-base text-[#F8F5EF]">
+                    {searchedOrder.estimatedDelivery || POLICY_CONFIG.STANDARD_DELIVERY_TIME}
+                  </strong>
+                </div>
+              </div>
             </div>
+
+            {/* Special status warning if cancelled or return */}
+            {isCancelled && (
+              <div className="p-4 bg-red-50 border border-red-300 rounded-2xl flex items-center gap-3 text-red-800 text-xs">
+                <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+                <div>
+                  <strong className="block font-bold">This order was cancelled</strong>
+                  <p>If payment was captured, the refund will be credited back to your original source within 5–7 business days.</p>
+                </div>
+              </div>
+            )}
+
+            {isReturnFlow && (
+              <div className="p-4 bg-amber-50 border border-amber-300 rounded-2xl flex items-center gap-3 text-amber-900 text-xs">
+                <AlertCircle className="w-5 h-5 text-amber-700 shrink-0" />
+                <div>
+                  <strong className="block font-bold">Return Status: {searchedOrder.status}</strong>
+                  <p>Your return request is being coordinated by our Kuthampully handloom care desk.</p>
+                </div>
+              </div>
+            )}
+
+            {/* Visual 8-Stage Progress Tracker */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-bold uppercase tracking-widest text-[#641E2B] flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-[#B99A61]" />
+                <span>Fulfillment Milestones</span>
+              </h4>
+
+              <div className="space-y-6 relative pl-6 sm:pl-8 border-l-2 border-[#B99A61]/40 text-xs pt-2">
+                {STANDARD_PIPELINE_STAGES.map((step, idx) => {
+                  const isDone = !isCancelled && currentStageIndex >= idx;
+                  const isCurrent = !isCancelled && currentStageIndex === idx;
+
+                  return (
+                    <div key={idx} className="relative">
+                      <div
+                        className={`absolute -left-[31px] sm:-left-[39px] top-0 w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all ${
+                          isCurrent
+                            ? 'bg-[#B99A61] border-[#641E2B] text-[#641E2B] ring-4 ring-[#B99A61]/30 shadow-md'
+                            : isDone
+                            ? 'bg-[#641E2B] border-[#B99A61] text-[#B99A61] shadow-xs'
+                            : 'bg-white border-gray-300 text-gray-300'
+                        }`}
+                      >
+                        {isDone ? (
+                          <CheckCircle2 className="w-4 h-4" />
+                        ) : (
+                          <Clock className="w-3.5 h-3.5" />
+                        )}
+                      </div>
+
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between">
+                          <h5
+                            className={`font-serif text-sm sm:text-base font-bold ${
+                              isCurrent
+                                ? 'text-[#641E2B] font-black'
+                                : isDone
+                                ? 'text-[#641E2B]'
+                                : 'text-gray-400'
+                            }`}
+                          >
+                            {step.label}
+                            {isCurrent && (
+                              <span className="ml-2 text-[10px] bg-[#641E2B] text-[#B99A61] px-2 py-0.5 rounded-full uppercase tracking-wider font-sans font-bold">
+                                Current Milestone
+                              </span>
+                            )}
+                          </h5>
+                          <span className="text-[10px] text-[#6E685D] font-medium bg-[#F8F5EF] px-2 py-0.5 rounded-full border border-[#E8DFD0]">
+                            Stage {idx + 1} of 8
+                          </span>
+                        </div>
+                        <p className={`text-xs ${isDone ? 'text-[#6E685D]' : 'text-gray-400'}`}>
+                          {step.desc}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Live Activity Timeline / Staff Notes History */}
+            {searchedOrder.timeline && searchedOrder.timeline.length > 0 && (
+              <div className="pt-6 border-t border-[#E8DFD0] space-y-3">
+                <h4 className="text-xs font-bold uppercase tracking-widest text-[#641E2B] flex items-center gap-2">
+                  <UserCheck className="w-4 h-4 text-[#B99A61]" />
+                  <span>Verified Activity Trail</span>
+                </h4>
+                <div className="space-y-2 bg-[#F8F5EF] p-4 rounded-2xl border border-[#E8DFD0]">
+                  {searchedOrder.timeline.map((entry, tIdx) => (
+                    <div key={tIdx} className="text-xs flex flex-col sm:flex-row sm:items-center justify-between py-2 border-b border-[#E8DFD0]/60 last:border-0 gap-1">
+                      <div>
+                        <strong className="text-[#641E2B] font-semibold">
+                          {entry.previousStatus ? `${entry.previousStatus} → ` : ''}{entry.newStatus}
+                        </strong>
+                        {entry.remarks && (
+                          <p className="text-[#6E685D] text-[11px] italic mt-0.5">"{entry.remarks}"</p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 text-[10px] text-[#6E685D] shrink-0 font-mono">
+                        <Calendar className="w-3 h-3 text-[#B99A61]" />
+                        <span>{new Date(entry.timestamp).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</span>
+                        <span>•</span>
+                        <span className="text-[#641E2B] font-medium">{entry.staffName}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Destination & Package Contents */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-[#E8DDC7]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-[#E8DFD0]">
               
-              <div className="p-4 bg-[#FAF8F1] rounded-2xl border border-[#E8DDC7] text-xs space-y-2">
-                <div className="flex items-center gap-1.5 font-bold text-[#12372A]">
-                  <MapPin className="w-4 h-4 text-[#D4AF37]" />
+              <div className="p-5 bg-[#F8F5EF] rounded-2xl border border-[#E8DFD0] text-xs space-y-2">
+                <div className="flex items-center gap-1.5 font-bold text-[#641E2B]">
+                  <MapPin className="w-4 h-4 text-[#B99A61]" />
                   <span>Delivery Destination</span>
                 </div>
-                <p className="text-[#6B5846] leading-relaxed">
-                  <strong className="text-[#12372A]">{searchedOrder.shippingAddress.name}</strong><br />
+                <p className="text-[#6E685D] leading-relaxed">
+                  <strong className="text-[#641E2B]">{searchedOrder.shippingAddress.name}</strong><br />
                   {searchedOrder.shippingAddress.street}<br />
                   {searchedOrder.shippingAddress.city}, {searchedOrder.shippingAddress.state} - {searchedOrder.shippingAddress.pincode}<br />
                   Phone: {searchedOrder.shippingAddress.phone}
                 </p>
               </div>
 
-              <div className="p-4 bg-[#FAF8F1] rounded-2xl border border-[#E8DDC7] text-xs space-y-2">
-                <div className="flex items-center gap-1.5 font-bold text-[#12372A]">
-                  <Package className="w-4 h-4 text-[#D4AF37]" />
+              <div className="p-5 bg-[#F8F5EF] rounded-2xl border border-[#E8DFD0] text-xs space-y-2">
+                <div className="flex items-center gap-1.5 font-bold text-[#641E2B]">
+                  <Package className="w-4 h-4 text-[#B99A61]" />
                   <span>Package Contents</span>
                 </div>
-                <div className="divide-y divide-[#E8DDC7]/60">
+                <div className="divide-y divide-[#E8DFD0]">
                   {searchedOrder.items.map((it, i) => (
-                    <div key={i} className="py-1.5 flex justify-between">
-                      <span className="font-semibold text-[#12372A] line-clamp-1">{it.product.name} (x{it.quantity})</span>
-                      <strong className="text-[#12372A] shrink-0 ml-2">{formatPrice(it.price * it.quantity)}</strong>
+                    <div key={i} className="py-2 flex justify-between items-center">
+                      <span className="font-semibold text-[#641E2B] line-clamp-1">{it.product.name} (x{it.quantity})</span>
+                      <strong className="text-[#641E2B] shrink-0 ml-2">{formatPrice(it.price * it.quantity)}</strong>
                     </div>
                   ))}
-                  <div className="pt-1.5 flex justify-between font-serif font-bold text-xs text-[#12372A]">
+                  <div className="pt-2 flex justify-between font-serif font-bold text-xs text-[#641E2B]">
                     <span>Total Paid:</span>
-                    <span>{formatPrice(searchedOrder.total)}</span>
+                    <span className="text-[#641E2B] font-bold text-sm">{formatPrice(searchedOrder.total)}</span>
                   </div>
                 </div>
               </div>
@@ -309,20 +413,22 @@ export const TrackOrder: React.FC = () => {
         )}
 
         {/* Assistance Box */}
-        <div className="mt-8 p-5 bg-white border border-[#E8DDC7] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+        <div className="mt-8 p-6 bg-white border border-[#E8DFD0] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs shadow-sm">
           <div className="flex items-center gap-3">
-            <Phone className="w-5 h-5 text-[#D4AF37] shrink-0" />
+            <div className="w-10 h-10 rounded-full bg-[#641E2B] text-[#B99A61] flex items-center justify-center shrink-0">
+              <Phone className="w-5 h-5" />
+            </div>
             <div>
-              <strong className="text-[#12372A] block font-bold">Have delivery questions?</strong>
-              <p className="text-[#6B5846]">Reach our Kuthampully Atelier logistics desk at {POLICY_CONFIG.SUPPORT_PHONE}</p>
+              <strong className="text-[#641E2B] block font-bold">Need Personal Logistics Support?</strong>
+              <p className="text-[#6E685D]">Reach our Kuthampully Atelier logistics concierge desk at {POLICY_CONFIG.SUPPORT_PHONE}</p>
             </div>
           </div>
           <button
             onClick={() => router.push('/contact')}
-            className="text-[#12372A] hover:text-[#D4AF37] font-bold uppercase text-[11px] flex items-center gap-1 cursor-pointer"
+            className="text-[#641E2B] hover:text-[#B99A61] font-bold uppercase text-xs flex items-center gap-1.5 cursor-pointer bg-[#F8F5EF] px-4 py-2.5 rounded-xl border border-[#E8DFD0] transition-colors"
           >
             <span>Contact Concierge</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3.5 h-3.5 text-[#B99A61]" />
           </button>
         </div>
 

@@ -4,6 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { HeroSection } from '../components/home/HeroSection';
 import { CategoryShowcase } from '../components/home/CategoryShowcase';
+import { FeaturedCollections } from '../components/home/FeaturedCollections';
 import { HeritageSpotlight } from '../components/home/HeritageSpotlight';
 import { CuratedProducts } from '../components/home/CuratedProducts';
 import { EditorialQuotes } from '../components/home/EditorialQuotes';
@@ -39,6 +40,7 @@ export default function HomePage() {
     <div className="animate-fadeIn">
       <HeroSection onNavigate={handleNavigate} />
       <CategoryShowcase onNavigate={handleNavigate} />
+      <FeaturedCollections onNavigate={handleNavigate} />
       <HeritageSpotlight onNavigate={handleNavigate} />
       <CuratedProducts onSelectProduct={handleSelectProduct} onNavigate={handleNavigate} />
       <EditorialQuotes />

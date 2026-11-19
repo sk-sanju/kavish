@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { SlidersHorizontal, X, RotateCcw } from 'lucide-react';
+import { SlidersHorizontal, X, RotateCcw, Check } from 'lucide-react';
 import type { FilterState } from '../../types';
 import { useCurrency } from '../../context/CurrencyContext';
 import { useProducts } from '../../context/ProductContext';
@@ -18,9 +18,18 @@ interface ProductFilterProps {
 const COLLECTIONS = [
   { label: 'Kasavu Masterpieces', value: 'kasavu-masterpieces' },
   { label: 'The Festive Edit', value: 'festive-edit' },
-  { label: 'Kerala Classics', value: 'kerala-classics' },
-  { label: 'Everyday Kerala Linen', value: 'everyday-kerala' },
-  { label: 'Kids Heritage', value: 'kids-heritage' }
+  { label: 'Ceremonial Classics', value: 'ceremonial-classics' },
+  { label: 'European Flax Linen', value: 'flax-linen' },
+];
+
+const STANDARD_SIZES = ['Free Size', 'S', 'M', 'L', 'XL', 'XXL', '38', '40', '42', '44'];
+
+const STANDARD_COLORS = [
+  { name: 'Kasavu Gold', hex: '#B99A61' },
+  { name: 'Natural Ivory', hex: '#F8F5EF' },
+  { name: 'Royal Maroon', hex: '#641E2B' },
+  { name: 'Deep Peacock', hex: '#0F4C5C' },
+  { name: 'Charcoal Black', hex: '#292522' },
 ];
 
 export const ProductFilter: React.FC<ProductFilterProps> = ({
@@ -59,159 +68,221 @@ export const ProductFilter: React.FC<ProductFilterProps> = ({
     onFilterChange({ collection: updated });
   };
 
+  const toggleSize = (sz: string) => {
+    const exists = filters.sizes.includes(sz);
+    const updated = exists ? filters.sizes.filter(s => s !== sz) : [...filters.sizes, sz];
+    onFilterChange({ sizes: updated });
+  };
+
+  const toggleColor = (colName: string) => {
+    const exists = filters.colors.includes(colName);
+    const updated = exists ? filters.colors.filter(c => c !== colName) : [...filters.colors, colName];
+    onFilterChange({ colors: updated });
+  };
+
   const content = (
-    <div className="space-y-6 text-xs text-[#171717]">
-      <div className="flex items-center justify-between pb-4 border-b border-[#E8DDC7]">
+    <div className="space-y-6 text-xs text-[#292522]">
+      {/* Header */}
+      <div className="flex items-center justify-between pb-4 border-b border-[#E8DFD0]">
         <div className="flex items-center gap-2">
-          <SlidersHorizontal className="w-4 h-4 text-[#12372A]" />
-          <span className="font-serif font-bold text-base text-[#12372A]">Filter Collection</span>
-          <span className="text-[10px] text-[#6B5846]">({totalResults} items)</span>
+          <SlidersHorizontal className="w-4 h-4 text-[#641E2B]" />
+          <span className="font-serif font-bold text-base text-[#641E2B]">Filter Collection</span>
+          <span className="text-[10px] text-[#6E685D]">({totalResults} items)</span>
         </div>
         <button
           onClick={onResetFilters}
-          className="text-[#D4AF37] hover:text-[#12372A] flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider"
+          className="text-[#B99A61] hover:text-[#641E2B] flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider cursor-pointer"
         >
           <RotateCcw className="w-3 h-3" />
           <span>Reset All</span>
         </button>
       </div>
 
-      <div className="space-y-2">
-        <h4 className="font-serif font-semibold text-sm text-[#12372A] uppercase tracking-wider">Department</h4>
-        <div className="flex flex-wrap gap-2">
-          {['women', 'men', 'kids'].map(g => {
-            const active = filters.gender.includes(g);
+      {/* 1. Department */}
+      <div className="space-y-2.5">
+        <span className="font-bold uppercase tracking-wider text-[11px] text-[#641E2B] block">
+          Department
+        </span>
+        <div className="space-y-1.5">
+          {[
+            { id: 'women', label: 'Women Collection' },
+            { id: 'men', label: 'Men Collection' },
+            { id: 'kids', label: 'Kids Ethnic' }
+          ].map(d => (
+            <label key={d.id} className="flex items-center gap-2.5 cursor-pointer hover:text-[#641E2B]">
+              <input
+                type="checkbox"
+                checked={filters.gender.includes(d.id)}
+                onChange={() => toggleGender(d.id)}
+                className="w-4 h-4 rounded border-[#E8DFD0] text-[#641E2B] focus:ring-[#B99A61] cursor-pointer"
+              />
+              <span className="font-medium text-xs">{d.label}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* 2. Categories */}
+      {activeCategories.length > 0 && (
+        <div className="space-y-2.5 pt-4 border-t border-[#E8DFD0]">
+          <span className="font-bold uppercase tracking-wider text-[11px] text-[#641E2B] block">
+            Handloom Categories
+          </span>
+          <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+            {activeCategories.map(cat => (
+              <label key={cat.id} className="flex items-center gap-2.5 cursor-pointer hover:text-[#641E2B]">
+                <input
+                  type="checkbox"
+                  checked={filters.category.some(c => c.toLowerCase() === cat.slug.toLowerCase())}
+                  onChange={() => toggleCategory(cat.slug)}
+                  className="w-4 h-4 rounded border-[#E8DFD0] text-[#641E2B] focus:ring-[#B99A61] cursor-pointer"
+                />
+                <span className="font-medium text-xs capitalize">{cat.name}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 3. Curated Collections */}
+      <div className="space-y-2.5 pt-4 border-t border-[#E8DFD0]">
+        <span className="font-bold uppercase tracking-wider text-[11px] text-[#641E2B] block">
+          Royal Collections
+        </span>
+        <div className="space-y-1.5">
+          {COLLECTIONS.map(col => (
+            <label key={col.value} className="flex items-center gap-2.5 cursor-pointer hover:text-[#641E2B]">
+              <input
+                type="checkbox"
+                checked={filters.collection.includes(col.value)}
+                onChange={() => toggleCollection(col.value)}
+                className="w-4 h-4 rounded border-[#E8DFD0] text-[#641E2B] focus:ring-[#B99A61] cursor-pointer"
+              />
+              <span className="font-medium text-xs">{col.label}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. Sizes */}
+      <div className="space-y-2.5 pt-4 border-t border-[#E8DFD0]">
+        <span className="font-bold uppercase tracking-wider text-[11px] text-[#641E2B] block">
+          Size / Draping
+        </span>
+        <div className="flex flex-wrap gap-1.5">
+          {STANDARD_SIZES.map(sz => {
+            const isSelected = filters.sizes.includes(sz);
             return (
               <button
-                key={g}
-                onClick={() => toggleGender(g)}
-                className={`px-3.5 py-1.5 capitalize text-xs border rounded-full transition-all ${
-                  active
-                    ? 'bg-[#12372A] text-[#FAF8F1] border-[#12372A] font-semibold shadow-xs'
-                    : 'bg-white text-[#171717] border-[#E8DDC7] hover:border-[#D4AF37]'
+                key={sz}
+                type="button"
+                onClick={() => toggleSize(sz)}
+                className={`px-2.5 py-1 text-[11px] border rounded-lg transition-all cursor-pointer ${
+                  isSelected
+                    ? 'bg-[#641E2B] text-[#F8F5EF] border-[#641E2B] font-bold shadow-xs'
+                    : 'bg-white text-[#292522] border-[#E8DFD0] hover:border-[#B99A61]'
                 }`}
               >
-                {g}
+                {sz}
               </button>
             );
           })}
         </div>
       </div>
 
-      {activeCategories.length > 0 && (
-        <div className="space-y-2 pt-2 border-t border-[#E8DDC7]/60">
-          <h4 className="font-serif font-semibold text-sm text-[#12372A] uppercase tracking-wider">Categories</h4>
-          <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-            {activeCategories.map(cat => {
-              const catSlug = (cat.slug || '').toLowerCase();
-              const catName = (cat.name || '').toLowerCase();
-              const active = filters.category.some(c => {
-                const clean = c.toLowerCase();
-                return clean === catSlug || clean === catName || clean.replace(/-/g, ' ') === catName;
-              });
-              return (
-                <label key={cat.id} className="flex items-center justify-between gap-2.5 cursor-pointer hover:text-[#D4AF37]">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={active}
-                      onChange={() => toggleCategory(cat.slug || cat.name)}
-                      className="rounded-sm accent-[#12372A] w-3.5 h-3.5"
-                    />
-                    <span className={active ? 'font-semibold text-[#12372A]' : ''}>{cat.name}</span>
-                  </div>
-                  <span className="text-[10px] text-gray-400 capitalize">{cat.parentCategory}</span>
-                </label>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      <div className="space-y-2 pt-2 border-t border-[#E8DDC7]/60">
-        <h4 className="font-serif font-semibold text-sm text-[#12372A] uppercase tracking-wider">Signature Collection</h4>
-        <div className="space-y-1.5">
-          {COLLECTIONS.map(c => {
-            const active = filters.collection.includes(c.value);
+      {/* 5. Colors & Zari */}
+      <div className="space-y-2.5 pt-4 border-t border-[#E8DFD0]">
+        <span className="font-bold uppercase tracking-wider text-[11px] text-[#641E2B] block">
+          Zari Accent &amp; Color
+        </span>
+        <div className="flex flex-wrap gap-2">
+          {STANDARD_COLORS.map(c => {
+            const isSelected = filters.colors.includes(c.name);
             return (
-              <label key={c.value} className="flex items-center gap-2.5 cursor-pointer hover:text-[#D4AF37]">
-                <input
-                  type="checkbox"
-                  checked={active}
-                  onChange={() => toggleCollection(c.value)}
-                  className="rounded-sm accent-[#12372A] w-3.5 h-3.5"
-                />
-                <span className={active ? 'font-semibold text-[#12372A]' : ''}>{c.label}</span>
-              </label>
+              <button
+                key={c.name}
+                type="button"
+                onClick={() => toggleColor(c.name)}
+                className={`w-7 h-7 rounded-full border-2 transition-transform relative flex items-center justify-center cursor-pointer ${
+                  isSelected ? 'border-[#641E2B] ring-2 ring-[#B99A61] scale-110' : 'border-[#E8DFD0] hover:scale-105'
+                }`}
+                style={{ backgroundColor: c.hex }}
+                title={c.name}
+              >
+                {isSelected && <Check className={`w-3.5 h-3.5 ${c.hex === '#F8F5EF' ? 'text-black' : 'text-white'}`} />}
+              </button>
             );
           })}
         </div>
       </div>
 
-      <div className="space-y-3 pt-2 border-t border-[#E8DDC7]/60">
-        <div className="flex items-center justify-between">
-          <h4 className="font-serif font-semibold text-sm text-[#12372A] uppercase tracking-wider">Price Range</h4>
-          <span className="text-[#D4AF37] font-semibold text-xs bg-[#FAF8F1] px-2 py-0.5 rounded-full border border-[#D4AF37]/30">
-            Up to {formatPrice(filters.priceRange[1])}
-          </span>
-        </div>
-        <input
-          type="range"
-          min={500}
-          max={15000}
-          step={500}
-          value={filters.priceRange[1]}
-          onChange={(e) => onFilterChange({ priceRange: [filters.priceRange[0], Number(e.target.value)] })}
-          className="w-full accent-[#12372A] cursor-pointer"
-        />
-        <div className="flex justify-between text-[10px] text-[#6B5846]">
-          <span>{formatPrice(500)}</span>
-          <span>{formatPrice(15000)}+</span>
-        </div>
-      </div>
-
-
-
-      <div className="pt-2 border-t border-[#E8DDC7]/60">
+      {/* 6. Availability Checkbox */}
+      <div className="pt-4 border-t border-[#E8DFD0]">
         <label className="flex items-center gap-2.5 cursor-pointer">
           <input
             type="checkbox"
             checked={filters.inStockOnly}
             onChange={(e) => onFilterChange({ inStockOnly: e.target.checked })}
-            className="rounded-sm accent-[#12372A] w-3.5 h-3.5"
+            className="w-4 h-4 rounded border-[#E8DFD0] text-[#641E2B] focus:ring-[#B99A61] cursor-pointer"
           />
-          <span className="font-semibold text-[#12372A]">In-Stock Ready to Dispatch</span>
+          <span className="font-semibold text-xs text-[#641E2B]">In Stock &amp; Express Dispatch</span>
         </label>
       </div>
 
+      {/* 7. Price Range */}
+      <div className="space-y-2.5 pt-4 border-t border-[#E8DFD0]">
+        <div className="flex items-center justify-between">
+          <span className="font-bold uppercase tracking-wider text-[11px] text-[#641E2B]">
+            Price Limit
+          </span>
+          <span className="font-bold text-[#641E2B] text-xs">
+            {formatPrice(filters.priceRange[1])}
+          </span>
+        </div>
+        <input
+          type="range"
+          min="500"
+          max="20000"
+          step="250"
+          value={filters.priceRange[1]}
+          onChange={(e) => onFilterChange({ priceRange: [filters.priceRange[0], Number(e.target.value)] })}
+          className="w-full accent-[#641E2B] cursor-pointer"
+        />
+        <div className="flex justify-between text-[10px] text-[#6E685D]">
+          <span>{formatPrice(500)}</span>
+          <span>{formatPrice(20000)}</span>
+        </div>
+      </div>
     </div>
   );
 
   return (
     <>
-      <div className="hidden lg:block w-64 shrink-0 bg-white p-5 border border-[#E8DDC7] rounded-2xl self-start sticky top-24 shadow-xs">
+      {/* Desktop Sidebar Filter */}
+      <aside className="hidden lg:block w-64 shrink-0 bg-white p-5 border border-[#E8DFD0] rounded-3xl shadow-xs sticky top-28 self-start">
         {content}
-      </div>
+      </aside>
 
+      {/* Mobile Drawer Filter */}
       {isOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex justify-end">
-          <div className="bg-[#FAF8F1] w-full max-w-xs h-full p-6 overflow-y-auto flex flex-col justify-between animate-slideLeft">
-            <div>
-              <div className="flex items-center justify-between pb-4 border-b border-[#D4AF37]/30 mb-6">
-                <span className="font-serif text-xl font-bold text-[#12372A]">Refine Selection</span>
-                <button onClick={onClose} className="p-1 text-[#171717] hover:text-[#D4AF37] w-8 h-8 rounded-full bg-white flex items-center justify-center">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              {content}
-            </div>
-
-            <div className="pt-6 border-t border-[#E8DDC7] mt-6">
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity" onClick={onClose} />
+          <div className="relative ml-auto w-full max-w-xs bg-white h-full shadow-2xl p-6 overflow-y-auto z-10 animate-slideLeft">
+            <div className="flex justify-end pb-2">
               <button
                 onClick={onClose}
-                className="w-full bg-[#12372A] text-[#FAF8F1] py-3 text-xs uppercase font-bold tracking-widest hover:bg-[#D4AF37] hover:text-[#12372A] transition-colors rounded-xl shadow-md"
+                className="p-1.5 rounded-full bg-[#F8F5EF] text-[#292522] hover:bg-[#E8DFD0] cursor-pointer"
               >
-                Apply Filters ({totalResults})
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            {content}
+            <div className="mt-8 pt-4 border-t border-[#E8DFD0]">
+              <button
+                onClick={onClose}
+                className="w-full py-3 bg-[#641E2B] text-[#F8F5EF] font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-[#B99A61] hover:text-[#46141D] transition-all cursor-pointer shadow-sm"
+              >
+                View {totalResults} Garments
               </button>
             </div>
           </div>

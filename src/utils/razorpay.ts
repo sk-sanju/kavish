@@ -156,7 +156,7 @@ export const initializeRazorpayPayment = async (options: RazorpayPaymentOptions)
       customer_contact: options.customerPhone
     },
     theme: {
-      color: '#12372A',
+      color: '#641E2B',
     },
     handler: async function (response: {
       razorpay_payment_id: string;

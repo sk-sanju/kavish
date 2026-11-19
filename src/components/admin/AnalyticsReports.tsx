@@ -35,58 +35,58 @@ export const AnalyticsReports: React.FC = () => {
     <div className="space-y-6 animate-fadeIn">
       
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DDC7] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#D4AF37] block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#B99A61] block">
             Business Intelligence &amp; Data Export
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#12372A] mt-0.5">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-0.5">
             Analytics &amp; CSV Data Reports
           </h1>
         </div>
       </div>
 
       {/* CSV Data Exporter Cards */}
-      <div className="bg-white p-6 border border-[#E8DDC7] rounded-2xl shadow-xs space-y-4">
-        <h3 className="font-serif font-bold text-lg text-[#12372A] border-b border-[#E8DDC7] pb-3">
+      <div className="bg-white p-6 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-4">
+        <h3 className="font-serif font-bold text-lg text-[#641E2B] border-b border-[#E8DFD0] pb-3">
           Downloadable Business Data Reports (CSV / Excel)
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="p-4 bg-[#FAF8F1] border border-[#E8DDC7] rounded-2xl flex flex-col justify-between space-y-3">
+          <div className="p-4 bg-[#F8F5EF] border border-[#E8DFD0] rounded-2xl flex flex-col justify-between space-y-3">
             <div>
-              <strong className="font-bold text-[#12372A] block text-sm">Product Catalog Export</strong>
-              <p className="text-[11px] text-[#6B5846]">Full product list, SKUs, category specs &amp; prices.</p>
+              <strong className="font-bold text-[#641E2B] block text-sm">Product Catalog Export</strong>
+              <p className="text-[11px] text-[#6E685D]">Full product list, SKUs, category specs &amp; prices.</p>
             </div>
             <button
               onClick={() => handleExportCSV('products')}
-              className="w-full bg-[#12372A] text-[#FAF8F1] py-2 rounded-xl font-bold uppercase text-[11px] flex items-center justify-center gap-1.5 border border-[#D4AF37]"
+              className="w-full bg-[#641E2B] text-[#F8F5EF] py-2 rounded-xl font-bold uppercase text-[11px] flex items-center justify-center gap-1.5 border border-[#B99A61]"
             >
               <Download className="w-3.5 h-3.5" /> Download Product CSV
             </button>
           </div>
 
-          <div className="p-4 bg-[#FAF8F1] border border-[#E8DDC7] rounded-2xl flex flex-col justify-between space-y-3">
+          <div className="p-4 bg-[#F8F5EF] border border-[#E8DFD0] rounded-2xl flex flex-col justify-between space-y-3">
             <div>
-              <strong className="font-bold text-[#12372A] block text-sm">Coupons &amp; Offers Data</strong>
-              <p className="text-[11px] text-[#6B5846]">Active discount codes, usage counts, minimum spend, &amp; expiry dates.</p>
+              <strong className="font-bold text-[#641E2B] block text-sm">Coupons &amp; Offers Data</strong>
+              <p className="text-[11px] text-[#6E685D]">Active discount codes, usage counts, minimum spend, &amp; expiry dates.</p>
             </div>
             <button
               onClick={() => handleExportCSV('coupons')}
-              className="w-full bg-[#12372A] text-[#FAF8F1] py-2 rounded-xl font-bold uppercase text-[11px] flex items-center justify-center gap-1.5 border border-[#D4AF37]"
+              className="w-full bg-[#641E2B] text-[#F8F5EF] py-2 rounded-xl font-bold uppercase text-[11px] flex items-center justify-center gap-1.5 border border-[#B99A61]"
             >
               <Download className="w-3.5 h-3.5" /> Download Coupons CSV
             </button>
           </div>
 
-          <div className="p-4 bg-[#FAF8F1] border border-[#E8DDC7] rounded-2xl flex flex-col justify-between space-y-3">
+          <div className="p-4 bg-[#F8F5EF] border border-[#E8DFD0] rounded-2xl flex flex-col justify-between space-y-3">
             <div>
-              <strong className="font-bold text-[#12372A] block text-sm">Sales &amp; Financial Summary</strong>
-              <p className="text-[11px] text-[#6B5846]">Revenue metrics, average order value, growth rates &amp; tax breakdown.</p>
+              <strong className="font-bold text-[#641E2B] block text-sm">Sales &amp; Financial Summary</strong>
+              <p className="text-[11px] text-[#6E685D]">Revenue metrics, average order value, growth rates &amp; tax breakdown.</p>
             </div>
             <button
               onClick={() => handleExportCSV('sales')}
-              className="w-full bg-[#12372A] text-[#FAF8F1] py-2 rounded-xl font-bold uppercase text-[11px] flex items-center justify-center gap-1.5 border border-[#D4AF37]"
+              className="w-full bg-[#641E2B] text-[#F8F5EF] py-2 rounded-xl font-bold uppercase text-[11px] flex items-center justify-center gap-1.5 border border-[#B99A61]"
             >
               <Download className="w-3.5 h-3.5" /> Download Sales CSV
             </button>

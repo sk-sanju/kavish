@@ -10,6 +10,9 @@ import { BannerManagement } from '../components/admin/BannerManagement';
 import { ProductManagement } from '../components/admin/ProductManagement';
 import { CategoryManagement } from '../components/admin/CategoryManagement';
 import { OrderManagement } from '../components/admin/OrderManagement';
+import { OrderPipeline } from '../components/admin/OrderPipeline';
+import { InventoryManagement } from '../components/admin/InventoryManagement';
+import { ReturnsRefundsManagement } from '../components/admin/ReturnsRefundsManagement';
 import { CustomerManagement } from '../components/admin/CustomerManagement';
 import { DiscountManagement } from '../components/admin/DiscountManagement';
 import { ShippingManagement } from '../components/admin/ShippingManagement';
@@ -38,20 +41,23 @@ export const AdminDashboard: React.FC = () => {
       onNavigateHome={() => router.push('/')}
     >
       {activeTab === 'overview' && <DashboardOverview onNavigateTab={setActiveTab} />}
-      {activeTab === 'banners' && <BannerManagement />}
+      {activeTab === 'orders' && <OrderManagement />}
+      {activeTab === 'pipeline' && <OrderPipeline />}
       {activeTab === 'products' && <ProductManagement />}
       {activeTab === 'categories' && <CategoryManagement />}
-      {activeTab === 'orders' && <OrderManagement />}
+      {activeTab === 'inventory' && <InventoryManagement />}
       {activeTab === 'customers' && <CustomerManagement />}
       {activeTab === 'discounts' && <DiscountManagement />}
-      {activeTab === 'shipping' && <ShippingManagement />}
       {activeTab === 'financials' && <FinancialManagement />}
-      {activeTab === 'analytics' && <AnalyticsReports />}
-      {activeTab === 'content' && <ContentManagement />}
+      {activeTab === 'shipping' && <ShippingManagement />}
+      {activeTab === 'returns' && <ReturnsRefundsManagement />}
       {activeTab === 'reviews' && <ReviewManagement />}
+      {activeTab === 'analytics' && <AnalyticsReports />}
       {activeTab === 'roles' && <RoleManagement />}
-      {activeTab === 'audit' && <AuditTrail />}
       {activeTab === 'settings' && <SettingsManagement />}
+      {activeTab === 'banners' && <BannerManagement />}
+      {activeTab === 'content' && <ContentManagement />}
+      {activeTab === 'audit' && <AuditTrail />}
       {activeTab === 'notifications' && (
         <>
           <DashboardOverview onNavigateTab={setActiveTab} />

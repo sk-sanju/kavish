@@ -50,7 +50,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-[#FAF8F1] font-sans antialiased text-[#171717]">
+    <div className="min-h-screen flex flex-col justify-between bg-[#F8F5EF] font-sans antialiased text-[#171717]">
       {!isAdminRoute && <AnnouncementBar />}
       {!isAdminRoute && <Header />}
 

@@ -158,7 +158,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const safeQty = Math.max(1, Math.floor(quantity));
     const sizeName = selectedSize || (product.sizes?.[0] || 'Free Size');
-    const colorItem = selectedColor || (product.colors?.[0] || { name: 'Kasavu Gold', hex: '#D4AF37' });
+    const colorItem = selectedColor || (product.colors?.[0] || { name: 'Kasavu Gold', hex: '#B99A61' });
     const itemId = `${product.id}-${sizeName}-${colorItem.name}`;
     
     setCart(prev => {
