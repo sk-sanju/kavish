@@ -230,37 +230,37 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       {/* Top Banner & Stats Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-[#E5E7EB] pb-5">
         <div>
-          <div className="inline-flex items-center gap-2 bg-[#B99A61]/15 border border-[#B99A61]/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest text-[#641E2B]">
-            <Kanban className="w-3.5 h-3.5 text-[#B99A61]" />
+          <div className="inline-flex items-center gap-2 bg-[#C5A15A]/15 border border-[#C5A15A]/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest text-[#111111]">
+            <Kanban className="w-3.5 h-3.5 text-[#C5A15A]" />
             <span>Visual Fulfillment Pipeline</span>
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-1">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#111111] mt-1">
             Order Pipeline &amp; Logistics Kanban
           </h1>
-          <p className="text-xs text-[#292722]/70 font-light mt-0.5">
+          <p className="text-xs text-[#1A1A1A]/70 font-light mt-0.5">
             Real-time stage tracking from customer checkout through Kuthampully loom dispatch to doorstep delivery.
           </p>
         </div>
 
         {/* Global Pipeline Metrics */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="bg-white border border-[#E8DFD0] rounded-xl px-3 py-2 shadow-xs text-center">
-            <span className="text-[10px] uppercase font-bold text-[#6E685D] block">In Pipeline</span>
-            <span className="font-serif text-lg font-bold text-[#641E2B]">
+          <div className="bg-white border border-[#E5E7EB] rounded-xl px-3 py-2 shadow-xs text-center">
+            <span className="text-[10px] uppercase font-bold text-[#6B7280] block">In Pipeline</span>
+            <span className="font-serif text-lg font-bold text-[#111111]">
               {filteredOrders.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled' && o.status !== 'Returned').length}
             </span>
           </div>
-          <div className="bg-white border border-[#E8DFD0] rounded-xl px-3 py-2 shadow-xs text-center">
+          <div className="bg-white border border-[#E5E7EB] rounded-xl px-3 py-2 shadow-xs text-center">
             <span className="text-[10px] uppercase font-bold text-emerald-700 block">Delivered</span>
             <span className="font-serif text-lg font-bold text-emerald-800">
               {filteredOrders.filter(o => o.status === 'Delivered').length}
             </span>
           </div>
-          <div className="bg-white border border-[#E8DFD0] rounded-xl px-3 py-2 shadow-xs text-center">
+          <div className="bg-white border border-[#E5E7EB] rounded-xl px-3 py-2 shadow-xs text-center">
             <span className="text-[10px] uppercase font-bold text-amber-700 block">Total Active</span>
-            <span className="font-serif text-lg font-bold text-[#B99A61]">
+            <span className="font-serif text-lg font-bold text-[#C5A15A]">
               {filteredOrders.length}
             </span>
           </div>
@@ -268,7 +268,7 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
       </div>
 
       {/* Pipeline Filter & Search Control */}
-      <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between text-xs">
+      <div className="bg-white p-4 border border-[#E5E7EB] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between text-xs">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
           <input
@@ -276,7 +276,7 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
             placeholder="Search by Order ID (KV-ORD-...), Customer, Phone, or City..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full border border-[#E8DFD0] pl-10 pr-4 py-2 rounded-xl bg-[#F8F5EF] text-[#292722] focus:outline-none focus:border-[#B99A61]"
+            className="w-full border border-[#E5E7EB] pl-10 pr-4 py-2 rounded-xl bg-[#FFFFFF] text-[#1A1A1A] focus:outline-none focus:border-[#C5A15A]"
           />
         </div>
 
@@ -284,7 +284,7 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
           <select
             value={paymentFilter}
             onChange={(e) => setPaymentFilter(e.target.value)}
-            className="border border-[#E8DFD0] px-3 py-2 bg-[#F8F5EF] rounded-xl font-semibold text-[#641E2B] focus:outline-none focus:border-[#B99A61]"
+            className="border border-[#E5E7EB] px-3 py-2 bg-[#FFFFFF] rounded-xl font-semibold text-[#111111] focus:outline-none focus:border-[#C5A15A]"
           >
             <option value="all">All Payment Statuses</option>
             <option value="Paid">Paid Only</option>
@@ -296,7 +296,7 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
           <select
             value={selectedStaffFilter}
             onChange={(e) => setSelectedStaffFilter(e.target.value)}
-            className="border border-[#E8DFD0] px-3 py-2 bg-[#F8F5EF] rounded-xl font-semibold text-[#641E2B] focus:outline-none focus:border-[#B99A61]"
+            className="border border-[#E5E7EB] px-3 py-2 bg-[#FFFFFF] rounded-xl font-semibold text-[#111111] focus:outline-none focus:border-[#C5A15A]"
           >
             <option value="all">All Staff Assignments</option>
             {adminUsers.map(u => (
@@ -315,24 +315,24 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
           return (
             <div
               key={stage.status}
-              className="w-80 shrink-0 bg-[#F8F5EF]/80 border border-[#E8DFD0] rounded-2xl p-3 shadow-xs flex flex-col max-h-[80vh]"
+              className="w-80 shrink-0 bg-[#FFFFFF]/80 border border-[#E5E7EB] rounded-2xl p-3 shadow-xs flex flex-col max-h-[80vh]"
             >
               {/* Stage Header */}
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#E8DFD0]">
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#E5E7EB]">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#641E2B] text-[#B99A61] flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-lg bg-[#111111] text-[#C5A15A] flex items-center justify-center">
                     <StageIcon className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="font-serif text-sm font-bold text-[#641E2B] leading-tight">
+                    <h3 className="font-serif text-sm font-bold text-[#111111] leading-tight">
                       {stage.label}
                     </h3>
-                    <span className="text-[10px] text-[#6E685D] block">
+                    <span className="text-[10px] text-[#6B7280] block">
                       {stage.desc}
                     </span>
                   </div>
                 </div>
-                <span className="bg-[#641E2B] text-[#F8F5EF] text-[11px] font-bold px-2.5 py-0.5 rounded-full font-mono">
+                <span className="bg-[#111111] text-[#FFFFFF] text-[11px] font-bold px-2.5 py-0.5 rounded-full font-mono">
                   {stageOrders.length}
                 </span>
               </div>
@@ -340,8 +340,8 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
               {/* Order Cards Container */}
               <div className="flex-1 overflow-y-auto space-y-3 pr-1">
                 {stageOrders.length === 0 ? (
-                  <div className="border border-dashed border-[#E8DFD0] rounded-xl p-6 text-center text-[#6E685D]">
-                    <Package className="w-6 h-6 mx-auto mb-1.5 opacity-40 text-[#B99A61]" />
+                  <div className="border border-dashed border-[#E5E7EB] rounded-xl p-6 text-center text-[#6B7280]">
+                    <Package className="w-6 h-6 mx-auto mb-1.5 opacity-40 text-[#C5A15A]" />
                     <p className="text-[11px] font-medium">No orders in {stage.label}</p>
                   </div>
                 ) : (
@@ -353,33 +353,33 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
                       <div
                         key={order.id}
                         onClick={() => handleOpenModal(order)}
-                        className="bg-white border border-[#E8DFD0] hover:border-[#B99A61] p-3.5 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
+                        className="bg-white border border-[#E5E7EB] hover:border-[#C5A15A] p-3.5 rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
                       >
                         {/* Top ID & Elapsed Time */}
                         <div className="flex items-center justify-between gap-2 mb-2">
-                          <span className="font-mono text-xs font-bold text-[#641E2B] group-hover:text-[#B99A61] transition-colors">
+                          <span className="font-mono text-xs font-bold text-[#111111] group-hover:text-[#C5A15A] transition-colors">
                             {order.id}
                           </span>
-                          <span className="text-[10px] text-[#6E685D] flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-[#B99A61]" />
+                          <span className="text-[10px] text-[#6B7280] flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-[#C5A15A]" />
                             {getElapsedString(order.date)}
                           </span>
                         </div>
 
                         {/* Customer & Location */}
                         <div className="mb-2 text-xs">
-                          <div className="font-bold text-[#292722] truncate">
+                          <div className="font-bold text-[#1A1A1A] truncate">
                             {order.shippingAddress.name}
                           </div>
-                          <div className="text-[11px] text-[#6E685D] truncate flex items-center gap-1 mt-0.5">
-                            <MapPin className="w-3 h-3 text-[#B99A61] shrink-0" />
+                          <div className="text-[11px] text-[#6B7280] truncate flex items-center gap-1 mt-0.5">
+                            <MapPin className="w-3 h-3 text-[#C5A15A] shrink-0" />
                             {order.shippingAddress.city}, {order.shippingAddress.state}
                           </div>
                         </div>
 
                         {/* Items Thumbnail & Count */}
-                        <div className="flex items-center gap-2 mb-3 bg-[#F8F5EF] p-2 rounded-lg">
-                          <div className="w-8 h-10 rounded overflow-hidden shrink-0 bg-[#E8DFD0]">
+                        <div className="flex items-center gap-2 mb-3 bg-[#FFFFFF] p-2 rounded-lg">
+                          <div className="w-8 h-10 rounded overflow-hidden shrink-0 bg-[#E5E7EB]">
                             {order.items[0]?.product?.images?.[0] ? (
                               <OptimizedImage
                                 src={order.items[0].product.images[0]}
@@ -392,18 +392,18 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-[11px] font-medium text-[#292722] truncate">
+                            <p className="text-[11px] font-medium text-[#1A1A1A] truncate">
                               {order.items[0]?.product?.name || 'Handloom Item'}
                             </p>
-                            <p className="text-[10px] text-[#6E685D]">
+                            <p className="text-[10px] text-[#6B7280]">
                               {order.items.length} {order.items.length === 1 ? 'item' : 'items'} • Size: {order.items[0]?.size || 'Free'}
                             </p>
                           </div>
                         </div>
 
                         {/* Price & Payment Badge */}
-                        <div className="flex items-center justify-between border-t border-[#E8DFD0] pt-2 mb-3">
-                          <span className="font-bold text-xs text-[#641E2B]">
+                        <div className="flex items-center justify-between border-t border-[#E5E7EB] pt-2 mb-3">
+                          <span className="font-bold text-xs text-[#111111]">
                             {formatPrice(order.total)}
                           </span>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
@@ -422,7 +422,7 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
                               e.stopPropagation();
                               handleTransitionStatus(order, nextStage);
                             }}
-                            className="w-full bg-[#641E2B] hover:bg-[#B99A61] hover:text-[#641E2B] text-[#F8F5EF] py-1.5 px-3 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-xs"
+                            className="w-full bg-[#111111] hover:bg-[#C5A15A] hover:text-[#111111] text-[#FFFFFF] py-1.5 px-3 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-xs"
                           >
                             <span>Move to {nextStage}</span>
                             <ArrowRight className="w-3.5 h-3.5" />
@@ -476,8 +476,8 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
                       {order.status}
                     </span>
                   </div>
-                  <p className="text-xs font-semibold text-[#292722]">{order.shippingAddress.name}</p>
-                  <p className="text-[11px] text-[#6E685D] mt-1">{formatPrice(order.total)} • {order.items.length} items</p>
+                  <p className="text-xs font-semibold text-[#1A1A1A]">{order.shippingAddress.name}</p>
+                  <p className="text-[11px] text-[#6B7280] mt-1">{formatPrice(order.total)} • {order.items.length} items</p>
                 </div>
               ))
             )}
@@ -488,12 +488,12 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
       {/* DETAILED ORDER INSPECTION & TIMELINE MODAL */}
       {activeModalOrder && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
-          <div className="bg-white border border-[#B99A61]/40 rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto flex flex-col text-[#292722]">
+          <div className="bg-white border border-[#C5A15A]/40 rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto flex flex-col text-[#1A1A1A]">
             
             {/* Modal Header */}
-            <div className="sticky top-0 bg-[#641E2B] text-[#F8F5EF] px-6 py-4 rounded-t-3xl flex items-center justify-between border-b border-[#B99A61]/30 z-10">
+            <div className="sticky top-0 bg-[#111111] text-[#FFFFFF] px-6 py-4 rounded-t-3xl flex items-center justify-between border-b border-[#C5A15A]/30 z-10">
               <div className="flex items-center gap-3">
-                <span className="bg-[#B99A61] text-[#641E2B] text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full font-mono">
+                <span className="bg-[#C5A15A] text-[#111111] text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full font-mono">
                   {activeModalOrder.status}
                 </span>
                 <h2 className="font-serif text-lg sm:text-xl font-bold">
@@ -502,7 +502,7 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
               </div>
               <button
                 onClick={() => setActiveModalOrder(null)}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-[#B99A61] flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-[#C5A15A] flex items-center justify-center transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -512,8 +512,8 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
             <div className="p-6 space-y-6">
               
               {/* Quick Status Advancement Bar */}
-              <div className="bg-[#F8F5EF] p-4 rounded-2xl border border-[#E8DFD0]">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#6E685D] block mb-2">
+              <div className="bg-[#FFFFFF] p-4 rounded-2xl border border-[#E5E7EB]">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#6B7280] block mb-2">
                   Update Pipeline Status
                 </span>
                 <div className="flex flex-wrap gap-2">
@@ -523,11 +523,11 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
                       onClick={() => handleTransitionStatus(activeModalOrder, s.status, customTransitionRemarks)}
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                         normalizeStatus(activeModalOrder.status) === s.status
-                          ? 'bg-[#641E2B] text-[#F8F5EF] shadow-sm'
-                          : 'bg-white text-[#292722] border border-[#E8DFD0] hover:border-[#B99A61]'
+                          ? 'bg-[#111111] text-[#FFFFFF] shadow-sm'
+                          : 'bg-white text-[#1A1A1A] border border-[#E5E7EB] hover:border-[#C5A15A]'
                       }`}
                     >
-                      {normalizeStatus(activeModalOrder.status) === s.status && <Check className="w-3.5 h-3.5 text-[#B99A61]" />}
+                      {normalizeStatus(activeModalOrder.status) === s.status && <Check className="w-3.5 h-3.5 text-[#C5A15A]" />}
                       <span>{s.label}</span>
                     </button>
                   ))}
@@ -552,7 +552,7 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
                     value={customTransitionRemarks}
                     onChange={(e) => setCustomTransitionRemarks(e.target.value)}
                     placeholder="Optional remarks for this status transition (e.g. Dispatched via Blue Dart AWB 92831)..."
-                    className="w-full bg-white border border-[#E8DFD0] text-xs px-3 py-2 rounded-xl focus:outline-none focus:border-[#B99A61]"
+                    className="w-full bg-white border border-[#E5E7EB] text-xs px-3 py-2 rounded-xl focus:outline-none focus:border-[#C5A15A]"
                   />
                 </div>
               </div>
@@ -561,71 +561,71 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
                 {/* Left: Customer & Address */}
-                <div className="bg-[#FCFAF5] p-5 rounded-2xl border border-[#E8DFD0] space-y-3">
-                  <h3 className="font-serif text-base font-bold text-[#641E2B] flex items-center gap-2">
-                    <User className="w-4 h-4 text-[#B99A61]" />
+                <div className="bg-[#FCFAF5] p-5 rounded-2xl border border-[#E5E7EB] space-y-3">
+                  <h3 className="font-serif text-base font-bold text-[#111111] flex items-center gap-2">
+                    <User className="w-4 h-4 text-[#C5A15A]" />
                     <span>Customer &amp; Shipping Details</span>
                   </h3>
                   <div className="text-xs space-y-1.5">
-                    <p><strong className="text-[#641E2B]">Name:</strong> {activeModalOrder.shippingAddress.name}</p>
+                    <p><strong className="text-[#111111]">Name:</strong> {activeModalOrder.shippingAddress.name}</p>
                     <p className="flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-[#B99A61]" />
+                      <Phone className="w-3.5 h-3.5 text-[#C5A15A]" />
                       <strong>Phone:</strong> {activeModalOrder.shippingAddress.phone}
                     </p>
                     <p><strong>Address:</strong> {activeModalOrder.shippingAddress.street}</p>
                     <p><strong>City/State:</strong> {activeModalOrder.shippingAddress.city}, {activeModalOrder.shippingAddress.state} - {activeModalOrder.shippingAddress.pincode}</p>
                     <p><strong>Payment Method:</strong> {activeModalOrder.paymentMethod}</p>
-                    <p><strong>Payment Status:</strong> <span className="font-bold text-[#641E2B]">{activeModalOrder.paymentStatus || 'Pending'}</span></p>
+                    <p><strong>Payment Status:</strong> <span className="font-bold text-[#111111]">{activeModalOrder.paymentStatus || 'Pending'}</span></p>
                   </div>
                 </div>
 
                 {/* Right: Logistics & Courier Settings */}
-                <form onSubmit={handleSaveOrderDetails} className="bg-[#FCFAF5] p-5 rounded-2xl border border-[#E8DFD0] space-y-3">
-                  <h3 className="font-serif text-base font-bold text-[#641E2B] flex items-center gap-2">
-                    <Truck className="w-4 h-4 text-[#B99A61]" />
+                <form onSubmit={handleSaveOrderDetails} className="bg-[#FCFAF5] p-5 rounded-2xl border border-[#E5E7EB] space-y-3">
+                  <h3 className="font-serif text-base font-bold text-[#111111] flex items-center gap-2">
+                    <Truck className="w-4 h-4 text-[#C5A15A]" />
                     <span>Logistics &amp; Staff Assignment</span>
                   </h3>
                   
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <label className="text-[10px] font-bold uppercase text-[#6E685D] block mb-1">Courier Partner</label>
+                      <label className="text-[10px] font-bold uppercase text-[#6B7280] block mb-1">Courier Partner</label>
                       <input
                         type="text"
                         value={courierInput}
                         onChange={(e) => setCourierInput(e.target.value)}
                         placeholder="Blue Dart, India Post..."
-                        className="w-full bg-white border border-[#E8DFD0] px-2.5 py-1.5 rounded-lg"
+                        className="w-full bg-white border border-[#E5E7EB] px-2.5 py-1.5 rounded-lg"
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold uppercase text-[#6E685D] block mb-1">AWB / Tracking ID</label>
+                      <label className="text-[10px] font-bold uppercase text-[#6B7280] block mb-1">AWB / Tracking ID</label>
                       <input
                         type="text"
                         value={awbInput}
                         onChange={(e) => setAwbInput(e.target.value)}
                         placeholder="e.g. BD-8921029"
-                        className="w-full bg-white border border-[#E8DFD0] px-2.5 py-1.5 rounded-lg"
+                        className="w-full bg-white border border-[#E5E7EB] px-2.5 py-1.5 rounded-lg"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-bold uppercase text-[#6E685D] block mb-1">Tracking URL</label>
+                    <label className="text-[10px] font-bold uppercase text-[#6B7280] block mb-1">Tracking URL</label>
                     <input
                       type="url"
                       value={trackingUrlInput}
                       onChange={(e) => setTrackingUrlInput(e.target.value)}
                       placeholder="https://track.courier.com/..."
-                      className="w-full bg-white border border-[#E8DFD0] px-2.5 py-1.5 rounded-lg text-xs"
+                      className="w-full bg-white border border-[#E5E7EB] px-2.5 py-1.5 rounded-lg text-xs"
                     />
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-bold uppercase text-[#6E685D] block mb-1">Assigned Staff Member</label>
+                    <label className="text-[10px] font-bold uppercase text-[#6B7280] block mb-1">Assigned Staff Member</label>
                     <select
                       value={assignedStaffInput}
                       onChange={(e) => setAssignedStaffInput(e.target.value)}
-                      className="w-full bg-white border border-[#E8DFD0] px-2.5 py-1.5 rounded-lg text-xs"
+                      className="w-full bg-white border border-[#E5E7EB] px-2.5 py-1.5 rounded-lg text-xs"
                     >
                       <option value="">Unassigned</option>
                       {adminUsers.map(u => (
@@ -635,19 +635,19 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-bold uppercase text-[#6E685D] block mb-1">Internal Staff Notes</label>
+                    <label className="text-[10px] font-bold uppercase text-[#6B7280] block mb-1">Internal Staff Notes</label>
                     <textarea
                       rows={2}
                       value={staffNoteInput}
                       onChange={(e) => setStaffNoteInput(e.target.value)}
                       placeholder="Special gift packaging instructions, weaver batch notes..."
-                      className="w-full bg-white border border-[#E8DFD0] px-2.5 py-1.5 rounded-lg text-xs"
+                      className="w-full bg-white border border-[#E5E7EB] px-2.5 py-1.5 rounded-lg text-xs"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-[#641E2B] hover:bg-[#B99A61] hover:text-[#641E2B] text-[#F8F5EF] py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors"
+                    className="w-full bg-[#111111] hover:bg-[#C5A15A] hover:text-[#111111] text-[#FFFFFF] py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors"
                   >
                     Save Logistics &amp; Notes
                   </button>
@@ -655,15 +655,15 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
               </div>
 
               {/* Order Items Table */}
-              <div className="bg-white border border-[#E8DFD0] rounded-2xl overflow-hidden shadow-xs">
-                <div className="px-5 py-3 bg-[#F8F5EF] border-b border-[#E8DFD0] font-serif font-bold text-sm text-[#641E2B]">
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs">
+                <div className="px-5 py-3 bg-[#FFFFFF] border-b border-[#E5E7EB] font-serif font-bold text-sm text-[#111111]">
                   Garments in Order ({activeModalOrder.items.length})
                 </div>
-                <div className="divide-y divide-[#E8DFD0]">
+                <div className="divide-y divide-[#E5E7EB]">
                   {activeModalOrder.items.map((it, idx) => (
                     <div key={idx} className="p-4 flex items-center justify-between text-xs gap-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-16 rounded-lg overflow-hidden bg-[#F8F5EF] shrink-0 border border-[#E8DFD0]">
+                        <div className="w-12 h-16 rounded-lg overflow-hidden bg-[#FFFFFF] shrink-0 border border-[#E5E7EB]">
                           {it.product?.images?.[0] && (
                             <OptimizedImage
                               src={it.product.images[0]}
@@ -674,22 +674,22 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
                           )}
                         </div>
                         <div>
-                          <p className="font-bold text-[#641E2B]">{it.product?.name}</p>
-                          <p className="text-[#6E685D]">SKU: {it.product?.sku || 'N/A'}</p>
-                          <p className="text-[#6E685D]">Size: <span className="font-semibold">{it.size}</span> • Qty: <span className="font-semibold">{it.quantity}</span></p>
+                          <p className="font-bold text-[#111111]">{it.product?.name}</p>
+                          <p className="text-[#6B7280]">SKU: {it.product?.sku || 'N/A'}</p>
+                          <p className="text-[#6B7280]">Size: <span className="font-semibold">{it.size}</span> • Qty: <span className="font-semibold">{it.quantity}</span></p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-bold text-[#641E2B]">{formatPrice(it.price * it.quantity)}</p>
-                        <p className="text-[10px] text-[#6E685D]">{formatPrice(it.price)} each</p>
+                        <p className="font-bold text-[#111111]">{formatPrice(it.price * it.quantity)}</p>
+                        <p className="text-[10px] text-[#6B7280]">{formatPrice(it.price)} each</p>
                       </div>
                     </div>
                   ))}
                 </div>
 
                 {/* Totals Summary */}
-                <div className="bg-[#FCFAF5] p-4 border-t border-[#E8DFD0] text-xs space-y-1">
-                  <div className="flex justify-between text-[#6E685D]">
+                <div className="bg-[#FCFAF5] p-4 border-t border-[#E5E7EB] text-xs space-y-1">
+                  <div className="flex justify-between text-[#6B7280]">
                     <span>Subtotal:</span>
                     <span>{formatPrice(activeModalOrder.subtotal)}</span>
                   </div>
@@ -699,11 +699,11 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
                       <span>-{formatPrice(activeModalOrder.discount)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-[#6E685D]">
+                  <div className="flex justify-between text-[#6B7280]">
                     <span>Shipping Fee:</span>
                     <span>{activeModalOrder.shippingFee === 0 ? 'Complimentary' : formatPrice(activeModalOrder.shippingFee)}</span>
                   </div>
-                  <div className="flex justify-between font-bold text-sm text-[#641E2B] pt-2 border-t border-[#E8DFD0]">
+                  <div className="flex justify-between font-bold text-sm text-[#111111] pt-2 border-t border-[#E5E7EB]">
                     <span>Total Amount:</span>
                     <span>{formatPrice(activeModalOrder.total)}</span>
                   </div>
@@ -711,38 +711,38 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
               </div>
 
               {/* Complete Activity Timeline */}
-              <div className="bg-white border border-[#E8DFD0] rounded-2xl p-5 shadow-xs">
-                <h3 className="font-serif text-base font-bold text-[#641E2B] flex items-center gap-2 mb-4">
-                  <History className="w-4 h-4 text-[#B99A61]" />
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-xs">
+                <h3 className="font-serif text-base font-bold text-[#111111] flex items-center gap-2 mb-4">
+                  <History className="w-4 h-4 text-[#C5A15A]" />
                   <span>Order Audit Timeline &amp; Processing History</span>
                 </h3>
 
                 {(!activeModalOrder.timeline || activeModalOrder.timeline.length === 0) ? (
-                  <p className="text-xs text-[#6E685D] italic">
+                  <p className="text-xs text-[#6B7280] italic">
                     Order created on {activeModalOrder.date}. No subsequent transitions recorded yet.
                   </p>
                 ) : (
-                  <div className="relative pl-6 space-y-4 border-l-2 border-[#B99A61]/40">
+                  <div className="relative pl-6 space-y-4 border-l-2 border-[#C5A15A]/40">
                     {activeModalOrder.timeline.map((entry) => (
                       <div key={entry.id} className="relative group">
-                        <div className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-[#641E2B] border-2 border-[#B99A61]" />
+                        <div className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-[#111111] border-2 border-[#C5A15A]" />
                         <div className="text-xs">
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-[#641E2B]">{entry.newStatus}</span>
+                            <span className="font-bold text-[#111111]">{entry.newStatus}</span>
                             {entry.previousStatus && entry.previousStatus !== 'None' && (
-                              <span className="text-[10px] text-[#6E685D]">
+                              <span className="text-[10px] text-[#6B7280]">
                                 (from {entry.previousStatus})
                               </span>
                             )}
-                            <span className="text-[10px] text-[#6E685D] ml-auto font-mono">
+                            <span className="text-[10px] text-[#6B7280] ml-auto font-mono">
                               {new Date(entry.timestamp).toLocaleString()}
                             </span>
                           </div>
-                          <p className="text-[11px] text-[#6E685D] mt-0.5">
-                            By: <strong className="text-[#292722]">{entry.staffName}</strong>
+                          <p className="text-[11px] text-[#6B7280] mt-0.5">
+                            By: <strong className="text-[#1A1A1A]">{entry.staffName}</strong>
                           </p>
                           {entry.remarks && (
-                            <p className="text-[11px] text-[#292722] bg-[#F8F5EF] p-2 rounded-lg mt-1 italic">
+                            <p className="text-[11px] text-[#1A1A1A] bg-[#FFFFFF] p-2 rounded-lg mt-1 italic">
                               "{entry.remarks}"
                             </p>
                           )}
@@ -756,20 +756,20 @@ export const OrderPipeline: React.FC<OrderPipelineProps> = () => {
             </div>
 
             {/* Modal Footer with Printable Invoice */}
-            <div className="sticky bottom-0 bg-[#F8F5EF] px-6 py-4 rounded-b-3xl border-t border-[#E8DFD0] flex items-center justify-between">
+            <div className="sticky bottom-0 bg-[#FFFFFF] px-6 py-4 rounded-b-3xl border-t border-[#E5E7EB] flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="bg-white border border-[#E8DFD0] hover:border-[#B99A61] text-[#641E2B] px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors shadow-xs"
+                className="bg-white border border-[#E5E7EB] hover:border-[#C5A15A] text-[#111111] px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors shadow-xs"
               >
-                <Printer className="w-4 h-4 text-[#B99A61]" />
+                <Printer className="w-4 h-4 text-[#C5A15A]" />
                 <span>Print Official Invoice</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveModalOrder(null)}
-                className="bg-[#641E2B] text-[#F8F5EF] hover:bg-[#B99A61] hover:text-[#641E2B] px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shadow-sm"
+                className="bg-[#111111] text-[#FFFFFF] hover:bg-[#C5A15A] hover:text-[#111111] px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shadow-sm"
               >
                 Close Window
               </button>

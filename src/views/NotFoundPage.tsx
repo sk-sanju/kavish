@@ -9,8 +9,8 @@ export const NotFoundPage: React.FC = () => {
   const router = useRouter();
 
   return (
-    <div className="py-16 sm:py-24 bg-[#F8F5EF] min-h-[75vh] flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-white p-8 sm:p-12 border border-[#E8DFD0] rounded-3xl shadow-xl max-w-lg w-full text-center space-y-6">
+    <div className="py-16 sm:py-24 bg-[#FFFFFF] min-h-[75vh] flex items-center justify-center p-4 animate-fadeIn">
+      <div className="bg-white p-8 sm:p-12 border border-[#E5E7EB] rounded-3xl shadow-xl max-w-lg w-full text-center space-y-6">
         
         <img
           src={logoImg}
@@ -20,13 +20,13 @@ export const NotFoundPage: React.FC = () => {
         />
 
         <div className="space-y-2">
-          <span className="text-[10px] uppercase font-bold text-[#B99A61] tracking-widest block">
+          <span className="text-[10px] uppercase font-bold text-[#C5A15A] tracking-widest block">
             404 • Page Not Found
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#641E2B]">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#111111]">
             Lost in the Weaves?
           </h1>
-          <p className="text-xs sm:text-sm text-[#6E685D] leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#6B7280] leading-relaxed">
             The page you are looking for might have been moved or does not exist. Let us guide you back to our curated handlooms.
           </p>
         </div>
@@ -34,31 +34,31 @@ export const NotFoundPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-3 pt-2">
           <button
             onClick={() => router.push('/')}
-            className="flex-1 bg-[#641E2B] text-[#F8F5EF] hover:bg-[#B99A61] hover:text-[#641E2B] py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all border border-[#B99A61] shadow-md flex items-center justify-center gap-2 cursor-pointer"
+            className="flex-1 bg-[#111111] text-[#FFFFFF] hover:bg-[#C5A15A] hover:text-[#111111] py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all border border-[#C5A15A] shadow-md flex items-center justify-center gap-2 cursor-pointer"
           >
-            <Home className="w-4 h-4 text-[#B99A61]" />
+            <Home className="w-4 h-4 text-[#C5A15A]" />
             <span>Return Home</span>
           </button>
 
           <button
             onClick={() => router.push('/shop')}
-            className="flex-1 bg-white text-[#641E2B] border border-[#641E2B] hover:bg-[#F8F5EF] py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="flex-1 bg-white text-[#111111] border border-[#111111] hover:bg-[#FFFFFF] py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <ShoppingBag className="w-4 h-4" />
             <span>Shop Collection</span>
           </button>
         </div>
 
-        <div className="pt-4 border-t border-[#E8DFD0] text-xs text-[#6E685D]">
-          <span className="block mb-2 font-semibold text-[#641E2B]">Popular Pages:</span>
+        <div className="pt-4 border-t border-[#E5E7EB] text-xs text-[#6B7280]">
+          <span className="block mb-2 font-semibold text-[#111111]">Popular Pages:</span>
           <div className="flex flex-wrap justify-center gap-3 text-[11px]">
-            <button onClick={() => router.push('/shop/category/women')} className="hover:text-[#B99A61] underline cursor-pointer">Kasavu Sarees</button>
+            <button onClick={() => router.push('/shop/category/women')} className="hover:text-[#C5A15A] underline cursor-pointer">Kasavu Sarees</button>
             <span>•</span>
-            <button onClick={() => router.push('/shop/category/men')} className="hover:text-[#B99A61] underline cursor-pointer">Men's Mundu</button>
+            <button onClick={() => router.push('/shop/category/men')} className="hover:text-[#C5A15A] underline cursor-pointer">Men's Mundu</button>
             <span>•</span>
-            <button onClick={() => router.push('/track-order')} className="hover:text-[#B99A61] underline cursor-pointer">Track Order</button>
+            <button onClick={() => router.push('/track-order')} className="hover:text-[#C5A15A] underline cursor-pointer">Track Order</button>
             <span>•</span>
-            <button onClick={() => router.push('/heritage')} className="hover:text-[#B99A61] underline cursor-pointer">Our Story</button>
+            <button onClick={() => router.push('/heritage')} className="hover:text-[#C5A15A] underline cursor-pointer">Our Story</button>
           </div>
         </div>
 

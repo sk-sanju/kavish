@@ -82,30 +82,30 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8F5EF] flex flex-col font-sans text-[#292722]">
+    <div className="min-h-screen bg-[#FFFFFF] flex flex-col font-sans text-[#1A1A1A]">
       
       {/* TOPBAR HEADER */}
-      <header className="bg-[#641E2B] text-[#F8F5EF] sticky top-0 z-40 px-4 sm:px-6 py-3 flex items-center justify-between shadow-md border-b border-[#B99A61]/30">
+      <header className="bg-[#111111] text-[#FFFFFF] sticky top-0 z-40 px-4 sm:px-6 py-3 flex items-center justify-between shadow-md border-b border-[#C5A15A]/30">
         
         {/* Left Branding & Mobile Toggle */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden p-1.5 text-[#B99A61] hover:bg-white/10 rounded-lg"
+            className="lg:hidden p-1.5 text-[#C5A15A] hover:bg-white/10 rounded-lg"
             title="Toggle Menu"
           >
             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
 
           <div onClick={onNavigateHome} className="cursor-pointer flex items-center gap-3 group">
-            <div className="bg-[#F8F5EF] px-2.5 py-1 rounded-xl shadow-xs flex items-center">
+            <div className="bg-[#FFFFFF] px-2.5 py-1 rounded-xl shadow-xs flex items-center">
               <img
                 src={logoImg}
                 alt="KAVISH"
                 className="h-7 sm:h-8 w-auto object-contain"
               />
             </div>
-            <span className="bg-[#B99A61] text-[#641E2B] text-[9px] uppercase font-bold px-2 py-0.5 rounded-full font-mono hidden sm:inline-block">
+            <span className="bg-[#C5A15A] text-[#111111] text-[9px] uppercase font-bold px-2 py-0.5 rounded-full font-mono hidden sm:inline-block">
               Atelier OS ERP
             </span>
           </div>
@@ -113,13 +113,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
         {/* Global Command / Quick Search Input */}
         <div className="hidden md:flex items-center relative max-w-md w-full mx-4">
-          <Search className="w-4 h-4 text-[#B99A61] absolute left-3" />
+          <Search className="w-4 h-4 text-[#C5A15A] absolute left-3" />
           <input
             type="text"
             value={quickSearch}
             onChange={(e) => setQuickSearch(e.target.value)}
             placeholder="Search orders, SKU, customer name, coupon..."
-            className="w-full bg-[#46141D] border border-[#B99A61]/40 text-xs text-[#F8F5EF] pl-9 pr-4 py-2 rounded-xl focus:outline-none focus:border-[#B99A61] placeholder:text-[#E8DFD0]/60 font-sans"
+            className="w-full bg-[#000000] border border-[#C5A15A]/40 text-xs text-[#FFFFFF] pl-9 pr-4 py-2 rounded-xl focus:outline-none focus:border-[#C5A15A] placeholder:text-[#E5E7EB]/60 font-sans"
           />
         </div>
 
@@ -129,10 +129,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           {/* Return to Storefront Button in Top Right */}
           <button
             onClick={onNavigateHome}
-            className="bg-[#46141D] hover:bg-[#B99A61] hover:text-[#641E2B] text-[#F8F5EF] border border-[#B99A61]/50 px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+            className="bg-[#000000] hover:bg-[#C5A15A] hover:text-[#111111] text-[#FFFFFF] border border-[#C5A15A]/50 px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
             title="Return to Customer Storefront"
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-[#B99A61]" />
+            <ArrowLeft className="w-3.5 h-3.5 text-[#C5A15A]" />
             <span className="hidden sm:inline">Storefront</span>
             <span className="sm:hidden">Store</span>
           </button>
@@ -140,7 +140,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           {onOpenAddProductModal && (
             <button
               onClick={onOpenAddProductModal}
-              className="hidden md:flex bg-[#B99A61] text-[#641E2B] px-3 py-1.5 text-xs font-bold uppercase rounded-xl hover:bg-[#F8F5EF] transition-all items-center gap-1 shadow-sm cursor-pointer"
+              className="hidden md:flex bg-[#C5A15A] text-[#111111] px-3 py-1.5 text-xs font-bold uppercase rounded-xl hover:bg-[#FFFFFF] transition-all items-center gap-1 shadow-sm cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Product</span>
@@ -150,7 +150,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           {/* Notifications Trigger */}
           <button
             onClick={() => setNotifDrawerOpen(true)}
-            className="p-2 bg-[#46141D] border border-[#B99A61]/40 text-[#B99A61] rounded-xl relative hover:bg-[#B99A61] hover:text-[#641E2B] transition-all cursor-pointer"
+            className="p-2 bg-[#000000] border border-[#C5A15A]/40 text-[#C5A15A] rounded-xl relative hover:bg-[#C5A15A] hover:text-[#111111] transition-all cursor-pointer"
             title="Notifications"
           >
             <Bell className="w-4 h-4" />
@@ -162,18 +162,18 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           </button>
 
           {/* Admin User Profile */}
-          <div className="flex items-center gap-2 bg-[#46141D] border border-[#B99A61]/40 px-3 py-1.5 rounded-xl text-xs">
-            <ShieldCheck className="w-4 h-4 text-[#B99A61]" />
+          <div className="flex items-center gap-2 bg-[#000000] border border-[#C5A15A]/40 px-3 py-1.5 rounded-xl text-xs">
+            <ShieldCheck className="w-4 h-4 text-[#C5A15A]" />
             <div className="hidden lg:block text-left">
-              <span className="font-bold text-[#F8F5EF] block leading-tight">{adminProfile.name}</span>
-              <span className="text-[9px] text-[#B99A61] uppercase font-mono">{adminProfile.role || 'Super Admin'}</span>
+              <span className="font-bold text-[#FFFFFF] block leading-tight">{adminProfile.name}</span>
+              <span className="text-[9px] text-[#C5A15A] uppercase font-mono">{adminProfile.role || 'Super Admin'}</span>
             </div>
             <button
               onClick={() => {
                 logoutAdmin();
                 onNavigateHome();
               }}
-              className="text-[#E8DFD0]/70 hover:text-red-400 p-1 ml-1 cursor-pointer"
+              className="text-[#E5E7EB]/70 hover:text-red-400 p-1 ml-1 cursor-pointer"
               title="Sign Out Admin"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -187,15 +187,15 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         
         {/* SIDEBAR NAVIGATION */}
         <aside
-          className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-[#641E2B] text-[#F8F5EF] flex flex-col justify-between transition-transform duration-300 transform border-r border-[#B99A61]/20 ${
+          className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-[#111111] text-[#FFFFFF] flex flex-col justify-between transition-transform duration-300 transform border-r border-[#C5A15A]/20 ${
             sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
           }`}
         >
           {/* Nav List */}
           <div className="py-4 px-3 space-y-1 overflow-y-auto flex-1 max-h-[calc(100vh-65px)]">
-            <div className="px-3 py-1.5 text-[10px] uppercase font-bold tracking-widest text-[#B99A61] border-b border-white/10 mb-2 flex items-center justify-between">
+            <div className="px-3 py-1.5 text-[10px] uppercase font-bold tracking-widest text-[#C5A15A] border-b border-white/10 mb-2 flex items-center justify-between">
               <span>Administration</span>
-              <span className="text-[9px] text-[#E8DFD0]/60">15 Modules</span>
+              <span className="text-[9px] text-[#E5E7EB]/60">15 Modules</span>
             </div>
 
             {navItems.map((item) => {
@@ -210,19 +210,19 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                   }}
                   className={`w-full px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-between transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-[#B99A61] text-[#641E2B] shadow-md font-bold'
-                      : 'text-[#E8DFD0]/90 hover:bg-white/10 hover:text-[#F8F5EF]'
+                      ? 'bg-[#C5A15A] text-[#111111] shadow-md font-bold'
+                      : 'text-[#E5E7EB]/90 hover:bg-white/10 hover:text-[#FFFFFF]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 truncate">
-                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#641E2B]' : 'text-[#B99A61]'}`} />
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#111111]' : 'text-[#C5A15A]'}`} />
                     <span className="truncate">{item.label}</span>
                   </div>
 
                   {item.badge && (
                     <span
                       className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase shrink-0 ${
-                        isActive ? 'bg-[#641E2B] text-[#B99A61]' : 'bg-[#46141D] text-[#B99A61] border border-[#B99A61]/40'
+                        isActive ? 'bg-[#111111] text-[#C5A15A]' : 'bg-[#000000] text-[#C5A15A] border border-[#C5A15A]/40'
                       }`}
                     >
                       {item.badge}
@@ -235,7 +235,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         </aside>
 
         {/* MAIN ADMIN CONTENT CONTAINER */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F8F5EF]">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 bg-[#FFFFFF]">
           {children}
         </main>
       </div>

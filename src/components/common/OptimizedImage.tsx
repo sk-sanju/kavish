@@ -125,7 +125,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   return (
     <div
-      className={`relative overflow-hidden bg-[#F8F5EF] ${aspectClass} ${containerClassName}`}
+      className={`relative overflow-hidden bg-[#FFFFFF] ${aspectClass} ${containerClassName}`}
       style={!aspectClass && aspectRatio && aspectRatio !== 'auto' ? { aspectRatio } : undefined}
     >
       {/* Lightweight Shimmer Skeleton Placeholder */}

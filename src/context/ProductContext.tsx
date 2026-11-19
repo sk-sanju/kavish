@@ -448,7 +448,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       isFeatured: productForm.isFeatured ?? true,
       images: productForm.images?.length ? productForm.images : ['/assets/categories/women_kasavu.jpg'],
       sizes: productForm.sizes?.length ? productForm.sizes : ['Free Size'],
-      colors: productForm.colors?.length ? productForm.colors : [{ name: 'Kasavu Gold', hex: '#B99A61' }],
+      colors: productForm.colors?.length ? productForm.colors : [{ name: 'Kasavu Gold', hex: '#C5A15A' }],
       fabric: productForm.fabric || '100% Pure Organic Cotton',
       details: productForm.details?.length ? productForm.details : ['100% Authentic Handloom with Kerala Govt GI Tag'],
       careInstructions: productForm.careInstructions?.length ? productForm.careInstructions : ['Dry Clean Only'],

@@ -80,20 +80,20 @@ export const FAQPage: React.FC = () => {
   const cleanWhatsapp = (storeContent?.contactInfo?.whatsappNumber || POLICY_CONFIG.WHATSAPP_NUMBER).replace(/[^0-9]/g, '');
 
   return (
-    <div className="py-8 sm:py-12 bg-[#F8F5EF] min-h-screen animate-fadeIn">
+    <div className="py-8 sm:py-12 bg-[#FFFFFF] min-h-screen animate-fadeIn">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Banner */}
-        <div className="bg-[#641E2B] text-[#F8F5EF] p-8 sm:p-12 rounded-3xl shadow-xl mb-10 relative overflow-hidden text-center sm:text-left">
-          <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-[#B99A61]/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="bg-[#111111] text-[#FFFFFF] p-8 sm:p-12 rounded-3xl shadow-xl mb-10 relative overflow-hidden text-center sm:text-left">
+          <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-[#C5A15A]/10 rounded-full blur-2xl pointer-events-none" />
           <div className="relative z-10 max-w-3xl space-y-3">
-            <span className="text-xs uppercase tracking-[0.25em] text-[#B99A61] font-bold block">
+            <span className="text-xs uppercase tracking-[0.25em] text-[#C5A15A] font-bold block">
               Atelier Knowledge Base
             </span>
             <h1 className="font-serif text-3xl sm:text-5xl font-bold leading-tight">
               Frequently Asked Questions
             </h1>
-            <p className="text-xs sm:text-sm text-[#E8DFD0] font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#E5E7EB] font-light leading-relaxed">
               Everything you need to know about our Kuthampully handlooms, ordering, and express shipping.
             </p>
           </div>
@@ -119,8 +119,8 @@ export const FAQPage: React.FC = () => {
                 }}
                 className={`px-4 py-2.5 rounded-full flex items-center gap-1.5 transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-[#641E2B] text-[#B99A61] border border-[#B99A61] shadow-xs'
-                    : 'bg-white text-[#6E685D] border border-[#E8DFD0] hover:border-[#B99A61]'
+                    ? 'bg-[#111111] text-[#C5A15A] border border-[#C5A15A] shadow-xs'
+                    : 'bg-white text-[#6B7280] border border-[#E5E7EB] hover:border-[#C5A15A]'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -131,30 +131,30 @@ export const FAQPage: React.FC = () => {
         </div>
 
         {/* FAQ Accordion List */}
-        <div className="bg-white p-6 sm:p-10 border border-[#E8DFD0] rounded-3xl shadow-xs space-y-4">
+        <div className="bg-white p-6 sm:p-10 border border-[#E5E7EB] rounded-3xl shadow-xs space-y-4">
           {filteredFaqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
               <div
                 key={idx}
                 className={`border rounded-2xl transition-all ${
-                  isOpen ? 'border-[#641E2B] bg-[#F8F5EF]' : 'border-[#E8DFD0] bg-white'
+                  isOpen ? 'border-[#111111] bg-[#FFFFFF]' : 'border-[#E5E7EB] bg-white'
                 }`}
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-serif text-sm sm:text-base font-bold text-[#641E2B] cursor-pointer"
+                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-serif text-sm sm:text-base font-bold text-[#111111] cursor-pointer"
                 >
                   <span>{faq.question}</span>
                   <ChevronDown
-                    className={`w-5 h-5 text-[#B99A61] shrink-0 transition-transform duration-300 ${
+                    className={`w-5 h-5 text-[#C5A15A] shrink-0 transition-transform duration-300 ${
                       isOpen ? 'rotate-180' : ''
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="px-4 sm:px-5 pb-5 text-xs sm:text-sm text-[#6E685D] leading-relaxed border-t border-[#E8DFD0]/60 pt-3 animate-fadeIn">
+                  <div className="px-4 sm:px-5 pb-5 text-xs sm:text-sm text-[#6B7280] leading-relaxed border-t border-[#E5E7EB]/60 pt-3 animate-fadeIn">
                     {faq.answer}
                   </div>
                 )}
@@ -164,12 +164,12 @@ export const FAQPage: React.FC = () => {
         </div>
 
         {/* Still Have Questions Box */}
-        <div className="mt-10 p-6 sm:p-8 bg-[#641E2B] text-[#F8F5EF] rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="mt-10 p-6 sm:p-8 bg-[#111111] text-[#FFFFFF] rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="space-y-1.5 text-center sm:text-left">
-            <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#B99A61]">
+            <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#C5A15A]">
               Still Have Questions?
             </h3>
-            <p className="text-xs sm:text-sm text-[#E8DFD0]">
+            <p className="text-xs sm:text-sm text-[#E5E7EB]">
               Our Kerala handloom concierge is here to assist with custom draping, wedding sets, or delivery questions.
             </p>
           </div>
@@ -178,14 +178,14 @@ export const FAQPage: React.FC = () => {
               href={`https://wa.me/${cleanWhatsapp}`}
               target="_blank"
               rel="noreferrer"
-              className="bg-[#B99A61] text-[#641E2B] px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-white transition-colors flex items-center gap-2 shadow-md"
+              className="bg-[#C5A15A] text-[#111111] px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-white transition-colors flex items-center gap-2 shadow-md"
             >
               <MessageSquare className="w-4 h-4" />
               <span>Chat WhatsApp</span>
             </a>
             <a
               href="/contact"
-              className="bg-transparent border border-white text-[#F8F5EF] px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-white hover:text-[#641E2B] transition-colors"
+              className="bg-transparent border border-white text-[#FFFFFF] px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-white hover:text-[#111111] transition-colors"
             >
               Contact Atelier
             </a>

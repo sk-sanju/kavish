@@ -5,7 +5,7 @@ import { PaymentFailed } from '../../views/PaymentFailed';
 
 export default function PaymentFailedRoute() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#F8F5EF]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-[#FFFFFF]" />}>
       <PaymentFailed />
     </Suspense>
   );

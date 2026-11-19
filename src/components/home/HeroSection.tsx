@@ -63,10 +63,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
   const current = bannersList[safeIdx] || DEFAULT_HERO_BANNERS[0];
 
   return (
-    <section className="relative bg-[#46141D] text-[#F8F5EF] min-h-[75vh] sm:min-h-[85vh] flex items-center overflow-hidden">
+    <section className="relative bg-[#000000] text-[#FFFFFF] min-h-[75vh] sm:min-h-[85vh] flex items-center overflow-hidden">
       
       {/* Background Image with Gradient Overlay */}
-      <div className="absolute inset-0 z-0 bg-[#46141D]">
+      <div className="absolute inset-0 z-0 bg-[#000000]">
         <OptimizedImage
           key={current.id || current.image}
           src={current.image}
@@ -76,8 +76,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
           containerClassName="w-full h-full"
           imageClassName="opacity-40 sm:opacity-45 transform scale-105 transition-all duration-1000 ease-out animate-fadeIn"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#46141D] via-[#46141D]/90 sm:via-[#46141D]/80 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#46141D] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#000000] via-[#000000]/90 sm:via-[#000000]/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-transparent to-transparent" />
       </div>
 
       {/* Content Container */}
@@ -85,18 +85,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
         <div className="max-w-2xl space-y-4 sm:space-y-6">
           
           {/* Campaign Tag */}
-          <div className="inline-flex items-center gap-2 bg-[#B99A61]/20 border border-[#B99A61]/60 px-3 py-1 text-[10px] sm:text-xs uppercase font-semibold text-[#B99A61] tracking-[0.2em] transition-all duration-500 rounded-full">
+          <div className="inline-flex items-center gap-2 bg-[#C5A15A]/20 border border-[#C5A15A]/60 px-3 py-1 text-[10px] sm:text-xs uppercase font-semibold text-[#C5A15A] tracking-[0.2em] transition-all duration-500 rounded-full">
             <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-pulse" />
             <span>{current.tag}</span>
           </div>
 
           {/* Headline */}
-          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] text-[#F8F5EF] whitespace-pre-line tracking-tight transition-all duration-700">
+          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] text-[#FFFFFF] whitespace-pre-line tracking-tight transition-all duration-700">
             {current.title}
           </h1>
 
           {/* Subtitle */}
-          <p className="font-sans text-xs sm:text-sm md:text-base text-[#F8F5EF]/90 leading-relaxed max-w-xl font-light transition-all duration-700">
+          <p className="font-sans text-xs sm:text-sm md:text-base text-[#FFFFFF]/90 leading-relaxed max-w-xl font-light transition-all duration-700">
             {current.subtitle}
           </p>
 
@@ -104,7 +104,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
           <div className="pt-2 sm:pt-4 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
             <button
               onClick={() => onNavigate(current.primaryCtaLink || 'shop', undefined, current.collectionSlug || undefined)}
-              className="bg-[#B99A61] text-[#46141D] hover:bg-[#F8F5EF] hover:text-[#46141D] px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-[0.2em] transition-all shadow-xl flex items-center justify-center gap-3 border border-[#B99A61] cursor-pointer rounded-full"
+              className="bg-[#C5A15A] text-[#000000] hover:bg-[#FFFFFF] hover:text-[#000000] px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-[0.2em] transition-all shadow-xl flex items-center justify-center gap-3 border border-[#C5A15A] cursor-pointer rounded-full"
             >
               <span>{current.primaryCtaText || 'Shop Collection'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -112,7 +112,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
 
             <button
               onClick={() => onNavigate(current.secondaryCtaLink || 'heritage')}
-              className="bg-transparent text-[#F8F5EF] border border-[#F8F5EF]/40 hover:border-[#B99A61] hover:text-[#B99A61] px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 cursor-pointer rounded-full"
+              className="bg-transparent text-[#FFFFFF] border border-[#FFFFFF]/40 hover:border-[#C5A15A] hover:text-[#C5A15A] px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-bold uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 cursor-pointer rounded-full"
             >
               <Compass className="w-4 h-4" />
               <span>{current.secondaryCtaText || 'Explore Our Story'}</span>
@@ -129,7 +129,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
                   aria-label={`Slide ${idx + 1}`}
                   className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
                     activeIdx === idx
-                      ? 'w-8 bg-[#B99A61]'
+                      ? 'w-8 bg-[#C5A15A]'
                       : 'w-2 bg-white/30 hover:bg-white/60'
                   }`}
                 />

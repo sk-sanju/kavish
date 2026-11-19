@@ -46,49 +46,49 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="bg-[#46141D] text-[#F8F5EF] pt-16 pb-24 lg:pb-12 border-t-2 border-[#B99A61]/35">
+    <footer className="bg-[#000000] text-[#FFFFFF] pt-16 pb-24 lg:pb-12 border-t-2 border-[#C5A15A]/35">
       
       {/* Brand Value Pillars */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 border-b border-[#B99A61]/20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 border-b border-[#C5A15A]/20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center sm:text-left">
           
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-[#641E2B] border border-[#B99A61]/50 flex items-center justify-center text-[#B99A61] shrink-0 shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#111111] border border-[#C5A15A]/50 flex items-center justify-center text-[#C5A15A] shrink-0 shadow-sm">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-serif font-bold text-base text-[#F8F5EF]">Kuthampully GI Certified</h4>
-              <p className="text-xs text-[#F8F5EF]/80 mt-0.5">{POLICY_CONFIG.GI_TAG_REG_NO}.</p>
+              <h4 className="font-serif font-bold text-base text-[#FFFFFF]">Kuthampully GI Certified</h4>
+              <p className="text-xs text-[#FFFFFF]/80 mt-0.5">{POLICY_CONFIG.GI_TAG_REG_NO}.</p>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-[#641E2B] border border-[#B99A61]/50 flex items-center justify-center text-[#B99A61] shrink-0 shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#111111] border border-[#C5A15A]/50 flex items-center justify-center text-[#C5A15A] shrink-0 shadow-sm">
               <Truck className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-serif font-bold text-base text-[#F8F5EF]">Express Pan-India Delivery</h4>
-              <p className="text-xs text-[#F8F5EF]/80 mt-0.5">Secure doorstep dispatch across India within 4–10 business days.</p>
+              <h4 className="font-serif font-bold text-base text-[#FFFFFF]">Express Pan-India Delivery</h4>
+              <p className="text-xs text-[#FFFFFF]/80 mt-0.5">Secure doorstep dispatch across India within 4–10 business days.</p>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-[#641E2B] border border-[#B99A61]/50 flex items-center justify-center text-[#B99A61] shrink-0 shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#111111] border border-[#C5A15A]/50 flex items-center justify-center text-[#C5A15A] shrink-0 shadow-sm">
               <RefreshCw className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-serif font-bold text-base text-[#F8F5EF]">{POLICY_CONFIG.RETURN_WINDOW_DAYS}-Day Size Exchange</h4>
-              <p className="text-xs text-[#F8F5EF]/80 mt-0.5">Complimentary doorstep exchange concierge for perfect fits.</p>
+              <h4 className="font-serif font-bold text-base text-[#FFFFFF]">{POLICY_CONFIG.RETURN_WINDOW_DAYS}-Day Size Exchange</h4>
+              <p className="text-xs text-[#FFFFFF]/80 mt-0.5">Complimentary doorstep exchange concierge for perfect fits.</p>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-[#641E2B] border border-[#B99A61]/50 flex items-center justify-center text-[#B99A61] shrink-0 shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#111111] border border-[#C5A15A]/50 flex items-center justify-center text-[#C5A15A] shrink-0 shadow-sm">
               <Lock className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-serif font-bold text-base text-[#F8F5EF]">Razorpay Safe Payments</h4>
-              <p className="text-xs text-[#F8F5EF]/80 mt-0.5">Instant UPI, Cards, and Net Banking with 256-bit SSL encryption.</p>
+              <h4 className="font-serif font-bold text-base text-[#FFFFFF]">Razorpay Safe Payments</h4>
+              <p className="text-xs text-[#FFFFFF]/80 mt-0.5">Instant UPI, Cards, and Net Banking with 256-bit SSL encryption.</p>
             </div>
           </div>
 
@@ -101,7 +101,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           
           {/* Brand Info */}
           <div className="lg:col-span-4 space-y-4">
-            <div className="inline-block bg-[#F8F5EF] p-2.5 rounded-2xl shadow-md cursor-pointer" onClick={() => onNavigate('home')}>
+            <div className="inline-block bg-[#FFFFFF] p-2.5 rounded-2xl shadow-md cursor-pointer" onClick={() => onNavigate('home')}>
               <img
                 src={logoImg}
                 alt="KAVISH - Authentic Kerala Handlooms"
@@ -112,22 +112,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 className="h-12 w-auto object-contain"
               />
             </div>
-            <p className="text-xs text-[#F8F5EF]/85 leading-relaxed font-light">
+            <p className="text-xs text-[#FFFFFF]/85 leading-relaxed font-light">
               Crafted in Kuthampully, Thrissur. We preserve 500 years of royal Devanga weaving traditions, crafting premium Kasavu sarees, ceremonial mundus, and European linen for modern generations.
             </p>
             
-            <div className="space-y-1.5 text-xs text-[#F8F5EF]/80 pt-1">
+            <div className="space-y-1.5 text-xs text-[#FFFFFF]/80 pt-1">
               <p className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-[#B99A61] shrink-0" />
+                <MapPin className="w-3.5 h-3.5 text-[#C5A15A] shrink-0" />
                 <span>{atelierAddress}</span>
               </p>
               <p className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-[#B99A61] shrink-0" />
+                <Phone className="w-3.5 h-3.5 text-[#C5A15A] shrink-0" />
                 <span>{supportPhone} ({visitingHours})</span>
               </p>
               <p className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-[#B99A61] shrink-0" />
-                <a href={`mailto:${supportEmail}`} className="hover:text-[#B99A61] underline">
+                <Mail className="w-3.5 h-3.5 text-[#C5A15A] shrink-0" />
+                <a href={`mailto:${supportEmail}`} className="hover:text-[#C5A15A] underline">
                   {supportEmail}
                 </a>
               </p>
@@ -138,7 +138,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-[#641E2B] border border-[#B99A61]/40 flex items-center justify-center text-[#B99A61] hover:bg-[#B99A61] hover:text-[#641E2B] transition-colors"
+                className="w-9 h-9 rounded-full bg-[#111111] border border-[#C5A15A]/40 flex items-center justify-center text-[#C5A15A] hover:bg-[#C5A15A] hover:text-[#111111] transition-colors"
                 aria-label="Instagram"
               >
                 <InstagramIcon className="w-4 h-4" />
@@ -147,7 +147,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-[#641E2B] border border-[#B99A61]/40 flex items-center justify-center text-[#B99A61] hover:bg-[#B99A61] hover:text-[#641E2B] transition-colors"
+                className="w-9 h-9 rounded-full bg-[#111111] border border-[#C5A15A]/40 flex items-center justify-center text-[#C5A15A] hover:bg-[#C5A15A] hover:text-[#111111] transition-colors"
                 aria-label="Facebook"
               >
                 <FacebookIcon className="w-4 h-4" />
@@ -157,42 +157,42 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Quick Categories */}
           <div className="lg:col-span-2 space-y-3">
-            <h5 className="font-serif font-bold text-sm text-[#B99A61] tracking-wider uppercase">
+            <h5 className="font-serif font-bold text-sm text-[#C5A15A] tracking-wider uppercase">
               Handloom Collections
             </h5>
-            <ul className="space-y-2 text-xs text-[#F8F5EF]/85">
+            <ul className="space-y-2 text-xs text-[#FFFFFF]/85">
               <li>
-                <button onClick={() => onNavigate('women')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('women')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   Kasavu Sarees
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('women')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('women')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   Tissue Sarees &amp; Set Mundu
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('men')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('men')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   Men's Double Mundu
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('men')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('men')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   European Linen Shirts
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('kids')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('kids')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   Kids Festive Wear
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('bridal-festive')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('bridal-festive')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   Bridal &amp; Festive Edits
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('shop')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('shop')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   All Garments
                 </button>
               </li>
@@ -201,42 +201,42 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Client Concierge */}
           <div className="lg:col-span-2 space-y-3">
-            <h5 className="font-serif font-bold text-sm text-[#B99A61] tracking-wider uppercase">
+            <h5 className="font-serif font-bold text-sm text-[#C5A15A] tracking-wider uppercase">
               Concierge &amp; Story
             </h5>
-            <ul className="space-y-2 text-xs text-[#F8F5EF]/85">
+            <ul className="space-y-2 text-xs text-[#FFFFFF]/85">
               <li>
-                <button onClick={() => onNavigate('heritage')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('heritage')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   500-Year Kuthampully Legacy
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('about')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('about')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   About Kavish Atelier
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('blog')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('blog')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   Handloom Craft Journal
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('track-order')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('track-order')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   Track Your Shipment
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('account')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('account')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   My Orders &amp; Profile
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('contact')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('contact')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   Contact Atelier
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('faq')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+                <button onClick={() => onNavigate('faq')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
                   Frequently Asked Questions
                 </button>
               </li>
@@ -245,17 +245,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Newsletter Subscription */}
           <div className="lg:col-span-4 space-y-3">
-            <h5 className="font-serif font-bold text-sm text-[#B99A61] tracking-wider uppercase flex items-center gap-1.5">
+            <h5 className="font-serif font-bold text-sm text-[#C5A15A] tracking-wider uppercase flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Atelier Newsletter</span>
             </h5>
-            <p className="text-xs text-[#F8F5EF]/80 leading-relaxed font-light">
+            <p className="text-xs text-[#FFFFFF]/80 leading-relaxed font-light">
               Receive private invitations to limited pit-loom runs, seasonal Onam/Vishu collections, and textile care guides.
             </p>
 
             {newsletterSubscribed ? (
-              <div className="p-3 bg-[#641E2B] border border-[#B99A61]/50 rounded-xl flex items-center gap-2 text-xs text-[#F8F5EF]">
-                <CheckCircle2 className="w-4 h-4 text-[#B99A61] shrink-0" />
+              <div className="p-3 bg-[#111111] border border-[#C5A15A]/50 rounded-xl flex items-center gap-2 text-xs text-[#FFFFFF]">
+                <CheckCircle2 className="w-4 h-4 text-[#C5A15A] shrink-0" />
                 <span>Thank you. You are enrolled in the Kavish Atelier Circle.</span>
               </div>
             ) : (
@@ -267,17 +267,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     placeholder="Enter your email address"
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    className="flex-1 px-3.5 py-2.5 rounded-xl bg-white/10 border border-[#B99A61]/30 text-xs text-[#F8F5EF] placeholder-[#F8F5EF]/50 focus:outline-none focus:border-[#B99A61]"
+                    className="flex-1 px-3.5 py-2.5 rounded-xl bg-white/10 border border-[#C5A15A]/30 text-xs text-[#FFFFFF] placeholder-[#FFFFFF]/50 focus:outline-none focus:border-[#C5A15A]"
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2.5 bg-[#B99A61] text-[#46141D] hover:bg-[#D1B784] font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center gap-1 cursor-pointer"
+                    className="px-4 py-2.5 bg-[#C5A15A] text-[#000000] hover:bg-[#D1B784] font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center gap-1 cursor-pointer"
                   >
                     <span>Join</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
-                <span className="text-[10px] text-[#F8F5EF]/60 block">
+                <span className="text-[10px] text-[#FFFFFF]/60 block">
                   Complimentary express shipping benefit on your first order. Unsubscribe anytime.
                 </span>
               </form>
@@ -288,25 +288,25 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       </div>
 
       {/* Legal & Policy Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-[#B99A61]/20 text-xs text-[#F8F5EF]/70 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-[#C5A15A]/20 text-xs text-[#FFFFFF]/70 flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           © {new Date().getFullYear()} {POLICY_CONFIG.COMPANY_LEGAL_NAME}. All rights reserved. Handcrafted with reverence in Kuthampully, Kerala.
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4 text-[11px]">
-          <button onClick={() => onNavigate('privacy-policy')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+          <button onClick={() => onNavigate('privacy-policy')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
             Privacy Policy
           </button>
           <span>•</span>
-          <button onClick={() => onNavigate('shipping-policy')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+          <button onClick={() => onNavigate('shipping-policy')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
             Shipping Policy
           </button>
           <span>•</span>
-          <button onClick={() => onNavigate('return-refund-policy')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+          <button onClick={() => onNavigate('return-refund-policy')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
             Return &amp; Refund Policy
           </button>
           <span>•</span>
-          <button onClick={() => onNavigate('terms-and-conditions')} className="hover:text-[#B99A61] transition-colors cursor-pointer">
+          <button onClick={() => onNavigate('terms-and-conditions')} className="hover:text-[#C5A15A] transition-colors cursor-pointer">
             Terms &amp; Conditions
           </button>
         </div>

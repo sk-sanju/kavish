@@ -17,7 +17,7 @@ export const PaymentFailed: React.FC = () => {
     'The transaction was declined by the bank or gateway, or the payment window was closed.';
 
   return (
-    <div className="py-12 sm:py-16 bg-[#F8F5EF] min-h-screen animate-fadeIn flex items-center justify-center p-4">
+    <div className="py-12 sm:py-16 bg-[#FFFFFF] min-h-screen animate-fadeIn flex items-center justify-center p-4">
       <div className="bg-white p-6 sm:p-10 border border-red-200 shadow-2xl rounded-3xl max-w-lg w-full text-center space-y-6">
         
         {/* Brand Logo */}
@@ -38,7 +38,7 @@ export const PaymentFailed: React.FC = () => {
           <span className="text-[10px] uppercase font-bold text-red-600 tracking-widest block mb-1">
             Transaction Incomplete
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B]">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#111111]">
             Payment Not Completed
           </h1>
         </div>
@@ -48,7 +48,7 @@ export const PaymentFailed: React.FC = () => {
           {orderId && (
             <div className="flex justify-between border-b border-red-200 pb-1.5 font-mono">
               <span className="font-semibold text-red-800">Order Reference:</span>
-              <strong className="text-[#641E2B]">{orderId}</strong>
+              <strong className="text-[#111111]">{orderId}</strong>
             </div>
           )}
           <div>
@@ -65,15 +65,15 @@ export const PaymentFailed: React.FC = () => {
         <div className="space-y-3 pt-2">
           <button
             onClick={() => router.push('/checkout')}
-            className="w-full bg-[#641E2B] text-[#F8F5EF] hover:bg-[#B99A61] hover:text-[#641E2B] py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all border border-[#B99A61] shadow-md flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full bg-[#111111] text-[#FFFFFF] hover:bg-[#C5A15A] hover:text-[#111111] py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all border border-[#C5A15A] shadow-md flex items-center justify-center gap-2 cursor-pointer"
           >
-            <RefreshCw className="w-4 h-4 text-[#B99A61]" />
+            <RefreshCw className="w-4 h-4 text-[#C5A15A]" />
             <span>Retry Payment at Checkout</span>
           </button>
 
           <button
             onClick={() => router.push('/cart')}
-            className="w-full bg-white text-[#641E2B] border border-[#641E2B] hover:bg-[#F8F5EF] py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full bg-white text-[#111111] border border-[#111111] hover:bg-[#FFFFFF] py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <ShoppingCart className="w-4 h-4" />
             <span>Review Cart Items</span>
@@ -81,22 +81,22 @@ export const PaymentFailed: React.FC = () => {
         </div>
 
         {/* Need Help */}
-        <div className="pt-4 border-t border-[#E8DFD0] text-xs text-[#6E685D] space-y-2">
-          <p className="font-semibold text-[#641E2B]">Need help completing your order?</p>
+        <div className="pt-4 border-t border-[#E5E7EB] text-xs text-[#6B7280] space-y-2">
+          <p className="font-semibold text-[#111111]">Need help completing your order?</p>
           <div className="flex justify-center gap-4">
             <a
               href={`https://wa.me/${POLICY_CONFIG.WHATSAPP_NUMBER}`}
               target="_blank"
               rel="noreferrer"
-              className="text-[#641E2B] hover:text-[#B99A61] font-bold flex items-center gap-1"
+              className="text-[#111111] hover:text-[#C5A15A] font-bold flex items-center gap-1"
             >
               <MessageSquare className="w-3.5 h-3.5" />
               <span>WhatsApp Support</span>
             </a>
-            <span className="text-[#E8DFD0]">•</span>
+            <span className="text-[#E5E7EB]">•</span>
             <a
               href={`tel:${POLICY_CONFIG.SUPPORT_PHONE}`}
-              className="text-[#641E2B] hover:text-[#B99A61] font-bold flex items-center gap-1"
+              className="text-[#111111] hover:text-[#C5A15A] font-bold flex items-center gap-1"
             >
               <Phone className="w-3.5 h-3.5" />
               <span>{POLICY_CONFIG.SUPPORT_PHONE}</span>

@@ -49,7 +49,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
     seoDescription: product?.seoDescription || '',
     images: product?.images?.length ? product?.images : ['/assets/categories/women_kasavu.jpg'],
     sizes: product?.sizes?.length ? product?.sizes : ['38 (S)', '40 (M)', '42 (L)', '44 (XL)'],
-    colors: product?.colors?.length ? product?.colors : [{ name: 'Kasavu Gold', hex: '#B99A61' }, { name: 'Royal Cream', hex: '#F8F5EF' }],
+    colors: product?.colors?.length ? product?.colors : [{ name: 'Kasavu Gold', hex: '#C5A15A' }, { name: 'Royal Cream', hex: '#FFFFFF' }],
     variants: product?.variants || [],
     fabric: product?.fabric || '100% Organic Cotton & 24k Zari',
     details: product?.details?.length ? product?.details : ['100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)'],
@@ -86,7 +86,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
         seoDescription: product.seoDescription || '',
         images: product.images?.length ? product.images : ['/assets/categories/women_kasavu.jpg'],
         sizes: product.sizes?.length ? product.sizes : ['38 (S)', '40 (M)', '42 (L)', '44 (XL)'],
-        colors: product.colors?.length ? product.colors : [{ name: 'Kasavu Gold', hex: '#B99A61' }, { name: 'Royal Cream', hex: '#F8F5EF' }],
+        colors: product.colors?.length ? product.colors : [{ name: 'Kasavu Gold', hex: '#C5A15A' }, { name: 'Royal Cream', hex: '#FFFFFF' }],
         variants: product.variants || [],
         fabric: product.fabric || '100% Organic Cotton & 24k Zari',
         details: product.details?.length ? product.details : ['100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)'],
@@ -101,7 +101,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
 
   const [newImageUrl, setNewImageUrl] = useState('');
   const [newColorName, setNewColorName] = useState('');
-  const [newColorHex, setNewColorHex] = useState('#B99A61');
+  const [newColorHex, setNewColorHex] = useState('#C5A15A');
   const [newSizeTag, setNewSizeTag] = useState('');
   const [newTagInput, setNewTagInput] = useState('');
 
@@ -180,7 +180,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
 
   const handleGenerateVariants = () => {
     const sizes = form.sizes || ['Free Size'];
-    const colors = form.colors || [{ name: 'Default', hex: '#B99A61' }];
+    const colors = form.colors || [{ name: 'Default', hex: '#C5A15A' }];
     const baseSku = form.sku || 'KV-PROD';
     const basePrice = form.price || 4999;
 
@@ -304,23 +304,23 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
-      <div className="bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh] my-auto border border-[#B99A61]">
+      <div className="bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh] my-auto border border-[#C5A15A]">
         
         {/* Modal Header */}
-        <div className="p-5 bg-[#641E2B] text-[#F8F5EF] flex items-center justify-between shrink-0 border-b border-[#B99A61]/30">
+        <div className="p-5 bg-[#111111] text-[#FFFFFF] flex items-center justify-between shrink-0 border-b border-[#C5A15A]/30">
           <div>
-            <h2 className="font-serif font-bold text-lg sm:text-xl text-[#F8F5EF]">
+            <h2 className="font-serif font-bold text-lg sm:text-xl text-[#FFFFFF]">
               {product?.id ? 'Edit Atelier Product' : 'Add New Handloom Product'}
             </h2>
-            <p className="text-xs text-[#E8DFD0]/80">Configure catalog specifications, pricing, inventory &amp; custom variants</p>
+            <p className="text-xs text-[#E5E7EB]/80">Configure catalog specifications, pricing, inventory &amp; custom variants</p>
           </div>
-          <button onClick={onClose} className="p-1 text-[#E8DFD0] hover:text-[#B99A61] cursor-pointer">
+          <button onClick={onClose} className="p-1 text-[#E5E7EB] hover:text-[#C5A15A] cursor-pointer">
             <X className="w-6 h-6" />
           </button>
         </div>
 
         {/* Tab Headers */}
-        <div className="bg-[#F8F5EF] border-b border-[#E8DFD0] px-5 py-2 flex flex-row overflow-x-auto gap-2 text-xs font-bold uppercase tracking-wider shrink-0">
+        <div className="bg-[#FFFFFF] border-b border-[#E5E7EB] px-5 py-2 flex flex-row overflow-x-auto gap-2 text-xs font-bold uppercase tracking-wider shrink-0">
           {[
             { id: 'basic', label: '1. Basic Info' },
             { id: 'pricing', label: '2. Pricing & GST' },
@@ -336,8 +336,8 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
               onClick={() => setActiveTab(tab.id as any)}
               className={`px-3.5 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer ${
                 activeTab === tab.id
-                  ? 'bg-[#641E2B] text-[#F8F5EF] shadow-xs font-bold'
-                  : 'text-[#6E685D] hover:bg-[#E8DFD0]/60'
+                  ? 'bg-[#111111] text-[#FFFFFF] shadow-xs font-bold'
+                  : 'text-[#6B7280] hover:bg-[#E5E7EB]/60'
               }`}
             >
               {tab.label}
@@ -346,7 +346,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6 text-xs text-[#292722]">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6 text-xs text-[#1A1A1A]">
           {validationError && (
             <div className="p-3 bg-red-50 text-red-700 border border-red-200 rounded-xl font-medium">
               {validationError}
@@ -358,58 +358,58 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Product Title *</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Product Title *</label>
                   <input
                     type="text"
                     required
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="e.g. Kuthampully Tissue Kasavu Saree"
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs font-bold text-[#641E2B]"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs font-bold text-[#111111]"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">SKU Code *</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">SKU Code *</label>
                   <input
                     type="text"
                     required
                     value={form.sku}
                     onChange={(e) => setForm({ ...form, sku: e.target.value })}
                     placeholder="e.g. KV-KUT-8491"
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs font-mono font-bold"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs font-mono font-bold"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Subtitle / Weave Summary</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Subtitle / Weave Summary</label>
                 <input
                   type="text"
                   value={form.subtitle}
                   onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
                   placeholder="e.g. Handcrafted with 24k Pure Gold Kasavu Borders"
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Detailed Description</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Detailed Description</label>
                 <textarea
                   rows={3}
                   value={form.description || ''}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                   placeholder="Comprehensive artisan narrative, weaving details, and heritage background..."
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs leading-relaxed"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs leading-relaxed"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Category</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Category</label>
                   <select
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value as ProductCategory })}
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs font-bold text-[#641E2B]"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs font-bold text-[#111111]"
                   >
                     <option value="women">Women</option>
                     <option value="men">Men</option>
@@ -419,9 +419,9 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
 
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <label className="block font-semibold text-[#6E685D]">Subcategory</label>
+                    <label className="block font-semibold text-[#6B7280]">Subcategory</label>
                     {categories.length > 0 && (
-                      <span className="text-[10px] text-[#B99A61] font-semibold">Select or type</span>
+                      <span className="text-[10px] text-[#C5A15A] font-semibold">Select or type</span>
                     )}
                   </div>
                   <input
@@ -430,7 +430,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                     value={form.subcategory}
                     onChange={(e) => setForm({ ...form, subcategory: e.target.value as ProductSubcategory })}
                     placeholder="e.g. Kasavu Sarees, Double Mundu"
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs font-semibold text-[#641E2B]"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs font-semibold text-[#111111]"
                   />
                   <datalist id="category-suggestions">
                     {categories
@@ -442,11 +442,11 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Collection</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Collection</label>
                   <select
                     value={form.collection}
                     onChange={(e) => setForm({ ...form, collection: e.target.value })}
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs font-bold text-[#641E2B]"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs font-bold text-[#111111]"
                   >
                     <option value="kasavu-masterpieces">Kasavu Masterpieces</option>
                     <option value="festive-edit">The Festive Edit</option>
@@ -459,33 +459,33 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Fabric &amp; Composition</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Fabric &amp; Composition</label>
                   <input
                     type="text"
                     value={form.fabric}
                     onChange={(e) => setForm({ ...form, fabric: e.target.value })}
                     placeholder="e.g. 100% Organic Flax Linen"
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Brand Name</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Brand Name</label>
                   <input
                     type="text"
                     value={form.brand}
                     onChange={(e) => setForm({ ...form, brand: e.target.value })}
                     placeholder="e.g. Kavish Kuthampully Atelier"
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Catalog Status</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Catalog Status</label>
                   <select
                     value={form.status || 'Active'}
                     onChange={(e) => setForm({ ...form, status: e.target.value as any })}
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs font-bold text-[#641E2B]"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs font-bold text-[#111111]"
                   >
                     <option value="Active">Active (Visible)</option>
                     <option value="Draft">Draft (Hidden)</option>
@@ -495,13 +495,13 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
               </div>
 
               {/* Status Badges Checkboxes */}
-              <div className="flex flex-wrap gap-5 pt-3 border-t border-[#E8DFD0]">
+              <div className="flex flex-wrap gap-5 pt-3 border-t border-[#E5E7EB]">
                 <label className="flex items-center gap-2 cursor-pointer font-semibold">
                   <input
                     type="checkbox"
                     checked={form.inStock}
                     onChange={(e) => setForm({ ...form, inStock: e.target.checked })}
-                    className="accent-[#641E2B] w-4 h-4 cursor-pointer"
+                    className="accent-[#111111] w-4 h-4 cursor-pointer"
                   />
                   <span>In Stock Available</span>
                 </label>
@@ -511,7 +511,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                     type="checkbox"
                     checked={form.isFeatured}
                     onChange={(e) => setForm({ ...form, isFeatured: e.target.checked })}
-                    className="accent-[#641E2B] w-4 h-4 cursor-pointer"
+                    className="accent-[#111111] w-4 h-4 cursor-pointer"
                   />
                   <span>Featured Collection Item</span>
                 </label>
@@ -521,7 +521,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                     type="checkbox"
                     checked={form.isNew}
                     onChange={(e) => setForm({ ...form, isNew: e.target.checked })}
-                    className="accent-[#641E2B] w-4 h-4 cursor-pointer"
+                    className="accent-[#111111] w-4 h-4 cursor-pointer"
                   />
                   <span>New Arrival Badge</span>
                 </label>
@@ -531,7 +531,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                     type="checkbox"
                     checked={form.isBestSeller}
                     onChange={(e) => setForm({ ...form, isBestSeller: e.target.checked })}
-                    className="accent-[#641E2B] w-4 h-4 cursor-pointer"
+                    className="accent-[#111111] w-4 h-4 cursor-pointer"
                   />
                   <span>Bestseller Badge</span>
                 </label>
@@ -544,40 +544,40 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Selling Price (₹) *</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Selling Price (₹) *</label>
                   <input
                     type="number"
                     required
                     value={form.price}
                     onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-sm font-bold text-[#641E2B]"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-sm font-bold text-[#111111]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">MRP / Original Price (₹)</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">MRP / Original Price (₹)</label>
                   <input
                     type="number"
                     value={form.originalPrice || ''}
                     onChange={(e) => setForm({ ...form, originalPrice: Number(e.target.value) })}
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-sm font-bold"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-sm font-bold"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Cost Price (COGS ₹)</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Cost Price (COGS ₹)</label>
                   <input
                     type="number"
                     value={form.costPrice || ''}
                     onChange={(e) => setForm({ ...form, costPrice: Number(e.target.value) })}
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-sm font-mono"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-sm font-mono"
                   />
                 </div>
               </div>
 
-              <div className="p-4 bg-[#F8F5EF] border border-[#E8DFD0] rounded-2xl space-y-2">
-                <h4 className="font-serif font-bold text-[#641E2B]">Indian Clothing GST Calculation</h4>
-                <p className="text-xs text-[#6E685D]">Applies 5% Handloom Apparel GST (2.5% CGST + 2.5% SGST)</p>
+              <div className="p-4 bg-[#FFFFFF] border border-[#E5E7EB] rounded-2xl space-y-2">
+                <h4 className="font-serif font-bold text-[#111111]">Indian Clothing GST Calculation</h4>
+                <p className="text-xs text-[#6B7280]">Applies 5% Handloom Apparel GST (2.5% CGST + 2.5% SGST)</p>
                 <div className="flex gap-4 text-xs font-semibold pt-1">
                   <span>Taxable Value: ₹{Math.round(form.price! / 1.05)}</span>
                   <span>GST Amount (5%): ₹{Math.round(form.price! - (form.price! / 1.05))}</span>
@@ -591,23 +591,23 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Total Stock Units *</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Total Stock Units *</label>
                   <input
                     type="number"
                     required
                     value={form.stockCount}
                     onChange={(e) => setForm({ ...form, stockCount: Number(e.target.value) })}
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-sm font-bold text-[#641E2B]"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-sm font-bold text-[#111111]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Low Stock Alert Threshold</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Low Stock Alert Threshold</label>
                   <input
                     type="number"
                     value={form.lowStockThreshold}
                     onChange={(e) => setForm({ ...form, lowStockThreshold: Number(e.target.value) })}
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-sm font-mono"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-sm font-mono"
                   />
                 </div>
 
@@ -617,7 +617,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                       type="checkbox"
                       checked={form.allowBackorders}
                       onChange={(e) => setForm({ ...form, allowBackorders: e.target.checked })}
-                      className="accent-[#641E2B] w-4 h-4 cursor-pointer"
+                      className="accent-[#111111] w-4 h-4 cursor-pointer"
                     />
                     <span>Allow Pre-Order Backorders</span>
                   </label>
@@ -631,10 +631,10 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
             <div className="space-y-5">
               {/* Sizes Manager */}
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1.5">Available Size Tags</label>
+                <label className="block font-semibold text-[#6B7280] mb-1.5">Available Size Tags</label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {(form.sizes || []).map((sz, idx) => (
-                    <span key={idx} className="bg-[#F8F5EF] border border-[#E8DFD0] px-3 py-1 rounded-xl font-bold text-[#641E2B] flex items-center gap-1.5">
+                    <span key={idx} className="bg-[#FFFFFF] border border-[#E5E7EB] px-3 py-1 rounded-xl font-bold text-[#111111] flex items-center gap-1.5">
                       <span>{sz}</span>
                       <button type="button" onClick={() => handleRemoveSize(idx)} className="text-red-600 font-bold hover:text-red-800 cursor-pointer">✕</button>
                     </span>
@@ -646,18 +646,18 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                     placeholder="Add Size (e.g. 42 (L), Double Mundu)"
                     value={newSizeTag}
                     onChange={(e) => setNewSizeTag(e.target.value)}
-                    className="flex-1 border border-[#E8DFD0] p-2 rounded-xl bg-[#F8F5EF]"
+                    className="flex-1 border border-[#E5E7EB] p-2 rounded-xl bg-[#FFFFFF]"
                   />
-                  <button type="button" onClick={handleAddSize} className="bg-[#641E2B] text-[#F8F5EF] px-4 py-2 font-bold uppercase rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-colors cursor-pointer">+ Add Size</button>
+                  <button type="button" onClick={handleAddSize} className="bg-[#111111] text-[#FFFFFF] px-4 py-2 font-bold uppercase rounded-xl hover:bg-[#C5A15A] hover:text-[#111111] transition-colors cursor-pointer">+ Add Size</button>
                 </div>
               </div>
 
               {/* Colors Manager */}
-              <div className="pt-3 border-t border-[#E8DFD0]">
-                <label className="block font-semibold text-[#6E685D] mb-1.5">Color Palette Variants</label>
+              <div className="pt-3 border-t border-[#E5E7EB]">
+                <label className="block font-semibold text-[#6B7280] mb-1.5">Color Palette Variants</label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {(form.colors || []).map((c, idx) => (
-                    <span key={idx} className="bg-[#F8F5EF] border border-[#E8DFD0] px-3 py-1 rounded-xl font-bold text-[#641E2B] flex items-center gap-2">
+                    <span key={idx} className="bg-[#FFFFFF] border border-[#E5E7EB] px-3 py-1 rounded-xl font-bold text-[#111111] flex items-center gap-2">
                       <span className="w-3.5 h-3.5 rounded-full border border-black/20" style={{ backgroundColor: c.hex }} />
                       <span>{c.name}</span>
                       <button type="button" onClick={() => handleRemoveColor(idx)} className="text-red-600 font-bold hover:text-red-800 cursor-pointer">✕</button>
@@ -670,29 +670,29 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                     placeholder="Color Name (e.g. Kasavu Gold)"
                     value={newColorName}
                     onChange={(e) => setNewColorName(e.target.value)}
-                    className="flex-1 border border-[#E8DFD0] p-2 rounded-xl bg-[#F8F5EF]"
+                    className="flex-1 border border-[#E5E7EB] p-2 rounded-xl bg-[#FFFFFF]"
                   />
                   <input
                     type="color"
                     value={newColorHex}
                     onChange={(e) => setNewColorHex(e.target.value)}
-                    className="w-10 h-10 border border-[#E8DFD0] p-1 rounded-xl cursor-pointer"
+                    className="w-10 h-10 border border-[#E5E7EB] p-1 rounded-xl cursor-pointer"
                   />
-                  <button type="button" onClick={handleAddColor} className="bg-[#641E2B] text-[#F8F5EF] px-4 py-2 font-bold uppercase rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-colors cursor-pointer">+ Add Color</button>
+                  <button type="button" onClick={handleAddColor} className="bg-[#111111] text-[#FFFFFF] px-4 py-2 font-bold uppercase rounded-xl hover:bg-[#C5A15A] hover:text-[#111111] transition-colors cursor-pointer">+ Add Color</button>
                 </div>
               </div>
 
               {/* Variant-Level Stock Matrix */}
-              <div className="pt-4 border-t border-[#E8DFD0] space-y-3">
+              <div className="pt-4 border-t border-[#E5E7EB] space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <label className="block font-semibold text-[#641E2B] text-sm">Variant-Level Stock Matrix</label>
-                    <p className="text-[11px] text-[#6E685D]">Generate SKU combinations for each Size x Color permutation</p>
+                    <label className="block font-semibold text-[#111111] text-sm">Variant-Level Stock Matrix</label>
+                    <p className="text-[11px] text-[#6B7280]">Generate SKU combinations for each Size x Color permutation</p>
                   </div>
                   <button
                     type="button"
                     onClick={handleGenerateVariants}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#B99A61] text-[#641E2B] font-bold text-xs uppercase rounded-xl hover:bg-[#D9BA78] transition-colors shadow-xs cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#C5A15A] text-[#111111] font-bold text-xs uppercase rounded-xl hover:bg-[#D9BA78] transition-colors shadow-xs cursor-pointer"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>Generate Variants</span>
@@ -700,9 +700,9 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                 </div>
 
                 {form.variants && form.variants.length > 0 ? (
-                  <div className="border border-[#E8DFD0] rounded-2xl overflow-hidden shadow-xs">
+                  <div className="border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-xs">
                     <table className="w-full text-left text-xs bg-white">
-                      <thead className="bg-[#641E2B] text-[#F8F5EF]">
+                      <thead className="bg-[#111111] text-[#FFFFFF]">
                         <tr>
                           <th className="p-2.5">Variant SKU</th>
                           <th className="p-2.5">Size</th>
@@ -710,10 +710,10 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                           <th className="p-2.5 w-32">Allocated Stock</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-[#E8DFD0]">
+                      <tbody className="divide-y divide-[#E5E7EB]">
                         {form.variants.map((v) => (
-                          <tr key={v.id} className="hover:bg-[#F8F5EF]/50">
-                            <td className="p-2.5 font-mono font-bold text-[#641E2B]">{v.sku}</td>
+                          <tr key={v.id} className="hover:bg-[#FFFFFF]/50">
+                            <td className="p-2.5 font-mono font-bold text-[#111111]">{v.sku}</td>
                             <td className="p-2.5 font-semibold">{v.size}</td>
                             <td className="p-2.5">
                               <span className="inline-flex items-center gap-1.5">
@@ -727,7 +727,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                                 min={0}
                                 value={v.stock}
                                 onChange={(e) => handleVariantStockChange(v.id, Number(e.target.value))}
-                                className="w-20 border border-[#E8DFD0] px-2 py-1 rounded-lg text-center font-bold text-[#641E2B] bg-[#F8F5EF]"
+                                className="w-20 border border-[#E5E7EB] px-2 py-1 rounded-lg text-center font-bold text-[#111111] bg-[#FFFFFF]"
                               />
                             </td>
                           </tr>
@@ -736,7 +736,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                     </table>
                   </div>
                 ) : (
-                  <div className="p-4 bg-[#F8F5EF] border border-dashed border-[#E8DFD0] rounded-xl text-center text-xs text-[#6E685D]">
+                  <div className="p-4 bg-[#FFFFFF] border border-dashed border-[#E5E7EB] rounded-xl text-center text-xs text-[#6B7280]">
                     Click "Generate Variants" to build individual size/color combinations.
                   </div>
                 )}
@@ -749,12 +749,12 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
             <div className="space-y-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <label className="block font-semibold text-[#641E2B] text-sm">Product High-Res Media Gallery</label>
-                  <p className="text-xs text-[#6E685D]">
+                  <label className="block font-semibold text-[#111111] text-sm">Product High-Res Media Gallery</label>
+                  <p className="text-xs text-[#6B7280]">
                     Upload photos directly from your device (phone/PC) or paste web URLs. The first image will be used as the primary catalog cover.
                   </p>
                 </div>
-                <span className="text-[11px] font-mono font-bold bg-[#F8F5EF] px-2.5 py-1 rounded-lg border border-[#E8DFD0] text-[#641E2B] self-start sm:self-auto">
+                <span className="text-[11px] font-mono font-bold bg-[#FFFFFF] px-2.5 py-1 rounded-lg border border-[#E5E7EB] text-[#111111] self-start sm:self-auto">
                   {(form.images || []).length} Photo{(form.images || []).length === 1 ? '' : 's'} Added
                 </span>
               </div>
@@ -787,8 +787,8 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                 }}
                 className={`block border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer select-none transition-all ${
                   isDragging
-                    ? 'border-[#B99A61] bg-[#B99A61]/15 scale-[0.99] ring-2 ring-[#B99A61]/50'
-                    : 'border-[#B99A61]/50 bg-[#F8F5EF]/70 hover:bg-[#F8F5EF] hover:border-[#B99A61]'
+                    ? 'border-[#C5A15A] bg-[#C5A15A]/15 scale-[0.99] ring-2 ring-[#C5A15A]/50'
+                    : 'border-[#C5A15A]/50 bg-[#FFFFFF]/70 hover:bg-[#FFFFFF] hover:border-[#C5A15A]'
                 }`}
               >
                 <input
@@ -809,23 +809,23 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                 />
 
                 <div className="flex flex-col items-center justify-center space-y-2 pointer-events-none">
-                  <div className="w-12 h-12 rounded-full bg-[#641E2B]/5 border border-[#B99A61]/30 flex items-center justify-center text-[#641E2B]">
+                  <div className="w-12 h-12 rounded-full bg-[#111111]/5 border border-[#C5A15A]/30 flex items-center justify-center text-[#111111]">
                     {isUploadingImage ? (
-                      <Loader2 className="w-6 h-6 animate-spin text-[#B99A61]" />
+                      <Loader2 className="w-6 h-6 animate-spin text-[#C5A15A]" />
                     ) : (
-                      <UploadCloud className="w-6 h-6 text-[#641E2B]" />
+                      <UploadCloud className="w-6 h-6 text-[#111111]" />
                     )}
                   </div>
                   <div>
-                    <p className="text-xs sm:text-sm font-bold text-[#641E2B]">
+                    <p className="text-xs sm:text-sm font-bold text-[#111111]">
                       {isUploadingImage ? 'Processing & Optimizing Images...' : 'Click to Upload from Device or Drag & Drop'}
                     </p>
-                    <p className="text-[11px] text-[#6E685D] mt-0.5">
+                    <p className="text-[11px] text-[#6B7280] mt-0.5">
                       JPG, PNG, WebP, SVG • Select multiple photos at once
                     </p>
                   </div>
-                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#641E2B] text-[#F8F5EF] text-[11px] font-bold uppercase rounded-xl tracking-wider shadow-xs">
-                    <ImagePlus className="w-3.5 h-3.5 text-[#B99A61]" />
+                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#111111] text-[#FFFFFF] text-[11px] font-bold uppercase rounded-xl tracking-wider shadow-xs">
+                    <ImagePlus className="w-3.5 h-3.5 text-[#C5A15A]" />
                     <span>Browse Device Files</span>
                   </span>
                 </div>
@@ -839,9 +839,9 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
               )}
 
               {/* Or Paste URL */}
-              <div className="pt-2 border-t border-[#E8DFD0]">
-                <label className="block text-[11px] font-semibold text-[#6E685D] mb-1.5 flex items-center gap-1.5">
-                  <LinkIcon className="w-3 h-3 text-[#B99A61]" />
+              <div className="pt-2 border-t border-[#E5E7EB]">
+                <label className="block text-[11px] font-semibold text-[#6B7280] mb-1.5 flex items-center gap-1.5">
+                  <LinkIcon className="w-3 h-3 text-[#C5A15A]" />
                   <span>Or Add via Direct Web Image URL:</span>
                 </label>
                 <div className="flex gap-2">
@@ -856,12 +856,12 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                         handleAddImage();
                       }
                     }}
-                    className="flex-1 border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs"
+                    className="flex-1 border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs"
                   />
                   <button
                     type="button"
                     onClick={handleAddImage}
-                    className="bg-[#641E2B] text-[#F8F5EF] px-5 py-2.5 font-bold uppercase text-xs rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-all whitespace-nowrap cursor-pointer"
+                    className="bg-[#111111] text-[#FFFFFF] px-5 py-2.5 font-bold uppercase text-xs rounded-xl hover:bg-[#C5A15A] hover:text-[#111111] transition-all whitespace-nowrap cursor-pointer"
                   >
                     + Add URL
                   </button>
@@ -870,12 +870,12 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
 
               {/* Attached Photos Grid */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6E685D] mb-2">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6B7280] mb-2">
                   Attached Product Media ({(form.images || []).length})
                 </label>
 
                 {(form.images || []).length === 0 ? (
-                  <div className="p-8 border border-dashed border-[#E8DFD0] rounded-2xl text-center text-xs text-[#6E685D] bg-[#F8F5EF]">
+                  <div className="p-8 border border-dashed border-[#E5E7EB] rounded-2xl text-center text-xs text-[#6B7280] bg-[#FFFFFF]">
                     No images added yet. Upload from device above or paste an image URL.
                   </div>
                 ) : (
@@ -884,7 +884,7 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                       <div
                         key={idx}
                         className={`relative aspect-[3/4] border-2 rounded-2xl overflow-hidden group shadow-xs transition-all ${
-                          idx === 0 ? 'border-[#B99A61] ring-2 ring-[#B99A61]/30' : 'border-[#E8DFD0]'
+                          idx === 0 ? 'border-[#C5A15A] ring-2 ring-[#C5A15A]/30' : 'border-[#E5E7EB]'
                         }`}
                       >
                         <OptimizedImage
@@ -897,15 +897,15 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                         
                         {/* Cover Badge */}
                         {idx === 0 ? (
-                          <span className="absolute top-2 left-2 bg-[#641E2B] text-[#B99A61] text-[10px] font-bold px-2 py-0.5 rounded-md border border-[#B99A61] shadow-sm flex items-center gap-1">
-                            <Star className="w-2.5 h-2.5 fill-[#B99A61]" />
+                          <span className="absolute top-2 left-2 bg-[#111111] text-[#C5A15A] text-[10px] font-bold px-2 py-0.5 rounded-md border border-[#C5A15A] shadow-sm flex items-center gap-1">
+                            <Star className="w-2.5 h-2.5 fill-[#C5A15A]" />
                             Cover
                           </span>
                         ) : (
                           <button
                             type="button"
                             onClick={() => handleSetCoverImage(idx)}
-                            className="absolute top-2 left-2 bg-black/60 hover:bg-[#641E2B] text-white text-[10px] font-bold px-2 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
+                            className="absolute top-2 left-2 bg-black/60 hover:bg-[#111111] text-white text-[10px] font-bold px-2 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
                             title="Set as main product cover"
                           >
                             Set Cover
@@ -940,33 +940,33 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
           {activeTab === 'seo' && (
             <div className="space-y-4">
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Search Engine Meta Title</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Search Engine Meta Title</label>
                 <input
                   type="text"
                   value={form.seoTitle || ''}
                   onChange={(e) => setForm({ ...form, seoTitle: e.target.value })}
                   placeholder="e.g. Pure Tissue Kasavu Saree | Kavish Kerala Handlooms"
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs font-medium"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs font-medium"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Meta Description</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Meta Description</label>
                 <textarea
                   rows={3}
                   value={form.seoDescription || ''}
                   onChange={(e) => setForm({ ...form, seoDescription: e.target.value })}
                   placeholder="Compelling preview text for Google search results..."
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] text-xs leading-relaxed"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] text-xs leading-relaxed"
                 />
               </div>
 
               {/* Tags Manager */}
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1.5">Product Discovery Tags</label>
+                <label className="block font-semibold text-[#6B7280] mb-1.5">Product Discovery Tags</label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {(form.tags || []).map((t, idx) => (
-                    <span key={idx} className="bg-[#F8F5EF] border border-[#E8DFD0] px-3 py-1 rounded-xl font-bold text-[#641E2B] flex items-center gap-1.5">
+                    <span key={idx} className="bg-[#FFFFFF] border border-[#E5E7EB] px-3 py-1 rounded-xl font-bold text-[#111111] flex items-center gap-1.5">
                       <span>#{t}</span>
                       <button type="button" onClick={() => handleRemoveTag(idx)} className="text-red-600 font-bold hover:text-red-800 cursor-pointer">✕</button>
                     </span>
@@ -978,9 +978,9 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
                     placeholder="Add search keyword tag..."
                     value={newTagInput}
                     onChange={(e) => setNewTagInput(e.target.value)}
-                    className="flex-1 border border-[#E8DFD0] p-2 rounded-xl bg-[#F8F5EF]"
+                    className="flex-1 border border-[#E5E7EB] p-2 rounded-xl bg-[#FFFFFF]"
                   />
-                  <button type="button" onClick={handleAddTag} className="bg-[#641E2B] text-[#F8F5EF] px-4 py-2 font-bold uppercase rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-colors cursor-pointer">+ Add Tag</button>
+                  <button type="button" onClick={handleAddTag} className="bg-[#111111] text-[#FFFFFF] px-4 py-2 font-bold uppercase rounded-xl hover:bg-[#C5A15A] hover:text-[#111111] transition-colors cursor-pointer">+ Add Tag</button>
                 </div>
               </div>
             </div>
@@ -989,44 +989,44 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
           {/* TAB 7: SIZE CHART */}
           {activeTab === 'sizechart' && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-[#E8DFD0] pb-2">
+              <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-2">
                 <div className="flex items-center gap-2">
-                  <Ruler className="w-4 h-4 text-[#B99A61]" />
-                  <h4 className="font-serif font-bold text-[#641E2B]">Custom Garment Measurement Table</h4>
+                  <Ruler className="w-4 h-4 text-[#C5A15A]" />
+                  <h4 className="font-serif font-bold text-[#111111]">Custom Garment Measurement Table</h4>
                 </div>
-                <button type="button" onClick={handleAddSizeRow} className="bg-[#641E2B] text-[#F8F5EF] px-3 py-1 rounded-lg text-[11px] font-bold uppercase hover:bg-[#B99A61] hover:text-[#641E2B] transition-colors cursor-pointer">+ Add Row</button>
+                <button type="button" onClick={handleAddSizeRow} className="bg-[#111111] text-[#FFFFFF] px-3 py-1 rounded-lg text-[11px] font-bold uppercase hover:bg-[#C5A15A] hover:text-[#111111] transition-colors cursor-pointer">+ Add Row</button>
               </div>
 
               <div className="space-y-2">
                 {(form.sizeChart?.rows || []).map((row, idx) => (
-                  <div key={idx} className="p-2 bg-[#F8F5EF] border border-[#E8DFD0] rounded-xl flex items-center gap-2">
+                  <div key={idx} className="p-2 bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl flex items-center gap-2">
                     <input
                       type="text"
                       placeholder="Size Tag"
                       value={row.size}
                       onChange={(e) => handleSizeRowChange(idx, 'size', e.target.value)}
-                      className="w-24 border border-[#E8DFD0] p-1.5 rounded-lg bg-white font-bold"
+                      className="w-24 border border-[#E5E7EB] p-1.5 rounded-lg bg-white font-bold"
                     />
                     <input
                       type="text"
                       placeholder="Chest"
                       value={row.chest || ''}
                       onChange={(e) => handleSizeRowChange(idx, 'chest', e.target.value)}
-                      className="flex-1 border border-[#E8DFD0] p-1.5 rounded-lg bg-white"
+                      className="flex-1 border border-[#E5E7EB] p-1.5 rounded-lg bg-white"
                     />
                     <input
                       type="text"
                       placeholder="Shoulder"
                       value={row.shoulder || ''}
                       onChange={(e) => handleSizeRowChange(idx, 'shoulder', e.target.value)}
-                      className="flex-1 border border-[#E8DFD0] p-1.5 rounded-lg bg-white"
+                      className="flex-1 border border-[#E5E7EB] p-1.5 rounded-lg bg-white"
                     />
                     <input
                       type="text"
                       placeholder="Length"
                       value={row.length || ''}
                       onChange={(e) => handleSizeRowChange(idx, 'length', e.target.value)}
-                      className="flex-1 border border-[#E8DFD0] p-1.5 rounded-lg bg-white"
+                      className="flex-1 border border-[#E5E7EB] p-1.5 rounded-lg bg-white"
                     />
                     <button type="button" onClick={() => handleRemoveSizeRow(idx)} className="text-red-600 font-bold p-1 cursor-pointer">✕</button>
                   </div>
@@ -1038,18 +1038,18 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
         </form>
 
         {/* Modal Footer */}
-        <div className="p-4 bg-[#F8F5EF] border-t border-[#E8DFD0] flex gap-3 shrink-0">
+        <div className="p-4 bg-[#FFFFFF] border-t border-[#E5E7EB] flex gap-3 shrink-0">
           <button
             type="button"
             onClick={handleSubmit}
-            className="flex-1 bg-[#641E2B] text-[#F8F5EF] py-3 uppercase font-bold text-xs tracking-wider rounded-xl border border-[#B99A61] hover:bg-[#B99A61] hover:text-[#641E2B] transition-all cursor-pointer shadow-md"
+            className="flex-1 bg-[#111111] text-[#FFFFFF] py-3 uppercase font-bold text-xs tracking-wider rounded-xl border border-[#C5A15A] hover:bg-[#C5A15A] hover:text-[#111111] transition-all cursor-pointer shadow-md"
           >
             Save Product to Store
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="px-6 py-3 border border-[#E8DFD0] text-[#292722] font-bold text-xs uppercase rounded-xl hover:bg-white cursor-pointer"
+            className="px-6 py-3 border border-[#E5E7EB] text-[#1A1A1A] font-bold text-xs uppercase rounded-xl hover:bg-white cursor-pointer"
           >
             Cancel
           </button>

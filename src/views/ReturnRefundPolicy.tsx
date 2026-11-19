@@ -10,20 +10,20 @@ export const ReturnRefundPolicy: React.FC = () => {
   const contact = storeContent?.contactInfo;
   const whatsappNumber = (contact?.whatsappNumber || POLICY_CONFIG.WHATSAPP_NUMBER).replace(/[^0-9]/g, '');
   return (
-    <div className="py-8 sm:py-12 bg-[#F8F5EF] min-h-screen animate-fadeIn">
+    <div className="py-8 sm:py-12 bg-[#FFFFFF] min-h-screen animate-fadeIn">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Banner */}
-        <div className="bg-[#641E2B] text-[#F8F5EF] p-8 sm:p-12 rounded-3xl shadow-xl mb-10 relative overflow-hidden">
-          <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-[#B99A61]/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="bg-[#111111] text-[#FFFFFF] p-8 sm:p-12 rounded-3xl shadow-xl mb-10 relative overflow-hidden">
+          <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-[#C5A15A]/10 rounded-full blur-2xl pointer-events-none" />
           <div className="relative z-10 max-w-3xl space-y-3">
-            <span className="text-xs uppercase tracking-[0.25em] text-[#B99A61] font-bold block">
+            <span className="text-xs uppercase tracking-[0.25em] text-[#C5A15A] font-bold block">
               Patron Assurance &amp; Satisfaction
             </span>
             <h1 className="font-serif text-3xl sm:text-5xl font-bold leading-tight">
               Return &amp; Refund Policy
             </h1>
-            <p className="text-xs sm:text-sm text-[#E8DFD0] font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#E5E7EB] font-light leading-relaxed">
               Hassle-Free {POLICY_CONFIG.RETURN_WINDOW_DAYS}-Day Doorstep Exchange &amp; Full Refund Guarantee
             </p>
           </div>
@@ -31,52 +31,52 @@ export const ReturnRefundPolicy: React.FC = () => {
 
         {/* Highlights Bar */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white p-5 rounded-2xl border border-[#E8DFD0] flex items-center gap-3.5 shadow-2xs">
-            <div className="w-10 h-10 rounded-full bg-[#F8F5EF] text-[#641E2B] border border-[#B99A61] flex items-center justify-center shrink-0">
-              <Clock className="w-5 h-5 text-[#B99A61]" />
+          <div className="bg-white p-5 rounded-2xl border border-[#E5E7EB] flex items-center gap-3.5 shadow-2xs">
+            <div className="w-10 h-10 rounded-full bg-[#FFFFFF] text-[#111111] border border-[#C5A15A] flex items-center justify-center shrink-0">
+              <Clock className="w-5 h-5 text-[#C5A15A]" />
             </div>
             <div>
-              <strong className="block text-xs font-bold text-[#641E2B]">{POLICY_CONFIG.RETURN_WINDOW_DAYS}-Day Window</strong>
-              <span className="text-[11px] text-[#6E685D]">From package delivery date</span>
+              <strong className="block text-xs font-bold text-[#111111]">{POLICY_CONFIG.RETURN_WINDOW_DAYS}-Day Window</strong>
+              <span className="text-[11px] text-[#6B7280]">From package delivery date</span>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-[#E8DFD0] flex items-center gap-3.5 shadow-2xs">
-            <div className="w-10 h-10 rounded-full bg-[#F8F5EF] text-[#641E2B] border border-[#B99A61] flex items-center justify-center shrink-0">
-              <Truck className="w-5 h-5 text-[#B99A61]" />
+          <div className="bg-white p-5 rounded-2xl border border-[#E5E7EB] flex items-center gap-3.5 shadow-2xs">
+            <div className="w-10 h-10 rounded-full bg-[#FFFFFF] text-[#111111] border border-[#C5A15A] flex items-center justify-center shrink-0">
+              <Truck className="w-5 h-5 text-[#C5A15A]" />
             </div>
             <div>
-              <strong className="block text-xs font-bold text-[#641E2B]">Doorstep Reverse Pickup</strong>
-              <span className="text-[11px] text-[#6E685D]">Complimentary across India</span>
+              <strong className="block text-xs font-bold text-[#111111]">Doorstep Reverse Pickup</strong>
+              <span className="text-[11px] text-[#6B7280]">Complimentary across India</span>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-[#E8DFD0] flex items-center gap-3.5 shadow-2xs">
-            <div className="w-10 h-10 rounded-full bg-[#F8F5EF] text-[#641E2B] border border-[#B99A61] flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-5 h-5 text-[#B99A61]" />
+          <div className="bg-white p-5 rounded-2xl border border-[#E5E7EB] flex items-center gap-3.5 shadow-2xs">
+            <div className="w-10 h-10 rounded-full bg-[#FFFFFF] text-[#111111] border border-[#C5A15A] flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-5 h-5 text-[#C5A15A]" />
             </div>
             <div>
-              <strong className="block text-xs font-bold text-[#641E2B]">{POLICY_CONFIG.REFUND_PROCESSING_DAYS}</strong>
-              <span className="text-[11px] text-[#6E685D]">Back to original payment source</span>
+              <strong className="block text-xs font-bold text-[#111111]">{POLICY_CONFIG.REFUND_PROCESSING_DAYS}</strong>
+              <span className="text-[11px] text-[#6B7280]">Back to original payment source</span>
             </div>
           </div>
         </div>
 
         {/* Policy Body */}
-        <div className="bg-white p-6 sm:p-10 border border-[#E8DFD0] rounded-3xl shadow-xs space-y-8 text-xs sm:text-sm text-[#292522] leading-relaxed">
+        <div className="bg-white p-6 sm:p-10 border border-[#E5E7EB] rounded-3xl shadow-xs space-y-8 text-xs sm:text-sm text-[#1A1A1A] leading-relaxed">
           
           {/* Section 1: Return Eligibility */}
           <section className="space-y-3">
-            <div className="flex items-center gap-2 text-[#641E2B]">
-              <RefreshCw className="w-5 h-5 text-[#B99A61] shrink-0" />
+            <div className="flex items-center gap-2 text-[#111111]">
+              <RefreshCw className="w-5 h-5 text-[#C5A15A] shrink-0" />
               <h2 className="font-serif text-lg sm:text-xl font-bold">1. Return &amp; Exchange Eligibility</h2>
             </div>
-            <p className="text-[#6E685D]">
+            <p className="text-[#6B7280]">
               At Kavish, we take immense pride in crafting the finest Kerala Kasavu weaves and handlooms. If you are not completely satisfied with your order, you are welcome to initiate a return or size exchange within <strong>{POLICY_CONFIG.RETURN_WINDOW_DAYS} calendar days</strong> of receiving your package.
             </p>
-            <div className="p-4 bg-[#F8F5EF] rounded-2xl border border-[#E8DFD0] space-y-2">
-              <strong className="text-[#641E2B] block font-bold">Conditions for Valid Return:</strong>
-              <ul className="space-y-1.5 pl-4 list-disc text-xs text-[#6E685D]">
+            <div className="p-4 bg-[#FFFFFF] rounded-2xl border border-[#E5E7EB] space-y-2">
+              <strong className="text-[#111111] block font-bold">Conditions for Valid Return:</strong>
+              <ul className="space-y-1.5 pl-4 list-disc text-xs text-[#6B7280]">
                 <li>Product must be unworn, unwashed, unaltered, and completely free of perfume, stains, or damage.</li>
                 <li>Original brand tags, folding layout, and Kuthampully GI Tag seal must remain attached and intact.</li>
                 <li>Must be returned in the original luxury Kavish gift box packaging along with the cotton preservation bag.</li>
@@ -86,14 +86,14 @@ export const ReturnRefundPolicy: React.FC = () => {
 
           {/* Section 2: Damaged, Defective or Incorrect Items */}
           <section className="space-y-3">
-            <div className="flex items-center gap-2 text-[#641E2B]">
-              <AlertTriangle className="w-5 h-5 text-[#B99A61] shrink-0" />
+            <div className="flex items-center gap-2 text-[#111111]">
+              <AlertTriangle className="w-5 h-5 text-[#C5A15A] shrink-0" />
               <h2 className="font-serif text-lg sm:text-xl font-bold">2. Damaged, Defective or Wrong Item Received</h2>
             </div>
-            <p className="text-[#6E685D]">
+            <p className="text-[#6B7280]">
               Every parcel undergoes a multi-point quality check by our Kuthampully master weavers craft team prior to dispatch. In the unlikely event that you receive a damaged, defective, or incorrect piece:
             </p>
-            <ul className="space-y-1.5 pl-4 list-disc text-[#6E685D]">
+            <ul className="space-y-1.5 pl-4 list-disc text-[#6B7280]">
               <li>Please notify our concierge within <strong>48 hours</strong> of delivery with clear photos or an unboxing video.</li>
               <li>We will arrange a priority express doorstep replacement with zero shipping charges, or initiate a 100% full refund including all taxes.</li>
             </ul>
@@ -101,14 +101,14 @@ export const ReturnRefundPolicy: React.FC = () => {
 
           {/* Section 3: Non-Returnable Items */}
           <section className="space-y-3">
-            <div className="flex items-center gap-2 text-[#641E2B]">
-              <CheckCircle2 className="w-5 h-5 text-[#B99A61] shrink-0" />
+            <div className="flex items-center gap-2 text-[#111111]">
+              <CheckCircle2 className="w-5 h-5 text-[#C5A15A] shrink-0" />
               <h2 className="font-serif text-lg sm:text-xl font-bold">3. Non-Returnable &amp; Customized Products</h2>
             </div>
-            <p className="text-[#6E685D]">
+            <p className="text-[#6B7280]">
               The following categories cannot be returned for customer preference:
             </p>
-            <ul className="space-y-1.5 pl-4 list-disc text-[#6E685D]">
+            <ul className="space-y-1.5 pl-4 list-disc text-[#6B7280]">
               <li>Bespoke custom-stitched sarees (where blouse piece has been tailored to custom sizing).</li>
               <li>Customized bridal heritage sets woven with bespoke monograms or custom gold zari inscriptions.</li>
               <li>Items purchased during clearance/sample sales explicitly marked as "Final Sale".</li>
@@ -117,59 +117,59 @@ export const ReturnRefundPolicy: React.FC = () => {
 
           {/* Section 4: Return & Pickup Process */}
           <section className="space-y-3">
-            <div className="flex items-center gap-2 text-[#641E2B]">
-              <Truck className="w-5 h-5 text-[#B99A61] shrink-0" />
+            <div className="flex items-center gap-2 text-[#111111]">
+              <Truck className="w-5 h-5 text-[#C5A15A] shrink-0" />
               <h2 className="font-serif text-lg sm:text-xl font-bold">4. How to Initiate a Return or Exchange</h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-              <div className="p-4 bg-[#F8F5EF] border border-[#E8DFD0] rounded-xl text-center space-y-1.5">
-                <span className="w-7 h-7 rounded-full bg-[#641E2B] text-[#B99A61] inline-flex items-center justify-center font-bold text-xs">1</span>
-                <strong className="block text-[#641E2B] text-xs">Contact Concierge</strong>
-                <p className="text-[11px] text-[#6E685D]">Email <a href={`mailto:${POLICY_CONFIG.SUPPORT_EMAIL}`} className="underline font-semibold">{POLICY_CONFIG.SUPPORT_EMAIL}</a> or WhatsApp {POLICY_CONFIG.SUPPORT_PHONE} with your Order ID.</p>
+              <div className="p-4 bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl text-center space-y-1.5">
+                <span className="w-7 h-7 rounded-full bg-[#111111] text-[#C5A15A] inline-flex items-center justify-center font-bold text-xs">1</span>
+                <strong className="block text-[#111111] text-xs">Contact Concierge</strong>
+                <p className="text-[11px] text-[#6B7280]">Email <a href={`mailto:${POLICY_CONFIG.SUPPORT_EMAIL}`} className="underline font-semibold">{POLICY_CONFIG.SUPPORT_EMAIL}</a> or WhatsApp {POLICY_CONFIG.SUPPORT_PHONE} with your Order ID.</p>
               </div>
 
-              <div className="p-4 bg-[#F8F5EF] border border-[#E8DFD0] rounded-xl text-center space-y-1.5">
-                <span className="w-7 h-7 rounded-full bg-[#641E2B] text-[#B99A61] inline-flex items-center justify-center font-bold text-xs">2</span>
-                <strong className="block text-[#641E2B] text-xs">Doorstep Pickup</strong>
-                <p className="text-[11px] text-[#6E685D]">Our express logistics partner will collect the securely packed parcel from your address within 24–48 hours.</p>
+              <div className="p-4 bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl text-center space-y-1.5">
+                <span className="w-7 h-7 rounded-full bg-[#111111] text-[#C5A15A] inline-flex items-center justify-center font-bold text-xs">2</span>
+                <strong className="block text-[#111111] text-xs">Doorstep Pickup</strong>
+                <p className="text-[11px] text-[#6B7280]">Our express logistics partner will collect the securely packed parcel from your address within 24–48 hours.</p>
               </div>
 
-              <div className="p-4 bg-[#F8F5EF] border border-[#E8DFD0] rounded-xl text-center space-y-1.5">
-                <span className="w-7 h-7 rounded-full bg-[#641E2B] text-[#B99A61] inline-flex items-center justify-center font-bold text-xs">3</span>
-                <strong className="block text-[#641E2B] text-xs">Refund / Exchange</strong>
-                <p className="text-[11px] text-[#6E685D]">Upon inspection at our atelier, replacement is dispatched or refund is credited within {POLICY_CONFIG.REFUND_PROCESSING_DAYS}.</p>
+              <div className="p-4 bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl text-center space-y-1.5">
+                <span className="w-7 h-7 rounded-full bg-[#111111] text-[#C5A15A] inline-flex items-center justify-center font-bold text-xs">3</span>
+                <strong className="block text-[#111111] text-xs">Refund / Exchange</strong>
+                <p className="text-[11px] text-[#6B7280]">Upon inspection at our atelier, replacement is dispatched or refund is credited within {POLICY_CONFIG.REFUND_PROCESSING_DAYS}.</p>
               </div>
             </div>
           </section>
 
           {/* Section 5: Refund Timeline & Methods */}
-          <section className="space-y-3 pt-4 border-t border-[#E8DFD0]">
-            <div className="flex items-center gap-2 text-[#641E2B]">
-              <ShieldCheck className="w-5 h-5 text-[#B99A61] shrink-0" />
+          <section className="space-y-3 pt-4 border-t border-[#E5E7EB]">
+            <div className="flex items-center gap-2 text-[#111111]">
+              <ShieldCheck className="w-5 h-5 text-[#C5A15A] shrink-0" />
               <h2 className="font-serif text-lg sm:text-xl font-bold">5. Refund Processing Timelines</h2>
             </div>
-            <p className="text-[#6E685D]">
+            <p className="text-[#6B7280]">
               All approved refunds are credited back to the <strong>original source payment method</strong> used during Razorpay checkout:
             </p>
-            <ul className="space-y-1.5 pl-4 list-disc text-[#6E685D]">
+            <ul className="space-y-1.5 pl-4 list-disc text-[#6B7280]">
               <li><strong>UPI (Google Pay, PhonePe, Paytm, BHIM):</strong> 24–48 hours from approval.</li>
               <li><strong>Credit / Debit Cards &amp; Net Banking:</strong> 5–7 business days depending on your issuing bank's settlement cycle.</li>
             </ul>
           </section>
 
           {/* Support CTA */}
-          <div className="p-5 bg-[#641E2B] text-[#F8F5EF] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="p-5 bg-[#111111] text-[#FFFFFF] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="space-y-1 text-center sm:text-left">
-              <h4 className="font-serif font-bold text-base text-[#B99A61] flex items-center gap-2 justify-center sm:justify-start">
+              <h4 className="font-serif font-bold text-base text-[#C5A15A] flex items-center gap-2 justify-center sm:justify-start">
                 <HelpCircle className="w-5 h-5" /> Need Assistance with a Return?
               </h4>
-              <p className="text-xs text-[#E8DFD0]">Our dedicated atelier concierge team is available 6 days a week.</p>
+              <p className="text-xs text-[#E5E7EB]">Our dedicated atelier concierge team is available 6 days a week.</p>
             </div>
             <a
               href={`https://wa.me/${whatsappNumber}`}
               target="_blank"
               rel="noreferrer"
-              className="bg-[#B99A61] text-[#641E2B] px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-white transition-colors shadow-md whitespace-nowrap"
+              className="bg-[#C5A15A] text-[#111111] px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-white transition-colors shadow-md whitespace-nowrap"
             >
               WhatsApp Concierge
             </a>

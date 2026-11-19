@@ -11,14 +11,14 @@ export function generateCustomerOrderConfirmationHtml(order: Order): string {
     .map(
       (item) => `
       <tr>
-        <td style="padding: 12px; border-bottom: 1px solid #E8DFD0; font-size: 13px; color: #292522;">
-          <strong style="color: #641E2B;">${item.product.name}</strong><br />
-          <span style="font-size: 11px; color: #6E685D;">Size: ${item.size} | Color: ${item.color.name}</span>
+        <td style="padding: 12px; border-bottom: 1px solid #E5E7EB; font-size: 13px; color: #1A1A1A;">
+          <strong style="color: #111111;">${item.product.name}</strong><br />
+          <span style="font-size: 11px; color: #6B7280;">Size: ${item.size} | Color: ${item.color.name}</span>
         </td>
-        <td style="padding: 12px; border-bottom: 1px solid #E8DFD0; font-size: 13px; text-align: center; color: #292522;">
+        <td style="padding: 12px; border-bottom: 1px solid #E5E7EB; font-size: 13px; text-align: center; color: #1A1A1A;">
           ${item.quantity}
         </td>
-        <td style="padding: 12px; border-bottom: 1px solid #E8DFD0; font-size: 13px; text-align: right; font-weight: bold; color: #641E2B;">
+        <td style="padding: 12px; border-bottom: 1px solid #E5E7EB; font-size: 13px; text-align: right; font-weight: bold; color: #111111;">
           ₹${(item.price * item.quantity).toLocaleString('en-IN')}
         </td>
       </tr>`
@@ -32,19 +32,19 @@ export function generateCustomerOrderConfirmationHtml(order: Order): string {
   <meta charset="UTF-8">
   <title>Order Confirmed — Kavish #${order.id}</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #F8F5EF; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #292522;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #F8F5EF; padding: 24px 12px;">
+<body style="margin: 0; padding: 0; background-color: #FFFFFF; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1A1A1A;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #FFFFFF; padding: 24px 12px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" style="max-width: 600px; background-color: #FFFFFF; border-radius: 16px; overflow: hidden; border: 1px solid #E8DFD0; box-shadow: 0 4px 20px rgba(0,0,0,0.06);">
+        <table role="presentation" width="100%" style="max-width: 600px; background-color: #FFFFFF; border-radius: 16px; overflow: hidden; border: 1px solid #E5E7EB; box-shadow: 0 4px 20px rgba(0,0,0,0.06);">
           
           <!-- Header Banner -->
           <tr>
-            <td style="background-color: #641E2B; padding: 32px 24px; text-align: center;">
-              <h1 style="margin: 0; font-family: 'Georgia', serif; font-size: 28px; letter-spacing: 4px; color: #B99A61; font-weight: bold;">
+            <td style="background-color: #111111; padding: 32px 24px; text-align: center;">
+              <h1 style="margin: 0; font-family: 'Georgia', serif; font-size: 28px; letter-spacing: 4px; color: #C5A15A; font-weight: bold;">
                 KAVISH
               </h1>
-              <p style="margin: 6px 0 0 0; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #F8F5EF;">
+              <p style="margin: 6px 0 0 0; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #FFFFFF;">
                 Authentic Kuthampully GI Tag Handlooms
               </p>
             </td>
@@ -53,14 +53,14 @@ export function generateCustomerOrderConfirmationHtml(order: Order): string {
           <!-- Confirmation Message -->
           <tr>
             <td style="padding: 32px 28px 20px 28px; text-align: center;">
-              <div style="display: inline-block; width: 48px; height: 48px; line-height: 48px; border-radius: 50%; background-color: #641E2B; color: #B99A61; font-size: 22px; margin-bottom: 16px;">
+              <div style="display: inline-block; width: 48px; height: 48px; line-height: 48px; border-radius: 50%; background-color: #111111; color: #C5A15A; font-size: 22px; margin-bottom: 16px;">
                 ✓
               </div>
-              <h2 style="margin: 0 0 8px 0; font-family: 'Georgia', serif; font-size: 22px; color: #641E2B;">
+              <h2 style="margin: 0 0 8px 0; font-family: 'Georgia', serif; font-size: 22px; color: #111111;">
                 Thank You, ${order.shippingAddress.name}!
               </h2>
-              <p style="margin: 0; font-size: 14px; color: #6E685D; line-height: 1.5;">
-                Your order <strong style="color: #641E2B;">#${order.id}</strong> has been confirmed and assigned to our master weavers in Kuthampully.
+              <p style="margin: 0; font-size: 14px; color: #6B7280; line-height: 1.5;">
+                Your order <strong style="color: #111111;">#${order.id}</strong> has been confirmed and assigned to our master weavers in Kuthampully.
               </p>
             </td>
           </tr>
@@ -68,30 +68,30 @@ export function generateCustomerOrderConfirmationHtml(order: Order): string {
           <!-- Order Summary Meta Box -->
           <tr>
             <td style="padding: 0 28px 24px 28px;">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #F8F5EF; border-radius: 12px; border: 1px solid #E8DFD0; padding: 16px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #FFFFFF; border-radius: 12px; border: 1px solid #E5E7EB; padding: 16px;">
                 <tr>
-                  <td style="padding: 6px 12px; font-size: 12px; color: #6E685D;">Order Number:</td>
-                  <td style="padding: 6px 12px; font-size: 12px; font-weight: bold; color: #641E2B; text-align: right; font-family: monospace;">${order.id}</td>
+                  <td style="padding: 6px 12px; font-size: 12px; color: #6B7280;">Order Number:</td>
+                  <td style="padding: 6px 12px; font-size: 12px; font-weight: bold; color: #111111; text-align: right; font-family: monospace;">${order.id}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 6px 12px; font-size: 12px; color: #6E685D;">Tax Invoice ID:</td>
-                  <td style="padding: 6px 12px; font-size: 12px; font-weight: bold; color: #B99A61; text-align: right; font-family: monospace;">${order.invoiceId || 'KV-INV-' + order.id.replace('KV-ORD-', '')}</td>
+                  <td style="padding: 6px 12px; font-size: 12px; color: #6B7280;">Tax Invoice ID:</td>
+                  <td style="padding: 6px 12px; font-size: 12px; font-weight: bold; color: #C5A15A; text-align: right; font-family: monospace;">${order.invoiceId || 'KV-INV-' + order.id.replace('KV-ORD-', '')}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 6px 12px; font-size: 12px; color: #6E685D;">Order Date:</td>
-                  <td style="padding: 6px 12px; font-size: 12px; color: #641E2B; text-align: right;">${order.date}</td>
+                  <td style="padding: 6px 12px; font-size: 12px; color: #6B7280;">Order Date:</td>
+                  <td style="padding: 6px 12px; font-size: 12px; color: #111111; text-align: right;">${order.date}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 6px 12px; font-size: 12px; color: #6E685D;">Payment Method:</td>
-                  <td style="padding: 6px 12px; font-size: 12px; font-weight: bold; color: #641E2B; text-align: right;">${order.paymentMethod}</td>
+                  <td style="padding: 6px 12px; font-size: 12px; color: #6B7280;">Payment Method:</td>
+                  <td style="padding: 6px 12px; font-size: 12px; font-weight: bold; color: #111111; text-align: right;">${order.paymentMethod}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 6px 12px; font-size: 12px; color: #6E685D;">Estimated Delivery:</td>
-                  <td style="padding: 6px 12px; font-size: 12px; font-weight: bold; color: #641E2B; text-align: right;">${order.estimatedDelivery || POLICY_CONFIG.STANDARD_DELIVERY_TIME}</td>
+                  <td style="padding: 6px 12px; font-size: 12px; color: #6B7280;">Estimated Delivery:</td>
+                  <td style="padding: 6px 12px; font-size: 12px; font-weight: bold; color: #111111; text-align: right;">${order.estimatedDelivery || POLICY_CONFIG.STANDARD_DELIVERY_TIME}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 6px 12px; font-size: 12px; color: #6E685D;">Tracking AWB:</td>
-                  <td style="padding: 6px 12px; font-size: 12px; font-weight: bold; color: #641E2B; text-align: right; font-family: monospace;">${order.trackingNumber}</td>
+                  <td style="padding: 6px 12px; font-size: 12px; color: #6B7280;">Tracking AWB:</td>
+                  <td style="padding: 6px 12px; font-size: 12px; font-weight: bold; color: #111111; text-align: right; font-family: monospace;">${order.trackingNumber}</td>
                 </tr>
               </table>
             </td>
@@ -100,15 +100,15 @@ export function generateCustomerOrderConfirmationHtml(order: Order): string {
           <!-- Items Ordered Table -->
           <tr>
             <td style="padding: 0 28px 24px 28px;">
-              <h3 style="margin: 0 0 12px 0; font-family: 'Georgia', serif; font-size: 16px; color: #641E2B; border-bottom: 1px solid #E8DFD0; padding-bottom: 8px;">
+              <h3 style="margin: 0 0 12px 0; font-family: 'Georgia', serif; font-size: 16px; color: #111111; border-bottom: 1px solid #E5E7EB; padding-bottom: 8px;">
                 Items in Your Atelier Box
               </h3>
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
                 <thead>
-                  <tr style="background-color: #F8F5EF;">
-                    <th style="padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; color: #6E685D;">Item</th>
-                    <th style="padding: 8px 12px; text-align: center; font-size: 11px; text-transform: uppercase; color: #6E685D;">Qty</th>
-                    <th style="padding: 8px 12px; text-align: right; font-size: 11px; text-transform: uppercase; color: #6E685D;">Price</th>
+                  <tr style="background-color: #FFFFFF;">
+                    <th style="padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; color: #6B7280;">Item</th>
+                    <th style="padding: 8px 12px; text-align: center; font-size: 11px; text-transform: uppercase; color: #6B7280;">Qty</th>
+                    <th style="padding: 8px 12px; text-align: right; font-size: 11px; text-transform: uppercase; color: #6B7280;">Price</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -119,8 +119,8 @@ export function generateCustomerOrderConfirmationHtml(order: Order): string {
               <!-- Totals -->
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top: 16px;">
                 <tr>
-                  <td style="padding: 4px 12px; font-size: 13px; color: #6E685D;">Subtotal:</td>
-                  <td style="padding: 4px 12px; font-size: 13px; color: #641E2B; text-align: right;">₹${order.subtotal.toLocaleString('en-IN')}</td>
+                  <td style="padding: 4px 12px; font-size: 13px; color: #6B7280;">Subtotal:</td>
+                  <td style="padding: 4px 12px; font-size: 13px; color: #111111; text-align: right;">₹${order.subtotal.toLocaleString('en-IN')}</td>
                 </tr>
                 ${
                   order.discount > 0
@@ -131,12 +131,12 @@ export function generateCustomerOrderConfirmationHtml(order: Order): string {
                     : ''
                 }
                 <tr>
-                  <td style="padding: 4px 12px; font-size: 13px; color: #6E685D;">Complimentary Express Shipping:</td>
-                  <td style="padding: 4px 12px; font-size: 13px; color: #641E2B; text-align: right;">${order.shippingFee === 0 ? 'FREE' : `₹${order.shippingFee}`}</td>
+                  <td style="padding: 4px 12px; font-size: 13px; color: #6B7280;">Complimentary Express Shipping:</td>
+                  <td style="padding: 4px 12px; font-size: 13px; color: #111111; text-align: right;">${order.shippingFee === 0 ? 'FREE' : `₹${order.shippingFee}`}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px; font-size: 16px; font-weight: bold; color: #641E2B; border-top: 1px solid #E8DFD0;">Total Amount Paid:</td>
-                  <td style="padding: 12px; font-size: 18px; font-weight: bold; font-family: 'Georgia', serif; color: #641E2B; text-align: right; border-top: 1px solid #E8DFD0;">₹${order.total.toLocaleString('en-IN')}</td>
+                  <td style="padding: 12px; font-size: 16px; font-weight: bold; color: #111111; border-top: 1px solid #E5E7EB;">Total Amount Paid:</td>
+                  <td style="padding: 12px; font-size: 18px; font-weight: bold; font-family: 'Georgia', serif; color: #111111; text-align: right; border-top: 1px solid #E5E7EB;">₹${order.total.toLocaleString('en-IN')}</td>
                 </tr>
               </table>
             </td>
@@ -145,11 +145,11 @@ export function generateCustomerOrderConfirmationHtml(order: Order): string {
           <!-- Shipping Address -->
           <tr>
             <td style="padding: 0 28px 24px 28px;">
-              <h3 style="margin: 0 0 8px 0; font-family: 'Georgia', serif; font-size: 16px; color: #641E2B;">
+              <h3 style="margin: 0 0 8px 0; font-family: 'Georgia', serif; font-size: 16px; color: #111111;">
                 Shipping Destination
               </h3>
-              <p style="margin: 0; font-size: 13px; color: #6E685D; line-height: 1.6; background-color: #F8F5EF; padding: 12px 16px; border-radius: 8px; border: 1px solid #E8DFD0;">
-                <strong style="color: #641E2B;">${order.shippingAddress.name}</strong><br />
+              <p style="margin: 0; font-size: 13px; color: #6B7280; line-height: 1.6; background-color: #FFFFFF; padding: 12px 16px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                <strong style="color: #111111;">${order.shippingAddress.name}</strong><br />
                 ${order.shippingAddress.street}<br />
                 ${order.shippingAddress.city}, ${order.shippingAddress.state} - ${order.shippingAddress.pincode}<br />
                 Phone: ${order.shippingAddress.phone}
@@ -160,10 +160,10 @@ export function generateCustomerOrderConfirmationHtml(order: Order): string {
           <!-- Action Buttons -->
           <tr>
             <td style="padding: 0 28px 32px 28px; text-align: center;">
-              <a href="https://kavish.xenotrix.in/track-order?orderId=${order.id}" style="display: inline-block; background-color: #641E2B; color: #F8F5EF; padding: 14px 28px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; text-decoration: none; border-radius: 8px; border: 1px solid #B99A61; margin-right: 8px;">
+              <a href="https://kavish.xenotrix.in/track-order?orderId=${order.id}" style="display: inline-block; background-color: #111111; color: #FFFFFF; padding: 14px 28px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; text-decoration: none; border-radius: 8px; border: 1px solid #C5A15A; margin-right: 8px;">
                 Track Delivery
               </a>
-              <a href="https://kavish.xenotrix.in" style="display: inline-block; background-color: #FFFFFF; color: #641E2B; padding: 14px 24px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; text-decoration: none; border-radius: 8px; border: 1px solid #641E2B;">
+              <a href="https://kavish.xenotrix.in" style="display: inline-block; background-color: #FFFFFF; color: #111111; padding: 14px 24px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; text-decoration: none; border-radius: 8px; border: 1px solid #111111;">
                 Visit Store
               </a>
             </td>
@@ -171,15 +171,15 @@ export function generateCustomerOrderConfirmationHtml(order: Order): string {
 
           <!-- Footer -->
           <tr>
-            <td style="background-color: #641E2B; padding: 24px; text-align: center; color: #F8F5EF; font-size: 11px; line-height: 1.6;">
-              <p style="margin: 0 0 8px 0; color: #B99A61; font-weight: bold;">
+            <td style="background-color: #111111; padding: 24px; text-align: center; color: #FFFFFF; font-size: 11px; line-height: 1.6;">
+              <p style="margin: 0 0 8px 0; color: #C5A15A; font-weight: bold;">
                 ${POLICY_CONFIG.COMPANY_LEGAL_NAME}
               </p>
               <p style="margin: 0 0 4px 0;">
                 ${POLICY_CONFIG.ATELIER_ADDRESS.FULL}
               </p>
               <p style="margin: 0;">
-                Concierge: <a href="mailto:${POLICY_CONFIG.SUPPORT_EMAIL}" style="color: #B99A61; text-decoration: none;">${POLICY_CONFIG.SUPPORT_EMAIL}</a> | Phone: ${POLICY_CONFIG.SUPPORT_PHONE}
+                Concierge: <a href="mailto:${POLICY_CONFIG.SUPPORT_EMAIL}" style="color: #C5A15A; text-decoration: none;">${POLICY_CONFIG.SUPPORT_EMAIL}</a> | Phone: ${POLICY_CONFIG.SUPPORT_PHONE}
               </p>
             </td>
           </tr>
@@ -211,9 +211,9 @@ export function generateAdminOrderNotificationHtml(order: Order): string {
   <meta charset="UTF-8">
   <title>New Order Received — Kavish #${order.id}</title>
 </head>
-<body style="background-color: #F8F5EF; font-family: sans-serif; padding: 20px; color: #292522;">
-  <div style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border-radius: 12px; border: 2px solid #641E2B; padding: 24px;">
-    <h2 style="color: #641E2B; margin-top: 0; border-bottom: 2px solid #B99A61; padding-bottom: 8px;">
+<body style="background-color: #FFFFFF; font-family: sans-serif; padding: 20px; color: #1A1A1A;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border-radius: 12px; border: 2px solid #111111; padding: 24px;">
+    <h2 style="color: #111111; margin-top: 0; border-bottom: 2px solid #C5A15A; padding-bottom: 8px;">
       🛍️ New Order Received: #${order.id}
     </h2>
     <p><strong>Total Value:</strong> <span style="font-size: 18px; color: #15803D; font-weight: bold;">₹${order.total.toLocaleString('en-IN')}</span></p>
@@ -223,20 +223,20 @@ export function generateAdminOrderNotificationHtml(order: Order): string {
     <p><strong>Tax Invoice:</strong> ${order.invoiceId || 'N/A'}</p>
     <p><strong>AWB Tracking:</strong> ${order.trackingNumber}</p>
     
-    <div style="background-color: #F8F5EF; border: 1px solid #E8DFD0; padding: 12px; border-radius: 8px; margin: 16px 0;">
-      <h4 style="margin: 0 0 8px 0; color: #641E2B;">Ordered Items:</h4>
+    <div style="background-color: #FFFFFF; border: 1px solid #E5E7EB; padding: 12px; border-radius: 8px; margin: 16px 0;">
+      <h4 style="margin: 0 0 8px 0; color: #111111;">Ordered Items:</h4>
       ${itemsText}
     </div>
 
-    <div style="background-color: #F8F5EF; border: 1px solid #E8DFD0; padding: 12px; border-radius: 8px; margin: 16px 0;">
-      <h4 style="margin: 0 0 8px 0; color: #641E2B;">Shipping Address:</h4>
+    <div style="background-color: #FFFFFF; border: 1px solid #E5E7EB; padding: 12px; border-radius: 8px; margin: 16px 0;">
+      <h4 style="margin: 0 0 8px 0; color: #111111;">Shipping Address:</h4>
       ${order.shippingAddress.name}<br />
       ${order.shippingAddress.street}<br />
       ${order.shippingAddress.city}, ${order.shippingAddress.state} - ${order.shippingAddress.pincode}<br />
       Phone: ${order.shippingAddress.phone}
     </div>
 
-    <p style="font-size: 11px; color: #6E685D; margin-top: 20px; border-top: 1px solid #E8DFD0; padding-top: 8px;">
+    <p style="font-size: 11px; color: #6B7280; margin-top: 20px; border-top: 1px solid #E5E7EB; padding-top: 8px;">
       Kavish Handlooms Admin Management System • Instant Purchase Alert
     </p>
   </div>

@@ -158,27 +158,27 @@ export const TrackOrder: React.FC = () => {
   const isReturnFlow = searchedOrder?.status?.startsWith('Return') || searchedOrder?.status?.startsWith('Refund');
 
   return (
-    <div className="py-8 sm:py-12 bg-[#F8F5EF] min-h-screen animate-fadeIn pb-24">
+    <div className="py-8 sm:py-12 bg-[#FFFFFF] min-h-screen animate-fadeIn pb-24">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Banner */}
-        <div className="bg-[#641E2B] text-[#F8F5EF] p-8 sm:p-12 rounded-3xl shadow-xl mb-8 relative overflow-hidden text-center sm:text-left border border-[#B99A61]/30">
-          <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-[#B99A61]/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="bg-[#111111] text-[#FFFFFF] p-8 sm:p-12 rounded-3xl shadow-xl mb-8 relative overflow-hidden text-center sm:text-left border border-[#C5A15A]/30">
+          <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-[#C5A15A]/10 rounded-full blur-2xl pointer-events-none" />
           <div className="relative z-10 max-w-3xl space-y-3">
-            <span className="text-xs uppercase tracking-[0.25em] text-[#B99A61] font-bold block">
+            <span className="text-xs uppercase tracking-[0.25em] text-[#C5A15A] font-bold block">
               Direct From Kuthampully Loom House
             </span>
             <h1 className="font-serif text-3xl sm:text-5xl font-bold leading-tight">
               Track Your Shipment
             </h1>
-            <p className="text-xs sm:text-sm text-[#E8DFD0] font-light leading-relaxed">
-              Enter your Order ID (e.g. <code className="bg-[#4A1520] px-2 py-0.5 rounded text-[#B99A61]">KV-ORD-83921</code>) or Courier AWB Tracking Number to view live weaving &amp; logistics milestones.
+            <p className="text-xs sm:text-sm text-[#E5E7EB] font-light leading-relaxed">
+              Enter your Order ID (e.g. <code className="bg-[#000000] px-2 py-0.5 rounded text-[#C5A15A]">KV-ORD-83921</code>) or Courier AWB Tracking Number to view live weaving &amp; logistics milestones.
             </p>
           </div>
         </div>
 
         {/* Search Bar Container */}
-        <div className="bg-white p-6 sm:p-8 border border-[#E8DFD0] rounded-3xl shadow-sm mb-8">
+        <div className="bg-white p-6 sm:p-8 border border-[#E5E7EB] rounded-3xl shadow-sm mb-8">
           <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -187,15 +187,15 @@ export const TrackOrder: React.FC = () => {
                 value={inputQuery}
                 onChange={(e) => setInputQuery(e.target.value)}
                 placeholder="Enter Order ID (e.g. KV-ORD-12345) or Tracking AWB..."
-                className="w-full pl-12 pr-4 py-3.5 bg-[#F8F5EF] border border-[#E8DFD0] rounded-xl text-xs sm:text-sm text-[#641E2B] font-medium focus:outline-none focus:border-[#B99A61] uppercase transition-colors"
+                className="w-full pl-12 pr-4 py-3.5 bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl text-xs sm:text-sm text-[#111111] font-medium focus:outline-none focus:border-[#C5A15A] uppercase transition-colors"
               />
             </div>
             <button
               type="submit"
               disabled={isSearching}
-              className="bg-[#641E2B] text-[#F8F5EF] hover:bg-[#B99A61] hover:text-[#641E2B] px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all border border-[#B99A61] shadow-md flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+              className="bg-[#111111] text-[#FFFFFF] hover:bg-[#C5A15A] hover:text-[#111111] px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all border border-[#C5A15A] shadow-md flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
             >
-              <Truck className="w-4 h-4 text-[#B99A61]" />
+              <Truck className="w-4 h-4 text-[#C5A15A]" />
               <span>{isSearching ? 'Verifying...' : 'Track Package'}</span>
             </button>
           </form>
@@ -210,23 +210,23 @@ export const TrackOrder: React.FC = () => {
 
         {/* Search Results / Tracking Timeline */}
         {searchedOrder && (
-          <div className="bg-white p-6 sm:p-10 border border-[#B99A61] rounded-3xl shadow-xl space-y-8 animate-fadeIn">
+          <div className="bg-white p-6 sm:p-10 border border-[#C5A15A] rounded-3xl shadow-xl space-y-8 animate-fadeIn">
             
             {/* Status Header Box */}
-            <div className="bg-[#641E2B] text-[#F8F5EF] p-6 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-[#B99A61]">
+            <div className="bg-[#111111] text-[#FFFFFF] p-6 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-[#C5A15A]">
               <div>
-                <span className="text-[10px] uppercase font-bold text-[#B99A61] tracking-widest block mb-0.5">
+                <span className="text-[10px] uppercase font-bold text-[#C5A15A] tracking-widest block mb-0.5">
                   Shipment Status
                 </span>
                 <h3 className="font-serif text-2xl font-bold text-white">
                   Order #{searchedOrder.id}
                 </h3>
-                <div className="flex flex-wrap items-center gap-2 text-xs text-[#E8DFD0] mt-1 font-mono">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-[#E5E7EB] mt-1 font-mono">
                   <span>Courier: <strong className="text-white">{searchedOrder.courierProvider || 'Standard Express'}</strong></span>
                   {searchedOrder.trackingNumber && (
                     <>
                       <span>•</span>
-                      <span>AWB: <strong className="text-[#B99A61]">{searchedOrder.trackingNumber}</strong></span>
+                      <span>AWB: <strong className="text-[#C5A15A]">{searchedOrder.trackingNumber}</strong></span>
                     </>
                   )}
                   {searchedOrder.dispatchDate && (
@@ -244,15 +244,15 @@ export const TrackOrder: React.FC = () => {
                     href={searchedOrder.trackingUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#B99A61] text-[#641E2B] hover:bg-[#D9BA78] font-bold text-xs uppercase tracking-wider transition-colors shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#C5A15A] text-[#111111] hover:bg-[#D9BA78] font-bold text-xs uppercase tracking-wider transition-colors shadow-sm"
                   >
                     <span>Courier Portal</span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 )}
-                <div className="text-left sm:text-right bg-[#4A1520] p-3 rounded-xl border border-[#B99A61]/30">
-                  <span className="text-[10px] uppercase text-[#B99A61] block">Estimated Delivery</span>
-                  <strong className="font-serif text-base text-[#F8F5EF]">
+                <div className="text-left sm:text-right bg-[#000000] p-3 rounded-xl border border-[#C5A15A]/30">
+                  <span className="text-[10px] uppercase text-[#C5A15A] block">Estimated Delivery</span>
+                  <strong className="font-serif text-base text-[#FFFFFF]">
                     {searchedOrder.estimatedDelivery || POLICY_CONFIG.STANDARD_DELIVERY_TIME}
                   </strong>
                 </div>
@@ -282,12 +282,12 @@ export const TrackOrder: React.FC = () => {
 
             {/* Visual 8-Stage Progress Tracker */}
             <div className="space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-widest text-[#641E2B] flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#B99A61]" />
+              <h4 className="text-xs font-bold uppercase tracking-widest text-[#111111] flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-[#C5A15A]" />
                 <span>Fulfillment Milestones</span>
               </h4>
 
-              <div className="space-y-6 relative pl-6 sm:pl-8 border-l-2 border-[#B99A61]/40 text-xs pt-2">
+              <div className="space-y-6 relative pl-6 sm:pl-8 border-l-2 border-[#C5A15A]/40 text-xs pt-2">
                 {STANDARD_PIPELINE_STAGES.map((step, idx) => {
                   const isDone = !isCancelled && currentStageIndex >= idx;
                   const isCurrent = !isCancelled && currentStageIndex === idx;
@@ -297,9 +297,9 @@ export const TrackOrder: React.FC = () => {
                       <div
                         className={`absolute -left-[31px] sm:-left-[39px] top-0 w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all ${
                           isCurrent
-                            ? 'bg-[#B99A61] border-[#641E2B] text-[#641E2B] ring-4 ring-[#B99A61]/30 shadow-md'
+                            ? 'bg-[#C5A15A] border-[#111111] text-[#111111] ring-4 ring-[#C5A15A]/30 shadow-md'
                             : isDone
-                            ? 'bg-[#641E2B] border-[#B99A61] text-[#B99A61] shadow-xs'
+                            ? 'bg-[#111111] border-[#C5A15A] text-[#C5A15A] shadow-xs'
                             : 'bg-white border-gray-300 text-gray-300'
                         }`}
                       >
@@ -315,24 +315,24 @@ export const TrackOrder: React.FC = () => {
                           <h5
                             className={`font-serif text-sm sm:text-base font-bold ${
                               isCurrent
-                                ? 'text-[#641E2B] font-black'
+                                ? 'text-[#111111] font-black'
                                 : isDone
-                                ? 'text-[#641E2B]'
+                                ? 'text-[#111111]'
                                 : 'text-gray-400'
                             }`}
                           >
                             {step.label}
                             {isCurrent && (
-                              <span className="ml-2 text-[10px] bg-[#641E2B] text-[#B99A61] px-2 py-0.5 rounded-full uppercase tracking-wider font-sans font-bold">
+                              <span className="ml-2 text-[10px] bg-[#111111] text-[#C5A15A] px-2 py-0.5 rounded-full uppercase tracking-wider font-sans font-bold">
                                 Current Milestone
                               </span>
                             )}
                           </h5>
-                          <span className="text-[10px] text-[#6E685D] font-medium bg-[#F8F5EF] px-2 py-0.5 rounded-full border border-[#E8DFD0]">
+                          <span className="text-[10px] text-[#6B7280] font-medium bg-[#FFFFFF] px-2 py-0.5 rounded-full border border-[#E5E7EB]">
                             Stage {idx + 1} of 8
                           </span>
                         </div>
-                        <p className={`text-xs ${isDone ? 'text-[#6E685D]' : 'text-gray-400'}`}>
+                        <p className={`text-xs ${isDone ? 'text-[#6B7280]' : 'text-gray-400'}`}>
                           {step.desc}
                         </p>
                       </div>
@@ -344,27 +344,27 @@ export const TrackOrder: React.FC = () => {
 
             {/* Live Activity Timeline / Staff Notes History */}
             {searchedOrder.timeline && searchedOrder.timeline.length > 0 && (
-              <div className="pt-6 border-t border-[#E8DFD0] space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-widest text-[#641E2B] flex items-center gap-2">
-                  <UserCheck className="w-4 h-4 text-[#B99A61]" />
+              <div className="pt-6 border-t border-[#E5E7EB] space-y-3">
+                <h4 className="text-xs font-bold uppercase tracking-widest text-[#111111] flex items-center gap-2">
+                  <UserCheck className="w-4 h-4 text-[#C5A15A]" />
                   <span>Verified Activity Trail</span>
                 </h4>
-                <div className="space-y-2 bg-[#F8F5EF] p-4 rounded-2xl border border-[#E8DFD0]">
+                <div className="space-y-2 bg-[#FFFFFF] p-4 rounded-2xl border border-[#E5E7EB]">
                   {searchedOrder.timeline.map((entry, tIdx) => (
-                    <div key={tIdx} className="text-xs flex flex-col sm:flex-row sm:items-center justify-between py-2 border-b border-[#E8DFD0]/60 last:border-0 gap-1">
+                    <div key={tIdx} className="text-xs flex flex-col sm:flex-row sm:items-center justify-between py-2 border-b border-[#E5E7EB]/60 last:border-0 gap-1">
                       <div>
-                        <strong className="text-[#641E2B] font-semibold">
+                        <strong className="text-[#111111] font-semibold">
                           {entry.previousStatus ? `${entry.previousStatus} → ` : ''}{entry.newStatus}
                         </strong>
                         {entry.remarks && (
-                          <p className="text-[#6E685D] text-[11px] italic mt-0.5">"{entry.remarks}"</p>
+                          <p className="text-[#6B7280] text-[11px] italic mt-0.5">"{entry.remarks}"</p>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 text-[10px] text-[#6E685D] shrink-0 font-mono">
-                        <Calendar className="w-3 h-3 text-[#B99A61]" />
+                      <div className="flex items-center gap-2 text-[10px] text-[#6B7280] shrink-0 font-mono">
+                        <Calendar className="w-3 h-3 text-[#C5A15A]" />
                         <span>{new Date(entry.timestamp).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</span>
                         <span>•</span>
-                        <span className="text-[#641E2B] font-medium">{entry.staffName}</span>
+                        <span className="text-[#111111] font-medium">{entry.staffName}</span>
                       </div>
                     </div>
                   ))}
@@ -373,36 +373,36 @@ export const TrackOrder: React.FC = () => {
             )}
 
             {/* Destination & Package Contents */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-[#E8DFD0]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-[#E5E7EB]">
               
-              <div className="p-5 bg-[#F8F5EF] rounded-2xl border border-[#E8DFD0] text-xs space-y-2">
-                <div className="flex items-center gap-1.5 font-bold text-[#641E2B]">
-                  <MapPin className="w-4 h-4 text-[#B99A61]" />
+              <div className="p-5 bg-[#FFFFFF] rounded-2xl border border-[#E5E7EB] text-xs space-y-2">
+                <div className="flex items-center gap-1.5 font-bold text-[#111111]">
+                  <MapPin className="w-4 h-4 text-[#C5A15A]" />
                   <span>Delivery Destination</span>
                 </div>
-                <p className="text-[#6E685D] leading-relaxed">
-                  <strong className="text-[#641E2B]">{searchedOrder.shippingAddress.name}</strong><br />
+                <p className="text-[#6B7280] leading-relaxed">
+                  <strong className="text-[#111111]">{searchedOrder.shippingAddress.name}</strong><br />
                   {searchedOrder.shippingAddress.street}<br />
                   {searchedOrder.shippingAddress.city}, {searchedOrder.shippingAddress.state} - {searchedOrder.shippingAddress.pincode}<br />
                   Phone: {searchedOrder.shippingAddress.phone}
                 </p>
               </div>
 
-              <div className="p-5 bg-[#F8F5EF] rounded-2xl border border-[#E8DFD0] text-xs space-y-2">
-                <div className="flex items-center gap-1.5 font-bold text-[#641E2B]">
-                  <Package className="w-4 h-4 text-[#B99A61]" />
+              <div className="p-5 bg-[#FFFFFF] rounded-2xl border border-[#E5E7EB] text-xs space-y-2">
+                <div className="flex items-center gap-1.5 font-bold text-[#111111]">
+                  <Package className="w-4 h-4 text-[#C5A15A]" />
                   <span>Package Contents</span>
                 </div>
-                <div className="divide-y divide-[#E8DFD0]">
+                <div className="divide-y divide-[#E5E7EB]">
                   {searchedOrder.items.map((it, i) => (
                     <div key={i} className="py-2 flex justify-between items-center">
-                      <span className="font-semibold text-[#641E2B] line-clamp-1">{it.product.name} (x{it.quantity})</span>
-                      <strong className="text-[#641E2B] shrink-0 ml-2">{formatPrice(it.price * it.quantity)}</strong>
+                      <span className="font-semibold text-[#111111] line-clamp-1">{it.product.name} (x{it.quantity})</span>
+                      <strong className="text-[#111111] shrink-0 ml-2">{formatPrice(it.price * it.quantity)}</strong>
                     </div>
                   ))}
-                  <div className="pt-2 flex justify-between font-serif font-bold text-xs text-[#641E2B]">
+                  <div className="pt-2 flex justify-between font-serif font-bold text-xs text-[#111111]">
                     <span>Total Paid:</span>
-                    <span className="text-[#641E2B] font-bold text-sm">{formatPrice(searchedOrder.total)}</span>
+                    <span className="text-[#111111] font-bold text-sm">{formatPrice(searchedOrder.total)}</span>
                   </div>
                 </div>
               </div>
@@ -413,22 +413,22 @@ export const TrackOrder: React.FC = () => {
         )}
 
         {/* Assistance Box */}
-        <div className="mt-8 p-6 bg-white border border-[#E8DFD0] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs shadow-sm">
+        <div className="mt-8 p-6 bg-white border border-[#E5E7EB] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#641E2B] text-[#B99A61] flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-full bg-[#111111] text-[#C5A15A] flex items-center justify-center shrink-0">
               <Phone className="w-5 h-5" />
             </div>
             <div>
-              <strong className="text-[#641E2B] block font-bold">Need Personal Logistics Support?</strong>
-              <p className="text-[#6E685D]">Reach our Kuthampully Atelier logistics concierge desk at {POLICY_CONFIG.SUPPORT_PHONE}</p>
+              <strong className="text-[#111111] block font-bold">Need Personal Logistics Support?</strong>
+              <p className="text-[#6B7280]">Reach our Kuthampully Atelier logistics concierge desk at {POLICY_CONFIG.SUPPORT_PHONE}</p>
             </div>
           </div>
           <button
             onClick={() => router.push('/contact')}
-            className="text-[#641E2B] hover:text-[#B99A61] font-bold uppercase text-xs flex items-center gap-1.5 cursor-pointer bg-[#F8F5EF] px-4 py-2.5 rounded-xl border border-[#E8DFD0] transition-colors"
+            className="text-[#111111] hover:text-[#C5A15A] font-bold uppercase text-xs flex items-center gap-1.5 cursor-pointer bg-[#FFFFFF] px-4 py-2.5 rounded-xl border border-[#E5E7EB] transition-colors"
           >
             <span>Contact Concierge</span>
-            <ArrowRight className="w-3.5 h-3.5 text-[#B99A61]" />
+            <ArrowRight className="w-3.5 h-3.5 text-[#C5A15A]" />
           </button>
         </div>
 

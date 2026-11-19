@@ -53,25 +53,25 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
   };
 
   return (
-    <section className="py-16 sm:py-20 bg-[#F8F5EF] border-b border-[#E8DFD0] relative overflow-hidden">
+    <section className="py-16 sm:py-20 bg-[#FFFFFF] border-b border-[#E5E7EB] relative overflow-hidden">
       
       {/* Subtle Background Ornament */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#B99A61]/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#641E2B]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#C5A15A]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#111111]/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 bg-[#B99A61]/15 border border-[#B99A61]/40 px-3 py-1 text-[10px] sm:text-xs uppercase font-bold text-[#641E2B] tracking-[0.2em] rounded-full">
-              <Sparkles className="w-3.5 h-3.5 text-[#B99A61]" />
+            <div className="inline-flex items-center gap-2 bg-[#C5A15A]/15 border border-[#C5A15A]/40 px-3 py-1 text-[10px] sm:text-xs uppercase font-bold text-[#111111] tracking-[0.2em] rounded-full">
+              <Sparkles className="w-3.5 h-3.5 text-[#C5A15A]" />
               <span>Atelier Directory</span>
             </div>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#641E2B]">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#111111]">
               Shop by Category
             </h2>
-            <p className="text-xs sm:text-sm text-[#292522]/70 max-w-xl leading-relaxed font-light">
+            <p className="text-xs sm:text-sm text-[#1A1A1A]/70 max-w-xl leading-relaxed font-light">
               Explore authentic GI-tagged Kuthampully handlooms, fine gold zari weaves, and European linen tailored for Kerala luxury.
             </p>
           </div>
@@ -82,8 +82,8 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
               onClick={() => setSelectedDept('all')}
               className={`px-4 py-2 rounded-full transition-all border cursor-pointer ${
                 selectedDept === 'all'
-                  ? 'bg-[#641E2B] text-[#F8F5EF] border-[#641E2B] shadow-sm font-bold'
-                  : 'bg-white text-[#292522] border-[#E8DFD0] hover:border-[#B99A61]'
+                  ? 'bg-[#111111] text-[#FFFFFF] border-[#111111] shadow-sm font-bold'
+                  : 'bg-white text-[#1A1A1A] border-[#E5E7EB] hover:border-[#C5A15A]'
               }`}
             >
               All ({activeCategories.length})
@@ -92,8 +92,8 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
               onClick={() => setSelectedDept('women')}
               className={`px-4 py-2 rounded-full transition-all border cursor-pointer ${
                 selectedDept === 'women'
-                  ? 'bg-[#641E2B] text-[#F8F5EF] border-[#641E2B] shadow-sm font-bold'
-                  : 'bg-white text-[#292522] border-[#E8DFD0] hover:border-[#B99A61]'
+                  ? 'bg-[#111111] text-[#FFFFFF] border-[#111111] shadow-sm font-bold'
+                  : 'bg-white text-[#1A1A1A] border-[#E5E7EB] hover:border-[#C5A15A]'
               }`}
             >
               Women
@@ -102,8 +102,8 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
               onClick={() => setSelectedDept('men')}
               className={`px-4 py-2 rounded-full transition-all border cursor-pointer ${
                 selectedDept === 'men'
-                  ? 'bg-[#641E2B] text-[#F8F5EF] border-[#641E2B] shadow-sm font-bold'
-                  : 'bg-white text-[#292522] border-[#E8DFD0] hover:border-[#B99A61]'
+                  ? 'bg-[#111111] text-[#FFFFFF] border-[#111111] shadow-sm font-bold'
+                  : 'bg-white text-[#1A1A1A] border-[#E5E7EB] hover:border-[#C5A15A]'
               }`}
             >
               Men
@@ -112,8 +112,8 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
               onClick={() => setSelectedDept('kids')}
               className={`px-4 py-2 rounded-full transition-all border cursor-pointer ${
                 selectedDept === 'kids'
-                  ? 'bg-[#641E2B] text-[#F8F5EF] border-[#641E2B] shadow-sm font-bold'
-                  : 'bg-white text-[#292522] border-[#E8DFD0] hover:border-[#B99A61]'
+                  ? 'bg-[#111111] text-[#FFFFFF] border-[#111111] shadow-sm font-bold'
+                  : 'bg-white text-[#1A1A1A] border-[#E5E7EB] hover:border-[#C5A15A]'
               }`}
             >
               Kids
@@ -129,9 +129,9 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
               <div
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat)}
-                className="group luxury-card relative bg-white border border-[#E8DFD0] hover:border-[#B99A61] overflow-hidden cursor-pointer shadow-xs"
+                className="group luxury-card relative bg-white border border-[#E5E7EB] hover:border-[#C5A15A] overflow-hidden cursor-pointer shadow-xs"
               >
-                <div className="aspect-[4/3] sm:aspect-[16/11] relative overflow-hidden bg-[#F8F5EF]">
+                <div className="aspect-[4/3] sm:aspect-[16/11] relative overflow-hidden bg-[#FFFFFF]">
                   <OptimizedImage
                     src={cat.image || '/assets/categories/women_kasavu.jpg'}
                     alt={cat.name}
@@ -142,13 +142,13 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   
                   <div className="absolute top-4 left-4">
-                    <span className="bg-[#641E2B]/90 backdrop-blur-md text-[#F8F5EF] text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-full border border-[#B99A61]/40">
+                    <span className="bg-[#111111]/90 backdrop-blur-md text-[#FFFFFF] text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-full border border-[#C5A15A]/40">
                       {cat.parentCategory}
                     </span>
                   </div>
 
                   <div className="absolute bottom-4 left-4 right-4 text-white">
-                    <h3 className="font-serif text-2xl font-bold leading-tight group-hover:text-[#B99A61] transition-colors">
+                    <h3 className="font-serif text-2xl font-bold leading-tight group-hover:text-[#C5A15A] transition-colors">
                       {cat.name}
                     </h3>
                     <p className="text-xs text-white/80 line-clamp-1 mt-1 font-light">
@@ -157,11 +157,11 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
                   </div>
                 </div>
 
-                <div className="p-4 flex items-center justify-between text-xs border-t border-[#E8DFD0]/60 bg-white">
-                  <span className="text-[#6E685D] font-medium">
+                <div className="p-4 flex items-center justify-between text-xs border-t border-[#E5E7EB]/60 bg-white">
+                  <span className="text-[#6B7280] font-medium">
                     {count} {count === 1 ? 'Garment' : 'Garments'}
                   </span>
-                  <div className="flex items-center gap-1 text-[#641E2B] font-bold uppercase tracking-wider group-hover:translate-x-1 transition-transform">
+                  <div className="flex items-center gap-1 text-[#111111] font-bold uppercase tracking-wider group-hover:translate-x-1 transition-transform">
                     <span>Explore</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </div>

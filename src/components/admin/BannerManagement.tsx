@@ -231,19 +231,19 @@ export const BannerManagement: React.FC = () => {
       
       {/* Toast Feedback */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-[10000] bg-[#641E2B] text-[#F8F5EF] px-5 py-3.5 rounded-2xl border-2 border-[#B99A61] shadow-2xl flex items-center gap-2.5 text-xs font-semibold animate-fadeIn">
-          <CheckCircle2 className="w-4 h-4 text-[#B99A61]" />
+        <div className="fixed bottom-6 right-6 z-[10000] bg-[#111111] text-[#FFFFFF] px-5 py-3.5 rounded-2xl border-2 border-[#C5A15A] shadow-2xl flex items-center gap-2.5 text-xs font-semibold animate-fadeIn">
+          <CheckCircle2 className="w-4 h-4 text-[#C5A15A]" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E5E7EB] pb-5">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#B99A61] block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C5A15A] block">
             Storefront Merchandising CMS
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-0.5">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#111111] mt-0.5">
             Hero &amp; Promotional Banner Manager ({heroBanners.length})
           </h1>
         </div>
@@ -256,7 +256,7 @@ export const BannerManagement: React.FC = () => {
                 showToast('Reset to default heritage campaigns.');
               }
             }}
-            className="bg-[#F8F5EF] text-[#6E685D] hover:text-[#641E2B] hover:bg-[#E8DFD0] px-4 py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center gap-1.5 border border-[#E8DFD0]"
+            className="bg-[#FFFFFF] text-[#6B7280] hover:text-[#111111] hover:bg-[#E5E7EB] px-4 py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center gap-1.5 border border-[#E5E7EB]"
             title="Reset to default banners"
           >
             <RefreshCw className="w-3.5 h-3.5" />
@@ -265,9 +265,9 @@ export const BannerManagement: React.FC = () => {
 
           <button
             onClick={handleOpenCreateModal}
-            className="bg-[#641E2B] text-[#F8F5EF] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-all flex items-center gap-2 border border-[#B99A61] shadow-sm"
+            className="bg-[#111111] text-[#FFFFFF] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#C5A15A] hover:text-[#111111] transition-all flex items-center gap-2 border border-[#C5A15A] shadow-sm"
           >
-            <Plus className="w-4 h-4 text-[#B99A61]" />
+            <Plus className="w-4 h-4 text-[#C5A15A]" />
             <span>Create Hero Banner</span>
           </button>
         </div>
@@ -279,18 +279,18 @@ export const BannerManagement: React.FC = () => {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Eye className="w-4 h-4 text-[#B99A61]" />
-            <h3 className="font-serif font-bold text-base text-[#641E2B]">
+            <Eye className="w-4 h-4 text-[#C5A15A]" />
+            <h3 className="font-serif font-bold text-base text-[#111111]">
               Live Storefront Hero Preview
             </h3>
           </div>
-          <span className="text-[11px] text-[#6E685D] font-mono">
+          <span className="text-[11px] text-[#6B7280] font-mono">
             Slide {previewBannerIndex + 1} of {heroBanners.length}
           </span>
         </div>
 
         {/* Live Simulated Hero Section */}
-        <div className="relative bg-[#641E2B] text-[#F8F5EF] rounded-3xl overflow-hidden shadow-md border-2 border-[#B99A61]/40 min-h-[360px] sm:min-h-[420px] flex items-center">
+        <div className="relative bg-[#111111] text-[#FFFFFF] rounded-3xl overflow-hidden shadow-md border-2 border-[#C5A15A]/40 min-h-[360px] sm:min-h-[420px] flex items-center">
           
           {/* Background Image with Authentic Gradient Overlay */}
           <div className="absolute inset-0 z-0">
@@ -302,37 +302,37 @@ export const BannerManagement: React.FC = () => {
               containerClassName="w-full h-full"
               imageClassName="opacity-45 transform scale-105 transition-all duration-700 ease-out"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#641E2B] via-[#641E2B]/85 sm:via-[#641E2B]/80 to-transparent z-10" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#641E2B] via-transparent to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#111111] via-[#111111]/85 sm:via-[#111111]/80 to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-transparent to-transparent z-10" />
           </div>
 
           {/* Content Container */}
           <div className="p-6 sm:p-12 relative z-10 max-w-2xl space-y-4">
             
             {/* Tag Badge */}
-            <div className="inline-flex items-center gap-2 bg-[#B99A61]/25 border border-[#B99A61] px-3 py-1 text-[10px] sm:text-xs uppercase font-semibold text-[#B99A61] tracking-[0.2em] rounded-md">
-              <Sparkles className="w-3 h-3 text-[#B99A61] animate-pulse" />
+            <div className="inline-flex items-center gap-2 bg-[#C5A15A]/25 border border-[#C5A15A] px-3 py-1 text-[10px] sm:text-xs uppercase font-semibold text-[#C5A15A] tracking-[0.2em] rounded-md">
+              <Sparkles className="w-3 h-3 text-[#C5A15A] animate-pulse" />
               <span>{currentPreview.tag}</span>
             </div>
 
             {/* Headline */}
-            <h2 className="font-serif text-2xl sm:text-4xl md:text-5xl font-bold leading-[1.15] text-[#F8F5EF] whitespace-pre-line tracking-tight">
+            <h2 className="font-serif text-2xl sm:text-4xl md:text-5xl font-bold leading-[1.15] text-[#FFFFFF] whitespace-pre-line tracking-tight">
               {currentPreview.title}
             </h2>
 
             {/* Subtitle */}
-            <p className="font-sans text-xs sm:text-sm text-[#E8DFD0]/90 leading-relaxed max-w-lg font-light line-clamp-3">
+            <p className="font-sans text-xs sm:text-sm text-[#E5E7EB]/90 leading-relaxed max-w-lg font-light line-clamp-3">
               {currentPreview.subtitle}
             </p>
 
             {/* CTA Buttons */}
             <div className="pt-2 flex flex-wrap gap-3 items-center">
-              <span className="bg-[#B99A61] text-[#641E2B] px-5 py-2.5 text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-2 border border-[#B99A61] rounded-md">
+              <span className="bg-[#C5A15A] text-[#111111] px-5 py-2.5 text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-2 border border-[#C5A15A] rounded-md">
                 <span>{currentPreview.primaryCtaText || 'Shop Collection'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </span>
 
-              <span className="bg-transparent text-[#F8F5EF] border border-[#F8F5EF]/40 px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center gap-2 rounded-md">
+              <span className="bg-transparent text-[#FFFFFF] border border-[#FFFFFF]/40 px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center gap-2 rounded-md">
                 <Compass className="w-3.5 h-3.5" />
                 <span>{currentPreview.secondaryCtaText || 'Explore Our Story'}</span>
               </span>
@@ -340,7 +340,7 @@ export const BannerManagement: React.FC = () => {
 
             {/* Slide Switcher Simulator Dots */}
             <div className="pt-4 flex items-center gap-2 text-xs">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-[#B99A61]">Preview Slide:</span>
+              <span className="text-[10px] uppercase font-bold tracking-widest text-[#C5A15A]">Preview Slide:</span>
               <div className="flex gap-1.5">
                 {heroBanners.map((b, idx) => (
                   <button
@@ -348,8 +348,8 @@ export const BannerManagement: React.FC = () => {
                     onClick={() => setPreviewBannerIndex(idx)}
                     className={`px-2.5 py-0.5 text-[10px] rounded border transition-all ${
                       previewBannerIndex === idx
-                        ? 'bg-[#B99A61] text-[#641E2B] font-bold border-[#B99A61]'
-                        : 'bg-black/40 text-[#E8DFD0] border-white/20 hover:border-[#B99A61]'
+                        ? 'bg-[#C5A15A] text-[#111111] font-bold border-[#C5A15A]'
+                        : 'bg-black/40 text-[#E5E7EB] border-white/20 hover:border-[#C5A15A]'
                     }`}
                   >
                     0{idx + 1}
@@ -381,14 +381,14 @@ export const BannerManagement: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-serif font-bold text-lg text-[#641E2B]">
+            <h3 className="font-serif font-bold text-lg text-[#111111]">
               Configured Carousel Banners ({heroBanners.length})
             </h3>
-            <p className="text-xs text-[#6E685D]">
+            <p className="text-xs text-[#6B7280]">
               Add, reorder, or edit hero campaign slides. Active banners rotate on the storefront homepage.
             </p>
           </div>
-          <span className="text-xs font-bold text-[#641E2B] bg-[#F8F5EF] px-3 py-1.5 rounded-xl border border-[#E8DFD0]">
+          <span className="text-xs font-bold text-[#111111] bg-[#FFFFFF] px-3 py-1.5 rounded-xl border border-[#E5E7EB]">
             {activeBanners.length} Active Slides
           </span>
         </div>
@@ -400,12 +400,12 @@ export const BannerManagement: React.FC = () => {
               <div
                 key={banner.id}
                 className={`bg-white border rounded-3xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between ${
-                  isSelectedForPreview ? 'border-2 border-[#B99A61] ring-2 ring-[#B99A61]/20' : 'border-[#E8DFD0]'
+                  isSelectedForPreview ? 'border-2 border-[#C5A15A] ring-2 ring-[#C5A15A]/20' : 'border-[#E5E7EB]'
                 }`}
               >
                 <div>
                   {/* Thumbnail Card Banner Image */}
-                  <div className="h-44 relative overflow-hidden bg-[#F8F5EF]">
+                  <div className="h-44 relative overflow-hidden bg-[#FFFFFF]">
                     <OptimizedImage
                       src={banner.image}
                       alt={banner.tag}
@@ -414,16 +414,16 @@ export const BannerManagement: React.FC = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-10" />
                     
-                    <span className="absolute top-3 left-3 bg-[#641E2B] text-[#B99A61] text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full border border-[#B99A61]">
+                    <span className="absolute top-3 left-3 bg-[#111111] text-[#C5A15A] text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full border border-[#C5A15A]">
                       Slide 0{index + 1}
                     </span>
 
-                    <span className="absolute top-3 right-3 bg-[#B99A61] text-[#641E2B] text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">
+                    <span className="absolute top-3 right-3 bg-[#C5A15A] text-[#111111] text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">
                       {banner.tag}
                     </span>
 
                     <div className="absolute bottom-3 left-4 right-4">
-                      <h4 className="font-serif text-lg font-bold text-[#F8F5EF] line-clamp-1">
+                      <h4 className="font-serif text-lg font-bold text-[#FFFFFF] line-clamp-1">
                         {banner.title.replace('\n', ' ')}
                       </h4>
                     </div>
@@ -431,25 +431,25 @@ export const BannerManagement: React.FC = () => {
 
                   {/* Body Specs */}
                   <div className="p-4 space-y-3 text-xs">
-                    <p className="text-[#6E685D] font-light line-clamp-2 leading-relaxed min-h-[32px]">
+                    <p className="text-[#6B7280] font-light line-clamp-2 leading-relaxed min-h-[32px]">
                       {banner.subtitle}
                     </p>
 
-                    <div className="p-2.5 bg-[#F8F5EF] rounded-xl border border-[#E8DFD0] space-y-1 text-[11px]">
+                    <div className="p-2.5 bg-[#FFFFFF] rounded-xl border border-[#E5E7EB] space-y-1 text-[11px]">
                       <div className="flex items-center justify-between">
-                        <span className="text-[#6E685D]">Primary CTA:</span>
-                        <strong className="text-[#641E2B]">{banner.primaryCtaText || 'Shop Collection'}</strong>
+                        <span className="text-[#6B7280]">Primary CTA:</span>
+                        <strong className="text-[#111111]">{banner.primaryCtaText || 'Shop Collection'}</strong>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-[#6E685D]">Secondary CTA:</span>
-                        <strong className="text-[#641E2B]">{banner.secondaryCtaText || 'Explore Our Story'}</strong>
+                        <span className="text-[#6B7280]">Secondary CTA:</span>
+                        <strong className="text-[#111111]">{banner.secondaryCtaText || 'Explore Our Story'}</strong>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Footer Controls */}
-                <div className="p-4 bg-[#F8F5EF] border-t border-[#E8DFD0] flex items-center justify-between gap-2">
+                <div className="p-4 bg-[#FFFFFF] border-t border-[#E5E7EB] flex items-center justify-between gap-2">
                   
                   {/* Status Toggle Button */}
                   <button
@@ -469,7 +469,7 @@ export const BannerManagement: React.FC = () => {
                     <button
                       onClick={() => setPreviewBannerIndex(index)}
                       className={`p-1.5 rounded-lg text-xs transition-colors border ${
-                        isSelectedForPreview ? 'bg-[#641E2B] text-[#B99A61] border-[#B99A61]' : 'bg-white text-[#641E2B] border-[#E8DFD0] hover:bg-[#F8F5EF]'
+                        isSelectedForPreview ? 'bg-[#111111] text-[#C5A15A] border-[#C5A15A]' : 'bg-white text-[#111111] border-[#E5E7EB] hover:bg-[#FFFFFF]'
                       }`}
                       title="Preview in simulator"
                     >
@@ -479,7 +479,7 @@ export const BannerManagement: React.FC = () => {
                     <button
                       disabled={index === 0}
                       onClick={() => handleMoveUp(index)}
-                      className="p-1.5 bg-white text-[#641E2B] hover:bg-[#F8F5EF] disabled:opacity-30 rounded-lg transition-colors border border-[#E8DFD0]"
+                      className="p-1.5 bg-white text-[#111111] hover:bg-[#FFFFFF] disabled:opacity-30 rounded-lg transition-colors border border-[#E5E7EB]"
                       title="Move slide up"
                     >
                       <ArrowUp className="w-3.5 h-3.5" />
@@ -488,7 +488,7 @@ export const BannerManagement: React.FC = () => {
                     <button
                       disabled={index === heroBanners.length - 1}
                       onClick={() => handleMoveDown(index)}
-                      className="p-1.5 bg-white text-[#641E2B] hover:bg-[#F8F5EF] disabled:opacity-30 rounded-lg transition-colors border border-[#E8DFD0]"
+                      className="p-1.5 bg-white text-[#111111] hover:bg-[#FFFFFF] disabled:opacity-30 rounded-lg transition-colors border border-[#E5E7EB]"
                       title="Move slide down"
                     >
                       <ArrowDown className="w-3.5 h-3.5" />
@@ -496,7 +496,7 @@ export const BannerManagement: React.FC = () => {
 
                     <button
                       onClick={() => handleOpenEditModal(banner)}
-                      className="p-1.5 bg-white text-[#641E2B] hover:bg-[#F8F5EF] rounded-lg transition-colors border border-[#E8DFD0]"
+                      className="p-1.5 bg-white text-[#111111] hover:bg-[#FFFFFF] rounded-lg transition-colors border border-[#E5E7EB]"
                       title="Edit banner"
                     >
                       <Edit className="w-3.5 h-3.5" />
@@ -526,14 +526,14 @@ export const BannerManagement: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[90vh]">
             
             {/* Modal Fixed Header */}
-            <div className="p-5 bg-[#641E2B] text-[#F8F5EF] flex items-center justify-between shrink-0">
+            <div className="p-5 bg-[#111111] text-[#FFFFFF] flex items-center justify-between shrink-0">
               <div>
-                <h3 className="font-serif font-bold text-lg text-[#F8F5EF]">
+                <h3 className="font-serif font-bold text-lg text-[#FFFFFF]">
                   {editingBanner ? 'Edit Hero Banner Slide' : 'Create New Hero Banner'}
                 </h3>
-                <p className="text-xs text-[#E8DFD0]/80">Configure imagery, headlines, badges &amp; action buttons</p>
+                <p className="text-xs text-[#E5E7EB]/80">Configure imagery, headlines, badges &amp; action buttons</p>
               </div>
-              <button onClick={() => setShowModal(false)} className="p-1 text-[#E8DFD0] hover:text-white">
+              <button onClick={() => setShowModal(false)} className="p-1 text-[#E5E7EB] hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -551,23 +551,23 @@ export const BannerManagement: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Campaign Badge Tag *</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Campaign Badge Tag *</label>
                   <input
                     type="text"
                     required
                     value={form.tag || ''}
                     onChange={(e) => setForm({ ...form, tag: e.target.value })}
                     placeholder="e.g. Atelier Signature Edit"
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] font-bold text-[#111111]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Associated Collection Filter</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Associated Collection Filter</label>
                   <select
                     value={form.collectionSlug || 'kasavu-masterpieces'}
                     onChange={(e) => setForm({ ...form, collectionSlug: e.target.value })}
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] font-bold text-[#111111]"
                   >
                     <option value="kasavu-masterpieces">Kasavu Masterpieces</option>
                     <option value="festive-edit">Festive Edit</option>
@@ -578,7 +578,7 @@ export const BannerManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">
+                <label className="block font-semibold text-[#6B7280] mb-1">
                   Hero Headline Title * (Use Enter for line breaks)
                 </label>
                 <textarea
@@ -587,25 +587,25 @@ export const BannerManagement: React.FC = () => {
                   value={form.title || ''}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                   placeholder="e.g. 500 Years of&#10;Kuthampully Handloom&#10;Mastery"
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-serif text-sm font-bold text-[#641E2B]"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] font-serif text-sm font-bold text-[#111111]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Hero Subtitle Story Text</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Hero Subtitle Story Text</label>
                 <textarea
                   rows={2}
                   value={form.subtitle || ''}
                   onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
                   placeholder="e.g. Royal Kasavu Sarees & Unbleached European Linen Woven for Modern Royalty"
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF]"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF]"
                 />
               </div>
 
               {/* Banner Background Image Section */}
               <div className="space-y-3 pt-1">
                 <div className="flex items-center justify-between">
-                  <label className="block font-semibold text-[#6E685D]">Banner Background Image *</label>
+                  <label className="block font-semibold text-[#6B7280]">Banner Background Image *</label>
                   {form.image && (
                     <span className="text-[10px] text-green-700 font-bold bg-green-50 px-2 py-0.5 rounded border border-green-200">
                       Image Ready
@@ -615,7 +615,7 @@ export const BannerManagement: React.FC = () => {
 
                 {/* Live Preview */}
                 {form.image && (
-                  <div className="relative h-36 rounded-2xl overflow-hidden border border-[#E8DFD0] group shadow-xs">
+                  <div className="relative h-36 rounded-2xl overflow-hidden border border-[#E5E7EB] group shadow-xs">
                     <OptimizedImage
                       src={form.image}
                       alt="Banner Preview"
@@ -629,7 +629,7 @@ export const BannerManagement: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => bannerFileInputRef.current?.click()}
-                        className="bg-[#641E2B] text-[#F8F5EF] px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase hover:bg-[#B99A61] hover:text-[#641E2B] transition-all flex items-center gap-1 shadow-sm"
+                        className="bg-[#111111] text-[#FFFFFF] px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase hover:bg-[#C5A15A] hover:text-[#111111] transition-all flex items-center gap-1 shadow-sm"
                       >
                         <ImagePlus className="w-3 h-3" />
                         Change
@@ -666,8 +666,8 @@ export const BannerManagement: React.FC = () => {
                   }}
                   className={`block border-2 border-dashed rounded-2xl p-4 text-center cursor-pointer select-none transition-all ${
                     isBannerDragging
-                      ? 'border-[#B99A61] bg-[#B99A61]/15 ring-2 ring-[#B99A61]/50'
-                      : 'border-[#B99A61]/50 bg-[#F8F5EF]/70 hover:bg-[#F8F5EF] hover:border-[#B99A61]'
+                      ? 'border-[#C5A15A] bg-[#C5A15A]/15 ring-2 ring-[#C5A15A]/50'
+                      : 'border-[#C5A15A]/50 bg-[#FFFFFF]/70 hover:bg-[#FFFFFF] hover:border-[#C5A15A]'
                   }`}
                 >
                   <input
@@ -686,17 +686,17 @@ export const BannerManagement: React.FC = () => {
                     className="sr-only"
                   />
                   <div className="flex flex-col items-center justify-center space-y-1 pointer-events-none">
-                    <div className="w-8 h-8 rounded-full bg-[#641E2B]/5 border border-[#B99A61]/30 flex items-center justify-center text-[#641E2B]">
+                    <div className="w-8 h-8 rounded-full bg-[#111111]/5 border border-[#C5A15A]/30 flex items-center justify-center text-[#111111]">
                       {isUploadingBannerImg ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-[#B99A61]" />
+                        <Loader2 className="w-4 h-4 animate-spin text-[#C5A15A]" />
                       ) : (
-                        <UploadCloud className="w-4 h-4 text-[#641E2B]" />
+                        <UploadCloud className="w-4 h-4 text-[#111111]" />
                       )}
                     </div>
-                    <p className="text-xs font-bold text-[#641E2B]">
+                    <p className="text-xs font-bold text-[#111111]">
                       {isUploadingBannerImg ? 'Processing High-Res Banner...' : 'Click or Drag Image from Device'}
                     </p>
-                    <p className="text-[10px] text-[#6E685D]">
+                    <p className="text-[10px] text-[#6B7280]">
                       Recommended 1800x900 or higher resolution for crisp luxury banners
                     </p>
                   </div>
@@ -711,7 +711,7 @@ export const BannerManagement: React.FC = () => {
 
                 {/* Preset Banner Presets */}
                 <div>
-                  <label className="block text-[10px] font-semibold text-[#6E685D] mb-1">
+                  <label className="block text-[10px] font-semibold text-[#6B7280] mb-1">
                     Or Select from Curated Heritage Presets:
                   </label>
                   <div className="grid grid-cols-2 gap-1.5">
@@ -722,11 +722,11 @@ export const BannerManagement: React.FC = () => {
                         onClick={() => setForm({ ...form, image: preset.url })}
                         className={`p-2 rounded-xl text-left border text-[10px] font-semibold flex items-center gap-1.5 transition-all ${
                           form.image === preset.url
-                            ? 'bg-[#641E2B] text-[#F8F5EF] border-[#B99A61]'
-                            : 'bg-[#F8F5EF] text-[#641E2B] border-[#E8DFD0] hover:border-[#B99A61]'
+                            ? 'bg-[#111111] text-[#FFFFFF] border-[#C5A15A]'
+                            : 'bg-[#FFFFFF] text-[#111111] border-[#E5E7EB] hover:border-[#C5A15A]'
                         }`}
                       >
-                        <ImageIcon className="w-3 h-3 text-[#B99A61] shrink-0" />
+                        <ImageIcon className="w-3 h-3 text-[#C5A15A] shrink-0" />
                         <span className="truncate">{preset.name}</span>
                       </button>
                     ))}
@@ -735,8 +735,8 @@ export const BannerManagement: React.FC = () => {
 
                 {/* Web Image URL Option */}
                 <div>
-                  <label className="block text-[10px] font-semibold text-[#6E685D] mb-1 flex items-center gap-1">
-                    <LinkIcon className="w-2.5 h-2.5 text-[#B99A61]" />
+                  <label className="block text-[10px] font-semibold text-[#6B7280] mb-1 flex items-center gap-1">
+                    <LinkIcon className="w-2.5 h-2.5 text-[#C5A15A]" />
                     <span>Or Custom Web Image URL:</span>
                   </label>
                   <input
@@ -744,41 +744,41 @@ export const BannerManagement: React.FC = () => {
                     value={form.image || ''}
                     onChange={(e) => setForm({ ...form, image: e.target.value })}
                     placeholder="/assets/banners/... or image URL / base64"
-                    className="w-full border border-[#E8DFD0] p-2 rounded-xl bg-[#F8F5EF] text-xs font-mono"
+                    className="w-full border border-[#E5E7EB] p-2 rounded-xl bg-[#FFFFFF] text-xs font-mono"
                   />
                 </div>
               </div>
 
               {/* Primary & Secondary Call to Actions */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[#E8DFD0]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[#E5E7EB]">
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Primary CTA Button Text</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Primary CTA Button Text</label>
                   <input
                     type="text"
                     value={form.primaryCtaText || ''}
                     onChange={(e) => setForm({ ...form, primaryCtaText: e.target.value })}
                     placeholder="e.g. Shop Collection"
-                    className="w-full border border-[#E8DFD0] p-2 rounded-xl bg-[#F8F5EF] font-bold"
+                    className="w-full border border-[#E5E7EB] p-2 rounded-xl bg-[#FFFFFF] font-bold"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Secondary CTA Button Text</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Secondary CTA Button Text</label>
                   <input
                     type="text"
                     value={form.secondaryCtaText || ''}
                     onChange={(e) => setForm({ ...form, secondaryCtaText: e.target.value })}
                     placeholder="e.g. Explore Our Story"
-                    className="w-full border border-[#E8DFD0] p-2 rounded-xl bg-[#F8F5EF] font-bold"
+                    className="w-full border border-[#E5E7EB] p-2 rounded-xl bg-[#FFFFFF] font-bold"
                   />
                 </div>
               </div>
 
               {/* Status Switch */}
-              <div className="pt-2 border-t border-[#E8DFD0] flex items-center justify-between">
+              <div className="pt-2 border-t border-[#E5E7EB] flex items-center justify-between">
                 <div>
-                  <strong className="block text-xs text-[#641E2B]">Banner Active Status</strong>
-                  <span className="text-[10px] text-[#6E685D]">Display this slide on the live homepage hero carousel</span>
+                  <strong className="block text-xs text-[#111111]">Banner Active Status</strong>
+                  <span className="text-[10px] text-[#6B7280]">Display this slide on the live homepage hero carousel</span>
                 </div>
                 <button
                   type="button"
@@ -796,17 +796,17 @@ export const BannerManagement: React.FC = () => {
             </form>
 
             {/* Modal Fixed Footer */}
-            <div className="p-4 bg-[#F8F5EF] border-t border-[#E8DFD0] flex gap-3 shrink-0">
+            <div className="p-4 bg-[#FFFFFF] border-t border-[#E5E7EB] flex gap-3 shrink-0">
               <button
                 type="submit"
                 form="banner-modal-form"
                 disabled={isSaving || isUploadingBannerImg}
                 onClick={handleSave}
-                className="flex-1 bg-[#641E2B] text-[#F8F5EF] py-3 uppercase font-bold text-xs rounded-xl border border-[#B99A61] hover:bg-[#B99A61] hover:text-[#641E2B] disabled:opacity-50 transition-all shadow-sm cursor-pointer flex items-center justify-center gap-2"
+                className="flex-1 bg-[#111111] text-[#FFFFFF] py-3 uppercase font-bold text-xs rounded-xl border border-[#C5A15A] hover:bg-[#C5A15A] hover:text-[#111111] disabled:opacity-50 transition-all shadow-sm cursor-pointer flex items-center justify-center gap-2"
               >
                 {isSaving ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-[#B99A61]" />
+                    <Loader2 className="w-4 h-4 animate-spin text-[#C5A15A]" />
                     <span>Saving Banner...</span>
                   </>
                 ) : (
@@ -816,7 +816,7 @@ export const BannerManagement: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-5 py-3 border border-[#E8DFD0] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all cursor-pointer"
+                className="px-5 py-3 border border-[#E5E7EB] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all cursor-pointer"
               >
                 Cancel
               </button>

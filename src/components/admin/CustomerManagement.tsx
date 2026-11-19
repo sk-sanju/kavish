@@ -154,27 +154,27 @@ export const CustomerManagement: React.FC = () => {
     <div className="space-y-6 animate-fadeIn">
       
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E5E7EB] pb-5">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#B99A61] block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C5A15A] block">
             Customer Relationship Management
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-0.5">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#111111] mt-0.5">
             Patron Accounts CRM ({customersList.length})
           </h1>
         </div>
 
         <button
           onClick={() => setShowAddCustomerModal(true)}
-          className="bg-[#641E2B] text-[#F8F5EF] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-all flex items-center gap-2 border border-[#B99A61] shadow-sm self-start sm:self-auto"
+          className="bg-[#111111] text-[#FFFFFF] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#C5A15A] hover:text-[#111111] transition-all flex items-center gap-2 border border-[#C5A15A] shadow-sm self-start sm:self-auto"
         >
-          <Plus className="w-4 h-4 text-[#B99A61]" />
+          <Plus className="w-4 h-4 text-[#C5A15A]" />
           <span>Add New Customer</span>
         </button>
       </div>
 
       {/* Search Toolbar */}
-      <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs text-xs">
+      <div className="bg-white p-4 border border-[#E5E7EB] rounded-2xl shadow-xs text-xs">
         <div className="relative">
           <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
           <input
@@ -182,17 +182,17 @@ export const CustomerManagement: React.FC = () => {
             placeholder="Search by customer name, email address, or phone number..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full border border-[#E8DFD0] pl-10 pr-4 py-2 rounded-xl bg-[#F8F5EF]"
+            className="w-full border border-[#E5E7EB] pl-10 pr-4 py-2 rounded-xl bg-[#FFFFFF]"
           />
         </div>
       </div>
 
       {/* Customer CRM Table */}
-      <div className="bg-white border border-[#E8DFD0] rounded-2xl shadow-xs overflow-hidden">
+      <div className="bg-white border border-[#E5E7EB] rounded-2xl shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-[#641E2B] text-[#F8F5EF] font-serif uppercase tracking-wider text-[10px]">
+              <tr className="bg-[#111111] text-[#FFFFFF] font-serif uppercase tracking-wider text-[10px]">
                 <th className="p-3.5">Patron Name</th>
                 <th className="p-3.5">Email Address</th>
                 <th className="p-3.5">Mobile Number</th>
@@ -202,19 +202,19 @@ export const CustomerManagement: React.FC = () => {
                 <th className="p-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E8DFD0]">
+            <tbody className="divide-y divide-[#E5E7EB]">
               {filteredCustomers.map(c => (
-                <tr key={c.id} className="hover:bg-[#F8F5EF] transition-colors">
+                <tr key={c.id} className="hover:bg-[#FFFFFF] transition-colors">
                   <td className="p-3.5">
-                    <strong className="text-[#641E2B] block font-serif text-sm">{c.name}</strong>
-                    <span className="text-[10px] text-[#6E685D]">Joined: {c.createdAt}</span>
+                    <strong className="text-[#111111] block font-serif text-sm">{c.name}</strong>
+                    <span className="text-[10px] text-[#6B7280]">Joined: {c.createdAt}</span>
                   </td>
 
-                  <td className="p-3.5 font-mono text-[11px] text-[#641E2B]">{c.email}</td>
+                  <td className="p-3.5 font-mono text-[11px] text-[#111111]">{c.email}</td>
 
                   <td className="p-3.5 font-mono text-[11px]">{c.phone}</td>
 
-                  <td className="p-3.5 font-serif font-bold text-[#641E2B] text-sm">{formatPrice(c.totalSpent || 0)}</td>
+                  <td className="p-3.5 font-serif font-bold text-[#111111] text-sm">{formatPrice(c.totalSpent || 0)}</td>
 
                   <td className="p-3.5 font-bold">{c.orders.length} Order(s)</td>
 
@@ -235,7 +235,7 @@ export const CustomerManagement: React.FC = () => {
                         setSelectedCustomer(c);
                         setInternalNotesInput(c.internalNotes || '');
                       }}
-                      className="bg-[#641E2B] text-[#F8F5EF] px-3.5 py-1.5 rounded-xl font-bold uppercase text-[10px] hover:bg-[#B99A61] hover:text-[#641E2B] transition-all border border-[#B99A61]"
+                      className="bg-[#111111] text-[#FFFFFF] px-3.5 py-1.5 rounded-xl font-bold uppercase text-[10px] hover:bg-[#C5A15A] hover:text-[#111111] transition-all border border-[#C5A15A]"
                     >
                       View CRM Profile
                     </button>
@@ -253,13 +253,13 @@ export const CustomerManagement: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh] my-auto">
             
             {/* Modal Header */}
-            <div className="p-5 bg-[#641E2B] text-[#F8F5EF] flex justify-between items-start shrink-0">
+            <div className="p-5 bg-[#111111] text-[#FFFFFF] flex justify-between items-start shrink-0">
               <div>
-                <span className="text-[10px] uppercase font-bold text-[#B99A61] tracking-widest block">Patron CRM Profile</span>
-                <h3 className="font-serif font-bold text-xl text-[#F8F5EF]">{selectedCustomer.name}</h3>
-                <span className="text-xs text-[#E8DFD0]/80 font-mono">{selectedCustomer.email} • {selectedCustomer.phone}</span>
+                <span className="text-[10px] uppercase font-bold text-[#C5A15A] tracking-widest block">Patron CRM Profile</span>
+                <h3 className="font-serif font-bold text-xl text-[#FFFFFF]">{selectedCustomer.name}</h3>
+                <span className="text-xs text-[#E5E7EB]/80 font-mono">{selectedCustomer.email} • {selectedCustomer.phone}</span>
               </div>
-              <button onClick={() => setSelectedCustomer(null)} className="p-1 text-[#E8DFD0] hover:text-white">
+              <button onClick={() => setSelectedCustomer(null)} className="p-1 text-[#E5E7EB] hover:text-white">
                 <X className="w-6 h-6" />
               </button>
             </div>
@@ -267,24 +267,24 @@ export const CustomerManagement: React.FC = () => {
             {/* Modal Scrollable Body */}
             <div className="p-6 overflow-y-auto space-y-4 text-xs flex-1">
               <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="p-3 bg-[#F8F5EF] border border-[#E8DFD0] rounded-xl">
-                  <span className="text-[#6E685D]">Lifetime Value:</span>
-                  <div className="font-serif text-lg font-bold text-[#641E2B]">{formatPrice(selectedCustomer.totalSpent || 0)}</div>
+                <div className="p-3 bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl">
+                  <span className="text-[#6B7280]">Lifetime Value:</span>
+                  <div className="font-serif text-lg font-bold text-[#111111]">{formatPrice(selectedCustomer.totalSpent || 0)}</div>
                 </div>
-                <div className="p-3 bg-[#F8F5EF] border border-[#E8DFD0] rounded-xl">
-                  <span className="text-[#6E685D]">Total Orders Count:</span>
-                  <div className="font-serif text-lg font-bold text-[#641E2B]">{selectedCustomer.orders.length}</div>
+                <div className="p-3 bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl">
+                  <span className="text-[#6B7280]">Total Orders Count:</span>
+                  <div className="font-serif text-lg font-bold text-[#111111]">{selectedCustomer.orders.length}</div>
                 </div>
               </div>
 
               {/* Saved Delivery Addresses */}
               <div className="space-y-2 text-xs">
-                <h4 className="font-bold text-[#641E2B]">Saved Delivery Addresses</h4>
+                <h4 className="font-bold text-[#111111]">Saved Delivery Addresses</h4>
                 {selectedCustomer.addresses.length === 0 ? (
                   <p className="text-gray-500 italic">No saved address on profile.</p>
                 ) : (
                   selectedCustomer.addresses.map(a => (
-                    <div key={a.id} className="p-3 border border-[#E8DFD0] rounded-xl bg-[#F8F5EF]">
+                    <div key={a.id} className="p-3 border border-[#E5E7EB] rounded-xl bg-[#FFFFFF]">
                       <strong>{a.name}</strong> - {a.street}, {a.city}, {a.state} - {a.pincode} (Ph: {a.phone})
                     </div>
                   ))
@@ -292,31 +292,31 @@ export const CustomerManagement: React.FC = () => {
               </div>
 
               {/* Internal Staff CRM Notes */}
-              <div className="space-y-2 text-xs pt-2 border-t border-[#E8DFD0]">
-                <h4 className="font-bold text-[#641E2B]">Internal Atelier Staff Notes</h4>
+              <div className="space-y-2 text-xs pt-2 border-t border-[#E5E7EB]">
+                <h4 className="font-bold text-[#111111]">Internal Atelier Staff Notes</h4>
                 <textarea
                   rows={3}
                   value={internalNotesInput}
                   onChange={(e) => setInternalNotesInput(e.target.value)}
                   placeholder="Enter private notes about preferences, sizing requirements, or VIP history..."
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF]"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF]"
                 />
               </div>
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 bg-[#F8F5EF] border-t border-[#E8DFD0] flex gap-3 shrink-0">
+            <div className="p-4 bg-[#FFFFFF] border-t border-[#E5E7EB] flex gap-3 shrink-0">
               <button
                 type="button"
                 onClick={handleSaveNotes}
-                className="flex-1 bg-[#641E2B] text-[#F8F5EF] py-3 font-bold uppercase text-xs rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-all border border-[#B99A61]"
+                className="flex-1 bg-[#111111] text-[#FFFFFF] py-3 font-bold uppercase text-xs rounded-xl hover:bg-[#C5A15A] hover:text-[#111111] transition-all border border-[#C5A15A]"
               >
                 Save CRM Notes
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedCustomer(null)}
-                className="px-5 py-3 border border-[#E8DFD0] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all"
+                className="px-5 py-3 border border-[#E5E7EB] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all"
               >
                 Close Profile
               </button>
@@ -333,12 +333,12 @@ export const CustomerManagement: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh] my-auto">
             
             {/* Modal Header */}
-            <div className="p-5 bg-[#641E2B] text-[#F8F5EF] flex items-center justify-between shrink-0">
+            <div className="p-5 bg-[#111111] text-[#FFFFFF] flex items-center justify-between shrink-0">
               <div>
-                <h3 className="font-serif font-bold text-lg text-[#F8F5EF]">Add New Patron Profile</h3>
-                <p className="text-xs text-[#E8DFD0]/80">Register customer account manually in CRM</p>
+                <h3 className="font-serif font-bold text-lg text-[#FFFFFF]">Add New Patron Profile</h3>
+                <p className="text-xs text-[#E5E7EB]/80">Register customer account manually in CRM</p>
               </div>
-              <button onClick={() => setShowAddCustomerModal(false)} className="p-1 text-[#E8DFD0] hover:text-white">
+              <button onClick={() => setShowAddCustomerModal(false)} className="p-1 text-[#E5E7EB] hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -346,55 +346,55 @@ export const CustomerManagement: React.FC = () => {
             {/* Modal Scrollable Form Body */}
             <form id="add-customer-form" onSubmit={handleAddCustomer} className="p-6 overflow-y-auto space-y-3 text-xs flex-1">
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Full Name *</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Full Name *</label>
                 <input
                   type="text"
                   required
                   value={newCustName}
                   onChange={(e) => setNewCustName(e.target.value)}
                   placeholder="e.g. Lakshmi Menon"
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] font-bold text-[#111111]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Email Address *</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Email Address *</label>
                 <input
                   type="email"
                   required
                   value={newCustEmail}
                   onChange={(e) => setNewCustEmail(e.target.value)}
                   placeholder="lakshmi@example.com"
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF]"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Mobile Phone *</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Mobile Phone *</label>
                 <input
                   type="text"
                   required
                   value={newCustPhone}
                   onChange={(e) => setNewCustPhone(e.target.value)}
                   placeholder="+91 98470 12345"
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF]"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF]"
                 />
               </div>
             </form>
 
             {/* Modal Footer */}
-            <div className="p-4 bg-[#F8F5EF] border-t border-[#E8DFD0] flex gap-3 shrink-0">
+            <div className="p-4 bg-[#FFFFFF] border-t border-[#E5E7EB] flex gap-3 shrink-0">
               <button
                 type="submit"
                 form="add-customer-form"
-                className="flex-1 bg-[#641E2B] text-[#F8F5EF] py-3 uppercase font-bold text-xs rounded-xl border border-[#B99A61] hover:bg-[#B99A61] hover:text-[#641E2B] transition-all"
+                className="flex-1 bg-[#111111] text-[#FFFFFF] py-3 uppercase font-bold text-xs rounded-xl border border-[#C5A15A] hover:bg-[#C5A15A] hover:text-[#111111] transition-all"
               >
                 Create Patron Account
               </button>
               <button
                 type="button"
                 onClick={() => setShowAddCustomerModal(false)}
-                className="px-5 py-3 border border-[#E8DFD0] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all"
+                className="px-5 py-3 border border-[#E5E7EB] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all"
               >
                 Cancel
               </button>

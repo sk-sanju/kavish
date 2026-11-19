@@ -26,30 +26,30 @@ export const AdminLoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[85vh] bg-[#F8F5EF] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 animate-fadeIn">
-      <div className="max-w-md w-full space-y-6 bg-white p-8 sm:p-10 border border-[#B99A61] rounded-3xl shadow-2xl relative">
+    <div className="min-h-[85vh] bg-[#FFFFFF] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 animate-fadeIn">
+      <div className="max-w-md w-full space-y-6 bg-white p-8 sm:p-10 border border-[#C5A15A] rounded-3xl shadow-2xl relative">
         
         <button
           onClick={() => router.push('/')}
-          className="absolute top-6 left-6 text-xs text-[#6E685D] hover:text-[#641E2B] flex items-center gap-1 font-semibold cursor-pointer transition-colors"
+          className="absolute top-6 left-6 text-xs text-[#6B7280] hover:text-[#111111] flex items-center gap-1 font-semibold cursor-pointer transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Return to Store</span>
         </button>
 
         <div className="text-center space-y-3 pt-4">
-          <div className="w-16 h-16 rounded-full bg-[#641E2B] text-[#B99A61] flex items-center justify-center mx-auto shadow-md border border-[#B99A61]/40">
+          <div className="w-16 h-16 rounded-full bg-[#111111] text-[#C5A15A] flex items-center justify-center mx-auto shadow-md border border-[#C5A15A]/40">
             <ShieldCheck className="w-8 h-8" />
           </div>
 
           <div>
-            <span className="text-xs uppercase tracking-[0.25em] text-[#B99A61] font-bold block">
+            <span className="text-xs uppercase tracking-[0.25em] text-[#C5A15A] font-bold block">
               Kuthampully Atelier Portal
             </span>
-            <h1 className="font-serif text-3xl font-bold text-[#641E2B] mt-1">
+            <h1 className="font-serif text-3xl font-bold text-[#111111] mt-1">
               Admin Login
             </h1>
-            <p className="text-xs text-[#6E685D] mt-1 font-light">
+            <p className="text-xs text-[#6B7280] mt-1 font-light">
               Authorized staff access for catalog, orders &amp; store ERP management.
             </p>
           </div>
@@ -65,7 +65,7 @@ export const AdminLoginPage: React.FC = () => {
         {/* LOGIN FORM */}
         <form onSubmit={handleLoginSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block text-[#6E685D] font-semibold mb-1.5">Admin Email / Phone *</label>
+            <label className="block text-[#6B7280] font-semibold mb-1.5">Admin Email / Phone *</label>
             <div className="relative">
               <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
               <input
@@ -74,13 +74,13 @@ export const AdminLoginPage: React.FC = () => {
                 placeholder="admin@kavishhandlooms.com or phone"
                 value={emailOrPhone}
                 onChange={(e) => setEmailOrPhone(e.target.value)}
-                className="w-full border border-[#E8DFD0] pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-[#B99A61] bg-[#F8F5EF] text-xs text-[#641E2B] font-medium"
+                className="w-full border border-[#E5E7EB] pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-[#C5A15A] bg-[#FFFFFF] text-xs text-[#111111] font-medium"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[#6E685D] font-semibold mb-1.5">Admin Password *</label>
+            <label className="block text-[#6B7280] font-semibold mb-1.5">Admin Password *</label>
             <div className="relative">
               <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" />
               <input
@@ -89,12 +89,12 @@ export const AdminLoginPage: React.FC = () => {
                 placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-[#E8DFD0] pl-10 pr-10 py-3 rounded-xl focus:outline-none focus:border-[#B99A61] bg-[#F8F5EF] text-xs font-mono text-[#641E2B]"
+                className="w-full border border-[#E5E7EB] pl-10 pr-10 py-3 rounded-xl focus:outline-none focus:border-[#C5A15A] bg-[#FFFFFF] text-xs font-mono text-[#111111]"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3.5 text-gray-400 hover:text-[#641E2B] p-0.5 cursor-pointer"
+                className="absolute right-3 top-3.5 text-gray-400 hover:text-[#111111] p-0.5 cursor-pointer"
                 title={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -104,15 +104,15 @@ export const AdminLoginPage: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full bg-[#641E2B] text-[#F8F5EF] hover:bg-[#B99A61] hover:text-[#641E2B] py-4 text-xs font-bold uppercase tracking-widest transition-all rounded-xl flex items-center justify-center gap-2 border border-[#B99A61] shadow-lg cursor-pointer"
+            className="w-full bg-[#111111] text-[#FFFFFF] hover:bg-[#C5A15A] hover:text-[#111111] py-4 text-xs font-bold uppercase tracking-widest transition-all rounded-xl flex items-center justify-center gap-2 border border-[#C5A15A] shadow-lg cursor-pointer"
           >
             <span>Authenticate &amp; Open Console</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
-        <div className="pt-4 border-t border-[#E8DFD0] text-center">
-          <p className="text-[11px] text-[#6E685D]">
+        <div className="pt-4 border-t border-[#E5E7EB] text-center">
+          <p className="text-[11px] text-[#6B7280]">
             Kavish Kuthampully GI Handloom Unit • Reg No. 2011
           </p>
         </div>

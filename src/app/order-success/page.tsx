@@ -5,7 +5,7 @@ import { OrderSuccess } from '../../views/OrderSuccess';
 
 export default function OrderSuccessRoute() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#F8F5EF]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-[#FFFFFF]" />}>
       <OrderSuccess />
     </Suspense>
   );

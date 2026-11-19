@@ -155,28 +155,28 @@ export const InventoryManagement: React.FC = () => {
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E5E7EB] pb-5">
         <div>
-          <div className="inline-flex items-center gap-2 bg-[#B99A61]/15 border border-[#B99A61]/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest text-[#641E2B]">
-            <Package className="w-3.5 h-3.5 text-[#B99A61]" />
+          <div className="inline-flex items-center gap-2 bg-[#C5A15A]/15 border border-[#C5A15A]/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest text-[#111111]">
+            <Package className="w-3.5 h-3.5 text-[#C5A15A]" />
             <span>Kavish Stock ERP</span>
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-1">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#111111] mt-1">
             Inventory &amp; Stock Management
           </h1>
-          <p className="text-xs text-[#292722]/70 font-light mt-0.5">
+          <p className="text-xs text-[#1A1A1A]/70 font-light mt-0.5">
             Monitor handloom inventory levels, manage variant-level stock, log physical reconciliations, and prevent out-of-stock orders.
           </p>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center bg-white border border-[#E8DFD0] p-1 rounded-xl shadow-xs">
+        <div className="flex items-center bg-white border border-[#E5E7EB] p-1 rounded-xl shadow-xs">
           <button
             onClick={() => setActiveTab('inventory')}
             className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               activeTab === 'inventory'
-                ? 'bg-[#641E2B] text-[#F8F5EF] shadow-xs'
-                : 'text-[#292722] hover:text-[#641E2B]'
+                ? 'bg-[#111111] text-[#FFFFFF] shadow-xs'
+                : 'text-[#1A1A1A] hover:text-[#111111]'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -186,8 +186,8 @@ export const InventoryManagement: React.FC = () => {
             onClick={() => setActiveTab('history')}
             className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               activeTab === 'history'
-                ? 'bg-[#641E2B] text-[#F8F5EF] shadow-xs'
-                : 'text-[#292722] hover:text-[#641E2B]'
+                ? 'bg-[#111111] text-[#FFFFFF] shadow-xs'
+                : 'text-[#1A1A1A] hover:text-[#111111]'
             }`}
           >
             <History className="w-3.5 h-3.5" />
@@ -199,35 +199,35 @@ export const InventoryManagement: React.FC = () => {
       {/* Metric Cards Row */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Total Units */}
-        <div className="bg-white border border-[#E8DFD0] rounded-2xl p-4 shadow-xs">
+        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-xs">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-[#6E685D]">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#6B7280]">
               Total In-Stock Units
             </span>
-            <div className="w-8 h-8 rounded-xl bg-[#641E2B]/10 text-[#641E2B] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#111111]/10 text-[#111111] flex items-center justify-center">
               <Package className="w-4 h-4" />
             </div>
           </div>
-          <div className="font-serif text-2xl font-bold text-[#641E2B]">
+          <div className="font-serif text-2xl font-bold text-[#111111]">
             {inventoryMetrics.totalUnits.toLocaleString()}
           </div>
-          <p className="text-[10px] text-[#6E685D] mt-1">Across {inventoryMetrics.totalProducts} catalog products</p>
+          <p className="text-[10px] text-[#6B7280] mt-1">Across {inventoryMetrics.totalProducts} catalog products</p>
         </div>
 
         {/* Retail Valuation */}
-        <div className="bg-white border border-[#E8DFD0] rounded-2xl p-4 shadow-xs">
+        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-xs">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-[#6E685D]">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#6B7280]">
               Inventory Retail Value
             </span>
-            <div className="w-8 h-8 rounded-xl bg-[#B99A61]/15 text-[#B99A61] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#C5A15A]/15 text-[#C5A15A] flex items-center justify-center">
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
-          <div className="font-serif text-2xl font-bold text-[#641E2B]">
+          <div className="font-serif text-2xl font-bold text-[#111111]">
             {formatPrice(inventoryMetrics.totalRetailValuation)}
           </div>
-          <p className="text-[10px] text-[#6E685D] mt-1">Estimated selling price value</p>
+          <p className="text-[10px] text-[#6B7280] mt-1">Estimated selling price value</p>
         </div>
 
         {/* Low Stock Alerts */}
@@ -264,7 +264,7 @@ export const InventoryManagement: React.FC = () => {
       </div>
 
       {/* Search & Filters */}
-      <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between text-xs">
+      <div className="bg-white p-4 border border-[#E5E7EB] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between text-xs">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
           <input
@@ -272,7 +272,7 @@ export const InventoryManagement: React.FC = () => {
             placeholder="Search by SKU (KV-...), Product Name, or Subcategory..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full border border-[#E8DFD0] pl-10 pr-4 py-2 rounded-xl bg-[#F8F5EF] text-[#292722] focus:outline-none focus:border-[#B99A61]"
+            className="w-full border border-[#E5E7EB] pl-10 pr-4 py-2 rounded-xl bg-[#FFFFFF] text-[#1A1A1A] focus:outline-none focus:border-[#C5A15A]"
           />
         </div>
 
@@ -280,7 +280,7 @@ export const InventoryManagement: React.FC = () => {
           <select
             value={stockStatusFilter}
             onChange={(e: any) => setStockStatusFilter(e.target.value)}
-            className="border border-[#E8DFD0] px-3 py-2 bg-[#F8F5EF] rounded-xl font-semibold text-[#641E2B] focus:outline-none focus:border-[#B99A61]"
+            className="border border-[#E5E7EB] px-3 py-2 bg-[#FFFFFF] rounded-xl font-semibold text-[#111111] focus:outline-none focus:border-[#C5A15A]"
           >
             <option value="all">All Stock Statuses</option>
             <option value="low">Low Stock Alerts Only</option>
@@ -291,7 +291,7 @@ export const InventoryManagement: React.FC = () => {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="border border-[#E8DFD0] px-3 py-2 bg-[#F8F5EF] rounded-xl font-semibold text-[#641E2B] focus:outline-none focus:border-[#B99A61]"
+            className="border border-[#E5E7EB] px-3 py-2 bg-[#FFFFFF] rounded-xl font-semibold text-[#111111] focus:outline-none focus:border-[#C5A15A]"
           >
             <option value="all">All Departments</option>
             <option value="women">Women</option>
@@ -303,10 +303,10 @@ export const InventoryManagement: React.FC = () => {
 
       {/* VIEW 1: LIVE INVENTORY TABLE */}
       {activeTab === 'inventory' && (
-        <div className="bg-white border border-[#E8DFD0] rounded-2xl shadow-xs overflow-hidden">
+        <div className="bg-white border border-[#E5E7EB] rounded-2xl shadow-xs overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#292722]">
-              <thead className="bg-[#F8F5EF] text-[#641E2B] font-serif font-bold uppercase tracking-wider text-[11px] border-b border-[#E8DFD0]">
+            <table className="w-full text-left text-xs text-[#1A1A1A]">
+              <thead className="bg-[#FFFFFF] text-[#111111] font-serif font-bold uppercase tracking-wider text-[11px] border-b border-[#E5E7EB]">
                 <tr>
                   <th className="py-3 px-4">Garment &amp; SKU</th>
                   <th className="py-3 px-4">Department / Subcategory</th>
@@ -316,10 +316,10 @@ export const InventoryManagement: React.FC = () => {
                   <th className="py-3 px-4 text-right">Quick Stock Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E8DFD0]">
+              <tbody className="divide-y divide-[#E5E7EB]">
                 {filteredProducts.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-12 text-center text-[#6E685D]">
+                    <td colSpan={6} className="py-12 text-center text-[#6B7280]">
                       No garments matched the inventory filters.
                     </td>
                   </tr>
@@ -335,7 +335,7 @@ export const InventoryManagement: React.FC = () => {
                         {/* Image, Name, SKU */}
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-14 rounded-lg overflow-hidden bg-[#F8F5EF] shrink-0 border border-[#E8DFD0]">
+                            <div className="w-10 h-14 rounded-lg overflow-hidden bg-[#FFFFFF] shrink-0 border border-[#E5E7EB]">
                               {p.images?.[0] && (
                                 <OptimizedImage
                                   src={p.images[0]}
@@ -346,10 +346,10 @@ export const InventoryManagement: React.FC = () => {
                               )}
                             </div>
                             <div>
-                              <p className="font-bold text-[#641E2B] line-clamp-1">{p.name}</p>
-                              <p className="font-mono text-[10px] text-[#B99A61] font-semibold">{p.sku}</p>
+                              <p className="font-bold text-[#111111] line-clamp-1">{p.name}</p>
+                              <p className="font-mono text-[10px] text-[#C5A15A] font-semibold">{p.sku}</p>
                               {p.variants && p.variants.length > 0 && (
-                                <span className="inline-block bg-[#E8DFD0]/60 text-[#292722] text-[9px] px-1.5 py-0.2 rounded mt-0.5">
+                                <span className="inline-block bg-[#E5E7EB]/60 text-[#1A1A1A] text-[9px] px-1.5 py-0.2 rounded mt-0.5">
                                   {p.variants.length} Variants
                                 </span>
                               )}
@@ -359,23 +359,23 @@ export const InventoryManagement: React.FC = () => {
 
                         {/* Category */}
                         <td className="py-3 px-4 capitalize">
-                          <span className="font-semibold text-[#641E2B]">{p.category}</span>
-                          <span className="text-[#6E685D] block text-[11px]">{p.subcategory}</span>
+                          <span className="font-semibold text-[#111111]">{p.category}</span>
+                          <span className="text-[#6B7280] block text-[11px]">{p.subcategory}</span>
                         </td>
 
                         {/* Price */}
-                        <td className="py-3 px-4 font-bold text-[#641E2B]">
+                        <td className="py-3 px-4 font-bold text-[#111111]">
                           {formatPrice(p.price)}
                         </td>
 
                         {/* Current Stock Number */}
                         <td className="py-3 px-4 text-center">
                           <span className={`font-mono text-base font-bold ${
-                            isOut ? 'text-red-700' : isLow ? 'text-amber-700' : 'text-[#641E2B]'
+                            isOut ? 'text-red-700' : isLow ? 'text-amber-700' : 'text-[#111111]'
                           }`}>
                             {stock}
                           </span>
-                          <span className="text-[10px] text-[#6E685D] block">units</span>
+                          <span className="text-[10px] text-[#6B7280] block">units</span>
                         </td>
 
                         {/* Stock Status Pill */}
@@ -402,7 +402,7 @@ export const InventoryManagement: React.FC = () => {
                         <td className="py-3 px-4 text-right">
                           <button
                             onClick={() => handleOpenAdjustment(p)}
-                            className="inline-flex items-center gap-1.5 bg-[#641E2B] hover:bg-[#B99A61] hover:text-[#641E2B] text-[#F8F5EF] px-3 py-1.5 rounded-xl font-bold text-[11px] uppercase tracking-wider transition-all shadow-xs"
+                            className="inline-flex items-center gap-1.5 bg-[#111111] hover:bg-[#C5A15A] hover:text-[#111111] text-[#FFFFFF] px-3 py-1.5 rounded-xl font-bold text-[11px] uppercase tracking-wider transition-all shadow-xs"
                           >
                             <Edit className="w-3.5 h-3.5" />
                             <span>Adjust Stock</span>
@@ -420,19 +420,19 @@ export const InventoryManagement: React.FC = () => {
 
       {/* VIEW 2: STOCK MOVEMENT HISTORY LOG */}
       {activeTab === 'history' && (
-        <div className="bg-white border border-[#E8DFD0] rounded-2xl shadow-xs overflow-hidden">
-          <div className="p-4 bg-[#F8F5EF] border-b border-[#E8DFD0] flex items-center justify-between">
-            <span className="font-serif font-bold text-sm text-[#641E2B]">
+        <div className="bg-white border border-[#E5E7EB] rounded-2xl shadow-xs overflow-hidden">
+          <div className="p-4 bg-[#FFFFFF] border-b border-[#E5E7EB] flex items-center justify-between">
+            <span className="font-serif font-bold text-sm text-[#111111]">
               Physical Reconciliations &amp; Stock Movement Log ({filteredAdjustments.length})
             </span>
-            <span className="text-[11px] text-[#6E685D]">
+            <span className="text-[11px] text-[#6B7280]">
               All adjustments permanently audited with timestamp &amp; staff attribution
             </span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-[#292722]">
-              <thead className="bg-[#FCFAF5] text-[#641E2B] font-serif font-bold uppercase tracking-wider text-[11px] border-b border-[#E8DFD0]">
+            <table className="w-full text-left text-xs text-[#1A1A1A]">
+              <thead className="bg-[#FCFAF5] text-[#111111] font-serif font-bold uppercase tracking-wider text-[11px] border-b border-[#E5E7EB]">
                 <tr>
                   <th className="py-3 px-4">Date &amp; Time</th>
                   <th className="py-3 px-4">Garment Name &amp; SKU</th>
@@ -443,22 +443,22 @@ export const InventoryManagement: React.FC = () => {
                   <th className="py-3 px-4">Reason / Remarks</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E8DFD0]">
+              <tbody className="divide-y divide-[#E5E7EB]">
                 {filteredAdjustments.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-12 text-center text-[#6E685D]">
+                    <td colSpan={7} className="py-12 text-center text-[#6B7280]">
                       No stock adjustments have been recorded yet. Click "Adjust Stock" on any garment to log a movement.
                     </td>
                   </tr>
                 ) : (
                   filteredAdjustments.map((adj) => (
                     <tr key={adj.id} className="hover:bg-[#FCFAF5] transition-colors">
-                      <td className="py-3 px-4 font-mono text-[10px] text-[#6E685D]">
+                      <td className="py-3 px-4 font-mono text-[10px] text-[#6B7280]">
                         {new Date(adj.timestamp).toLocaleString()}
                       </td>
                       <td className="py-3 px-4">
-                        <p className="font-bold text-[#641E2B]">{adj.productName}</p>
-                        <p className="font-mono text-[10px] text-[#B99A61]">{adj.sku}</p>
+                        <p className="font-bold text-[#111111]">{adj.productName}</p>
+                        <p className="font-mono text-[10px] text-[#C5A15A]">{adj.sku}</p>
                       </td>
                       <td className="py-3 px-4">
                         <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
@@ -476,13 +476,13 @@ export const InventoryManagement: React.FC = () => {
                         {adj.type === 'deduct' && <span className="text-red-700">-{adj.quantity}</span>}
                         {adj.type === 'set' && <span className="text-blue-700">Set</span>}
                       </td>
-                      <td className="py-3 px-4 text-center font-mono font-bold text-[#641E2B]">
+                      <td className="py-3 px-4 text-center font-mono font-bold text-[#111111]">
                         {adj.previousStock} &rarr; {adj.newStock}
                       </td>
-                      <td className="py-3 px-4 font-semibold text-[#292722]">
+                      <td className="py-3 px-4 font-semibold text-[#1A1A1A]">
                         {adj.staffName}
                       </td>
-                      <td className="py-3 px-4 text-[#6E685D] max-w-xs truncate">
+                      <td className="py-3 px-4 text-[#6B7280] max-w-xs truncate">
                         {adj.reason}
                       </td>
                     </tr>
@@ -497,12 +497,12 @@ export const InventoryManagement: React.FC = () => {
       {/* ADJUSTMENT MODAL */}
       {selectedProductForAdj && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
-          <div className="bg-white border border-[#B99A61]/40 rounded-3xl shadow-2xl max-w-lg w-full flex flex-col text-[#292722]">
+          <div className="bg-white border border-[#C5A15A]/40 rounded-3xl shadow-2xl max-w-lg w-full flex flex-col text-[#1A1A1A]">
             
             {/* Modal Header */}
-            <div className="bg-[#641E2B] text-[#F8F5EF] px-6 py-4 rounded-t-3xl flex items-center justify-between border-b border-[#B99A61]/30">
+            <div className="bg-[#111111] text-[#FFFFFF] px-6 py-4 rounded-t-3xl flex items-center justify-between border-b border-[#C5A15A]/30">
               <div>
-                <span className="text-[10px] uppercase font-bold text-[#B99A61] tracking-widest block">
+                <span className="text-[10px] uppercase font-bold text-[#C5A15A] tracking-widest block">
                   Inventory Reconciliation
                 </span>
                 <h2 className="font-serif text-lg font-bold">
@@ -511,7 +511,7 @@ export const InventoryManagement: React.FC = () => {
               </div>
               <button
                 onClick={() => setSelectedProductForAdj(null)}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-[#B99A61] flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-[#C5A15A] flex items-center justify-center transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -520,16 +520,16 @@ export const InventoryManagement: React.FC = () => {
             {/* Modal Form */}
             <form onSubmit={handleSaveAdjustment} className="p-6 space-y-4 text-xs">
               
-              <div className="bg-[#F8F5EF] p-3 rounded-xl border border-[#E8DFD0] flex items-center justify-between">
+              <div className="bg-[#FFFFFF] p-3 rounded-xl border border-[#E5E7EB] flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-[#6E685D] block">Current Recorded Stock:</span>
-                  <span className="font-mono text-base font-bold text-[#641E2B]">
+                  <span className="text-[10px] text-[#6B7280] block">Current Recorded Stock:</span>
+                  <span className="font-mono text-base font-bold text-[#111111]">
                     {selectedProductForAdj.stockCount != null ? selectedProductForAdj.stockCount : 10} Units
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] text-[#6E685D] block">SKU Code:</span>
-                  <span className="font-mono text-xs font-bold text-[#B99A61]">
+                  <span className="text-[10px] text-[#6B7280] block">SKU Code:</span>
+                  <span className="font-mono text-xs font-bold text-[#C5A15A]">
                     {selectedProductForAdj.sku}
                   </span>
                 </div>
@@ -538,13 +538,13 @@ export const InventoryManagement: React.FC = () => {
               {/* Variant Selector (if product has variants) */}
               {selectedProductForAdj.variants && selectedProductForAdj.variants.length > 0 && (
                 <div>
-                  <label className="text-[10px] font-bold uppercase text-[#6E685D] block mb-1">
+                  <label className="text-[10px] font-bold uppercase text-[#6B7280] block mb-1">
                     Select Variant (Optional)
                   </label>
                   <select
                     value={selectedVariantId}
                     onChange={(e) => setSelectedVariantId(e.target.value)}
-                    className="w-full bg-[#FCFAF5] border border-[#E8DFD0] px-3 py-2 rounded-xl text-xs text-[#292722]"
+                    className="w-full bg-[#FCFAF5] border border-[#E5E7EB] px-3 py-2 rounded-xl text-xs text-[#1A1A1A]"
                   >
                     <option value="">Master Product Stock</option>
                     {selectedProductForAdj.variants.map((v) => (
@@ -558,7 +558,7 @@ export const InventoryManagement: React.FC = () => {
 
               {/* Adjustment Type Selector */}
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#6E685D] block mb-1.5">
+                <label className="text-[10px] font-bold uppercase text-[#6B7280] block mb-1.5">
                   Action Type
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -568,7 +568,7 @@ export const InventoryManagement: React.FC = () => {
                     className={`py-2 px-3 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all ${
                       adjustmentType === 'add'
                         ? 'bg-emerald-700 text-white shadow-xs'
-                        : 'bg-[#FCFAF5] border border-[#E8DFD0] text-[#292722]'
+                        : 'bg-[#FCFAF5] border border-[#E5E7EB] text-[#1A1A1A]'
                     }`}
                   >
                     <Plus className="w-3.5 h-3.5" />
@@ -581,7 +581,7 @@ export const InventoryManagement: React.FC = () => {
                     className={`py-2 px-3 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all ${
                       adjustmentType === 'deduct'
                         ? 'bg-red-700 text-white shadow-xs'
-                        : 'bg-[#FCFAF5] border border-[#E8DFD0] text-[#292722]'
+                        : 'bg-[#FCFAF5] border border-[#E5E7EB] text-[#1A1A1A]'
                     }`}
                   >
                     <Minus className="w-3.5 h-3.5" />
@@ -593,8 +593,8 @@ export const InventoryManagement: React.FC = () => {
                     onClick={() => setAdjustmentType('set')}
                     className={`py-2 px-3 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all ${
                       adjustmentType === 'set'
-                        ? 'bg-[#641E2B] text-white shadow-xs'
-                        : 'bg-[#FCFAF5] border border-[#E8DFD0] text-[#292722]'
+                        ? 'bg-[#111111] text-white shadow-xs'
+                        : 'bg-[#FCFAF5] border border-[#E5E7EB] text-[#1A1A1A]'
                     }`}
                   >
                     <Check className="w-3.5 h-3.5" />
@@ -605,7 +605,7 @@ export const InventoryManagement: React.FC = () => {
 
               {/* Quantity */}
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#6E685D] block mb-1">
+                <label className="text-[10px] font-bold uppercase text-[#6B7280] block mb-1">
                   Quantity ({adjustmentType === 'set' ? 'New Exact Total' : 'Units to ' + adjustmentType})
                 </label>
                 <input
@@ -614,20 +614,20 @@ export const InventoryManagement: React.FC = () => {
                   max="10000"
                   value={adjustmentQty}
                   onChange={(e) => setAdjustmentQty(parseInt(e.target.value) || 0)}
-                  className="w-full bg-[#FCFAF5] border border-[#E8DFD0] px-3 py-2 rounded-xl text-sm font-mono font-bold text-[#641E2B]"
+                  className="w-full bg-[#FCFAF5] border border-[#E5E7EB] px-3 py-2 rounded-xl text-sm font-mono font-bold text-[#111111]"
                   required
                 />
               </div>
 
               {/* Reason Selector & Notes */}
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#6E685D] block mb-1">
+                <label className="text-[10px] font-bold uppercase text-[#6B7280] block mb-1">
                   Official Adjustment Reason
                 </label>
                 <select
                   value={adjustmentReason}
                   onChange={(e) => setAdjustmentReason(e.target.value)}
-                  className="w-full bg-[#FCFAF5] border border-[#E8DFD0] px-3 py-2 rounded-xl text-xs mb-2 text-[#292722]"
+                  className="w-full bg-[#FCFAF5] border border-[#E5E7EB] px-3 py-2 rounded-xl text-xs mb-2 text-[#1A1A1A]"
                 >
                   <option value="New Handloom Batch Received from Kuthampully Loom">New Handloom Batch Received from Kuthampully Loom</option>
                   <option value="Physical Loom Audit Reconciliation">Physical Loom Audit Reconciliation</option>
@@ -641,7 +641,7 @@ export const InventoryManagement: React.FC = () => {
                   placeholder="Or enter custom reason / weaver batch ID..."
                   value={adjustmentReason}
                   onChange={(e) => setAdjustmentReason(e.target.value)}
-                  className="w-full bg-[#FCFAF5] border border-[#E8DFD0] px-3 py-1.5 rounded-xl text-xs text-[#292722]"
+                  className="w-full bg-[#FCFAF5] border border-[#E5E7EB] px-3 py-1.5 rounded-xl text-xs text-[#1A1A1A]"
                 />
               </div>
 
@@ -650,13 +650,13 @@ export const InventoryManagement: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setSelectedProductForAdj(null)}
-                  className="flex-1 bg-white border border-[#E8DFD0] hover:bg-gray-50 py-2.5 rounded-xl font-bold uppercase text-[11px] text-[#292722]"
+                  className="flex-1 bg-white border border-[#E5E7EB] hover:bg-gray-50 py-2.5 rounded-xl font-bold uppercase text-[11px] text-[#1A1A1A]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-[#641E2B] hover:bg-[#B99A61] hover:text-[#641E2B] text-[#F8F5EF] py-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider transition-colors shadow-md"
+                  className="flex-1 bg-[#111111] hover:bg-[#C5A15A] hover:text-[#111111] text-[#FFFFFF] py-2.5 rounded-xl font-bold uppercase text-[11px] tracking-wider transition-colors shadow-md"
                 >
                   Commit Adjustment
                 </button>

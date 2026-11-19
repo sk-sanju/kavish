@@ -140,19 +140,19 @@ export const CategoryManagement: React.FC = () => {
       
       {/* Feedback Toast */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#641E2B] text-[#F8F5EF] px-4 py-3 rounded-2xl border border-[#B99A61] shadow-xl flex items-center gap-2 text-xs font-semibold animate-fadeIn">
-          <CheckCircle2 className="w-4 h-4 text-[#B99A61]" />
+        <div className="fixed bottom-6 right-6 z-50 bg-[#111111] text-[#FFFFFF] px-4 py-3 rounded-2xl border border-[#C5A15A] shadow-xl flex items-center gap-2 text-xs font-semibold animate-fadeIn">
+          <CheckCircle2 className="w-4 h-4 text-[#C5A15A]" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E5E7EB] pb-5">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#B99A61] block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C5A15A] block">
             Taxonomy &amp; Navigation
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-0.5">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#111111] mt-0.5">
             Category Management ({categories.length})
           </h1>
         </div>
@@ -161,9 +161,9 @@ export const CategoryManagement: React.FC = () => {
           {categories.length === 0 && (
             <button
               onClick={handleSeedDefaults}
-              className="bg-[#F8F5EF] text-[#641E2B] px-4 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#E8DFD0] transition-all flex items-center gap-1.5 border border-[#B99A61]"
+              className="bg-[#FFFFFF] text-[#111111] px-4 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#E5E7EB] transition-all flex items-center gap-1.5 border border-[#C5A15A]"
             >
-              <Sparkles className="w-4 h-4 text-[#B99A61]" />
+              <Sparkles className="w-4 h-4 text-[#C5A15A]" />
               <span>Load Default Categories</span>
             </button>
           )}
@@ -183,16 +183,16 @@ export const CategoryManagement: React.FC = () => {
               });
               setShowModal(true);
             }}
-            className="bg-[#641E2B] text-[#F8F5EF] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-all flex items-center gap-2 border border-[#B99A61] shadow-sm"
+            className="bg-[#111111] text-[#FFFFFF] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#C5A15A] hover:text-[#111111] transition-all flex items-center gap-2 border border-[#C5A15A] shadow-sm"
           >
-            <Plus className="w-4 h-4 text-[#B99A61]" />
+            <Plus className="w-4 h-4 text-[#C5A15A]" />
             <span>Create Category</span>
           </button>
         </div>
       </div>
 
       {/* Department Filter Tabs & Search Bar */}
-      <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between text-xs">
+      <div className="bg-white p-4 border border-[#E5E7EB] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between text-xs">
         {/* Search */}
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
@@ -201,34 +201,34 @@ export const CategoryManagement: React.FC = () => {
             placeholder="Search categories by name, slug, or description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full border border-[#E8DFD0] pl-10 pr-4 py-2 rounded-xl bg-[#F8F5EF] text-xs text-[#641E2B]"
+            className="w-full border border-[#E5E7EB] pl-10 pr-4 py-2 rounded-xl bg-[#FFFFFF] text-xs text-[#111111]"
           />
         </div>
 
         {/* Department Filter */}
-        <div className="flex items-center gap-1.5 bg-[#F8F5EF] p-1 rounded-xl border border-[#E8DFD0] overflow-x-auto">
-          <Filter className="w-3.5 h-3.5 text-[#B99A61] ml-2 shrink-0" />
+        <div className="flex items-center gap-1.5 bg-[#FFFFFF] p-1 rounded-xl border border-[#E5E7EB] overflow-x-auto">
+          <Filter className="w-3.5 h-3.5 text-[#C5A15A] ml-2 shrink-0" />
           <button
             onClick={() => setSelectedDepartment('all')}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap ${selectedDepartment === 'all' ? 'bg-[#641E2B] text-[#F8F5EF] font-bold shadow-xs' : 'text-[#6E685D] hover:bg-white'}`}
+            className={`px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap ${selectedDepartment === 'all' ? 'bg-[#111111] text-[#FFFFFF] font-bold shadow-xs' : 'text-[#6B7280] hover:bg-white'}`}
           >
             All ({categories.length})
           </button>
           <button
             onClick={() => setSelectedDepartment('women')}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap ${selectedDepartment === 'women' ? 'bg-[#641E2B] text-[#F8F5EF] font-bold shadow-xs' : 'text-[#6E685D] hover:bg-white'}`}
+            className={`px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap ${selectedDepartment === 'women' ? 'bg-[#111111] text-[#FFFFFF] font-bold shadow-xs' : 'text-[#6B7280] hover:bg-white'}`}
           >
             Women ({categories.filter(c => c.parentCategory === 'women').length})
           </button>
           <button
             onClick={() => setSelectedDepartment('men')}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap ${selectedDepartment === 'men' ? 'bg-[#641E2B] text-[#F8F5EF] font-bold shadow-xs' : 'text-[#6E685D] hover:bg-white'}`}
+            className={`px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap ${selectedDepartment === 'men' ? 'bg-[#111111] text-[#FFFFFF] font-bold shadow-xs' : 'text-[#6B7280] hover:bg-white'}`}
           >
             Men ({categories.filter(c => c.parentCategory === 'men').length})
           </button>
           <button
             onClick={() => setSelectedDepartment('kids')}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap ${selectedDepartment === 'kids' ? 'bg-[#641E2B] text-[#F8F5EF] font-bold shadow-xs' : 'text-[#6E685D] hover:bg-white'}`}
+            className={`px-3 py-1.5 rounded-lg font-semibold transition-all whitespace-nowrap ${selectedDepartment === 'kids' ? 'bg-[#111111] text-[#FFFFFF] font-bold shadow-xs' : 'text-[#6B7280] hover:bg-white'}`}
           >
             Kids ({categories.filter(c => c.parentCategory === 'kids').length})
           </button>
@@ -237,15 +237,15 @@ export const CategoryManagement: React.FC = () => {
 
       {/* Empty State When No Categories Found */}
       {filteredCategories.length === 0 ? (
-        <div className="bg-white border-2 border-dashed border-[#E8DFD0] rounded-3xl p-12 text-center space-y-4 shadow-xs">
-          <div className="w-16 h-16 rounded-full bg-[#F8F5EF] border border-[#B99A61] flex items-center justify-center mx-auto text-[#641E2B]">
-            <Layers className="w-8 h-8 text-[#B99A61]" />
+        <div className="bg-white border-2 border-dashed border-[#E5E7EB] rounded-3xl p-12 text-center space-y-4 shadow-xs">
+          <div className="w-16 h-16 rounded-full bg-[#FFFFFF] border border-[#C5A15A] flex items-center justify-center mx-auto text-[#111111]">
+            <Layers className="w-8 h-8 text-[#C5A15A]" />
           </div>
           <div className="max-w-md mx-auto space-y-1">
-            <h3 className="font-serif text-lg font-bold text-[#641E2B]">
+            <h3 className="font-serif text-lg font-bold text-[#111111]">
               {categories.length === 0 ? 'No Categories Configured Yet' : 'No Matching Categories Found'}
             </h3>
-            <p className="text-xs text-[#6E685D]">
+            <p className="text-xs text-[#6B7280]">
               {categories.length === 0
                 ? 'Organize your store taxonomy by adding your first handloom department or loading default heritage categories.'
                 : 'Try adjusting your search query or department filter.'}
@@ -256,9 +256,9 @@ export const CategoryManagement: React.FC = () => {
             {categories.length === 0 && (
               <button
                 onClick={handleSeedDefaults}
-                className="bg-[#F8F5EF] text-[#641E2B] px-4 py-2.5 rounded-xl text-xs font-bold uppercase border border-[#B99A61] hover:bg-[#E8DFD0] transition-all flex items-center gap-1.5"
+                className="bg-[#FFFFFF] text-[#111111] px-4 py-2.5 rounded-xl text-xs font-bold uppercase border border-[#C5A15A] hover:bg-[#E5E7EB] transition-all flex items-center gap-1.5"
               >
-                <Sparkles className="w-3.5 h-3.5 text-[#B99A61]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#C5A15A]" />
                 <span>Load Default Categories</span>
               </button>
             )}
@@ -277,9 +277,9 @@ export const CategoryManagement: React.FC = () => {
                 });
                 setShowModal(true);
               }}
-              className="bg-[#641E2B] text-[#F8F5EF] px-5 py-2.5 rounded-xl text-xs font-bold uppercase border border-[#B99A61] hover:bg-[#B99A61] hover:text-[#641E2B] transition-all flex items-center gap-1.5 shadow-sm"
+              className="bg-[#111111] text-[#FFFFFF] px-5 py-2.5 rounded-xl text-xs font-bold uppercase border border-[#C5A15A] hover:bg-[#C5A15A] hover:text-[#111111] transition-all flex items-center gap-1.5 shadow-sm"
             >
-              <Plus className="w-3.5 h-3.5 text-[#B99A61]" />
+              <Plus className="w-3.5 h-3.5 text-[#C5A15A]" />
               <span>Create Category</span>
             </button>
           </div>
@@ -292,10 +292,10 @@ export const CategoryManagement: React.FC = () => {
             return (
               <div
                 key={cat.id}
-                className="bg-white border border-[#E8DFD0] hover:border-[#B99A61] rounded-3xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+                className="bg-white border border-[#E5E7EB] hover:border-[#C5A15A] rounded-3xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
               >
                 <div>
-                  <div className="h-44 relative overflow-hidden bg-[#F8F5EF]">
+                  <div className="h-44 relative overflow-hidden bg-[#FFFFFF]">
                     <OptimizedImage
                       src={cat.image}
                       alt={cat.name}
@@ -305,31 +305,31 @@ export const CategoryManagement: React.FC = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent z-10" />
                     
-                    <span className="absolute top-3 right-3 bg-[#641E2B] text-[#B99A61] text-[10px] uppercase font-bold px-2.5 py-1 rounded-full border border-[#B99A61] shadow-sm">
+                    <span className="absolute top-3 right-3 bg-[#111111] text-[#C5A15A] text-[10px] uppercase font-bold px-2.5 py-1 rounded-full border border-[#C5A15A] shadow-sm">
                       {cat.parentCategory}
                     </span>
                     
-                    <h3 className="absolute bottom-3 left-4 right-4 font-serif text-xl font-bold text-[#F8F5EF] line-clamp-1">
+                    <h3 className="absolute bottom-3 left-4 right-4 font-serif text-xl font-bold text-[#FFFFFF] line-clamp-1">
                       {cat.name}
                     </h3>
                   </div>
 
                   <div className="p-4 space-y-2.5 text-xs">
-                    <p className="text-[#6E685D] font-light line-clamp-2 leading-relaxed min-h-[32px]">
+                    <p className="text-[#6B7280] font-light line-clamp-2 leading-relaxed min-h-[32px]">
                       {cat.description || 'Traditional Kuthampully handloom certified collection.'}
                     </p>
-                    <div className="pt-2 border-t border-[#F8F5EF] flex justify-between items-center text-[11px] font-mono text-[#641E2B]">
-                      <span className="bg-[#F8F5EF] px-2 py-0.5 rounded border border-[#E8DFD0] text-[10px]">
+                    <div className="pt-2 border-t border-[#FFFFFF] flex justify-between items-center text-[11px] font-mono text-[#111111]">
+                      <span className="bg-[#FFFFFF] px-2 py-0.5 rounded border border-[#E5E7EB] text-[10px]">
                         /{cat.slug}
                       </span>
-                      <span className="font-bold text-[#641E2B] bg-[#F8F5EF] px-2 py-0.5 rounded-full border border-[#E8DFD0]">
+                      <span className="font-bold text-[#111111] bg-[#FFFFFF] px-2 py-0.5 rounded-full border border-[#E5E7EB]">
                         {liveGarmentCount} Garments
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-4 bg-[#F8F5EF] border-t border-[#E8DFD0] flex items-center justify-between">
+                <div className="p-4 bg-[#FFFFFF] border-t border-[#E5E7EB] flex items-center justify-between">
                   <button
                     onClick={() => handleToggleStatus(cat.id)}
                     className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase flex items-center gap-1 border transition-all ${
@@ -349,7 +349,7 @@ export const CategoryManagement: React.FC = () => {
                         setForm(cat);
                         setShowModal(true);
                       }}
-                      className="p-1.5 text-[#641E2B] hover:bg-white rounded-lg transition-colors border border-transparent hover:border-[#E8DFD0]"
+                      className="p-1.5 text-[#111111] hover:bg-white rounded-lg transition-colors border border-transparent hover:border-[#E5E7EB]"
                       title="Edit Category"
                     >
                       <Edit className="w-4 h-4" />
@@ -375,14 +375,14 @@ export const CategoryManagement: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[85vh]">
             
             {/* Modal Fixed Header */}
-            <div className="p-5 bg-[#641E2B] text-[#F8F5EF] flex items-center justify-between shrink-0">
+            <div className="p-5 bg-[#111111] text-[#FFFFFF] flex items-center justify-between shrink-0">
               <div>
-                <h3 className="font-serif font-bold text-lg text-[#F8F5EF]">
+                <h3 className="font-serif font-bold text-lg text-[#FFFFFF]">
                   {editingCategory ? 'Edit Category' : 'Create New Category'}
                 </h3>
-                <p className="text-xs text-[#E8DFD0]/80">Configure taxonomy, department &amp; SEO metadata</p>
+                <p className="text-xs text-[#E5E7EB]/80">Configure taxonomy, department &amp; SEO metadata</p>
               </div>
-              <button onClick={() => setShowModal(false)} className="p-1 text-[#E8DFD0] hover:text-white">
+              <button onClick={() => setShowModal(false)} className="p-1 text-[#E5E7EB] hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -390,24 +390,24 @@ export const CategoryManagement: React.FC = () => {
             {/* Modal Scrollable Form Body */}
             <form id="category-modal-form" noValidate onSubmit={handleSave} className="p-6 overflow-y-auto space-y-4 text-xs flex-1">
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Category Name *</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Category Name *</label>
                 <input
                   type="text"
                   required
                   value={form.name}
                   onChange={(e) => handleNameChange(e.target.value)}
                   placeholder="e.g. Kasavu Sarees"
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] font-bold text-[#111111]"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">Parent Department</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">Parent Department</label>
                   <select
                     value={form.parentCategory}
                     onChange={(e) => setForm({ ...form, parentCategory: e.target.value as ProductCategory })}
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] font-bold text-[#111111]"
                   >
                     <option value="women">Women</option>
                     <option value="men">Men</option>
@@ -416,13 +416,13 @@ export const CategoryManagement: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">URL Slug</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">URL Slug</label>
                   <input
                     type="text"
                     value={form.slug}
                     onChange={(e) => setForm({ ...form, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, '-') })}
                     placeholder="e.g. kasavu-sarees"
-                    className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-mono text-xs text-[#641E2B]"
+                    className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] font-mono text-xs text-[#111111]"
                   />
                 </div>
               </div>
@@ -430,7 +430,7 @@ export const CategoryManagement: React.FC = () => {
               {/* Category Image Section with Device Upload */}
               <div className="space-y-3 pt-1">
                 <div className="flex items-center justify-between">
-                  <label className="block font-semibold text-[#6E685D]">Category Banner Image</label>
+                  <label className="block font-semibold text-[#6B7280]">Category Banner Image</label>
                   {form.image && (
                     <span className="text-[10px] text-green-700 font-bold bg-green-50 px-2 py-0.5 rounded border border-green-200">
                       Image Selected
@@ -440,7 +440,7 @@ export const CategoryManagement: React.FC = () => {
 
                 {/* Live Preview If Image Exists */}
                 {form.image ? (
-                  <div className="relative h-36 rounded-2xl overflow-hidden border border-[#E8DFD0] group shadow-xs">
+                  <div className="relative h-36 rounded-2xl overflow-hidden border border-[#E5E7EB] group shadow-xs">
                     <OptimizedImage
                       src={form.image}
                       alt="Category Banner Preview"
@@ -454,7 +454,7 @@ export const CategoryManagement: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => categoryFileInputRef.current?.click()}
-                        className="bg-[#641E2B] text-[#F8F5EF] px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase hover:bg-[#B99A61] hover:text-[#641E2B] transition-all flex items-center gap-1 shadow-sm"
+                        className="bg-[#111111] text-[#FFFFFF] px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase hover:bg-[#C5A15A] hover:text-[#111111] transition-all flex items-center gap-1 shadow-sm"
                       >
                         <ImagePlus className="w-3 h-3" />
                         Change
@@ -499,8 +499,8 @@ export const CategoryManagement: React.FC = () => {
                   }}
                   className={`block border-2 border-dashed rounded-2xl p-4 text-center cursor-pointer select-none transition-all ${
                     isCategoryDragging
-                      ? 'border-[#B99A61] bg-[#B99A61]/15 ring-2 ring-[#B99A61]/50'
-                      : 'border-[#B99A61]/50 bg-[#F8F5EF]/70 hover:bg-[#F8F5EF] hover:border-[#B99A61]'
+                      ? 'border-[#C5A15A] bg-[#C5A15A]/15 ring-2 ring-[#C5A15A]/50'
+                      : 'border-[#C5A15A]/50 bg-[#FFFFFF]/70 hover:bg-[#FFFFFF] hover:border-[#C5A15A]'
                   }`}
                 >
                   <input
@@ -519,21 +519,21 @@ export const CategoryManagement: React.FC = () => {
                     className="sr-only"
                   />
                   <div className="flex flex-col items-center justify-center space-y-1.5 pointer-events-none">
-                    <div className="w-9 h-9 rounded-full bg-[#641E2B]/5 border border-[#B99A61]/30 flex items-center justify-center text-[#641E2B]">
+                    <div className="w-9 h-9 rounded-full bg-[#111111]/5 border border-[#C5A15A]/30 flex items-center justify-center text-[#111111]">
                       {isUploadingCategoryImg ? (
-                        <Loader2 className="w-5 h-5 animate-spin text-[#B99A61]" />
+                        <Loader2 className="w-5 h-5 animate-spin text-[#C5A15A]" />
                       ) : (
-                        <UploadCloud className="w-5 h-5 text-[#641E2B]" />
+                        <UploadCloud className="w-5 h-5 text-[#111111]" />
                       )}
                     </div>
-                    <p className="text-xs font-bold text-[#641E2B]">
+                    <p className="text-xs font-bold text-[#111111]">
                       {isUploadingCategoryImg ? 'Uploading & Processing...' : 'Click to Upload Banner from Device'}
                     </p>
-                    <p className="text-[10px] text-[#6E685D]">
+                    <p className="text-[10px] text-[#6B7280]">
                       Drag & drop image here or click to browse (JPG, PNG, WebP, SVG)
                     </p>
-                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#641E2B] text-[#F8F5EF] text-[10px] font-bold uppercase rounded-lg tracking-wider mt-0.5 shadow-xs">
-                      <ImagePlus className="w-3 h-3 text-[#B99A61]" />
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#111111] text-[#FFFFFF] text-[10px] font-bold uppercase rounded-lg tracking-wider mt-0.5 shadow-xs">
+                      <ImagePlus className="w-3 h-3 text-[#C5A15A]" />
                       <span>Browse File</span>
                     </span>
                   </div>
@@ -548,8 +548,8 @@ export const CategoryManagement: React.FC = () => {
 
                 {/* Web Image URL Input */}
                 <div>
-                  <label className="block text-[10px] font-semibold text-[#6E685D] mb-1 flex items-center gap-1">
-                    <LinkIcon className="w-2.5 h-2.5 text-[#B99A61]" />
+                  <label className="block text-[10px] font-semibold text-[#6B7280] mb-1 flex items-center gap-1">
+                    <LinkIcon className="w-2.5 h-2.5 text-[#C5A15A]" />
                     <span>Or Paste Image Web URL:</span>
                   </label>
                   <input
@@ -557,59 +557,59 @@ export const CategoryManagement: React.FC = () => {
                     value={form.image || ''}
                     onChange={(e) => setForm({ ...form, image: e.target.value })}
                     placeholder="/assets/categories/... or image data URL"
-                    className="w-full border border-[#E8DFD0] p-2 rounded-xl bg-[#F8F5EF] text-xs font-mono"
+                    className="w-full border border-[#E5E7EB] p-2 rounded-xl bg-[#FFFFFF] text-xs font-mono"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Category Description</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Category Description</label>
                 <textarea
                   rows={2}
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                   placeholder="Short description of this handloom category..."
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF]"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF]"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[#E8DFD0]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[#E5E7EB]">
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">SEO Title</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">SEO Title</label>
                   <input
                     type="text"
                     value={form.seoTitle}
                     onChange={(e) => setForm({ ...form, seoTitle: e.target.value })}
                     placeholder="e.g. Authentic Kasavu Sarees | Kavish"
-                    className="w-full border border-[#E8DFD0] p-2 rounded-xl bg-[#F8F5EF]"
+                    className="w-full border border-[#E5E7EB] p-2 rounded-xl bg-[#FFFFFF]"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-[#6E685D] mb-1">SEO Description</label>
+                  <label className="block font-semibold text-[#6B7280] mb-1">SEO Description</label>
                   <input
                     type="text"
                     value={form.seoDescription}
                     onChange={(e) => setForm({ ...form, seoDescription: e.target.value })}
                     placeholder="Meta description for search engines..."
-                    className="w-full border border-[#E8DFD0] p-2 rounded-xl bg-[#F8F5EF]"
+                    className="w-full border border-[#E5E7EB] p-2 rounded-xl bg-[#FFFFFF]"
                   />
                 </div>
               </div>
             </form>
 
             {/* Modal Fixed Footer */}
-            <div className="p-4 bg-[#F8F5EF] border-t border-[#E8DFD0] flex gap-3 shrink-0">
+            <div className="p-4 bg-[#FFFFFF] border-t border-[#E5E7EB] flex gap-3 shrink-0">
               <button
                 type="button"
                 onClick={handleSave}
-                className="flex-1 bg-[#641E2B] text-[#F8F5EF] py-3 uppercase font-bold text-xs rounded-xl border border-[#B99A61] hover:bg-[#B99A61] hover:text-[#641E2B] transition-all shadow-sm cursor-pointer"
+                className="flex-1 bg-[#111111] text-[#FFFFFF] py-3 uppercase font-bold text-xs rounded-xl border border-[#C5A15A] hover:bg-[#C5A15A] hover:text-[#111111] transition-all shadow-sm cursor-pointer"
               >
                 {editingCategory ? 'Update Category' : 'Save Category'}
               </button>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-5 py-3 border border-[#E8DFD0] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all cursor-pointer"
+                className="px-5 py-3 border border-[#E5E7EB] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all cursor-pointer"
               >
                 Cancel
               </button>

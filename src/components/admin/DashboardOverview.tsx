@@ -239,9 +239,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
     const catCounts: Record<string, { name: string; count: number; revenue: number; color: string }> = {};
 
     const defaultCategoriesList = [
-      { key: 'sarees', name: "Women's Kasavu Sarees", color: '#641E2B' },
-      { key: 'mundu', name: "Men's Mundu & Linen Shirts", color: '#B99A61' },
-      { key: 'kids', name: "Kids Ethnic Wear", color: '#6E685D' }
+      { key: 'sarees', name: "Women's Kasavu Sarees", color: '#111111' },
+      { key: 'mundu', name: "Men's Mundu & Linen Shirts", color: '#C5A15A' },
+      { key: 'kids', name: "Kids Ethnic Wear", color: '#6B7280' }
     ];
 
     defaultCategoriesList.forEach(c => {
@@ -337,7 +337,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
         if (item.size) sizeFreq[item.size] = (sizeFreq[item.size] || 0) + (item.quantity || 1);
         if (item.color?.name) {
           const cName = item.color.name;
-          const current = colorFreq[cName] || { count: 0, hex: item.color.hex || '#B99A61' };
+          const current = colorFreq[cName] || { count: 0, hex: item.color.hex || '#C5A15A' };
           colorFreq[cName] = { count: current.count + (item.quantity || 1), hex: item.color.hex || current.hex };
         }
       });
@@ -351,7 +351,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
         });
         p.colors?.forEach(c => {
           const current = colorFreq[c.name] || { count: 0, hex: c.hex };
-          colorFreq[c.name] = { count: current.count + 1, hex: c.hex || '#B99A61' };
+          colorFreq[c.name] = { count: current.count + 1, hex: c.hex || '#C5A15A' };
         });
       });
     }
@@ -361,8 +361,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
 
     const topColorEntry = Object.entries(colorFreq).sort((a, b) => b[1].count - a[1].count)[0];
     const topColor = topColorEntry
-      ? { name: topColorEntry[0], hex: topColorEntry[1].hex || '#B99A61' }
-      : { name: '24k Kasavu Gold', hex: '#B99A61' };
+      ? { name: topColorEntry[0], hex: topColorEntry[1].hex || '#C5A15A' }
+      : { name: '24k Kasavu Gold', hex: '#C5A15A' };
 
     return {
       breakdown,
@@ -438,40 +438,40 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
     <div className="space-y-8 animate-fadeIn">
       
       {/* HEADER & DATE RANGE FILTER */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E5E7EB] pb-5">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#B99A61] block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C5A15A] block">
             Executive Command Center
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-0.5">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#111111] mt-0.5">
             Store Performance Overview
           </h1>
         </div>
 
         {/* Dynamic Date Filter Bar */}
-        <div className="flex items-center gap-1.5 sm:gap-2 bg-white p-1.5 border border-[#E8DFD0] rounded-2xl shadow-xs text-xs font-semibold overflow-x-auto">
-          <Filter className="w-3.5 h-3.5 text-[#B99A61] ml-2 shrink-0" />
+        <div className="flex items-center gap-1.5 sm:gap-2 bg-white p-1.5 border border-[#E5E7EB] rounded-2xl shadow-xs text-xs font-semibold overflow-x-auto">
+          <Filter className="w-3.5 h-3.5 text-[#C5A15A] ml-2 shrink-0" />
           <button
             onClick={() => setDateFilter('today')}
-            className={`px-3 py-1.5 rounded-xl transition-all whitespace-nowrap ${dateFilter === 'today' ? 'bg-[#641E2B] text-[#F8F5EF] font-bold shadow-xs' : 'text-[#6E685D] hover:bg-[#F8F5EF]'}`}
+            className={`px-3 py-1.5 rounded-xl transition-all whitespace-nowrap ${dateFilter === 'today' ? 'bg-[#111111] text-[#FFFFFF] font-bold shadow-xs' : 'text-[#6B7280] hover:bg-[#FFFFFF]'}`}
           >
             Today
           </button>
           <button
             onClick={() => setDateFilter('7days')}
-            className={`px-3 py-1.5 rounded-xl transition-all whitespace-nowrap ${dateFilter === '7days' ? 'bg-[#641E2B] text-[#F8F5EF] font-bold shadow-xs' : 'text-[#6E685D] hover:bg-[#F8F5EF]'}`}
+            className={`px-3 py-1.5 rounded-xl transition-all whitespace-nowrap ${dateFilter === '7days' ? 'bg-[#111111] text-[#FFFFFF] font-bold shadow-xs' : 'text-[#6B7280] hover:bg-[#FFFFFF]'}`}
           >
             Last 7 Days
           </button>
           <button
             onClick={() => setDateFilter('30days')}
-            className={`px-3 py-1.5 rounded-xl transition-all whitespace-nowrap ${dateFilter === '30days' ? 'bg-[#641E2B] text-[#F8F5EF] font-bold shadow-xs' : 'text-[#6E685D] hover:bg-[#F8F5EF]'}`}
+            className={`px-3 py-1.5 rounded-xl transition-all whitespace-nowrap ${dateFilter === '30days' ? 'bg-[#111111] text-[#FFFFFF] font-bold shadow-xs' : 'text-[#6B7280] hover:bg-[#FFFFFF]'}`}
           >
             Last 30 Days
           </button>
           <button
             onClick={() => setDateFilter('year')}
-            className={`px-3 py-1.5 rounded-xl transition-all whitespace-nowrap ${dateFilter === 'year' ? 'bg-[#641E2B] text-[#F8F5EF] font-bold shadow-xs' : 'text-[#6E685D] hover:bg-[#F8F5EF]'}`}
+            className={`px-3 py-1.5 rounded-xl transition-all whitespace-nowrap ${dateFilter === 'year' ? 'bg-[#111111] text-[#FFFFFF] font-bold shadow-xs' : 'text-[#6B7280] hover:bg-[#FFFFFF]'}`}
           >
             This Year
           </button>
@@ -480,7 +480,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
 
       {/* 15 KPI CARDS GRID */}
       <div>
-        <h3 className="font-serif text-lg font-bold text-[#641E2B] mb-4">Key Performance Indicators</h3>
+        <h3 className="font-serif text-lg font-bold text-[#111111] mb-4">Key Performance Indicators</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {kpiCards.map((kpi, idx) => {
             const Icon = kpi.icon;
@@ -488,21 +488,21 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
               <div
                 key={idx}
                 onClick={() => onNavigateTab(kpi.targetTab)}
-                className="bg-white p-4 border border-[#E8DFD0] hover:border-[#B99A61] rounded-2xl shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
+                className="bg-white p-4 border border-[#E5E7EB] hover:border-[#C5A15A] rounded-2xl shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center justify-between text-xs text-[#6E685D] mb-1.5">
+                  <div className="flex items-center justify-between text-xs text-[#6B7280] mb-1.5">
                     <span className="font-medium">{kpi.title}</span>
-                    <div className="w-8 h-8 rounded-full bg-[#F8F5EF] group-hover:bg-[#641E2B] text-[#B99A61] group-hover:text-[#B99A61] flex items-center justify-center transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-[#FFFFFF] group-hover:bg-[#111111] text-[#C5A15A] group-hover:text-[#C5A15A] flex items-center justify-center transition-colors">
                       <Icon className="w-4 h-4" />
                     </div>
                   </div>
-                  <div className="font-serif text-xl sm:text-2xl font-bold text-[#641E2B] tracking-tight">
+                  <div className="font-serif text-xl sm:text-2xl font-bold text-[#111111] tracking-tight">
                     {kpi.value}
                   </div>
                 </div>
 
-                <div className="mt-3 pt-2 border-t border-[#F8F5EF] flex items-center justify-between text-[11px]">
+                <div className="mt-3 pt-2 border-t border-[#FFFFFF] flex items-center justify-between text-[11px]">
                   <span
                     className={`inline-flex items-center gap-0.5 font-bold px-2 py-0.5 rounded-full ${
                       kpi.isUp ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-900'
@@ -511,7 +511,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
                     {kpi.isUp ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
                     <span>{kpi.change}</span>
                   </span>
-                  <span className="text-[#6E685D]/80 text-[10px]">{kpi.comparison}</span>
+                  <span className="text-[#6B7280]/80 text-[10px]">{kpi.comparison}</span>
                 </div>
               </div>
             );
@@ -523,18 +523,18 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Main Interactive Dynamic Revenue Graph */}
-        <div className="lg:col-span-8 bg-white p-6 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-4 relative">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E8DFD0] pb-3">
+        <div className="lg:col-span-8 bg-white p-6 border border-[#E5E7EB] rounded-2xl shadow-xs space-y-4 relative">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E5E7EB] pb-3">
             <div>
-              <h3 className="font-serif text-lg font-bold text-[#641E2B]">Sales Revenue &amp; Growth Trajectory</h3>
-              <p className="text-xs text-[#6E685D]">
+              <h3 className="font-serif text-lg font-bold text-[#111111]">Sales Revenue &amp; Growth Trajectory</h3>
+              <p className="text-xs text-[#6B7280]">
                 {dateFilter === 'today' && 'Real-time hourly transaction volume for today'}
                 {dateFilter === '7days' && 'Real-time daily transaction volume over the past 7 days'}
                 {dateFilter === '30days' && 'Real-time weekly transaction volume over 30 days'}
                 {dateFilter === 'year' && 'Quarterly revenue progression for this calendar year'}
               </p>
             </div>
-            <span className="bg-[#F8F5EF] text-[#641E2B] border border-[#B99A61] text-[10px] font-bold uppercase px-3 py-1.5 rounded-full font-mono self-start sm:self-auto shadow-2xs">
+            <span className="bg-[#FFFFFF] text-[#111111] border border-[#C5A15A] text-[10px] font-bold uppercase px-3 py-1.5 rounded-full font-mono self-start sm:self-auto shadow-2xs">
               TOTAL REVENUE: {formatPrice(activePeriodRevenue)}
             </span>
           </div>
@@ -545,13 +545,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
             {/* Interactive Tooltip on Dot Hover */}
             {hoveredPointIndex !== null && chartData.points[hoveredPointIndex] && (
               <div
-                className="absolute z-20 pointer-events-none bg-[#641E2B] text-[#F8F5EF] px-3 py-1.5 rounded-xl text-xs shadow-lg border border-[#B99A61] transform -translate-x-1/2 -translate-y-12 transition-all duration-150 animate-fadeIn"
+                className="absolute z-20 pointer-events-none bg-[#111111] text-[#FFFFFF] px-3 py-1.5 rounded-xl text-xs shadow-lg border border-[#C5A15A] transform -translate-x-1/2 -translate-y-12 transition-all duration-150 animate-fadeIn"
                 style={{
                   left: `${(chartData.points[hoveredPointIndex].x / 500) * 100}%`,
                   top: `${(chartData.points[hoveredPointIndex].y / 150) * 80}%`
                 }}
               >
-                <div className="font-bold text-[#B99A61] font-mono text-[10px] uppercase">
+                <div className="font-bold text-[#C5A15A] font-mono text-[10px] uppercase">
                   {chartData.points[hoveredPointIndex].label}
                 </div>
                 <div className="font-serif font-bold text-sm">
@@ -566,19 +566,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
             <svg className="w-full h-48 overflow-visible" viewBox="0 0 500 150">
               <defs>
                 <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#B99A61" stopOpacity="0.45" />
-                  <stop offset="60%" stopColor="#B99A61" stopOpacity="0.15" />
-                  <stop offset="100%" stopColor="#641E2B" stopOpacity="0.0" />
+                  <stop offset="0%" stopColor="#C5A15A" stopOpacity="0.45" />
+                  <stop offset="60%" stopColor="#C5A15A" stopOpacity="0.15" />
+                  <stop offset="100%" stopColor="#111111" stopOpacity="0.0" />
                 </linearGradient>
                 <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#B99A61" floodOpacity="0.5" />
+                  <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#C5A15A" floodOpacity="0.5" />
                 </filter>
               </defs>
 
               {/* Grid Lines */}
-              <line x1="0" y1="25" x2="500" y2="25" stroke="#E8DFD0" strokeDasharray="3 3" strokeWidth="1" opacity="0.6" />
-              <line x1="0" y1="75" x2="500" y2="75" stroke="#E8DFD0" strokeDasharray="3 3" strokeWidth="1" opacity="0.6" />
-              <line x1="0" y1="125" x2="500" y2="125" stroke="#E8DFD0" strokeDasharray="3 3" strokeWidth="1" opacity="0.6" />
+              <line x1="0" y1="25" x2="500" y2="25" stroke="#E5E7EB" strokeDasharray="3 3" strokeWidth="1" opacity="0.6" />
+              <line x1="0" y1="75" x2="500" y2="75" stroke="#E5E7EB" strokeDasharray="3 3" strokeWidth="1" opacity="0.6" />
+              <line x1="0" y1="125" x2="500" y2="125" stroke="#E5E7EB" strokeDasharray="3 3" strokeWidth="1" opacity="0.6" />
 
               {/* Dynamic Smooth Area Fill */}
               <path
@@ -591,7 +591,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
               <path
                 d={chartData.pathD}
                 fill="none"
-                stroke="#641E2B"
+                stroke="#111111"
                 strokeWidth="3.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -618,7 +618,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
                         cy={pt.y}
                         r="9"
                         fill="none"
-                        stroke="#B99A61"
+                        stroke="#C5A15A"
                         strokeWidth="2.5"
                         filter="url(#glow)"
                         className="animate-pulse"
@@ -630,8 +630,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
                       cx={pt.x}
                       cy={pt.y}
                       r={isHovered ? '6.5' : idx === chartData.points.length - 1 ? '6' : '5'}
-                      fill="#B99A61"
-                      stroke="#641E2B"
+                      fill="#C5A15A"
+                      stroke="#111111"
                       strokeWidth={isHovered ? '3' : '2'}
                       className="transition-all duration-200"
                     />
@@ -641,11 +641,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
             </svg>
 
             {/* Dynamic X-Axis Labels */}
-            <div className="flex justify-between text-[11px] text-[#6E685D] font-mono border-t border-[#E8DFD0] pt-2">
+            <div className="flex justify-between text-[11px] text-[#6B7280] font-mono border-t border-[#E5E7EB] pt-2">
               {chartData.points.map((pt, idx) => (
                 <span
                   key={idx}
-                  className={`transition-colors cursor-pointer ${hoveredPointIndex === idx ? 'text-[#641E2B] font-bold underline decoration-[#B99A61]' : ''}`}
+                  className={`transition-colors cursor-pointer ${hoveredPointIndex === idx ? 'text-[#111111] font-bold underline decoration-[#C5A15A]' : ''}`}
                   onMouseEnter={() => setHoveredPointIndex(idx)}
                   onMouseLeave={() => setHoveredPointIndex(null)}
                 >
@@ -657,9 +657,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
         </div>
 
         {/* Category & Variant Breakdown */}
-        <div className="lg:col-span-4 bg-white p-6 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-4 bg-white p-6 border border-[#E5E7EB] rounded-2xl shadow-xs space-y-4 flex flex-col justify-between">
           <div>
-            <h3 className="font-serif text-lg font-bold text-[#641E2B] border-b border-[#E8DFD0] pb-3">
+            <h3 className="font-serif text-lg font-bold text-[#111111] border-b border-[#E5E7EB] pb-3">
               Category Share Breakdown
             </h3>
 
@@ -668,10 +668,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
               {categoryStats.breakdown.map((cat, idx) => (
                 <div key={idx} className="space-y-1">
                   <div className="flex justify-between font-semibold">
-                    <span className="text-[#641E2B]">{cat.name}</span>
-                    <span className="font-serif font-bold text-[#641E2B]">{cat.share}%</span>
+                    <span className="text-[#111111]">{cat.name}</span>
+                    <span className="font-serif font-bold text-[#111111]">{cat.share}%</span>
                   </div>
-                  <div className="w-full h-2.5 bg-[#F8F5EF] rounded-full overflow-hidden border border-[#E8DFD0]">
+                  <div className="w-full h-2.5 bg-[#FFFFFF] rounded-full overflow-hidden border border-[#E5E7EB]">
                     <div
                       className="h-full rounded-full transition-all duration-700 ease-out"
                       style={{
@@ -686,16 +686,16 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
           </div>
 
           {/* Dynamic Top Demanded Specs */}
-          <div className="pt-4 border-t border-[#E8DFD0] space-y-2">
-            <div className="p-3 bg-[#F8F5EF] rounded-xl border border-[#E8DFD0] flex items-center justify-between text-xs">
-              <span className="text-[#6E685D]">Top Size Demanded:</span>
-              <strong className="font-mono text-[#641E2B] font-bold">{categoryStats.topSize}</strong>
+          <div className="pt-4 border-t border-[#E5E7EB] space-y-2">
+            <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#E5E7EB] flex items-center justify-between text-xs">
+              <span className="text-[#6B7280]">Top Size Demanded:</span>
+              <strong className="font-mono text-[#111111] font-bold">{categoryStats.topSize}</strong>
             </div>
-            <div className="p-3 bg-[#F8F5EF] rounded-xl border border-[#E8DFD0] flex items-center justify-between text-xs">
-              <span className="text-[#6E685D]">Top Color Choice:</span>
-              <strong className="text-[#641E2B] flex items-center gap-1.5 font-semibold">
+            <div className="p-3 bg-[#FFFFFF] rounded-xl border border-[#E5E7EB] flex items-center justify-between text-xs">
+              <span className="text-[#6B7280]">Top Color Choice:</span>
+              <strong className="text-[#111111] flex items-center gap-1.5 font-semibold">
                 <span
-                  className="w-3 h-3 rounded-full inline-block border border-[#E8DFD0] shadow-2xs"
+                  className="w-3 h-3 rounded-full inline-block border border-[#E5E7EB] shadow-2xs"
                   style={{ backgroundColor: categoryStats.topColor.hex }}
                 />
                 {categoryStats.topColor.name}
@@ -710,41 +710,41 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Top Best-Selling Products */}
-        <div className="lg:col-span-7 bg-white p-6 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-4">
-          <div className="flex justify-between items-center border-b border-[#E8DFD0] pb-3">
+        <div className="lg:col-span-7 bg-white p-6 border border-[#E5E7EB] rounded-2xl shadow-xs space-y-4">
+          <div className="flex justify-between items-center border-b border-[#E5E7EB] pb-3">
             <div>
-              <h3 className="font-serif text-lg font-bold text-[#641E2B]">Top Revenue Performing Products</h3>
-              <p className="text-xs text-[#6E685D]">Based on live order volume and sales revenue</p>
+              <h3 className="font-serif text-lg font-bold text-[#111111]">Top Revenue Performing Products</h3>
+              <p className="text-xs text-[#6B7280]">Based on live order volume and sales revenue</p>
             </div>
-            <button onClick={() => onNavigateTab('products')} className="text-xs text-[#B99A61] font-bold hover:underline">
+            <button onClick={() => onNavigateTab('products')} className="text-xs text-[#C5A15A] font-bold hover:underline">
               View Catalog →
             </button>
           </div>
 
           <div className="space-y-3">
             {topProducts.length === 0 ? (
-              <div className="p-4 text-center text-xs text-[#6E685D] bg-[#F8F5EF] rounded-2xl border border-[#E8DFD0]">
+              <div className="p-4 text-center text-xs text-[#6B7280] bg-[#FFFFFF] rounded-2xl border border-[#E5E7EB]">
                 No products found in catalog. Add your first handloom masterpiece!
               </div>
             ) : (
               topProducts.map(p => (
-                <div key={p.id} className="p-3 bg-[#F8F5EF] border border-[#E8DFD0] rounded-2xl flex items-center justify-between text-xs gap-3 hover:border-[#B99A61] transition-all">
+                <div key={p.id} className="p-3 bg-[#FFFFFF] border border-[#E5E7EB] rounded-2xl flex items-center justify-between text-xs gap-3 hover:border-[#C5A15A] transition-all">
                   <div className="flex items-center gap-3">
                     <OptimizedImage
                       src={p.images?.[0]}
                       alt={p.name}
                       preset="thumbnail"
                       aspectRatio="3/4"
-                      containerClassName="w-10 h-12 rounded-lg bg-white border border-[#E8DFD0] shrink-0"
+                      containerClassName="w-10 h-12 rounded-lg bg-white border border-[#E5E7EB] shrink-0"
                     />
                     <div>
-                      <h4 className="font-bold text-[#641E2B] line-clamp-1">{p.name}</h4>
-                      <span className="text-[10px] text-[#6E685D]">SKU: {p.sku} • Stock: {p.stockCount ?? 10}</span>
+                      <h4 className="font-bold text-[#111111] line-clamp-1">{p.name}</h4>
+                      <span className="text-[10px] text-[#6B7280]">SKU: {p.sku} • Stock: {p.stockCount ?? 10}</span>
                     </div>
                   </div>
 
                   <div className="text-right">
-                    <strong className="font-serif text-sm font-bold text-[#641E2B] block">{formatPrice(p.price)}</strong>
+                    <strong className="font-serif text-sm font-bold text-[#111111] block">{formatPrice(p.price)}</strong>
                     <span className="text-[10px] text-green-700 font-bold bg-green-50 px-2 py-0.5 rounded-full border border-green-200">
                       {p.unitsSold > 0 ? `${p.unitsSold} Ordered` : p.isBestSeller ? 'Bestseller' : 'High Demand'}
                     </span>
@@ -756,30 +756,30 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ onNavigate
         </div>
 
         {/* Realtime Activity Audit Stream */}
-        <div className="lg:col-span-5 bg-white p-6 border border-[#E8DFD0] rounded-2xl shadow-xs space-y-4">
-          <div className="flex justify-between items-center border-b border-[#E8DFD0] pb-3">
+        <div className="lg:col-span-5 bg-white p-6 border border-[#E5E7EB] rounded-2xl shadow-xs space-y-4">
+          <div className="flex justify-between items-center border-b border-[#E5E7EB] pb-3">
             <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-[#B99A61]" />
-              <h3 className="font-serif text-lg font-bold text-[#641E2B]">Live Activity Audit Feed</h3>
+              <Activity className="w-4 h-4 text-[#C5A15A]" />
+              <h3 className="font-serif text-lg font-bold text-[#111111]">Live Activity Audit Feed</h3>
             </div>
-            <button onClick={() => onNavigateTab('audit')} className="text-xs text-[#B99A61] font-bold hover:underline">
+            <button onClick={() => onNavigateTab('audit')} className="text-xs text-[#C5A15A] font-bold hover:underline">
               Audit Logs →
             </button>
           </div>
 
           <div className="space-y-3 text-xs max-h-72 overflow-y-auto pr-1">
             {auditLogs.length === 0 ? (
-              <div className="p-4 text-center text-[11px] text-[#6E685D] bg-[#F8F5EF] rounded-xl border border-[#E8DFD0]">
+              <div className="p-4 text-center text-[11px] text-[#6B7280] bg-[#FFFFFF] rounded-xl border border-[#E5E7EB]">
                 No recent activity logged. Live actions will appear here in real time.
               </div>
             ) : (
               auditLogs.map(log => (
-                <div key={log.id} className="p-3 bg-[#F8F5EF] border border-[#E8DFD0] rounded-xl space-y-1">
-                  <div className="flex justify-between items-center text-[11px] font-bold text-[#641E2B]">
+                <div key={log.id} className="p-3 bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl space-y-1">
+                  <div className="flex justify-between items-center text-[11px] font-bold text-[#111111]">
                     <span>{log.action}</span>
                     <span className="text-[10px] text-gray-400 font-mono">{log.timestamp}</span>
                   </div>
-                  <p className="text-[11px] text-[#6E685D] font-light">
+                  <p className="text-[11px] text-[#6B7280] font-light">
                     By {log.adminName} ({log.adminRole})
                   </p>
                 </div>

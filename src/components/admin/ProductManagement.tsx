@@ -115,12 +115,12 @@ export const ProductManagement: React.FC = () => {
     <div className="space-y-6 animate-fadeIn">
       
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E5E7EB] pb-5">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#B99A61] block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C5A15A] block">
             Catalog Management &amp; Stock Control
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-0.5">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#111111] mt-0.5">
             Store Product Catalog ({products.length})
           </h1>
         </div>
@@ -130,15 +130,15 @@ export const ProductManagement: React.FC = () => {
             setEditingProduct(null);
             setShowEditorModal(true);
           }}
-          className="bg-[#641E2B] text-[#F8F5EF] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-all flex items-center gap-2 border border-[#B99A61] shadow-sm self-start sm:self-auto cursor-pointer"
+          className="bg-[#111111] text-[#FFFFFF] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#C5A15A] hover:text-[#111111] transition-all flex items-center gap-2 border border-[#C5A15A] shadow-sm self-start sm:self-auto cursor-pointer"
         >
-          <Plus className="w-4 h-4 text-[#B99A61]" />
+          <Plus className="w-4 h-4 text-[#C5A15A]" />
           <span>Add New Product</span>
         </button>
       </div>
 
       {/* Filter & Search Toolbar */}
-      <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+      <div className="bg-white p-4 border border-[#E5E7EB] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
         
         {/* Search Input */}
         <div className="relative flex-1">
@@ -148,7 +148,7 @@ export const ProductManagement: React.FC = () => {
             placeholder="Search by product title, SKU, or subcategory..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full border border-[#E8DFD0] pl-10 pr-4 py-2 text-xs focus:outline-none focus:border-[#B99A61] rounded-xl bg-[#F8F5EF] text-[#641E2B]"
+            className="w-full border border-[#E5E7EB] pl-10 pr-4 py-2 text-xs focus:outline-none focus:border-[#C5A15A] rounded-xl bg-[#FFFFFF] text-[#111111]"
           />
         </div>
 
@@ -157,7 +157,7 @@ export const ProductManagement: React.FC = () => {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="border border-[#E8DFD0] px-3 py-2 bg-[#F8F5EF] rounded-xl font-semibold text-[#641E2B]"
+            className="border border-[#E5E7EB] px-3 py-2 bg-[#FFFFFF] rounded-xl font-semibold text-[#111111]"
           >
             <option value="all">All Departments</option>
             <option value="women">Women</option>
@@ -168,7 +168,7 @@ export const ProductManagement: React.FC = () => {
           <select
             value={stockFilter}
             onChange={(e) => setStockFilter(e.target.value)}
-            className="border border-[#E8DFD0] px-3 py-2 bg-[#F8F5EF] rounded-xl font-semibold text-[#641E2B]"
+            className="border border-[#E5E7EB] px-3 py-2 bg-[#FFFFFF] rounded-xl font-semibold text-[#111111]"
           >
             <option value="all">All Stock Statuses</option>
             <option value="instock">In Stock Only</option>
@@ -189,17 +189,17 @@ export const ProductManagement: React.FC = () => {
       </div>
 
       {/* Product Table */}
-      <div className="bg-white border border-[#E8DFD0] rounded-2xl shadow-xs overflow-hidden">
+      <div className="bg-white border border-[#E5E7EB] rounded-2xl shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-[#641E2B] text-[#F8F5EF] font-serif uppercase tracking-wider text-[10px]">
+              <tr className="bg-[#111111] text-[#FFFFFF] font-serif uppercase tracking-wider text-[10px]">
                 <th className="p-3.5 w-10 text-center">
                   <input
                     type="checkbox"
                     checked={selectedIds.length === filteredProducts.length && filteredProducts.length > 0}
                     onChange={(e) => handleSelectAll(e.target.checked)}
-                    className="accent-[#B99A61]"
+                    className="accent-[#C5A15A]"
                   />
                 </th>
                 <th className="p-3.5">Product</th>
@@ -211,22 +211,22 @@ export const ProductManagement: React.FC = () => {
                 <th className="p-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E8DFD0]">
+            <tbody className="divide-y divide-[#E5E7EB]">
               {filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="p-8 text-center text-[#6E685D]">
+                  <td colSpan={8} className="p-8 text-center text-[#6B7280]">
                     No garments matching filter criteria.
                   </td>
                 </tr>
               ) : (
                 filteredProducts.map(p => (
-                  <tr key={p.id} className="hover:bg-[#F8F5EF]/60 transition-colors">
+                  <tr key={p.id} className="hover:bg-[#FFFFFF]/60 transition-colors">
                     <td className="p-3.5 text-center">
                       <input
                         type="checkbox"
                         checked={selectedIds.includes(p.id)}
                         onChange={() => handleToggleSelect(p.id)}
-                        className="accent-[#641E2B]"
+                        className="accent-[#111111]"
                       />
                     </td>
 
@@ -237,27 +237,27 @@ export const ProductManagement: React.FC = () => {
                           alt={p.name}
                           preset="thumbnail"
                           aspectRatio="3/4"
-                          containerClassName="w-10 h-12 rounded-lg bg-[#F8F5EF] border border-[#E8DFD0] shrink-0"
+                          containerClassName="w-10 h-12 rounded-lg bg-[#FFFFFF] border border-[#E5E7EB] shrink-0"
                         />
                         <div>
                           <div className="flex items-center gap-1.5">
-                            <h4 className="font-bold text-[#641E2B] text-xs line-clamp-1">{p.name}</h4>
+                            <h4 className="font-bold text-[#111111] text-xs line-clamp-1">{p.name}</h4>
                             {p.isFeatured && (
-                              <span className="text-[9px] bg-[#B99A61]/20 text-[#641E2B] border border-[#B99A61]/40 px-1 rounded font-bold uppercase shrink-0">
+                              <span className="text-[9px] bg-[#C5A15A]/20 text-[#111111] border border-[#C5A15A]/40 px-1 rounded font-bold uppercase shrink-0">
                                 Featured
                               </span>
                             )}
                           </div>
-                          <span className="text-[10px] text-[#6E685D]">{p.subcategory} • {p.fabric}</span>
+                          <span className="text-[10px] text-[#6B7280]">{p.subcategory} • {p.fabric}</span>
                         </div>
                       </div>
                     </td>
 
-                    <td className="p-3.5 font-mono text-[11px] text-[#641E2B] font-semibold">{p.sku}</td>
+                    <td className="p-3.5 font-mono text-[11px] text-[#111111] font-semibold">{p.sku}</td>
 
-                    <td className="p-3.5 capitalize font-semibold text-[#6E685D]">{p.category}</td>
+                    <td className="p-3.5 capitalize font-semibold text-[#6B7280]">{p.category}</td>
 
-                    <td className="p-3.5 font-bold font-serif text-[#641E2B]">
+                    <td className="p-3.5 font-bold font-serif text-[#111111]">
                       {formatPrice(p.price)}
                       {p.originalPrice && (
                         <span className="text-[10px] text-gray-400 line-through block font-sans font-normal">
@@ -267,11 +267,11 @@ export const ProductManagement: React.FC = () => {
                     </td>
 
                     <td className="p-3.5">
-                      <span className={`font-mono font-bold ${ (p.stockCount ?? 10) <= 5 ? 'text-red-600' : 'text-[#641E2B]' }`}>
+                      <span className={`font-mono font-bold ${ (p.stockCount ?? 10) <= 5 ? 'text-red-600' : 'text-[#111111]' }`}>
                         {p.stockCount ?? 10} Units
                       </span>
                       {p.variants && p.variants.length > 0 && (
-                        <span className="block text-[9px] text-[#B99A61] font-sans font-medium">
+                        <span className="block text-[9px] text-[#C5A15A] font-sans font-medium">
                           {p.variants.length} Variants
                         </span>
                       )}
@@ -297,7 +297,7 @@ export const ProductManagement: React.FC = () => {
                           setEditingProduct(p);
                           setShowEditorModal(true);
                         }}
-                        className="p-1.5 text-[#641E2B] hover:bg-[#F8F5EF] rounded-lg cursor-pointer"
+                        className="p-1.5 text-[#111111] hover:bg-[#FFFFFF] rounded-lg cursor-pointer"
                         title="Edit Product"
                       >
                         <Edit className="w-4 h-4" />
@@ -305,7 +305,7 @@ export const ProductManagement: React.FC = () => {
 
                       <button
                         onClick={() => handleDuplicate(p)}
-                        className="p-1.5 text-[#B99A61] hover:bg-[#F8F5EF] rounded-lg cursor-pointer"
+                        className="p-1.5 text-[#C5A15A] hover:bg-[#FFFFFF] rounded-lg cursor-pointer"
                         title="Duplicate Product"
                       >
                         <Copy className="w-4 h-4" />

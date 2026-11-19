@@ -23,16 +23,16 @@ const InstagramIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4"
 
 export const SocialGallery: React.FC = () => {
   return (
-    <section className="py-20 bg-[#F8F5EF] border-b border-[#E8DFD0]">
+    <section className="py-20 bg-[#FFFFFF] border-b border-[#E5E7EB]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 bg-[#B99A61]/15 border border-[#B99A61]/40 px-3 py-1 rounded-full text-[10px] sm:text-xs uppercase font-bold text-[#641E2B] tracking-[0.2em] mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#B99A61]" />
+            <div className="inline-flex items-center gap-2 bg-[#C5A15A]/15 border border-[#C5A15A]/40 px-3 py-1 rounded-full text-[10px] sm:text-xs uppercase font-bold text-[#111111] tracking-[0.2em] mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-[#C5A15A]" />
               <span>Community &amp; Culture</span>
             </div>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#641E2B]">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#111111]">
               Kavish, In Your World
             </h2>
           </div>
@@ -41,9 +41,9 @@ export const SocialGallery: React.FC = () => {
             href="https://instagram.com"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#641E2B] hover:text-[#B99A61] transition-colors mt-4 sm:mt-0 bg-white px-5 py-2.5 rounded-full border border-[#E8DFD0] shadow-xs cursor-pointer"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#111111] hover:text-[#C5A15A] transition-colors mt-4 sm:mt-0 bg-white px-5 py-2.5 rounded-full border border-[#E5E7EB] shadow-xs cursor-pointer"
           >
-            <InstagramIcon className="w-4 h-4 text-[#B99A61]" />
+            <InstagramIcon className="w-4 h-4 text-[#C5A15A]" />
             <span>Follow @KavishOfficial</span>
             <ArrowUpRight className="w-4 h-4" />
           </a>
@@ -56,7 +56,7 @@ export const SocialGallery: React.FC = () => {
               href="https://instagram.com"
               target="_blank"
               rel="noreferrer"
-              className="group aspect-square overflow-hidden bg-[#F8F5EF] relative border border-[#E8DFD0] rounded-2xl shadow-xs"
+              className="group aspect-square overflow-hidden bg-[#FFFFFF] relative border border-[#E5E7EB] rounded-2xl shadow-xs"
             >
               <OptimizedImage
                 src={img}
@@ -66,7 +66,7 @@ export const SocialGallery: React.FC = () => {
                 containerClassName="w-full h-full rounded-2xl"
                 imageClassName="group-hover:scale-110 transition-transform duration-500 opacity-90 group-hover:opacity-100 rounded-2xl"
               />
-              <div className="absolute inset-0 bg-[#46141D]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[#B99A61] rounded-2xl z-10">
+              <div className="absolute inset-0 bg-[#000000]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[#C5A15A] rounded-2xl z-10">
                 <InstagramIcon className="w-6 h-6" />
               </div>
             </a>

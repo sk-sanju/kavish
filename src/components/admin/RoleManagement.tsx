@@ -52,31 +52,31 @@ export const RoleManagement: React.FC = () => {
     <div className="space-y-6 animate-fadeIn">
       
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E5E7EB] pb-5">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#B99A61] block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C5A15A] block">
             Access Control &amp; Security
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-0.5">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#111111] mt-0.5">
             Admin Users &amp; RBAC Roles ({adminUsers.length})
           </h1>
         </div>
 
         <button
           onClick={() => setShowModal(true)}
-          className="bg-[#641E2B] text-[#F8F5EF] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#B99A61] hover:text-[#641E2B] transition-all flex items-center gap-2 border border-[#B99A61] shadow-sm self-start sm:self-auto"
+          className="bg-[#111111] text-[#FFFFFF] px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#C5A15A] hover:text-[#111111] transition-all flex items-center gap-2 border border-[#C5A15A] shadow-sm self-start sm:self-auto"
         >
-          <Plus className="w-4 h-4 text-[#B99A61]" />
+          <Plus className="w-4 h-4 text-[#C5A15A]" />
           <span>Add Admin User</span>
         </button>
       </div>
 
       {/* Users Table */}
-      <div className="bg-white border border-[#E8DFD0] rounded-2xl shadow-xs overflow-hidden">
+      <div className="bg-white border border-[#E5E7EB] rounded-2xl shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-[#641E2B] text-[#F8F5EF] font-serif uppercase tracking-wider text-[10px]">
+              <tr className="bg-[#111111] text-[#FFFFFF] font-serif uppercase tracking-wider text-[10px]">
                 <th className="p-3.5">Admin Staff Name</th>
                 <th className="p-3.5">Email Address</th>
                 <th className="p-3.5">Assigned Role</th>
@@ -85,17 +85,17 @@ export const RoleManagement: React.FC = () => {
                 <th className="p-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E8DFD0]">
+            <tbody className="divide-y divide-[#E5E7EB]">
               {adminUsers.map(user => (
-                <tr key={user.id} className="hover:bg-[#F8F5EF] transition-colors">
+                <tr key={user.id} className="hover:bg-[#FFFFFF] transition-colors">
                   <td className="p-3.5">
-                    <strong className="text-[#641E2B] block font-serif text-sm">{user.name}</strong>
+                    <strong className="text-[#111111] block font-serif text-sm">{user.name}</strong>
                   </td>
 
-                  <td className="p-3.5 font-mono text-[11px] text-[#641E2B]">{user.email}</td>
+                  <td className="p-3.5 font-mono text-[11px] text-[#111111]">{user.email}</td>
 
                   <td className="p-3.5 font-bold">
-                    <span className="bg-[#641E2B] text-[#B99A61] px-2.5 py-0.5 rounded-full text-[10px] uppercase font-mono border border-[#B99A61]">
+                    <span className="bg-[#111111] text-[#C5A15A] px-2.5 py-0.5 rounded-full text-[10px] uppercase font-mono border border-[#C5A15A]">
                       {user.role}
                     </span>
                   </td>
@@ -134,12 +134,12 @@ export const RoleManagement: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh] my-auto">
             
             {/* Modal Header */}
-            <div className="p-5 bg-[#641E2B] text-[#F8F5EF] flex items-center justify-between shrink-0">
+            <div className="p-5 bg-[#111111] text-[#FFFFFF] flex items-center justify-between shrink-0">
               <div>
-                <h3 className="font-serif font-bold text-lg text-[#F8F5EF]">Provision New Admin User</h3>
-                <p className="text-xs text-[#E8DFD0]/80">Configure staff account &amp; RBAC scope</p>
+                <h3 className="font-serif font-bold text-lg text-[#FFFFFF]">Provision New Admin User</h3>
+                <p className="text-xs text-[#E5E7EB]/80">Configure staff account &amp; RBAC scope</p>
               </div>
-              <button onClick={() => setShowModal(false)} className="p-1 text-[#E8DFD0] hover:text-white">
+              <button onClick={() => setShowModal(false)} className="p-1 text-[#E5E7EB] hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -147,43 +147,43 @@ export const RoleManagement: React.FC = () => {
             {/* Modal Scrollable Form Body */}
             <form id="add-admin-user-form" onSubmit={handleCreateUser} className="p-6 overflow-y-auto space-y-3 text-xs flex-1">
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Staff Member Name *</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Staff Member Name *</label>
                 <input
                   type="text"
                   required
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   placeholder="e.g. Master Weaver Ramesh"
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] font-bold text-[#111111]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Email Address *</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Email Address *</label>
                 <input
                   type="email"
                   required
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="weaver@kavishhandlooms.com"
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF]"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Phone Number *</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Phone Number *</label>
                 <input
                   type="text"
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+91 98470 54321"
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-mono"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] font-mono"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Initial Login Password *</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Initial Login Password *</label>
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -191,12 +191,12 @@ export const RoleManagement: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter staff login password"
-                    className="w-full border border-[#E8DFD0] p-2.5 pr-10 rounded-xl bg-[#F8F5EF] font-mono"
+                    className="w-full border border-[#E5E7EB] p-2.5 pr-10 rounded-xl bg-[#FFFFFF] font-mono"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-gray-400 hover:text-[#641E2B] p-0.5 cursor-pointer"
+                    className="absolute right-3 top-2.5 text-gray-400 hover:text-[#111111] p-0.5 cursor-pointer"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -204,11 +204,11 @@ export const RoleManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-semibold text-[#6E685D] mb-1">Role &amp; Permissions Scope</label>
+                <label className="block font-semibold text-[#6B7280] mb-1">Role &amp; Permissions Scope</label>
                 <select
                   value={form.role}
                   onChange={(e) => setForm({ ...form, role: e.target.value as AdminRole })}
-                  className="w-full border border-[#E8DFD0] p-2.5 rounded-xl bg-[#F8F5EF] font-bold text-[#641E2B]"
+                  className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] font-bold text-[#111111]"
                 >
                   <option value="Super Admin">Super Admin (Full Access)</option>
                   <option value="Store Manager">Store Manager</option>
@@ -224,18 +224,18 @@ export const RoleManagement: React.FC = () => {
             </form>
 
             {/* Modal Footer */}
-            <div className="p-4 bg-[#F8F5EF] border-t border-[#E8DFD0] flex gap-3 shrink-0">
+            <div className="p-4 bg-[#FFFFFF] border-t border-[#E5E7EB] flex gap-3 shrink-0">
               <button
                 type="submit"
                 form="add-admin-user-form"
-                className="flex-1 bg-[#641E2B] text-[#F8F5EF] py-3 uppercase font-bold text-xs rounded-xl border border-[#B99A61] hover:bg-[#B99A61] hover:text-[#641E2B] transition-all"
+                className="flex-1 bg-[#111111] text-[#FFFFFF] py-3 uppercase font-bold text-xs rounded-xl border border-[#C5A15A] hover:bg-[#C5A15A] hover:text-[#111111] transition-all"
               >
                 Create Admin User
               </button>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-5 py-3 border border-[#E8DFD0] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all"
+                className="px-5 py-3 border border-[#E5E7EB] font-bold text-xs uppercase rounded-xl hover:bg-white transition-all"
               >
                 Cancel
               </button>

@@ -2,22 +2,22 @@
 
 @layer base {
   :root {
-    /* Kavish 2.0 Royal Indian Luxury Handloom Palette */
-    --kavish-primary: #641E2B;        /* Royal Kasavu Maroon / Deep Crimson Atelier Wine */
-    --kavish-primary-dark: #46141D;   /* Deep Night Crimson */
-    --kavish-primary-light: #7E2636;  /* Soft Royal Maroon */
+    /* Kavish 2.0 Royal Noir & Kasavu Gold Palette */
+    --kavish-primary: #111111;        /* Pure Luxury Obsidian Black */
+    --kavish-primary-dark: #000000;   /* Pitch Black */
+    --kavish-primary-light: #262626;  /* Soft Black */
     
-    --kavish-secondary: #B99A61;      /* Refined Kasavu Antique Temple Gold */
-    --kavish-secondary-light: #D1B784;/* Shimmering Kasavu Zari */
-    --kavish-secondary-dark: #967840; /* Aged Temple Gold */
+    --kavish-secondary: #C5A15A;      /* Antique Kasavu Gold */
+    --kavish-secondary-light: #D8BA7A;/* Shimmering Kasavu Zari */
+    --kavish-secondary-dark: #A5843D; /* Aged Temple Gold */
     
-    --kavish-bg: #F8F5EF;             /* Warm Ivory / Raw Silk Cream */
-    --kavish-bg-light: #FCFAF7;       /* Pure White Silk */
-    --kavish-surface: #FFFFFF;        /* Crisp Card White */
+    --kavish-bg: #FFFFFF;             /* Crisp Pure White */
+    --kavish-bg-light: #FAFAFA;       /* Soft Studio Off-White */
+    --kavish-surface: #FFFFFF;        /* Pure White Card */
     
-    --kavish-text: #292522;           /* Warm Charcoal / Deep Espresso */
-    --kavish-text-muted: #6E685D;     /* Subtle Handloom Linen Grey */
-    --kavish-border: #E8DFD0;         /* Soft Sand Weave Border */
+    --kavish-text: #111111;           /* Crisp Obsidian Black Text */
+    --kavish-text-muted: #6B7280;     /* Refined Editorial Grey */
+    --kavish-border: #E5E7EB;         /* Subtle Clean Border */
 
     /* Backward compatibility mappings for existing components */
     --deep-emerald: var(--kavish-primary);
@@ -33,7 +33,7 @@
     --kasavu-gold: var(--kavish-secondary);
     --kasavu-gold-light: var(--kavish-secondary-light);
     --charcoal: var(--kavish-text);
-    --charcoal-light: #4A463F;
+    --charcoal-light: #374151;
     --charcoal-muted: var(--kavish-text-muted);
     --warm-beige: var(--kavish-border);
     --warm-sand: var(--kavish-border);
@@ -74,144 +74,144 @@
 
 /* Kavish 2.0 Color Classes */
 .bg-kavish-maroon {
-  background-color: #641E2B;
+  background-color: #111111;
 }
 
 .bg-kavish-maroon-dark {
-  background-color: #46141D;
+  background-color: #000000;
 }
 
 .bg-kavish-gold {
-  background-color: #B99A61;
+  background-color: #C5A15A;
 }
 
 .text-kavish-maroon {
-  color: #641E2B;
+  color: #111111;
 }
 
 .text-kavish-gold {
-  color: #B99A61;
+  color: #C5A15A;
 }
 
 .border-kavish-gold {
-  border-color: #B99A61;
+  border-color: #C5A15A;
 }
 
 .border-kavish-maroon {
-  border-color: #641E2B;
+  border-color: #111111;
 }
 
 .bg-kavish-ivory {
-  background-color: #F8F5EF;
+  background-color: #FFFFFF;
 }
 
 .text-kavish-charcoal {
-  color: #292522;
+  color: #111111;
 }
 
-/* Backward-compatible utilities mapped to Royal Maroon & Kasavu Gold */
+/* Backward-compatible utilities mapped to Obsidian Black & Antique Gold */
 .bg-deep-emerald {
-  background-color: #641E2B;
+  background-color: #111111;
 }
 
 .bg-deep-emerald-dark {
-  background-color: #46141D;
+  background-color: #000000;
 }
 
 .text-deep-emerald {
-  color: #641E2B;
+  color: #111111;
 }
 
 .border-deep-emerald {
-  border-color: #641E2B;
+  border-color: #111111;
 }
 
 .bg-royal-ivory {
-  background-color: #F8F5EF;
+  background-color: #FFFFFF;
 }
 
 .text-royal-ivory {
-  color: #F8F5EF;
+  color: #FFFFFF;
 }
 
 .border-royal-ivory {
-  border-color: #F8F5EF;
+  border-color: #E5E7EB;
 }
 
 .bg-antique-gold {
-  background-color: #B99A61;
+  background-color: #C5A15A;
 }
 
 .text-antique-gold {
-  color: #B99A61;
+  color: #C5A15A;
 }
 
 .border-antique-gold {
-  border-color: #B99A61;
+  border-color: #C5A15A;
 }
 
 .bg-charcoal {
-  background-color: #292522;
+  background-color: #1A1A1A;
 }
 
 .text-charcoal {
-  color: #292522;
+  color: #1A1A1A;
 }
 
 .border-charcoal {
-  border-color: #292522;
+  border-color: #1A1A1A;
 }
 
 .bg-warm-beige {
-  background-color: #E8DFD0;
+  background-color: #E5E7EB;
 }
 
 .text-warm-beige {
-  color: #E8DFD0;
+  color: #E5E7EB;
 }
 
 .border-warm-beige {
-  border-color: #E8DFD0;
+  border-color: #E5E7EB;
 }
 
 .bg-kerala-green {
-  background-color: #641E2B;
+  background-color: #111111;
 }
 
 .bg-kerala-dark {
-  background-color: #46141D;
+  background-color: #000000;
 }
 
 .text-kerala-green {
-  color: #641E2B;
+  color: #111111;
 }
 
 .border-kerala-green {
-  border-color: #641E2B;
+  border-color: #111111;
 }
 
 .bg-kasavu-gold {
-  background-color: #B99A61;
+  background-color: #C5A15A;
 }
 
 .text-kasavu-gold {
-  color: #B99A61;
+  color: #C5A15A;
 }
 
 .border-kasavu-gold {
-  border-color: #B99A61;
+  border-color: #C5A15A;
 }
 
 .bg-warm-sand {
-  background-color: #E8DFD0;
+  background-color: #E5E7EB;
 }
 
 .bg-ivory {
-  background-color: #F8F5EF;
+  background-color: #FFFFFF;
 }
 
 .text-muted-brown {
-  color: #6E685D;
+  color: #6B7280;
 }
 
 /* Smooth Card Hover Elevation & Rounded Styling */
@@ -223,36 +223,36 @@
 
 .luxury-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 30px -10px rgba(100, 30, 43, 0.15), 0 0 15px rgba(185, 154, 97, 0.25);
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.12), 0 0 15px rgba(197, 161, 90, 0.2);
 }
 
 /* Gold Gradient Accents */
 .gold-gradient-text {
-  background: linear-gradient(135deg, #B99A61 0%, #D1B784 50%, #967840 100%);
+  background: linear-gradient(135deg, #C5A15A 0%, #D8BA7A 50%, #A5843D 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .gold-gradient-bg {
-  background: linear-gradient(135deg, #B99A61 0%, #D1B784 50%, #967840 100%);
+  background: linear-gradient(135deg, #C5A15A 0%, #D8BA7A 50%, #A5843D 100%);
 }
 
 .kasavu-border-bottom {
   border-bottom: 2px solid transparent;
-  border-image: linear-gradient(to right, transparent, #B99A61, #D1B784, #B99A61, transparent) 1;
+  border-image: linear-gradient(to right, transparent, #C5A15A, #D8BA7A, #C5A15A, transparent) 1;
 }
 
 /* Luxury Glassmorphism & Hover Animations */
 .glass-header {
-  background: rgba(248, 245, 239, 0.95);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(185, 154, 97, 0.3);
+  border: 1px solid rgba(197, 161, 90, 0.25);
   border-radius: 1.25rem;
 }
 

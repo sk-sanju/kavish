@@ -102,16 +102,16 @@ export const ReturnsRefundsManagement: React.FC = () => {
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DFD0] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E5E7EB] pb-5">
         <div>
-          <div className="inline-flex items-center gap-2 bg-[#B99A61]/15 border border-[#B99A61]/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest text-[#641E2B]">
-            <RotateCcw className="w-3.5 h-3.5 text-[#B99A61]" />
+          <div className="inline-flex items-center gap-2 bg-[#C5A15A]/15 border border-[#C5A15A]/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest text-[#111111]">
+            <RotateCcw className="w-3.5 h-3.5 text-[#C5A15A]" />
             <span>Customer Service &amp; Reverse Logistics</span>
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#641E2B] mt-1">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#111111] mt-1">
             Returns, Exchanges &amp; Refunds
           </h1>
-          <p className="text-xs text-[#292722]/70 font-light mt-0.5">
+          <p className="text-xs text-[#1A1A1A]/70 font-light mt-0.5">
             Manage customer return authorizations, inspect handloom conditions, schedule doorstep reverse pickups, and process refunds.
           </p>
         </div>
@@ -119,14 +119,14 @@ export const ReturnsRefundsManagement: React.FC = () => {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="bg-white border border-[#E8DFD0] rounded-2xl p-4 shadow-xs">
-          <span className="text-[10px] uppercase font-bold tracking-wider text-[#6E685D] block mb-1">
+        <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-xs">
+          <span className="text-[10px] uppercase font-bold tracking-wider text-[#6B7280] block mb-1">
             Total Requests
           </span>
-          <div className="font-serif text-2xl font-bold text-[#641E2B]">
+          <div className="font-serif text-2xl font-bold text-[#111111]">
             {metrics.totalRequests}
           </div>
-          <p className="text-[10px] text-[#6E685D] mt-1">All time return claims</p>
+          <p className="text-[10px] text-[#6B7280] mt-1">All time return claims</p>
         </div>
 
         <div className="bg-white border border-amber-200 rounded-2xl p-4 shadow-xs bg-amber-50/30">
@@ -161,7 +161,7 @@ export const ReturnsRefundsManagement: React.FC = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white p-4 border border-[#E8DFD0] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between text-xs">
+      <div className="bg-white p-4 border border-[#E5E7EB] rounded-2xl shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between text-xs">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
           <input
@@ -169,14 +169,14 @@ export const ReturnsRefundsManagement: React.FC = () => {
             placeholder="Search by Order ID, Customer Name, Email, or Garment..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full border border-[#E8DFD0] pl-10 pr-4 py-2 rounded-xl bg-[#F8F5EF] text-[#292722] focus:outline-none focus:border-[#B99A61]"
+            className="w-full border border-[#E5E7EB] pl-10 pr-4 py-2 rounded-xl bg-[#FFFFFF] text-[#1A1A1A] focus:outline-none focus:border-[#C5A15A]"
           />
         </div>
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="border border-[#E8DFD0] px-3 py-2 bg-[#F8F5EF] rounded-xl font-semibold text-[#641E2B] focus:outline-none focus:border-[#B99A61]"
+          className="border border-[#E5E7EB] px-3 py-2 bg-[#FFFFFF] rounded-xl font-semibold text-[#111111] focus:outline-none focus:border-[#C5A15A]"
         >
           <option value="all">All Request Statuses</option>
           <option value="Requested">Requested (New)</option>
@@ -191,10 +191,10 @@ export const ReturnsRefundsManagement: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-white border border-[#E8DFD0] rounded-2xl shadow-xs overflow-hidden">
+      <div className="bg-white border border-[#E5E7EB] rounded-2xl shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-[#292722]">
-            <thead className="bg-[#F8F5EF] text-[#641E2B] font-serif font-bold uppercase tracking-wider text-[11px] border-b border-[#E8DFD0]">
+          <table className="w-full text-left text-xs text-[#1A1A1A]">
+            <thead className="bg-[#FFFFFF] text-[#111111] font-serif font-bold uppercase tracking-wider text-[11px] border-b border-[#E5E7EB]">
               <tr>
                 <th className="py-3 px-4">Request Date</th>
                 <th className="py-3 px-4">Order ID &amp; Garment</th>
@@ -205,31 +205,31 @@ export const ReturnsRefundsManagement: React.FC = () => {
                 <th className="py-3 px-4 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E8DFD0]">
+            <tbody className="divide-y divide-[#E5E7EB]">
               {filteredRequests.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-[#6E685D]">
+                  <td colSpan={7} className="py-12 text-center text-[#6B7280]">
                     No return or refund requests found.
                   </td>
                 </tr>
               ) : (
                 filteredRequests.map((req) => (
                   <tr key={req.id} className="hover:bg-[#FCFAF5] transition-colors">
-                    <td className="py-3 px-4 font-mono text-[10px] text-[#6E685D]">
+                    <td className="py-3 px-4 font-mono text-[10px] text-[#6B7280]">
                       {req.requestedDate}
                     </td>
                     <td className="py-3 px-4">
-                      <p className="font-mono text-xs font-bold text-[#641E2B]">{req.orderId}</p>
-                      <p className="text-[#6E685D] text-[11px]">{req.productName}</p>
+                      <p className="font-mono text-xs font-bold text-[#111111]">{req.orderId}</p>
+                      <p className="text-[#6B7280] text-[11px]">{req.productName}</p>
                     </td>
                     <td className="py-3 px-4">
-                      <p className="font-bold text-[#292722]">{req.customerName}</p>
-                      <p className="text-[10px] text-[#6E685D] flex items-center gap-1">
-                        <Mail className="w-3 h-3 text-[#B99A61]" />
+                      <p className="font-bold text-[#1A1A1A]">{req.customerName}</p>
+                      <p className="text-[10px] text-[#6B7280] flex items-center gap-1">
+                        <Mail className="w-3 h-3 text-[#C5A15A]" />
                         {req.customerEmail}
                       </p>
                     </td>
-                    <td className="py-3 px-4 text-[#6E685D] max-w-xs truncate">
+                    <td className="py-3 px-4 text-[#6B7280] max-w-xs truncate">
                       {req.reason}
                     </td>
                     <td className="py-3 px-4 font-bold text-emerald-800">
@@ -251,7 +251,7 @@ export const ReturnsRefundsManagement: React.FC = () => {
                     <td className="py-3 px-4 text-right">
                       <button
                         onClick={() => handleOpenModal(req)}
-                        className="bg-[#641E2B] hover:bg-[#B99A61] hover:text-[#641E2B] text-[#F8F5EF] px-3 py-1.5 rounded-xl font-bold text-[11px] uppercase tracking-wider transition-all shadow-xs"
+                        className="bg-[#111111] hover:bg-[#C5A15A] hover:text-[#111111] text-[#FFFFFF] px-3 py-1.5 rounded-xl font-bold text-[11px] uppercase tracking-wider transition-all shadow-xs"
                       >
                         Manage
                       </button>
@@ -267,11 +267,11 @@ export const ReturnsRefundsManagement: React.FC = () => {
       {/* ACTION MODAL */}
       {selectedReturn && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
-          <div className="bg-white border border-[#B99A61]/40 rounded-3xl shadow-2xl max-w-lg w-full flex flex-col text-[#292722]">
+          <div className="bg-white border border-[#C5A15A]/40 rounded-3xl shadow-2xl max-w-lg w-full flex flex-col text-[#1A1A1A]">
             
-            <div className="bg-[#641E2B] text-[#F8F5EF] px-6 py-4 rounded-t-3xl flex items-center justify-between border-b border-[#B99A61]/30">
+            <div className="bg-[#111111] text-[#FFFFFF] px-6 py-4 rounded-t-3xl flex items-center justify-between border-b border-[#C5A15A]/30">
               <div>
-                <span className="text-[10px] uppercase font-bold text-[#B99A61] tracking-widest block">
+                <span className="text-[10px] uppercase font-bold text-[#C5A15A] tracking-widest block">
                   Return Authorization
                 </span>
                 <h2 className="font-serif text-lg font-bold">
@@ -280,7 +280,7 @@ export const ReturnsRefundsManagement: React.FC = () => {
               </div>
               <button
                 onClick={() => setSelectedReturn(null)}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-[#B99A61] flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-[#C5A15A] flex items-center justify-center transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -288,7 +288,7 @@ export const ReturnsRefundsManagement: React.FC = () => {
 
             <div className="p-6 space-y-4 text-xs">
               
-              <div className="bg-[#F8F5EF] p-3 rounded-xl border border-[#E8DFD0] space-y-1">
+              <div className="bg-[#FFFFFF] p-3 rounded-xl border border-[#E5E7EB] space-y-1">
                 <p><strong>Customer:</strong> {selectedReturn.customerName} ({selectedReturn.customerEmail})</p>
                 <p><strong>Garment:</strong> {selectedReturn.productName}</p>
                 <p><strong>Reason:</strong> <span className="italic">"{selectedReturn.reason}"</span></p>
@@ -296,7 +296,7 @@ export const ReturnsRefundsManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#6E685D] block mb-1">
+                <label className="text-[10px] font-bold uppercase text-[#6B7280] block mb-1">
                   Admin Internal Inspection Notes
                 </label>
                 <textarea
@@ -304,7 +304,7 @@ export const ReturnsRefundsManagement: React.FC = () => {
                   value={adminNotesInput}
                   onChange={(e) => setAdminNotesInput(e.target.value)}
                   placeholder="Notes on fabric condition, zari inspection, courier reverse AWB..."
-                  className="w-full bg-[#FCFAF5] border border-[#E8DFD0] p-2.5 rounded-xl text-xs text-[#292722] focus:outline-none focus:border-[#B99A61]"
+                  className="w-full bg-[#FCFAF5] border border-[#E5E7EB] p-2.5 rounded-xl text-xs text-[#1A1A1A] focus:outline-none focus:border-[#C5A15A]"
                 />
               </div>
 
@@ -314,16 +314,16 @@ export const ReturnsRefundsManagement: React.FC = () => {
                   id="restockCheck"
                   checked={restockOnApproval}
                   onChange={(e) => setRestockOnApproval(e.target.checked)}
-                  className="rounded text-[#641E2B] focus:ring-[#B99A61]"
+                  className="rounded text-[#111111] focus:ring-[#C5A15A]"
                 />
-                <label htmlFor="restockCheck" className="text-xs text-[#292722] cursor-pointer">
+                <label htmlFor="restockCheck" className="text-xs text-[#1A1A1A] cursor-pointer">
                   Automatically restock garment unit into inventory upon refund completion
                 </label>
               </div>
 
               {/* Status Action Buttons */}
               <div>
-                <span className="text-[10px] font-bold uppercase text-[#6E685D] block mb-2">
+                <span className="text-[10px] font-bold uppercase text-[#6B7280] block mb-2">
                   Update Return State
                 </span>
                 <div className="grid grid-cols-2 gap-2">
