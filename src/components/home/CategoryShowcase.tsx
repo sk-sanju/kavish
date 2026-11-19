@@ -121,17 +121,17 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
           </div>
         </div>
 
-        {/* Category Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        {/* Category Cards Grid - Perfectly aligned 4 in one line on desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-5 xl:gap-6">
           {displayedCategories.map((cat) => {
             const count = getProductCountForCat(cat);
             return (
               <div
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat)}
-                className="group luxury-card relative bg-white border border-[#E5E7EB] hover:border-[#C5A15A] overflow-hidden cursor-pointer shadow-xs"
+                className="group luxury-card relative bg-white border border-[#E5E7EB] hover:border-[#C5A15A] overflow-hidden cursor-pointer shadow-xs transition-all duration-300 hover:shadow-md flex flex-col justify-between"
               >
-                <div className="aspect-[4/3] sm:aspect-[16/11] relative overflow-hidden bg-[#FFFFFF]">
+                <div className="aspect-[4/5] sm:aspect-[3/4] relative overflow-hidden bg-[#FFFFFF]">
                   <OptimizedImage
                     src={cat.image || '/assets/categories/women_kasavu.jpg'}
                     alt={cat.name}
@@ -139,29 +139,29 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
                     containerClassName="w-full h-full"
                     imageClassName="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                   
-                  <div className="absolute top-4 left-4">
+                  <div className="absolute top-3.5 left-3.5">
                     <span className="bg-[#111111]/90 backdrop-blur-md text-[#FFFFFF] text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-full border border-[#C5A15A]/40">
                       {cat.parentCategory}
                     </span>
                   </div>
 
-                  <div className="absolute bottom-4 left-4 right-4 text-white">
-                    <h3 className="font-serif text-2xl font-bold leading-tight group-hover:text-[#C5A15A] transition-colors">
+                  <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
+                    <h3 className="font-serif text-lg sm:text-xl font-bold leading-snug group-hover:text-[#C5A15A] transition-colors">
                       {cat.name}
                     </h3>
-                    <p className="text-xs text-white/80 line-clamp-1 mt-1 font-light">
+                    <p className="text-[11px] sm:text-xs text-white/80 line-clamp-2 mt-1 font-light leading-relaxed">
                       {cat.description || 'Authentic Kuthampully handwoven creation.'}
                     </p>
                   </div>
                 </div>
 
-                <div className="p-4 flex items-center justify-between text-xs border-t border-[#E5E7EB]/60 bg-white">
-                  <span className="text-[#6B7280] font-medium">
+                <div className="p-3.5 sm:p-4 flex items-center justify-between text-xs border-t border-[#E5E7EB]/60 bg-white">
+                  <span className="text-[#6B7280] font-medium text-[11px] sm:text-xs">
                     {count} {count === 1 ? 'Garment' : 'Garments'}
                   </span>
-                  <div className="flex items-center gap-1 text-[#111111] font-bold uppercase tracking-wider group-hover:translate-x-1 transition-transform">
+                  <div className="flex items-center gap-1 text-[#111111] font-bold uppercase tracking-wider text-[11px] sm:text-xs group-hover:translate-x-1 transition-transform">
                     <span>Explore</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </div>
