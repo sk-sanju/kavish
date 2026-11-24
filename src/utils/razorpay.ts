@@ -141,7 +141,7 @@ export const initializeRazorpayPayment = async (options: RazorpayPaymentOptions)
     amount: amountInPaise,
     currency: options.currencyCode || 'INR',
     name: POLICY_CONFIG.COMPANY_LEGAL_NAME,
-    description: `Order #${options.orderId} • Authentic Kuthampully GI Handlooms`,
+    description: `Order #${options.orderId} • Authentic Kuthampully Handlooms`,
     image: '/assets/logo.png',
     prefill: {
       name: options.customerName,

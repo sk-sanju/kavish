@@ -101,7 +101,7 @@ export const BannerManagement: React.FC = () => {
     setForm({
       tag: 'New Collection Campaign',
       title: 'Heirloom Kasavu\nHandwoven with Pride',
-      subtitle: 'Discover authentic Kuthampully handloom craft, certified GI tag quality, and regal gold zari borders.',
+      subtitle: 'Discover authentic Kuthampully handloom craft, certified master handloom quality, and regal gold zari borders.',
       image: '/assets/banners/hero_kavish.jpg',
       primaryCtaText: 'Shop Collection',
       primaryCtaLink: 'shop',

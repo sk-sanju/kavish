@@ -16,7 +16,7 @@ export const ContactPage: React.FC = () => {
     phone: '+91 9539251789',
     email: 'kavishlooms@gmail.com',
     whatsappNumber: '919539251789',
-    badgeText: 'Authentic Kuthampully GI Tag Unit'
+    badgeText: 'Authentic Kuthampully Handloom Unit'
   };
 
   const cleanWhatsappNumber = (contact.whatsappNumber || '919539251789').replace(/[^0-9]/g, '');
@@ -44,7 +44,7 @@ export const ContactPage: React.FC = () => {
               Visit Us in Kuthampully, Kerala
             </h1>
             <p className="text-xs sm:text-sm text-[#E5E7EB] font-light leading-relaxed">
-              Step into our master weaving house in Kuthampully village, Thrissur — home to over 500 years of royal Kochi court weaving traditions and authentic GI-tagged Kasavu handlooms.
+              Step into our master weaving house in Kuthampully village, Thrissur — home to over 500 years of royal Kochi court weaving traditions and authentic Kerala Kasavu handlooms.
             </p>
           </div>
         </div>
@@ -115,10 +115,10 @@ export const ContactPage: React.FC = () => {
             <div className="bg-[#111111]/5 p-4 rounded-xl border border-[#C5A15A]/30 text-xs text-[#111111] space-y-1">
               <div className="flex items-center gap-1.5 font-bold">
                 <Award className="w-4 h-4 text-[#C5A15A]" />
-                <span>{contact.badgeText || 'Authentic Kuthampully GI Tag Unit'}</span>
+                <span>{contact.badgeText || 'Authentic Kuthampully Handloom Unit'}</span>
               </div>
               <p className="text-[11px] text-[#6B7280]">
-                Certified by the Geographical Indications Registry, Government of India (Reg No. 2011).
+                Preserving 500 years of traditional Kerala pit-loom handloom craftsmanship.
               </p>
             </div>
 

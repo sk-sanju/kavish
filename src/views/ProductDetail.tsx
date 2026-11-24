@@ -199,7 +199,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
               />
 
               <span className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-[#111111] text-[#FFFFFF] text-[8px] sm:text-[9px] uppercase tracking-widest font-bold px-3 py-1 rounded-full border border-[#C5A15A] shadow-xs z-10">
-                100% Kuthampully Handloom GI Tag
+                100% Authentic Handloom
               </span>
 
               <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-xs text-[#111111] px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-xs border border-black/5 opacity-80 group-hover:opacity-100 transition-opacity">
@@ -413,7 +413,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
             <div className="grid grid-cols-3 gap-2 pt-3 border-t border-[#E5E7EB] text-center text-[10px] text-[#6B7280]">
               <div className="p-2 rounded-xl bg-[#FFFFFF]">
                 <ShieldCheck className="w-4 h-4 mx-auto mb-1 text-[#C5A15A]" />
-                <span>GI Tag Certified</span>
+                <span>100% Handloom</span>
               </div>
               <div className="p-2 rounded-xl bg-[#FFFFFF]">
                 <Truck className="w-4 h-4 mx-auto mb-1 text-[#C5A15A]" />
@@ -441,7 +441,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product: propProdu
                     <p><strong>Fabric:</strong> {product.fabric}</p>
                     <p><strong>Brand / Atelier:</strong> {product.brand || 'Kavish Kuthampully Atelier'}</p>
                     <p><strong>Weave Type:</strong> Traditional Non-Motorized Pit Loom</p>
-                    <p><strong>Certification:</strong> Geographical Indication (GI Tag 2011)</p>
+                    <p><strong>Certification:</strong> 100% Authentic Pit-Loom Handloom Weave</p>
                     <p><strong>Fit:</strong> {product.fitInformation || 'Standard Traditional Fit'}</p>
                     <ul className="list-disc pl-4 space-y-1 mt-2">
                       {product.details.map((d, i) => (

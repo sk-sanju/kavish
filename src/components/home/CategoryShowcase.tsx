@@ -72,7 +72,7 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
               Shop by Category
             </h2>
             <p className="text-xs sm:text-sm text-[#1A1A1A]/70 max-w-xl leading-relaxed font-light">
-              Explore authentic GI-tagged Kuthampully handlooms, fine gold zari weaves, and European linen tailored for Kerala luxury.
+              Explore authentic handcrafted Kuthampully handlooms, fine gold zari weaves, and European linen tailored for Kerala luxury.
             </p>
           </div>
 

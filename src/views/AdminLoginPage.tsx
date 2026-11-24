@@ -113,7 +113,7 @@ export const AdminLoginPage: React.FC = () => {
 
         <div className="pt-4 border-t border-[#E5E7EB] text-center">
           <p className="text-[11px] text-[#6B7280]">
-            Kavish Kuthampully GI Handloom Unit • Reg No. 2011
+            Kavish Kuthampully Master Handloom Unit • Reg No. 2011
           </p>
         </div>
 

@@ -94,7 +94,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [reviews, setReviews] = useState<Review[]>(INITIAL_REVIEWS);
   const [stockAdjustments, setStockAdjustments] = useState<StockAdjustment[]>([]);
   const [announcementText, setAnnouncementTextState] = useState<string>(
-    'Complimentary Express Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified'
+    'Complimentary Express Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully Handloom Certified'
   );
 
   // Cross-tab and window sync listener
@@ -450,11 +450,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       sizes: productForm.sizes?.length ? productForm.sizes : ['Free Size'],
       colors: productForm.colors?.length ? productForm.colors : [{ name: 'Kasavu Gold', hex: '#C5A15A' }],
       fabric: productForm.fabric || '100% Pure Organic Cotton',
-      details: productForm.details?.length ? productForm.details : ['100% Authentic Handloom with Kerala Govt GI Tag'],
+      details: productForm.details?.length ? productForm.details : ['100% Authentic Handloom Handcrafted in Kuthampully'],
       careInstructions: productForm.careInstructions?.length ? productForm.careInstructions : ['Dry Clean Only'],
       fitInformation: productForm.fitInformation || 'Standard Traditional Fit',
       sku: productForm.sku || `KV-KUT-${Math.floor(1000 + Math.random() * 9000)}`,
-      tags: productForm.tags || ['Kuthampully', 'GI Tag'],
+      tags: productForm.tags || ['Kuthampully', 'Handloom'],
       sizeChart: productForm.sizeChart
     };
 
@@ -773,7 +773,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     saveCollections(INITIAL_COLLECTIONS);
     saveReviews(INITIAL_REVIEWS);
     saveCategories(INITIAL_CATEGORIES);
-    setAnnouncementText('Complimentary Express Air Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified');
+    setAnnouncementText('Complimentary Express Air Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully Handloom Certified');
   };
 
   return (

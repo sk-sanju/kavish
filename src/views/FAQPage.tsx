@@ -12,11 +12,11 @@ interface FAQItem {
 }
 
 const BASE_FAQS: FAQItem[] = [
-  // Authenticity & GI Tag
+  // Authenticity & Craftsmanship
   {
     category: 'authenticity',
     question: 'Are all Kavish sarees and garments authentic Kuthampully handlooms?',
-    answer: `Yes, 100%. Every piece crafted by Kavish is woven by master artisans in Kuthampully village, Thrissur, Kerala, and is certified under the Government of India Geographical Indication (${POLICY_CONFIG.GI_TAG_REG_NO}). Each item arrives with our official GI verification tag and hallmark seal.`
+    answer: 'Yes, 100%. Every piece crafted by Kavish is woven by master artisans in Kuthampully village, Thrissur, Kerala, using traditional non-motorized pit-looms and frame-looms. Each item arrives with our official handloom hallmark seal and keepsake luxury box.'
   },
   {
     category: 'authenticity',
@@ -103,7 +103,7 @@ export const FAQPage: React.FC = () => {
         <div className="flex flex-wrap items-center justify-center gap-2 mb-8 text-xs font-semibold">
           {[
             { id: 'all', label: 'All Questions', icon: HelpCircle },
-            { id: 'authenticity', label: 'Authenticity & GI Tag', icon: Award },
+            { id: 'authenticity', label: 'Authenticity & Craft', icon: Award },
             { id: 'sizing', label: 'Sizing & Customization', icon: ShieldCheck },
             { id: 'shipping', label: 'Shipping & Delivery', icon: Truck },
             { id: 'payments', label: 'Payments & Security', icon: CreditCard },

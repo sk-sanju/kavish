@@ -83,6 +83,7 @@ export const Header: React.FC = () => {
     else if (view === 'wishlist') router.push('/wishlist');
     else if (view === 'account') router.push('/account');
     else if (view === 'heritage') router.push('/heritage');
+    else if (view === 'about') router.push('/about');
     else if (view === 'contact') router.push('/contact');
     else if (view === 'admin') router.push('/admin');
     else router.push(`/${view}`);
@@ -191,11 +192,11 @@ export const Header: React.FC = () => {
                           <div className="font-bold text-[#1A1A1A]">Traditional Kasavu Sarees</div>
                           <div className="text-[11px] text-[#6B7280]">24k Gold Electroplated Zari Borders</div>
                         </div>
-                        <span className="text-[10px] text-[#C5A15A] font-bold uppercase bg-[#111111]/5 px-2 py-0.5 rounded-full">GI Tag</span>
+                        <span className="text-[10px] text-[#C5A15A] font-bold uppercase bg-[#111111]/5 px-2 py-0.5 rounded-full">Handloom</span>
                       </button>
 
                       <button
-                        onClick={() => handleNavClick('women')}
+                        onClick={() => handleNavClick('shop', undefined, 'kasavu-masterpieces')}
                         className="w-full text-left px-3 py-2 hover:bg-[#E5E7EB]/50 hover:text-[#111111] rounded-xl transition-colors flex items-center justify-between cursor-pointer"
                       >
                         <div>
@@ -227,7 +228,7 @@ export const Header: React.FC = () => {
 
                     <div className="mt-3 pt-3 border-t border-[#E5E7EB] flex items-center justify-between bg-white p-3 rounded-xl border">
                       <div className="text-[11px]">
-                        <span className="font-bold text-[#111111]">Authentic GI Tag Certified</span>
+                        <span className="font-bold text-[#111111]">100% Authentic Handloom</span>
                         <p className="text-[10px] text-[#6B7280]">Direct from weaver societies in Thrissur</p>
                       </div>
                       <button
@@ -281,7 +282,7 @@ export const Header: React.FC = () => {
                       </button>
 
                       <button
-                        onClick={() => handleNavClick('men')}
+                        onClick={() => handleNavClick('shop', undefined, 'flax-linen')}
                         className="w-full text-left px-3 py-2 hover:bg-[#E5E7EB]/50 hover:text-[#111111] rounded-xl transition-colors cursor-pointer"
                       >
                         <div className="font-bold text-[#1A1A1A]">Pure European Linen Shirts</div>
@@ -289,7 +290,7 @@ export const Header: React.FC = () => {
                       </button>
 
                       <button
-                        onClick={() => handleNavClick('men')}
+                        onClick={() => handleNavClick('bridal-festive')}
                         className="w-full text-left px-3 py-2 hover:bg-[#E5E7EB]/50 hover:text-[#111111] rounded-xl transition-colors cursor-pointer"
                       >
                         <div className="font-bold text-[#1A1A1A]">Wedding &amp; Festival Combo Sets</div>
@@ -365,11 +366,11 @@ export const Header: React.FC = () => {
                       </button>
 
                       <button
-                        onClick={() => handleNavClick('heritage')}
+                        onClick={() => handleNavClick('about')}
                         className="w-full text-left px-3 py-2 hover:bg-[#E5E7EB]/50 hover:text-[#111111] rounded-xl transition-colors cursor-pointer"
                       >
-                        <div className="font-bold text-[#1A1A1A]">GI Tag Authenticity</div>
-                        <div className="text-[11px] text-[#6B7280]">Government Certified Geographical Indication</div>
+                        <div className="font-bold text-[#1A1A1A]">About Kavish Atelier</div>
+                        <div className="text-[11px] text-[#6B7280]">Our Master Weavers, Vision &amp; Craftsmanship</div>
                       </button>
 
                       <button

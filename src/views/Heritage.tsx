@@ -31,7 +31,7 @@ export const Heritage: React.FC<HeritageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Village & GI Tag Spotlight Banner */}
+      {/* Village & Master Handloom Spotlight Banner */}
       <section className="py-12 bg-[#000000] text-[#FFFFFF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-[#C5A15A]/20">
@@ -42,8 +42,8 @@ export const Heritage: React.FC<HeritageProps> = ({ onNavigate }) => {
             </div>
 
             <div className="p-4 space-y-1">
-              <span className="font-serif text-3xl font-bold text-[#C5A15A]">GI Tag</span>
-              <p className="text-xs text-[#E5E7EB]">Certified Geographical Indication 2011</p>
+              <span className="font-serif text-3xl font-bold text-[#C5A15A]">100%</span>
+              <p className="text-xs text-[#E5E7EB]">Authentic Pit-Loom Handloom Weave</p>
             </div>
 
             <div className="p-4 space-y-1">

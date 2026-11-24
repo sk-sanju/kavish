@@ -41,7 +41,7 @@ export const DEFAULT_HERO_BANNERS: HeroBanner[] = [
     image: '/assets/banners/hero_festive.jpg',
     primaryCtaText: 'Shop Festive Edit',
     primaryCtaLink: 'shop',
-    secondaryCtaText: 'GI Tag Heritage',
+    secondaryCtaText: 'Our Heritage',
     secondaryCtaLink: 'heritage',
     collectionSlug: 'festive-edit',
     isActive: true,
@@ -123,13 +123,13 @@ const DEFAULT_GST_CONFIG: GSTConfig = {
 };
 
 const DEFAULT_STORE_CONTENT: StoreContentConfig = {
-  announcementText: 'Complimentary Express Air Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified',
+  announcementText: 'Complimentary Express Air Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully Handloom Certified',
   heroTitle: '500 Years of Kuthampully Handloom Mastery',
   heroSubtitle: 'Royal Kasavu Sarees & Unbleached European Linen Woven for Modern Royalty',
   bannerImage: '/assets/banners/hero_kavish.jpg',
   featuredCollectionIds: ['col-kasavu', 'col-festive', 'col-everyday'],
   faqItems: [
-    { question: 'Are all Kavish garments certified authentic handloom?', answer: 'Yes, every Kavish product carries the official Government GI Tag (Reg 2011) woven in Kuthampully, Thrissur.' }
+    { question: 'Are all Kavish garments certified authentic handloom?', answer: 'Yes, every Kavish product is woven by master artisans on traditional pit looms in Kuthampully, Thrissur.' }
   ],
   policyText: 'Kavish Handlooms Pvt. Ltd. guarantees 100% authentic Devanga artisan craftsmanship.',
   contactInfo: {
@@ -142,7 +142,7 @@ const DEFAULT_STORE_CONTENT: StoreContentConfig = {
     phone: '+91 9539251789',
     email: 'kavishlooms@gmail.com',
     whatsappNumber: '919539251789',
-    badgeText: 'Authentic Kuthampully GI Tag Unit'
+    badgeText: 'Authentic Kuthampully Handloom Unit'
   }
 };
 

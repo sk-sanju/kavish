@@ -207,7 +207,7 @@ export const QuickViewModal: React.FC = () => {
                 <Truck className="w-3.5 h-3.5 text-[#C5A15A]" /> Free Express Shipping
               </span>
               <span className="flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#C5A15A]" /> GI Hallmark Authenticity
+                <ShieldCheck className="w-3.5 h-3.5 text-[#C5A15A]" /> Pure Handloom Authenticity
               </span>
             </div>
           </div>

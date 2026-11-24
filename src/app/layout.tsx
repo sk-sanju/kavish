@@ -17,13 +17,13 @@ export const metadata: Metadata = {
     template: '%s | Kavish Kerala Handlooms',
   },
   description:
-    "Shop authentic GI-certified Kuthampully handloom Kasavu sarees, men's double mundus, linen shirts, and kids festive wear. 500 years of royal Devanga weaving traditions with pan-India complimentary express delivery.",
+    "Shop authentic Kuthampully handloom Kasavu sarees, men's double mundus, linen shirts, and kids festive wear. 500 years of royal Devanga weaving traditions with pan-India complimentary express delivery.",
   keywords: [
     'Kavish handlooms',
     'Kuthampully Kasavu sarees',
     'Kerala wedding sarees',
     'Onam sarees',
-    'GI tag handlooms',
+    'authentic handlooms',
     'authentic mundu',
     'linen shirts Kerala',
     'Chendamangalam handlooms',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_IN',
     url: 'https://kavish.xenotrix.in',
-    title: 'Kavish — Authentic Kerala Handlooms & GI Tag Kasavu Weaves',
+    title: 'Kavish — Authentic Kerala Handlooms & Luxury Kasavu Weaves',
     description:
       '500 years of royal Devanga weaving traditions crafted in Kuthampully, Thrissur. Luxury Kasavu sarees, bridal edits, and pure linen shirts.',
     siteName: 'Kavish Kerala Handlooms',
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Kavish — Authentic Kerala Handlooms',
     description:
-      'Authentic GI-certified Kuthampully handloom Kasavu sarees, double mundus, and luxury linen shirts.',
+      'Authentic Kuthampully handloom Kasavu sarees, double mundus, and luxury linen shirts.',
     images: ['/assets/banners/hero_kavish.jpg'],
   },
   icons: {
@@ -91,7 +91,7 @@ export default function RootLayout({
               legalName: 'Kavish Handlooms Pvt. Ltd.',
               url: 'https://kavish.xenotrix.in',
               logo: 'https://kavish.xenotrix.in/assets/logo.png',
-              description: 'Authentic Kuthampully GI Tag Kasavu Sarees, Men’s Mundu & Luxury Kerala Handlooms',
+              description: 'Authentic Kuthampully Kasavu Sarees, Men’s Mundu & Luxury Kerala Handlooms',
               telephone: '+919539251789',
               email: 'kavishhandlooms@gmail.com',
               address: {

@@ -30,7 +30,7 @@ export const AnnouncementBar: React.FC = () => {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="hidden md:flex items-center space-x-2 text-[#C5A15A]">
           <ShieldCheck className="w-3.5 h-3.5 text-[#C5A15A]" />
-          <span className="text-[11px] uppercase tracking-wider text-white/90 font-medium">100% Authentic Handloom GI Tag Certified</span>
+          <span className="text-[11px] uppercase tracking-wider text-white/90 font-medium">100% Authentic Handloom Certified</span>
         </div>
 
         <div className="flex items-center justify-center space-x-2 mx-auto md:mx-0">
@@ -47,7 +47,7 @@ export const AnnouncementBar: React.FC = () => {
                 </span>
               ))
             ) : (
-              'Complimentary Express Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully GI Tag Certified'
+              'Complimentary Express Delivery across India on orders over ₹2,000 | 100% Authentic Kuthampully Handloom'
             )}
           </span>
         </div>

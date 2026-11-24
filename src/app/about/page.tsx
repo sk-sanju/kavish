@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Heritage } from '../../views/Heritage';
+import { AboutPage } from '../../views/AboutPage';
 
 export default function AboutRoute() {
   const router = useRouter();
@@ -13,5 +13,5 @@ export default function AboutRoute() {
     else router.push(`/${view}`);
   };
 
-  return <Heritage onNavigate={handleNavigate} />;
+  return <AboutPage onNavigate={handleNavigate} />;
 }

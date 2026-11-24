@@ -18,7 +18,7 @@ const STANDARD_PIPELINE_STAGES: { status: OrderStatus; label: string; desc: stri
   { status: 'New Order', label: 'Order Received', desc: 'Order placed & payment verified' },
   { status: 'Confirmed', label: 'Order Confirmed', desc: 'Atelier verified & assigned to loom master' },
   { status: 'Processing', label: 'Artisan Weaving', desc: 'Quality inspection & weave verification' },
-  { status: 'Packed', label: 'Luxury Packed', desc: 'GI hallmark tag attached & sealed in gift box' },
+  { status: 'Packed', label: 'Luxury Packed', desc: 'Authenticity hallmark tag attached & sealed in gift box' },
   { status: 'Ready to Dispatch', label: 'Ready for Pickup', desc: 'Manifested for courier partner handoff' },
   { status: 'Shipped', label: 'In Transit', desc: 'En route from Kuthampully loom house' },
   { status: 'Out for Delivery', label: 'Out for Delivery', desc: 'Courier agent en route to recipient destination' },

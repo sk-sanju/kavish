@@ -9,7 +9,7 @@ const STAGES: { status: OrderStatus; label: string; desc: string }[] = [
   { status: 'New Order', label: 'Order Received', desc: 'Payment verified & order created' },
   { status: 'Confirmed', label: 'Confirmed', desc: 'Atelier verified & assigned to loom master' },
   { status: 'Processing', label: 'Artisan Weaving', desc: 'Quality inspection & weave verification' },
-  { status: 'Packed', label: 'Luxury Packed', desc: 'GI hallmark tag attached & gift boxed' },
+  { status: 'Packed', label: 'Luxury Packed', desc: 'Authenticity hallmark tag attached & gift boxed' },
   { status: 'Ready to Dispatch', label: 'Ready for Pickup', desc: 'Manifested for courier partner handoff' },
   { status: 'Shipped', label: 'In Transit', desc: 'Dispatched from Kuthampully loom house' },
   { status: 'Out for Delivery', label: 'Out for Delivery', desc: 'Courier agent en route to recipient destination' },

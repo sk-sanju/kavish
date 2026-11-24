@@ -62,7 +62,7 @@ export default function BridalFestivePage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E5E7EB] pb-6">
           <div className="flex items-center gap-2 text-xs text-[#111111] font-bold uppercase tracking-wider">
             <Award className="w-4 h-4 text-[#C5A15A]" />
-            <span>GI Certified Kuthampully Handlooms ({festiveProducts.length} Pieces)</span>
+            <span>Authentic Kuthampully Handlooms ({festiveProducts.length} Pieces)</span>
           </div>
 
           {/* Sort Selector */}

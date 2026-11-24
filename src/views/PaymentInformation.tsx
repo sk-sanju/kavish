@@ -120,7 +120,7 @@ export const PaymentInformation: React.FC = () => {
                 Note on Cash on Delivery (COD)
               </strong>
               <p className="text-xs text-amber-900 leading-relaxed">
-                To protect the handcrafted authenticity of our GI-certified Kuthampully weaves and minimize fraudulent transit returns, Kavish currently operates on an <strong>online-first payment model</strong>. Cash on Delivery is not active at this time.
+                To protect the handcrafted authenticity of our master Kuthampully weaves and minimize fraudulent transit returns, Kavish currently operates on an <strong>online-first payment model</strong>. Cash on Delivery is not active at this time.
               </p>
             </div>
           </section>

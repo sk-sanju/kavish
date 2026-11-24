@@ -78,7 +78,7 @@ export const ReturnRefundPolicy: React.FC = () => {
               <strong className="text-[#111111] block font-bold">Conditions for Valid Return:</strong>
               <ul className="space-y-1.5 pl-4 list-disc text-xs text-[#6B7280]">
                 <li>Product must be unworn, unwashed, unaltered, and completely free of perfume, stains, or damage.</li>
-                <li>Original brand tags, folding layout, and Kuthampully GI Tag seal must remain attached and intact.</li>
+                <li>Original brand tags, folding layout, and authentic brand seal must remain attached and intact.</li>
                 <li>Must be returned in the original luxury Kavish gift box packaging along with the cotton preservation bag.</li>
               </ul>
             </div>

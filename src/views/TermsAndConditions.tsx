@@ -53,10 +53,10 @@ export const TermsAndConditions: React.FC = () => {
           <section className="space-y-3">
             <div className="flex items-center gap-2 text-[#111111]">
               <Award className="w-5 h-5 text-[#C5A15A] shrink-0" />
-              <h2 className="font-serif text-lg sm:text-xl font-bold">2. Authentic Handloom Craftsmanship &amp; GI Tag Characteristics</h2>
+              <h2 className="font-serif text-lg sm:text-xl font-bold">2. Authentic Handloom Craftsmanship &amp; Natural Characteristics</h2>
             </div>
             <p className="text-[#6B7280]">
-              All Kavish creations are authentic handloom pieces, certified under the <strong>{POLICY_CONFIG.GI_TAG_REG_NO}</strong>. Due to the traditional pit-loom and frame-loom weaving techniques:
+              All Kavish creations are authentic handloom pieces, woven by master artisans on traditional pit looms and frame looms. Due to the authentic handmade nature:
             </p>
             <ul className="space-y-2 pl-4 list-disc text-[#6B7280]">
               <li>Subtle variations in zari texture, weave density, and natural yarn slubs are natural hallmarks of authentic handcrafting and are not considered manufacturing defects.</li>
@@ -107,7 +107,7 @@ export const TermsAndConditions: React.FC = () => {
               <h2 className="font-serif text-lg sm:text-xl font-bold">6. Returns, Exchanges &amp; Refunds</h2>
             </div>
             <p className="text-[#6B7280]">
-              We offer a dedicated <strong>{POLICY_CONFIG.RETURN_WINDOW_DAYS}-day return &amp; size exchange window</strong> from the date of package delivery. Returned products must be unused, unwashed, in original condition with all tags and GI seals intact. Full terms are detailed on our <a href="/return-refund-policy" className="text-[#111111] underline font-semibold">Return &amp; Refund Policy</a> page.
+              We offer a dedicated <strong>{POLICY_CONFIG.RETURN_WINDOW_DAYS}-day return &amp; size exchange window</strong> from the date of package delivery. Returned products must be unused, unwashed, in original condition with all tags and seals intact. Full terms are detailed on our <a href="/return-refund-policy" className="text-[#111111] underline font-semibold">Return &amp; Refund Policy</a> page.
             </p>
           </section>
 

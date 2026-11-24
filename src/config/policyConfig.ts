@@ -9,8 +9,8 @@ export const POLICY_CONFIG = {
   // Brand & Company Identity
   BRAND_NAME: 'KAVISH',
   COMPANY_LEGAL_NAME: 'Kavish Handlooms Pvt. Ltd.',
-  TAGLINE: 'Authentic Kerala Handlooms & GI-Certified Kuthampully Kasavu Weaves',
-  GI_TAG_REG_NO: 'Kuthampully GI Reg No. 2011 (Govt. of India)',
+  TAGLINE: 'Authentic Kerala Handlooms & Luxury Kuthampully Kasavu Weaves',
+  WEAVE_AUTHENTICITY_DECLARATION: 'Authentic Kuthampully Master Handloom Weave',
   
   // Atelier & Physical Coordinates
   ATELIER_ADDRESS: {

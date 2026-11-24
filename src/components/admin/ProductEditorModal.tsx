@@ -52,11 +52,11 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
     colors: product?.colors?.length ? product?.colors : [{ name: 'Kasavu Gold', hex: '#C5A15A' }, { name: 'Royal Cream', hex: '#FFFFFF' }],
     variants: product?.variants || [],
     fabric: product?.fabric || '100% Organic Cotton & 24k Zari',
-    details: product?.details?.length ? product?.details : ['100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)'],
+    details: product?.details?.length ? product?.details : ['100% Authentic Handloom Handcrafted in Kuthampully'],
     careInstructions: product?.careInstructions?.length ? product?.careInstructions : ['Dry Clean Only', 'Iron on Reverse Zari'],
     fitInformation: product?.fitInformation || 'Standard Traditional Fit',
     sku: product?.sku || `KV-KUT-${Math.floor(1000 + Math.random() * 9000)}`,
-    tags: product?.tags?.length ? product?.tags : ['Kuthampully', 'GI Tag', 'Handloom'],
+    tags: product?.tags?.length ? product?.tags : ['Kuthampully', 'Authentic', 'Handloom'],
     sizeChart: product?.sizeChart
   });
 
@@ -89,11 +89,11 @@ export const ProductEditorModal: React.FC<ProductEditorModalProps> = ({ product,
         colors: product.colors?.length ? product.colors : [{ name: 'Kasavu Gold', hex: '#C5A15A' }, { name: 'Royal Cream', hex: '#FFFFFF' }],
         variants: product.variants || [],
         fabric: product.fabric || '100% Organic Cotton & 24k Zari',
-        details: product.details?.length ? product.details : ['100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)'],
+        details: product.details?.length ? product.details : ['100% Authentic Handloom Handcrafted in Kuthampully'],
         careInstructions: product.careInstructions?.length ? product.careInstructions : ['Dry Clean Only', 'Iron on Reverse Zari'],
         fitInformation: product.fitInformation || 'Standard Traditional Fit',
         sku: product.sku || `KV-KUT-${Math.floor(1000 + Math.random() * 9000)}`,
-        tags: product.tags?.length ? product.tags : ['Kuthampully', 'GI Tag', 'Handloom'],
+        tags: product.tags?.length ? product.tags : ['Kuthampully', 'Authentic', 'Handloom'],
         sizeChart: product.sizeChart
       });
     }

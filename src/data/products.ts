@@ -47,7 +47,7 @@ export const PRODUCTS: Product[] = [
     "variants": [],
     "fabric": "100% Organic Cotton & Golden Zari",
     "details": [
-      "100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)"
+      "100% Authentic Handloom Handcrafted in Kuthampully"
     ],
     "careInstructions": [
       "Dry Clean Only",
@@ -57,7 +57,7 @@ export const PRODUCTS: Product[] = [
     "sku": "KV-RPTS",
     "tags": [
       "Kuthampully",
-      "GI Tag",
+      "Authentic Weave",
       "Handloom"
     ],
     "createdAt": "2026-08-27T09:29:26.500217+00:00",
@@ -101,7 +101,7 @@ export const PRODUCTS: Product[] = [
     "variants": [],
     "fabric": "100% Organic Cotton &Golden Zari",
     "details": [
-      "100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)"
+      "100% Authentic Handloom Handcrafted in Kuthampully"
     ],
     "careInstructions": [
       "Dry Clean Only",
@@ -111,7 +111,7 @@ export const PRODUCTS: Product[] = [
     "sku": "KV-RPCS",
     "tags": [
       "Kuthampully",
-      "GI Tag",
+      "Authentic Weave",
       "Handloom"
     ],
     "createdAt": "2026-08-27T09:30:59.530128+00:00",
@@ -197,7 +197,7 @@ export const PRODUCTS: Product[] = [
     "variants": [],
     "fabric": "100% Organic Cotton",
     "details": [
-      "100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)"
+      "100% Authentic Handloom Handcrafted in Kuthampully"
     ],
     "careInstructions": [
       "Dry Clean Only",
@@ -207,7 +207,7 @@ export const PRODUCTS: Product[] = [
     "sku": "KV-FPKKST",
     "tags": [
       "Kuthampully",
-      "GI Tag",
+      "Authentic Weave",
       "Handloom"
     ],
     "createdAt": "2026-08-27T09:15:56.228408+00:00",
@@ -279,7 +279,7 @@ export const PRODUCTS: Product[] = [
     "variants": [],
     "fabric": "100% Organic Cotton & Golden Zari",
     "details": [
-      "100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)"
+      "100% Authentic Handloom Handcrafted in Kuthampully"
     ],
     "careInstructions": [
       "Dry Clean Only",
@@ -289,7 +289,7 @@ export const PRODUCTS: Product[] = [
     "sku": "KV-TWGST",
     "tags": [
       "Kuthampully",
-      "GI Tag",
+      "Authentic Weave",
       "Handloom"
     ],
     "createdAt": "2026-08-27T09:07:06.449901+00:00",
@@ -330,7 +330,7 @@ export const PRODUCTS: Product[] = [
     "variants": [],
     "fabric": "100% Organic Cotton",
     "details": [
-      "100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)"
+      "100% Authentic Handloom Handcrafted in Kuthampully"
     ],
     "careInstructions": [
       "Dry Clean Only",
@@ -340,7 +340,7 @@ export const PRODUCTS: Product[] = [
     "sku": "KV-BTPSM",
     "tags": [
       "Kuthampully",
-      "GI Tag",
+      "Authentic Weave",
       "Handloom"
     ],
     "createdAt": "2026-08-27T09:33:49.466523+00:00",
@@ -389,7 +389,7 @@ export const PRODUCTS: Product[] = [
     "variants": [],
     "fabric": "100% Organic Cotton & Golden Zari",
     "details": [
-      "100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)"
+      "100% Authentic Handloom Handcrafted in Kuthampully"
     ],
     "careInstructions": [
       "Dry Clean Only",
@@ -399,7 +399,7 @@ export const PRODUCTS: Product[] = [
     "sku": "KV-LCGST3X3",
     "tags": [
       "Kuthampully",
-      "GI Tag",
+      "Authentic Weave",
       "Handloom"
     ],
     "sizeChart": {
@@ -450,7 +450,7 @@ export const PRODUCTS: Product[] = [
     "variants": [],
     "fabric": "100% Organic Cotton & Golden Zari",
     "details": [
-      "100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)"
+      "100% Authentic Handloom Handcrafted in Kuthampully"
     ],
     "careInstructions": [
       "Dry Clean Only",
@@ -460,7 +460,7 @@ export const PRODUCTS: Product[] = [
     "sku": "KV-GPCBSM",
     "tags": [
       "Kuthampully",
-      "GI Tag",
+      "Authentic Weave",
       "Handloom"
     ],
     "createdAt": "2026-08-27T09:39:20.328568+00:00",
@@ -501,7 +501,7 @@ export const PRODUCTS: Product[] = [
     "variants": [],
     "fabric": "100% Organic Cotton & Golden Zari",
     "details": [
-      "100% Authentic Handloom with Kerala Govt GI Tag (Reg 2011)"
+      "100% Authentic Handloom Handcrafted in Kuthampully"
     ],
     "careInstructions": [
       "Dry Clean Only",
@@ -511,7 +511,7 @@ export const PRODUCTS: Product[] = [
     "sku": "KV-MCGSM",
     "tags": [
       "Kuthampully",
-      "GI Tag",
+      "Authentic Weave",
       "Handloom"
     ],
     "createdAt": "2026-08-27T09:44:19.647775+00:00",

@@ -17,7 +17,7 @@ export const HERITAGE_STORIES: HeritageStory[] = [
     details: [
       'Invited by the Kochi Royal Court over 500 years ago',
       'Preserved by Devanga Chettiar master artisan families',
-      'Granted official Geographical Indication (GI Tag) Status in 2011',
+      'Recognized nationwide for authentic Kuthampully handloom mastery',
       'Traditional non-motorized pit-loom & jacquard weaving'
     ]
   },
@@ -41,7 +41,7 @@ export const HERITAGE_STORIES: HeritageStory[] = [
     description: 'The golden Kasavu border of Kuthampully is synonymous with Kerala’s celebratory spirit — worn during Onam, Vishu, royal weddings, and sacred festivities. Kavish honors this legacy while tailoring modern relaxed silhouettes for discerning patrons worldwide.',
     image: '/assets/heritage/royal_kasavu_weaver.jpg',
     details: [
-      'Certified 100% authentic Kuthampully GI Handloom',
+      'Certified 100% authentic Kuthampully Handloom',
       'Tarnish-resistant electroplated gold thread protection',
       'Tailored European linen & organic cotton blends',
       'Delivered in royal gold-embossed keepsake boxes'

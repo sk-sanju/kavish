@@ -36,7 +36,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     else if (view === 'checkout') router.push('/checkout');
     else if (view === 'wishlist') router.push('/wishlist');
     else if (view === 'account') router.push('/account');
-    else if (view === 'heritage' || view === 'about') router.push('/heritage');
+    else if (view === 'heritage') router.push('/heritage');
+    else if (view === 'about') router.push('/about');
     else if (view === 'contact') router.push('/contact');
     else if (view === 'faq') router.push('/faq');
     else if (view === 'track-order') router.push('/track-order');

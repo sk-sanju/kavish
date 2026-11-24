@@ -45,7 +45,7 @@ export function generateCustomerOrderConfirmationHtml(order: Order): string {
                 KAVISH
               </h1>
               <p style="margin: 6px 0 0 0; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #FFFFFF;">
-                Authentic Kuthampully GI Tag Handlooms
+                Authentic Kuthampully Luxury Handlooms
               </p>
             </td>
           </tr>

@@ -36,7 +36,7 @@ export const ContentManagement: React.FC = () => {
       phone: '+91 9539251789',
       email: 'kavishlooms@gmail.com',
       whatsappNumber: '919539251789',
-      badgeText: 'Authentic Kuthampully GI Tag Unit'
+      badgeText: 'Authentic Kuthampully Handloom Unit'
     }
   );
 
@@ -282,14 +282,14 @@ export const ContentManagement: React.FC = () => {
                 <div>
                   <label className="block font-semibold text-[#6B7280] mb-1 flex items-center gap-1.5">
                     <Award className="w-3.5 h-3.5 text-[#C5A15A]" />
-                    <span>GI Tag / Accreditation Badge</span>
+                    <span>Artisan Accreditation Badge</span>
                   </label>
                   <input
                     type="text"
                     value={contactForm.badgeText}
                     onChange={(e) => setContactForm({ ...contactForm, badgeText: e.target.value })}
                     className="w-full border border-[#E5E7EB] p-2.5 rounded-xl bg-[#FFFFFF] font-bold"
-                    placeholder="e.g. Authentic Kuthampully GI Tag Unit"
+                    placeholder="e.g. Authentic Kuthampully Handloom Unit"
                   />
                 </div>
               </div>

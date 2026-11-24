@@ -138,7 +138,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onS
           {/* Brand and Badge */}
           <div className="flex items-center gap-1.5 mb-1.5">
             <span className="bg-[#111111]/10 text-[#111111] text-[8px] sm:text-[9px] font-bold px-2 py-0.5 rounded-full tracking-wide uppercase">
-              {product.isBestSeller ? 'BESTSELLER' : product.isNew ? 'NEW ARRIVAL' : 'GI HANDLOOM'}
+              {product.isBestSeller ? 'BESTSELLER' : product.isNew ? 'NEW ARRIVAL' : 'KAVISH LUXE'}
             </span>
             <span className="font-bold text-[10px] sm:text-[11px] uppercase tracking-wider text-[#C5A15A]">
               KAVISH

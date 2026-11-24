@@ -571,7 +571,7 @@ export const AccountPage: React.FC = () => {
 
                   <div className="bg-[#FFFFFF] p-3 rounded-xl border border-[#E5E7EB] text-[11px] text-[#6B7280] space-y-1">
                     <p>• <strong>Complimentary Reverse Pickup:</strong> Our courier partner will collect the garment from your original address.</p>
-                    <p>• <strong>Condition:</strong> Must have unremoved GI tag, unwashed and in original keepsake box.</p>
+                    <p>• <strong>Condition:</strong> Must have unremoved original brand tags, unwashed and in original keepsake box.</p>
                   </div>
 
                   <div className="pt-2 flex gap-2">

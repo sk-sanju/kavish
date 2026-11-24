@@ -130,14 +130,14 @@ export const ShippingPolicy: React.FC = () => {
             </div>
           </section>
 
-          {/* Section 3: Packaging & GI Seal Protection */}
+          {/* Section 3: Packaging & Seal Protection */}
           <section className="space-y-3">
             <div className="flex items-center gap-2 text-[#111111]">
               <PackageCheck className="w-5 h-5 text-[#C5A15A] shrink-0" />
-              <h2 className="font-serif text-lg sm:text-xl font-bold">3. Luxury Handloom Packaging &amp; GI Tag Protection</h2>
+              <h2 className="font-serif text-lg sm:text-xl font-bold">3. Luxury Handloom Packaging &amp; Fabric Protection</h2>
             </div>
             <p className="text-[#6B7280]">
-              Each handloom saree and garment is wrapped in breathable archival butter-paper, sealed with our authentic Kuthampully GI certification tag, and presented inside a rigid gold-embossed Kavish keepsake atelier box. All packages are encased in waterproof outer polybags with tamper-evident security tape.
+              Each handloom saree and garment is wrapped in breathable archival butter-paper, sealed with our authentic Kuthampully handloom hallmark seal, and presented inside a rigid gold-embossed Kavish keepsake atelier box. All packages are encased in waterproof outer polybags with tamper-evident security tape.
             </p>
           </section>
 

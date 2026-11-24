@@ -34,7 +34,7 @@ export const INITIAL_CATEGORIES: CategoryItem[] = [
     "image": "/assets/categories/women_kasavu.jpg",
     "description": "Authentic Kuthampully handloom pure cotton and tissue Kasavu sarees with 24k gold zari borders.",
     "seoTitle": "Authentic Kuthampully Kasavu Sarees | Kavish",
-    "seoDescription": "Shop certified GI Tagged Kerala Kasavu Sarees woven by master Devanga weavers.",
+    "seoDescription": "Shop authentic handcrafted Kerala Kasavu Sarees woven by master Devanga weavers.",
     "status": "Active",
     "productCount": 8
   },

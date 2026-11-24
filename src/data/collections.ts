@@ -15,9 +15,9 @@ export const COLLECTIONS: CollectionItem[] = [
     id: 'col-kasavu',
     title: 'Kasavu Masterpieces',
     subtitle: 'Royal Kochi Court Weaves',
-    description: 'Authentic GI Tagged Kuthampully Kasavu sarees with 24k electroplated tarnish-free gold zari.',
+    description: 'Authentic handcrafted Kuthampully Kasavu sarees with 24k electroplated tarnish-free gold zari.',
     image: '/assets/categories/women_kasavu.jpg',
-    tag: 'GI Tag Certified',
+    tag: 'Master Artisan Weave',
     slug: 'kasavu-masterpieces',
     itemCount: 18,
     featured: true

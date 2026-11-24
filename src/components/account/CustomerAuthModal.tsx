@@ -210,7 +210,7 @@ export const CustomerAuthModal: React.FC = () => {
             </div>
             <div className="flex flex-col items-center space-y-1">
               <Award className="w-4 h-4 text-[#C5A15A]" />
-              <span className="font-semibold text-[#111111]">GI Certified</span>
+              <span className="font-semibold text-[#111111]">100% Authentic Handloom</span>
             </div>
           </div>
         </div>

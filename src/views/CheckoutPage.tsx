@@ -306,7 +306,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
             onClick={onNavigateHome}
           />
           <p className="text-[10px] sm:text-xs text-[#C5A15A] font-semibold uppercase tracking-widest mt-1">
-            Secure Atelier Checkout • Kuthampully GI Certified
+            Secure Atelier Checkout • 100% Authentic Handloom
           </p>
         </div>
 
@@ -815,9 +815,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onOrderSuccess, onNa
             <div className="p-3 bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl text-[11px] text-[#6B7280] space-y-1">
               <div className="flex items-center gap-1.5 font-bold text-[#111111]">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#C5A15A]" />
-                <span>GI Tag Certified Kuthampully Handloom</span>
+                <span>100% Authentic Kuthampully Handloom</span>
               </div>
-              <p>Authentic Kuthampully GI Tag craft with {POLICY_CONFIG.RETURN_WINDOW_DAYS}-day hassle-free doorstep size exchange.</p>
+              <p>Authentic Kuthampully handloom craft with {POLICY_CONFIG.RETURN_WINDOW_DAYS}-day hassle-free doorstep size exchange.</p>
             </div>
           </div>
 
