@@ -2,11 +2,13 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { SlidersHorizontal, Grid3X3, LayoutGrid, X, Sparkles } from 'lucide-react';
+import { SlidersHorizontal, Grid3X3, LayoutGrid, X, Sparkles, ArrowRight, Check } from 'lucide-react';
 import { ProductCard } from '../components/product/ProductCard';
 import { ProductFilter } from '../components/product/ProductFilter';
 import { useProducts } from '../context/ProductContext';
-import type { Product, FilterState } from '../types';
+import { OptimizedImage } from '../components/common/OptimizedImage';
+import { INITIAL_CATEGORIES } from '../data/categories';
+import type { Product, FilterState, CategoryItem } from '../types';
 
 interface ShopProps {
   initialCategory?: string;
@@ -36,8 +38,8 @@ const COLLECTION_ALIASES: Record<string, string[]> = {
   'kerala-classics': ['kerala-classics', 'ceremonial-classics']
 };
 
-export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, onSelectProduct }) => {
-  const { products } = useProducts();
+const ShopContent: React.FC<ShopProps> = ({ initialCategory, initialCollection, onSelectProduct }) => {
+  const { products, categories } = useProducts();
   const params = useParams() as { category?: string; collection?: string };
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -91,6 +93,114 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
     setVisibleCount(12);
     router.push('/shop');
   };
+
+  const activeCategories: CategoryItem[] = useMemo(() => {
+    const list = (categories && categories.length > 0) ? categories : INITIAL_CATEGORIES;
+    return list.filter(c => c.status !== 'Disabled');
+  }, [categories]);
+
+  const getProductCountForCat = (cat: CategoryItem): number => {
+    if (typeof cat.productCount === 'number' && cat.productCount > 0) {
+      return cat.productCount;
+    }
+    const catSlug = (cat.slug || '').toLowerCase();
+    const catName = (cat.name || '').toLowerCase();
+    const matched = products.filter(p => {
+      const pCat = (p.category || '').toLowerCase();
+      const pSub = (p.subcategory || '').toLowerCase();
+      return (
+        pCat === cat.parentCategory.toLowerCase() ||
+        pSub.includes(catSlug) ||
+        pSub.includes(catName)
+      );
+    });
+    return matched.length > 0 ? matched.length : 6;
+  };
+
+  const isCardActive = (cat: CategoryItem) => {
+    if (cat.id === 'cat-men-mundu') {
+      return (
+        filters.gender.length === 1 &&
+        filters.gender.includes('men') &&
+        filters.collection.length === 0
+      );
+    }
+    if (cat.id === 'cat-kids-ethnic') {
+      return (
+        filters.gender.length === 1 &&
+        filters.gender.includes('kids') &&
+        filters.collection.length === 0
+      );
+    }
+    if (cat.id === 'cat-women-kasavu') {
+      return (
+        filters.gender.length === 1 &&
+        filters.gender.includes('women') &&
+        filters.collection.length === 0
+      );
+    }
+    if (cat.id === 'cat-festive-bridal') {
+      return (
+        filters.collection.includes('festive-edit') ||
+        filters.category.includes('festive-heritage')
+      );
+    }
+    return false;
+  };
+
+  const handleCategoryCardClick = (cat: CategoryItem) => {
+    if (isCardActive(cat)) {
+      handleResetFilters();
+      return;
+    }
+
+    if (cat.id === 'cat-men-mundu') {
+      setFilters(prev => ({
+        ...prev,
+        gender: ['men'],
+        collection: [],
+        category: [],
+      }));
+      router.push('/shop?dept=men');
+    } else if (cat.id === 'cat-kids-ethnic') {
+      setFilters(prev => ({
+        ...prev,
+        gender: ['kids'],
+        collection: [],
+        category: [],
+      }));
+      router.push('/shop?dept=kids');
+    } else if (cat.id === 'cat-women-kasavu') {
+      setFilters(prev => ({
+        ...prev,
+        gender: ['women'],
+        collection: [],
+        category: [],
+      }));
+      router.push('/shop?dept=women');
+    } else if (cat.id === 'cat-festive-bridal') {
+      setFilters(prev => ({
+        ...prev,
+        gender: [],
+        collection: ['festive-edit'],
+        category: [],
+      }));
+      router.push('/shop?collection=festive-edit');
+    } else {
+      if (cat.parentCategory) {
+        setFilters(prev => ({
+          ...prev,
+          gender: [cat.parentCategory.toLowerCase()],
+          collection: [],
+          category: [],
+        }));
+        router.push(`/shop?dept=${cat.parentCategory.toLowerCase()}`);
+      }
+    }
+    setVisibleCount(12);
+  };
+
+  const activeSelectedCategory = activeCategories.find(c => isCardActive(c));
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
@@ -204,6 +314,8 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
               ? activeCol.replace(/-/g, ' ').toUpperCase()
               : activeCat
               ? `${activeCat.toUpperCase()} COLLECTION`
+              : filters.gender.length === 1
+              ? `${filters.gender[0].toUpperCase()} COLLECTION`
               : filters.searchQuery
               ? `SEARCH: "${filters.searchQuery}"`
               : 'All Kerala Handlooms'}
@@ -211,6 +323,110 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
           <p className="text-xs sm:text-sm text-[#1A1A1A]/70 mt-1 max-w-xl font-light">
             Crafted in Kuthampully, Thrissur. Every Kasavu thread and unbleached cotton drape embodies 500 years of Devanga master weaving tradition.
           </p>
+        </div>
+
+        {/* 4 Category Showcase Cards - Perfectly aligned in 1 single row on desktop */}
+        <div className="mb-10 sm:mb-12">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-5">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-2">
+                <span className="text-xs uppercase font-bold text-[#111111] tracking-wider">
+                  Featured Atelier Categories
+                </span>
+                <span className="text-xs text-[#6B7280]">
+                  ({activeCategories.length} Weave Traditions)
+                </span>
+              </div>
+              <p className="text-xs text-[#6B7280]">
+                Select a category card to filter the catalog instantly
+              </p>
+            </div>
+
+            {activeSelectedCategory && (
+              <button
+                onClick={handleResetFilters}
+                className="self-start sm:self-auto inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#111111] text-[#FFFFFF] hover:bg-[#C5A15A] hover:text-[#111111] text-xs font-semibold tracking-wide transition-all shadow-xs cursor-pointer"
+              >
+                <span>View All ({products.length} Garments)</span>
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
+          {/* Cards Grid: Exactly 4 in one line on desktop */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-5 xl:gap-6">
+            {activeCategories.map((cat) => {
+              const count = getProductCountForCat(cat);
+              const isActive = isCardActive(cat);
+
+              return (
+                <div
+                  key={cat.id}
+                  onClick={() => handleCategoryCardClick(cat)}
+                  className={`group luxury-card relative bg-white rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 flex flex-col justify-between ${
+                    isActive
+                      ? 'border-2 border-[#C5A15A] ring-2 ring-[#C5A15A]/30 shadow-md'
+                      : 'border border-[#E5E7EB] hover:border-[#C5A15A] shadow-xs hover:shadow-md'
+                  }`}
+                >
+                  <div className="aspect-[4/5] sm:aspect-[3/4] relative overflow-hidden bg-[#FFFFFF]">
+                    <OptimizedImage
+                      src={cat.image || '/assets/categories/women_kasavu.jpg'}
+                      alt={cat.name}
+                      preset="card"
+                      containerClassName="w-full h-full"
+                      imageClassName="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+                    
+                    {/* Parent category tag badge */}
+                    <div className="absolute top-3.5 left-3.5 flex items-center gap-2">
+                      <span className="bg-[#111111]/90 backdrop-blur-md text-[#FFFFFF] text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-full border border-[#C5A15A]/40 shadow-xs">
+                        {cat.parentCategory}
+                      </span>
+                      {isActive && (
+                        <span className="bg-[#C5A15A] text-[#111111] text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
+                          <Check className="w-2.5 h-2.5 stroke-[3]" />
+                          <span>Active</span>
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Category Title & Description */}
+                    <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
+                      <h3 className="font-serif text-lg sm:text-xl font-bold leading-snug group-hover:text-[#C5A15A] transition-colors">
+                        {cat.name}
+                      </h3>
+                      <p className="text-[11px] sm:text-xs text-white/80 line-clamp-2 mt-1 font-light leading-relaxed">
+                        {cat.description || 'Authentic Kuthampully handwoven creation.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Bottom strip matching the screenshot */}
+                  <div className={`p-3.5 sm:p-4 flex items-center justify-between text-xs border-t transition-colors ${
+                    isActive
+                      ? 'border-[#C5A15A]/40 bg-[#C5A15A]/10'
+                      : 'border-[#E5E7EB]/60 bg-white'
+                  }`}>
+                    <span className={`font-medium text-[11px] sm:text-xs ${
+                      isActive ? 'text-[#C5A15A] font-bold' : 'text-[#6B7280]'
+                    }`}>
+                      {count} {count === 1 ? 'Garment' : 'Garments'}
+                    </span>
+                    <div className={`flex items-center gap-1 font-bold uppercase tracking-wider text-[11px] sm:text-xs transition-transform ${
+                      isActive
+                        ? 'text-[#C5A15A]'
+                        : 'text-[#111111] group-hover:translate-x-1'
+                    }`}>
+                      <span>{isActive ? 'Filtered' : 'Explore'}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Mobile Horizontal Quick-Filter Bar */}
@@ -403,3 +619,11 @@ export const Shop: React.FC<ShopProps> = ({ initialCategory, initialCollection, 
     </div>
   );
 };
+
+export const Shop: React.FC<ShopProps> = (props) => (
+  <React.Suspense fallback={<div className="py-12 bg-white min-h-screen text-center text-xs text-gray-400">Loading catalog...</div>}>
+    <ShopContent {...props} />
+  </React.Suspense>
+);
+
+export default Shop;

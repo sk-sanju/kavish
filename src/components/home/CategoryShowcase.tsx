@@ -129,7 +129,7 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({ onNavigate }
               <div
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat)}
-                className="group luxury-card relative bg-white border border-[#E5E7EB] hover:border-[#C5A15A] overflow-hidden cursor-pointer shadow-xs transition-all duration-300 hover:shadow-md flex flex-col justify-between"
+                className="group luxury-card relative bg-white border border-[#E5E7EB] hover:border-[#C5A15A] rounded-2xl overflow-hidden cursor-pointer shadow-xs transition-all duration-300 hover:shadow-md flex flex-col justify-between"
               >
                 <div className="aspect-[4/5] sm:aspect-[3/4] relative overflow-hidden bg-[#FFFFFF]">
                   <OptimizedImage
